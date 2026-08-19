@@ -1,0 +1,39 @@
+name: Validate template
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: src/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+        working-directory: src
+      - name: Test and build
+        run: npm test && npm run typecheck && npm run build
+        working-directory: src
+      - name: Validate PowerShell syntax
+        shell: pwsh
+        run: |
+          $errors = @()
+          Get-ChildItem ./scripts -Recurse -Include *.ps1,*.psm1 -File | ForEach-Object {
+            $tokens = $null
+            $parseErrors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$tokens, [ref]$parseErrors)
+            $errors += $parseErrors
+          }
+          if ($errors) { $errors | Format-List; exit 1 }
+      - name: Build Bicep
+        run: az bicep build --file infra/main.bicep

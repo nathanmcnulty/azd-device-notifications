@@ -1,0 +1,6 @@
+.azure/
+.env
+*.local.json
+teams-app/*.zip
+src/dist/
+src/node_modules/

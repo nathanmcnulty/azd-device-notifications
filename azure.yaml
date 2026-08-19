@@ -1,0 +1,29 @@
+name: azd-device-notifications
+metadata:
+  template: azd-device-notifications@0.1.0
+requiredVersions:
+  azd: ">= 1.23.0"
+infra:
+  provider: bicep
+  path: infra
+services:
+  notifier:
+    project: ./src
+    language: ts
+    host: function
+hooks:
+  preprovision:
+    shell: pwsh
+    run: ./scripts/Pre-Provision.ps1
+    interactive: true
+    continueOnError: false
+  postprovision:
+    shell: pwsh
+    run: ./scripts/Post-Provision.ps1
+    interactive: true
+    continueOnError: false
+  postdeploy:
+    shell: pwsh
+    run: ./scripts/Test-Deployment.ps1
+    interactive: false
+    continueOnError: false
