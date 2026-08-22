@@ -12,6 +12,7 @@
     "entraPollSchedule": { "value": "${ENTRA_POLL_SCHEDULE}" },
     "intunePollSchedule": { "value": "${INTUNE_POLL_SCHEDULE}" },
     "enrollmentLookbackHours": { "value": "${ENROLLMENT_LOOKBACK_HOURS}" },
-    "auditOverlapMinutes": { "value": "${ENTRA_AUDIT_OVERLAP_MINUTES}" }
+    "auditOverlapMinutes": { "value": "${ENTRA_AUDIT_OVERLAP_MINUTES}" },
+    "collectionEnabled": { "value": "${DEVICE_NOTIFICATION_COLLECTION_ENABLED=false}" }
   }
 }

@@ -41,5 +41,8 @@ describe("routing", () => {
     expect(() => loadRoutingConfig(JSON.stringify({ monitoredGroupIds: ["not-a-guid"] }))).toThrow("GUIDs");
     expect(() => loadRoutingConfig(JSON.stringify({ quietHours: { start: 30, end: 7, timeZone: "UTC" } }))).toThrow("quietHours");
     expect(() => loadRoutingConfig(JSON.stringify({ events: { deviceRegistered: { user: ["sms"] } } }))).toThrow("teamsDm");
+    expect(() => loadRoutingConfig(JSON.stringify({ events: { deviceRegistered: { user: ["teamsWebhook"] } } }))).toThrow("cannot contain teamsWebhook");
+    expect(() => loadRoutingConfig(JSON.stringify({ events: { deviceRegistered: { admin: ["teamsDm"] } } }))).toThrow("cannot contain teamsDm");
+    expect(() => loadRoutingConfig(JSON.stringify({ events: { deviceRegistered: { user: ["email", "email"] } } }))).toThrow("duplicate transports");
   });
 });

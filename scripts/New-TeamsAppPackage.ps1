@@ -4,6 +4,11 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+Import-Module (Join-Path $PSScriptRoot 'Tenant.Guards.psm1') -Force
+foreach ($name in @('AZURE_SUBSCRIPTION_ID', 'AZURE_TENANT_ID', 'AZURE_WORKLOAD_CLIENT_ID', 'AZURE_FUNCTION_APP_URL')) {
+    [void](Get-AzdEnvironmentValue $name)
+}
+Assert-AzdTenantContext
 foreach ($name in @('AZURE_WORKLOAD_CLIENT_ID', 'AZURE_FUNCTION_APP_URL')) {
     if (-not [Environment]::GetEnvironmentVariable($name)) { throw "$name is required." }
 }
@@ -74,7 +79,7 @@ try {
     $manifest = @{
         '$schema' = 'https://developer.microsoft.com/json-schemas/teams/v1.17/MicrosoftTeams.schema.json'
         manifestVersion = '1.17'
-        version = '1.0.0'
+        version = '0.1.0'
         id = $env:AZURE_WORKLOAD_CLIENT_ID
         packageName = 'com.nathanmcnulty.devicenotifications'
         developer = @{ name = 'Device Notifications'; websiteUrl = 'https://github.com/nathanmcnulty/azd-device-notifications'; privacyUrl = 'https://github.com/nathanmcnulty/azd-device-notifications/blob/main/docs/privacy.md'; termsOfUseUrl = 'https://github.com/nathanmcnulty/azd-device-notifications/blob/main/docs/privacy.md' }

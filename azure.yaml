@@ -27,3 +27,8 @@ hooks:
     run: ./scripts/Test-Deployment.ps1
     interactive: false
     continueOnError: false
+  predown:
+    shell: pwsh
+    run: ./scripts/Remove-TenantObjects.ps1
+    interactive: true
+    continueOnError: false

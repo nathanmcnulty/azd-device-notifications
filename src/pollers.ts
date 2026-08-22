@@ -6,9 +6,13 @@ import { normalizeRegistration, type DirectoryAudit } from "./normalization.js";
 async function publish(events: ReturnType<typeof normalizeRegistration>[], outbox: OutboxRepository, logger: Logger) {
   for (const event of events) {
     if (!event) continue;
-    if (!(await outbox.reserve(event.id, event))) {
+    const reservation = await outbox.reserve(event.id, event);
+    if (reservation === "published") {
       logger.info("Duplicate event suppressed", { eventId: event.id, eventType: event.type });
       continue;
+    }
+    if (reservation === "pending") {
+      throw new Error(`Event ${event.id} is still pending publication`);
     }
     try {
       await outbox.enqueue(event);
@@ -26,7 +30,12 @@ export async function pollDirectoryAudits(dependencies: {
   logger: Logger;
   now: Date;
   overlapMs: number;
+  enabled?: boolean;
 }): Promise<void> {
+  if (dependencies.enabled === false) {
+    dependencies.logger.info("Directory audit collection is disabled until onboarding is completed");
+    return;
+  }
   const prior = await dependencies.watermarks.get("directoryAudits");
   const from = new Date((prior ? new Date(prior).valueOf() : dependencies.now.valueOf()) - dependencies.overlapMs);
   const filter = encodeURIComponent(`activityDateTime ge ${from.toISOString()}`);
@@ -54,7 +63,12 @@ export async function pollManagedDevices(dependencies: {
   logger: Logger;
   now: Date;
   enrollmentLookbackMs: number;
+  enabled?: boolean;
 }): Promise<void> {
+  if (dependencies.enabled === false) {
+    dependencies.logger.info("Managed-device collection is disabled until onboarding is completed");
+    return;
+  }
   let deviceCount = 0;
   let eventCount = 0;
   const select = "id,azureADDeviceId,deviceName,enrolledDateTime,complianceState,complianceGracePeriodExpirationDateTime,lastSyncDateTime,operatingSystem,managedDeviceOwnerType,userId,userPrincipalName,emailAddress,userDisplayName";

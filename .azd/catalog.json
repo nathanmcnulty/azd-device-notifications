@@ -1,0 +1,23 @@
+{
+  "title": "Device lifecycle notifications",
+  "summary": "Notifies device owners and administrators about Entra registration, Intune enrollment, and compliance transitions through Teams or scoped email.",
+  "tags": [
+    "Microsoft Entra ID",
+    "Microsoft Intune",
+    "Device Management",
+    "Microsoft Teams",
+    "Managed Identity"
+  ],
+  "highlights": [
+    "Guides administrators through readiness-gated setup and protected delivery testing before collection.",
+    "Routes each event independently to device owners, administrators, or both.",
+    "Uses managed identity and mailbox-scoped Exchange Application RBAC without destructive device permissions.",
+    "Stores delivery history and overlapping poll state for resilient lifecycle detection."
+  ],
+  "featured": false,
+  "solutionCount": 3,
+  "quickstartCommands": [
+    "azd init --template nathanmcnulty/azd-device-notifications",
+    "azd up"
+  ]
+}

@@ -11,8 +11,13 @@ param emailSenderUpn string = ''
 param teamsAdminWebhookUrl string = ''
 param entraPollSchedule string = '0 */5 * * * *'
 param intunePollSchedule string = '30 */15 * * * *'
-param enrollmentLookbackHours int = 24
+@minValue(0)
+@maxValue(720)
+param enrollmentLookbackHours int = 0
+@minValue(1)
+@maxValue(1440)
 param auditOverlapMinutes int = 15
+param collectionEnabled bool = false
 
 var resourceToken = toLower(uniqueString(subscription().id, environmentName))
 var resourceGroupName = 'rg-${environmentName}'
@@ -43,6 +48,7 @@ module resources 'resources.bicep' = {
     intunePollSchedule: intunePollSchedule
     enrollmentLookbackHours: enrollmentLookbackHours
     auditOverlapMinutes: auditOverlapMinutes
+    collectionEnabled: collectionEnabled
     tags: tags
   }
 }
