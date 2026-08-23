@@ -17,7 +17,7 @@
     "botbuilder": "^4.23.3"
   },
   "devDependencies": {
-    "@types/node": "^22.15.30",
+    "@types/node": "^26.2.0",
     "typescript": "^7.0.2",
     "vitest": "^4.1.11"
   },
