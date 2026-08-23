@@ -70,8 +70,10 @@ if ($configuration.UsesEmail -and (Get-AzdEnvironmentValue 'DEVICE_NOTIFICATION_
     & (Join-Path $PSScriptRoot 'Configure-ExchangeMail.ps1') -SenderMailbox $env:EMAIL_SENDER_UPN
 }
 
-& (Join-Path $PSScriptRoot 'New-TeamsAppPackage.ps1')
-if ($LASTEXITCODE -ne 0) { throw 'Teams app package generation failed.' }
+if ($configuration.UsesTeamsDm) {
+    & (Join-Path $PSScriptRoot 'New-TeamsAppPackage.ps1')
+    if ($LASTEXITCODE -ne 0) { throw 'Teams app package generation failed.' }
+}
 
 if ($env:DEVICE_NOTIFICATION_COLLECTION_ENABLED -ne 'true') {
     Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_ONBOARDING_STATUS' 'delivery-validation-required'

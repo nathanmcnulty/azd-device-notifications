@@ -31,6 +31,7 @@ Describe 'Configuration validation' {
             -IntunePollSchedule '30 */15 * * * *' -EnrollmentLookbackHours 0 -AuditOverlapMinutes 15
         $result.EnabledRouteCount | Should -Be 3
         $result.EnrollmentLookbackHours | Should -Be 0
+        $result.UsesTeamsDm | Should -BeTrue
     }
 
     It 'rejects an enabled webhook route without a destination' {
@@ -81,12 +82,38 @@ Describe 'Graph permission planning' {
 }
 
 Describe 'Lifecycle safety contracts' {
-    It 'offers a hash-pinned portable Node path for administrator deployments' {
-        $wrapper = Get-Content (Join-Path $repoRoot 'scripts/Invoke-Azd.ps1') -Raw
-        $wrapper | Should -Match "ValidateSet\('up', 'deploy', 'package'\)"
-        $wrapper | Should -Match 'Get-FileHash.*SHA256'
-        $wrapper | Should -Match 'https://nodejs.org/dist/'
-        $wrapper | Should -Match '\.azure/tools'
+    It 'deploys the committed runtime without a local or remote Node build' {
+        $deployment = Get-Content (Join-Path $repoRoot 'scripts/Deploy-FunctionPackage.ps1') -Raw
+        $deployment | Should -Match 'function-package'
+        $deployment | Should -Match '--build-remote false'
+        $deployment | Should -Not -Match 'npm|nodejs\.org'
+        Test-Path (Join-Path $repoRoot 'function-package/index.cjs') | Should -BeTrue
+        Test-Path (Join-Path $repoRoot 'scripts/Invoke-Azd.ps1') | Should -BeFalse
+    }
+
+    It 'does not require Bot Service for email-only owner delivery' {
+        $emailRouting = $routing.Replace('"teamsDm"', '"email"')
+        $result = Get-NotificationConfiguration -RoutingJson $emailRouting -EmailSenderUpn 'notifications@contoso.com' `
+            -EntraPollSchedule '0 */5 * * * *' -IntunePollSchedule '30 */15 * * * *' `
+            -EnrollmentLookbackHours 0 -AuditOverlapMinutes 15
+        $result.UsesTeamsDm | Should -BeFalse
+        $result.UsesEmail | Should -BeTrue
+    }
+
+    It 'registers the queue binding extension in source and deployment hosts' {
+        foreach ($path in @('src/host.json', 'function-package/host.json')) {
+            $hostConfig = Get-Content (Join-Path $repoRoot $path) -Raw | ConvertFrom-Json
+            $hostConfig.extensionBundle.id | Should -Be 'Microsoft.Azure.Functions.ExtensionBundle'
+            $hostConfig.extensionBundle.version | Should -Be '[4.0.0, 5.0.0)'
+        }
+    }
+
+    It 'creates Bot Service only when personal Teams delivery is selected' {
+        $infra = Get-Content (Join-Path $repoRoot 'infra/resources.bicep') -Raw
+        $infra | Should -Match "resource bot .* = if \(teamsBotEnabled\)"
+        $infra | Should -Match "resource teamsChannel .* = if \(teamsBotEnabled\)"
+        $parameters = Get-Content (Join-Path $repoRoot 'infra/main.parameters.json') -Raw
+        $parameters | Should -Match 'DEVICE_NOTIFICATION_TEAMS_BOT_ENABLED=false'
     }
 
     It 'keeps collection paused by default and requires explicit enablement' {

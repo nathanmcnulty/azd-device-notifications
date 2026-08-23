@@ -18,6 +18,7 @@ param enrollmentLookbackHours int = 0
 @maxValue(1440)
 param auditOverlapMinutes int = 15
 param collectionEnabled bool = false
+param teamsBotEnabled bool = false
 
 var resourceToken = toLower(uniqueString(subscription().id, environmentName))
 var resourceGroupName = 'rg-${environmentName}'
@@ -49,6 +50,7 @@ module resources 'resources.bicep' = {
     enrollmentLookbackHours: enrollmentLookbackHours
     auditOverlapMinutes: auditOverlapMinutes
     collectionEnabled: collectionEnabled
+    teamsBotEnabled: teamsBotEnabled
     tags: tags
   }
 }

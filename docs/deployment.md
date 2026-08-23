@@ -4,7 +4,7 @@ Deployment is intentionally phased. The first `azd up` creates and validates the
 
 ## 1. Prepare the administrator session
 
-Install Azure CLI, Azure Developer CLI 1.23 or later, and PowerShell 7. Email setup additionally requires the ExchangeOnlineManagement PowerShell module. Node.js does not need to be installed on Windows administrator workstations: the repository deployment command downloads a pinned, hash-checked portable copy into the ignored local `.azure` folder when needed, and Azure builds the Function remotely.
+Install Azure CLI, Azure Developer CLI 1.23 or later, and PowerShell 7. Email setup additionally requires the ExchangeOnlineManagement PowerShell module. Administrators do not install Node.js or npm: the repository contains the ready-to-run Function package, including its application dependencies, and deployment performs no local or remote npm restore or source build.
 
 If an administrator Teams Workflow route will be selected, create **Post to a chat or channel when a webhook request is received** now, choose the intended destination, add a durable co-owner, and copy the callback URL. The first-run wizard requires and validates that credential before it enables the route.
 
@@ -23,7 +23,7 @@ Until the first stable release is published, use the default branch only for rev
 
 ```powershell
 azd init --template nathanmcnulty/azd-device-notifications
-./scripts/Invoke-Azd.ps1 up
+azd up
 ```
 
 The first-run review covers:
@@ -44,7 +44,7 @@ azd init --template nathanmcnulty/azd-device-notifications --branch v1.0.0
 
 ## 3. Confirm foundation readiness
 
-The initial deployment should report the Function App state and exact core Graph application-role assignments. It also creates `teams-app/device-notifications.zip`.
+The initial deployment uploads the reviewed Function package already contained in the repository, with remote build disabled. It should report the Function App state and exact core Graph application-role assignments. When personal Teams messages are selected, it also creates `teams-app/device-notifications.zip`.
 
 At this point `DEVICE_NOTIFICATION_COLLECTION_ENABLED` remains `false`. This is expected: a running Function App and assigned Graph permissions prove infrastructure readiness, not message delivery. Finish every selected destination below.
 

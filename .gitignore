@@ -1,6 +1,8 @@
 .azure/
 .env
 *.local.json
+**/local.settings.json
 teams-app/*.zip
 src/dist/
 src/node_modules/
+function-package/*.zip
