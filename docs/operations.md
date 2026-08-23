@@ -20,19 +20,25 @@ Keep collection paused and run all three event types through the deployed Functi
 
 ```powershell
 ./scripts/Test-Deployment.ps1
-./scripts/Test-NotificationDelivery.ps1
+./scripts/Test-Deployment.ps1 -TestDelivery
 ```
 
 When owner routes are enabled, provide a prepared test user's Entra object ID, UPN, and email address at the prompts. The user must be directly selected, belong to a selected monitored group, or be covered by the explicitly confirmed all-users scope. You can also provide the values explicitly:
 
 ```powershell
-./scripts/Test-NotificationDelivery.ps1 `
+./scripts/Test-Deployment.ps1 -TestDelivery `
     -TestUserId <entra-user-object-id> `
     -TestUserUpn test-user@contoso.com `
     -TestUserEmail test-user@contoso.com
 ```
 
 The script obtains a Function host key without printing it, calls only the test endpoint, and clears the key reference afterward. The endpoint refuses testing when either the azd environment or live Function setting says collection is enabled. Messages are labeled `[TEST]` and use the normal route dispatcher and delivery-history path.
+
+Every run writes `reports/deployment-validation.json` using the shared portfolio
+validation contract. The report is redacted and ignored by Git. Run
+`./scripts/Test-Deployment.ps1 -Plan` to inspect the exact check set without
+authentication, Azure or Graph reads, the unauthenticated endpoint probe, or
+synthetic delivery.
 
 A complete default run tests `deviceRegistered`, `deviceEnrolled`, and `deviceNoncompliant`, then records `DEVICE_NOTIFICATION_DELIVERY_TESTED=true` plus a SHA-256 fingerprint of the exact routing and destinations. Testing only selected `-EventType` values is useful for diagnosis but does not record enablement proof.
 
@@ -103,7 +109,7 @@ azd env get-value DEVICE_NOTIFICATION_DELIVERY_TESTED
 azd env get-value DEVICE_NOTIFICATION_COLLECTION_ENABLED
 ```
 
-Do not force the collection flag merely to clear the status. Correct the readiness issue, run `./scripts/Test-Deployment.ps1` and `./scripts/Test-NotificationDelivery.ps1`, inspect the delivered messages, and then use `./scripts/Enable-NotificationCollection.ps1`.
+Do not force the collection flag merely to clear the status. Correct the readiness issue, run `./scripts/Test-Deployment.ps1` and `./scripts/Test-Deployment.ps1 -TestDelivery`, inspect the delivered messages, and then use `./scripts/Enable-NotificationCollection.ps1`.
 
 `-AllowUntestedDestination` is an explicit last-resort override. It requires an additional warning acknowledgement and accepts that events may be missed. Do not use it to avoid diagnosing a normal setup failure.
 

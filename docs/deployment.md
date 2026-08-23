@@ -105,7 +105,7 @@ With collection still paused, rerun infrastructure/configuration validation and 
 
 ```powershell
 ./scripts/Test-Deployment.ps1
-./scripts/Test-NotificationDelivery.ps1
+./scripts/Test-Deployment.ps1 -TestDelivery
 ```
 
 Owner routes prompt for a prepared test user's object ID, UPN, and email address. Confirm every expected `[TEST]` Teams card and email reaches its intended recipient. A complete run records a fingerprint of the exact routes and destinations.

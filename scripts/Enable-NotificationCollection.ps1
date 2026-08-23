@@ -37,7 +37,7 @@ $expectedFingerprint = Get-NotificationDeliveryFingerprint -RoutingJson $env:DEV
     -EmailSenderUpn $env:EMAIL_SENDER_UPN -FunctionAppName $env:AZURE_FUNCTION_APP_NAME -WorkloadClientId $env:AZURE_WORKLOAD_CLIENT_ID
 $proofValid = $env:DEVICE_NOTIFICATION_DELIVERY_TESTED -eq 'true' -and $env:DEVICE_NOTIFICATION_DELIVERY_TEST_FINGERPRINT -ceq $expectedFingerprint
 if (-not $proofValid -and -not $AllowUntestedDestination) {
-    throw 'Current delivery configuration has not passed Test-NotificationDelivery.ps1. Collection remains paused.'
+    throw 'Current delivery configuration has not passed Test-Deployment.ps1 -TestDelivery. Collection remains paused.'
 }
 if (-not $proofValid) { Write-Warning 'OVERRIDE: collection will start without proof that every configured destination can deliver. Events can be permanently missed.' }
 $expected = if ($tenantWide) { 'ENABLE ALL USERS' } else { 'ENABLE SELECTED SCOPE' }

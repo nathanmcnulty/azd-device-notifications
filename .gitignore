@@ -4,3 +4,5 @@
 teams-app/*.zip
 src/dist/
 src/node_modules/
+reports/
+testResults.xml

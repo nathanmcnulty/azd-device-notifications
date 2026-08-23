@@ -114,9 +114,10 @@ Describe 'Lifecycle safety contracts' {
     }
 
     It 'validates an unauthenticated bot request is rejected' {
-        $validation = Get-Content (Join-Path $repoRoot 'scripts/Test-Deployment.ps1') -Raw
-        $validation | Should -Match 'accepted an unauthenticated request'
-        $validation | Should -Match 'Collection remains PAUSED|collection is PAUSED'
+        $validation = Get-Content (Join-Path $repoRoot 'scripts/Deployment.Validation.psm1') -Raw
+        $validation | Should -Match 'StatusCode -notin @\(401, 403\)'
+        $validation | Should -Match 'authentication-specific rejection'
+        $validation | Should -Match 'collection remains paused|Keep collection paused'
     }
 
     It 'keeps the Function host key in a header and clears it after delivery testing' {
