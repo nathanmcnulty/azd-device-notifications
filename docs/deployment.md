@@ -4,7 +4,7 @@ Deployment is intentionally phased. The first `azd up` creates and validates the
 
 ## 1. Prepare the administrator session
 
-Install Azure CLI, Azure Developer CLI 1.23 or later, PowerShell 7, and Node.js 22. Email setup additionally requires the ExchangeOnlineManagement PowerShell module.
+Install Azure CLI, Azure Developer CLI 1.23 or later, and PowerShell 7. Email setup additionally requires the ExchangeOnlineManagement PowerShell module. Node.js does not need to be installed on Windows administrator workstations: the repository deployment command downloads a pinned, hash-checked portable copy into the ignored local `.azure` folder when needed, and Azure builds the Function remotely.
 
 If an administrator Teams Workflow route will be selected, create **Post to a chat or channel when a webhook request is received** now, choose the intended destination, add a durable co-owner, and copy the callback URL. The first-run wizard requires and validates that credential before it enables the route.
 
@@ -23,7 +23,7 @@ Until the first stable release is published, use the default branch only for rev
 
 ```powershell
 azd init --template nathanmcnulty/azd-device-notifications
-azd up
+./scripts/Invoke-Azd.ps1 up
 ```
 
 The first-run review covers:

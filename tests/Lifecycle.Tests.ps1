@@ -81,6 +81,14 @@ Describe 'Graph permission planning' {
 }
 
 Describe 'Lifecycle safety contracts' {
+    It 'offers a hash-pinned portable Node path for administrator deployments' {
+        $wrapper = Get-Content (Join-Path $repoRoot 'scripts/Invoke-Azd.ps1') -Raw
+        $wrapper | Should -Match "ValidateSet\('up', 'deploy', 'package'\)"
+        $wrapper | Should -Match 'Get-FileHash.*SHA256'
+        $wrapper | Should -Match 'https://nodejs.org/dist/'
+        $wrapper | Should -Match '\.azure/tools'
+    }
+
     It 'keeps collection paused by default and requires explicit enablement' {
         Get-Content (Join-Path $repoRoot 'infra/main.bicep') -Raw | Should -Match 'param collectionEnabled bool = false'
         $enable = Get-Content (Join-Path $repoRoot 'scripts/Enable-NotificationCollection.ps1') -Raw
