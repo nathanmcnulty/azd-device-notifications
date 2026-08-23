@@ -12,7 +12,7 @@
   "dependencies": {
     "@azure/data-tables": "^13.3.0",
     "@azure/functions": "^4.7.2",
-    "@azure/identity": "^4.11.1",
+    "@azure/identity": "^4.13.2",
     "@azure/storage-queue": "^12.27.0",
     "botbuilder": "^4.23.3"
   },
