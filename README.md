@@ -1,161 +1,180 @@
-# Device lifecycle notifications for Microsoft Entra and Intune
+# Device notifications for Microsoft Entra and Intune
 
-Deploy administrator-controlled notifications for these device lifecycle events:
+This template tells users and administrators when:
 
-1. A device is registered in Microsoft Entra ID.
-2. A device is enrolled in Microsoft Intune.
-3. An Intune device changes from its recorded baseline to `noncompliant`, `error`, `inGracePeriod`, or `unknown`.
+- a device is registered in Microsoft Entra ID;
+- a device is enrolled in Microsoft Intune; or
+- an Intune device changes to a problem state such as noncompliant, error, grace period, or unknown.
 
-Each event can notify the device owner, administrators, or both through a Teams personal message, a Teams Workflows webhook, or email from an Exchange Online shared mailbox.
+Notifications can go to the device owner, an administrator, or both. Supported destinations are a personal Teams message, a Teams Workflow, and email from one shared mailbox.
 
 > [!IMPORTANT]
-> This solution detects and notifies. It never disables, deletes, retires, or wipes a device; changes compliance; revokes a certificate; or performs another remediation action.
+> This solution only detects and notifies. It never deletes, disables, retires, or wipes a device, changes compliance, or performs another remediation action.
 
-## Quickstart
+## How setup works
 
-### Before you begin
+Collection starts **paused**. Nothing is polled until an administrator has reviewed the scope and proved the selected notification paths.
 
-Use a test environment first. Decide which users or groups are in scope and which notification path you will prove before enabling polling.
+```mermaid
+flowchart LR
+    A[Choose test users or groups] --> B[Deploy with azd up]
+    B --> C[Finish Teams or email setup]
+    C --> D[Send protected test notifications]
+    D --> E{Messages arrived?}
+    E -- No --> C
+    E -- Yes --> F[Enable collection]
+    F --> G[Run real device-event tests]
+```
+
+## Before you begin
+
+Start with test users or a test group. Decide which notification path you will prove before you enable collection.
 
 Install:
 
 - [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
 - [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
 - [PowerShell 7](https://learn.microsoft.com/powershell/scripting/install/installing-powershell)
-- [Node.js 22](https://nodejs.org/en/download)
 
-For email delivery, install the Exchange Online module in PowerShell 7:
+Node.js does not need to be installed on Windows administrator workstations. The deployment command downloads a pinned, hash-checked portable copy into the ignored local `.azure` folder when `npm` is unavailable. Azure performs the Function build remotely.
+
+If you use email, install the Exchange Online PowerShell module:
 
 ```powershell
 Install-Module ExchangeOnlineManagement -Scope CurrentUser
 ```
 
-| Requirement | Why it is needed |
+### Administrator access
+
+| Access | Why it is needed |
 |---|---|
-| Azure CLI, Azure Developer CLI 1.23 or later, PowerShell 7, and Node.js 22 | Deploys, configures, and validates the solution |
-| Azure Owner, or Contributor plus User Access Administrator | Creates Azure resources and managed-identity role assignments |
-| Privileged Role Administrator | Assigns the required Microsoft Graph application permissions |
-| Teams Administrator, when using personal Teams messages | Uploads and approves the custom Teams app and controls installation policies |
-| A Teams Workflows owner, when using admin Teams delivery | Creates and maintains the channel or chat workflow and its connection |
-| Exchange Administrator and the ExchangeOnlineManagement module, when using email | Restricts `Application Mail.Send` to one shared mailbox |
+| Azure Owner, or Contributor plus User Access Administrator | Create Azure resources and managed-identity assignments |
+| Privileged Role Administrator | Assign the exact Microsoft Graph application permissions |
+| Teams Administrator | Upload and approve the custom Teams app when personal messages are selected |
+| Teams Workflow owner | Own the administrator channel or chat Workflow |
+| Exchange Administrator | Limit email sending to one shared mailbox |
 
-The Azure CLI tenant, subscription tenant, and azd tenant must match. The deployment uses existing Azure CLI and azd sign-in caches and opens the normal operating-system or browser flow when sign-in is required. Device-code authentication is not used.
+The Azure CLI, Azure subscription, and `azd` environment must use the same tenant. Normal operating-system or browser sign-in is used; device-code authentication is not used. See [Identity and permissions](docs/identity-and-permissions.md) for the exact roles and runtime permissions.
 
-See [identity and permissions](docs/identity-and-permissions.md) for the exact human and runtime permissions. Review [privacy and retention](docs/privacy.md) before deploying broadly.
+## Choose where messages go
 
-### Choose delivery paths
-
-| Path | Recipient | Administrator setup required before it is ready |
+| Destination | Recipient | What you prepare |
 |---|---|---|
-| Teams personal message | Device owner | Upload and approve the generated Teams app, install it for the prepared test user, and capture an installation conversation |
-| Teams Workflow | Administrator channel or chat | Create the webhook Workflow, add a co-owner, store the callback URL, and prove an independent test post |
-| Shared-mailbox email | Device owner or administrators | Configure Exchange Application RBAC for one mailbox and prove the exact mailbox scope |
+| Personal Teams message | Device owner | Upload and approve the generated Teams app, then install it for test users |
+| Teams Workflow | Administrators | Create the Workflow, add a co-owner, and copy its callback URL before `azd up` |
+| Shared-mailbox email | Owners or administrators | Choose one shared mailbox; setup limits the app to that mailbox |
 
-At least one delivery route must be selected; for operational coverage, an administrator route is strongly recommended. Empty monitored-user and monitored-group lists mean **all discovered users**, not no users. The wizard requires an explicit all-users confirmation; begin with dedicated test identities or a test group.
+At least one route is required. An administrator route is strongly recommended. Empty user and group lists mean **all discovered users**, so the setup wizard requires an explicit all-users confirmation.
 
-If you plan to select Teams Workflow delivery, create that Workflow and copy its callback URL before running `azd up`; the wizard validates the URL before provisioning. Teams personal-app installation happens afterward because the app package is generated by the deployment.
+## Deploy
 
-### Initialize
-
-This repository has not published a stable release yet. The following command evaluates the current default branch and is intended for review and test deployments:
+This repository does not yet have a stable release. Use the default branch only for review and test deployments:
 
 ```powershell
 azd init --template nathanmcnulty/azd-device-notifications
+./scripts/Invoke-Azd.ps1 up
 ```
 
-After a `v1.0.0` release is published, production deployments should pin it:
+The setup wizard asks you to:
+
+1. Choose users, groups, or explicitly confirm all users.
+2. Choose owner and administrator notification paths.
+3. Enter the required Teams Workflow or email details.
+4. Choose whether existing recent enrollments should generate messages. The recommended first-run value is `0`, which creates a baseline without sending old enrollment notifications.
+5. Review everything before Azure or tenant changes begin.
+
+Rerunning `./scripts/Invoke-Azd.ps1 up` reuses and rechecks saved choices. If Node.js 22 or later is already available, the script uses it instead of downloading the portable copy.
+
+After a `v1.0.0` release exists, production deployments should pin it:
 
 ```powershell
 azd init --template nathanmcnulty/azd-device-notifications --branch v1.0.0
 ```
 
-### Configure and deploy
+## Finish setup and prove delivery
 
-Run:
+Complete only the destinations you selected:
+
+1. **Personal Teams messages:** upload `teams-app/device-notifications.zip` in the Teams admin center, approve it, and install it for each test user.
+2. **Teams Workflow:** confirm the Workflow has a durable co-owner, then verify both a successful run and the message in the intended channel or chat.
+3. **Email:** `azd up` configures mailbox-limited Exchange access. If the step was interrupted or the mailbox changes, follow [Deployment](docs/deployment.md#6-configure-shared-mailbox-email).
+
+While collection is still paused, run:
 
 ```powershell
-azd up
+./scripts/Test-Deployment.ps1
+./scripts/Test-NotificationDelivery.ps1
 ```
 
-Treat setup as four checkpoints:
+The second command sends `[TEST]` notifications through the real delivery code. Confirm that every expected Teams card and email arrives. An HTTP success alone is not proof that a person received the message.
 
-1. **Review scope and routes.** The first-run wizard confirms selected users/groups or an explicit all-users scope, gathers the selected Teams and email destinations, and asks whether to suppress or intentionally include recent enrollments.
-2. **Provision the Azure foundation.** The Function App, managed identity, storage, monitoring, and bot are deployed. Infrastructure readiness does not yet prove notification delivery.
-3. **Finish external setup.** Complete only the selected Teams and Exchange tasks in [deployment](docs/deployment.md).
-4. **Prove delivery, then enable collection.** While polling remains paused, a protected synthetic test uses the real dispatch path for every selected route. Enable collection only after checking the actual Teams and email results.
+When every selected path works, enable collection:
 
-The recommended enrollment lookback is `0`, which establishes a baseline without notifying for devices enrolled before deployment. A positive lookback intentionally includes recent enrollments. Rerunning `azd up` resumes and revalidates saved choices instead of repeating the completed wizard.
-
-### Finish onboarding
-
-1. For Teams personal messages, upload `teams-app/device-notifications.zip`, approve it, install it for each test recipient, and confirm the installation reaches the bot.
-2. For Teams Workflow delivery, send a test payload and confirm both a successful Workflow run and a message in the intended channel or chat.
-3. For email, `azd up` configures the mailbox-scoped Exchange role after normal administrator sign-in. If that step was interrupted or the sender changes, rerun `./scripts/Configure-ExchangeMail.ps1 -SenderMailbox notifications@contoso.com`, run `azd provision`, then confirm Exchange authorization and mailbox receipt.
-4. Verify destination prerequisites, then send `[TEST]` notifications through the deployed Function and every configured route while collection remains paused:
-
-   ```powershell
-   ./scripts/Test-NotificationDelivery.ps1
-   ```
-
-   When owner routes are configured, the script prompts for a prepared in-scope test user's object ID, UPN, and email address. Confirm every expected Teams card and email actually arrives.
-
-5. Review the saved scope, routes, destinations, and enrollment lookback, then enable collection interactively:
-
-   ```powershell
-   ./scripts/Enable-NotificationCollection.ps1
-   ```
-
-6. Generate approved real registration, enrollment, and compliance events in the monitored scope. Synthetic delivery proves dispatch, not Graph polling or event detection.
-7. Continue monitoring the first production polling cycles; enablement is not a substitute for operational validation.
-
-## What gets deployed
-
-An Azure Functions Flex Consumption app polls supported Microsoft Graph v1.0 endpoints. Azure Tables store overlapping poll watermarks, device snapshots, event fingerprints, Teams conversation references, and delivery history. Azure Queue Storage separates detection from delivery. Application Insights and Log Analytics provide operational evidence.
-
-The deployment also creates a user-assigned managed identity and an Azure Bot. Function execution, storage, and Log Analytics ingestion can incur Azure charges; estimate them for the selected region, polling scope, and retention policy before production use.
-
-```text
-Entra directory audits ----+
-                            +--> normalize/correlate --> Tables --> Queue --> Teams bot DM
-Intune managed devices ----+                                  |--> Teams Workflow
-                                                               +--> Exchange shared mailbox
+```powershell
+./scripts/Enable-NotificationCollection.ps1
 ```
 
-Polling is deliberate: the supported Graph resources do not provide the change-notification coverage this solution needs. Delivery routes are independent, but an unavailable or incompletely configured destination is not proof of delivery and may not be retried. Complete route onboarding before monitoring production scope.
+Finally, generate approved real registration, enrollment, and compliance events for the test scope. Synthetic tests prove delivery; real events prove Graph polling and detection.
 
-See [architecture and boundaries](docs/architecture.md) for the detailed state and delivery model.
+## What is deployed
 
-## Event routing
+```mermaid
+flowchart LR
+    Entra[Entra device audits] --> Function[Azure Function]
+    Intune[Intune managed devices] --> Function
+    Function --> Tables[Tables: checkpoints and history]
+    Tables --> Queue[Notification queue]
+    Queue --> TeamsUser[Owner Teams message]
+    Queue --> TeamsAdmin[Admin Teams Workflow]
+    Queue --> Mail[Shared-mailbox email]
+```
 
-| Event | Available owner routes | Available administrator routes |
-|---|---|---|
-| Device registered | Teams personal message or email | Teams Workflow or email |
-| Device enrolled | Teams personal message or email | Teams Workflow or email |
-| Device noncompliant | Teams personal message or email | Teams Workflow or email |
+The Azure Function polls supported Microsoft Graph v1.0 endpoints. Azure Tables keep checkpoints, device snapshots, fingerprints, Teams conversation references, and delivery history. Azure Queue Storage separates detection from delivery. Application Insights and Log Analytics provide operational evidence.
 
-The wizard applies the selected owner and administrator paths to all three events; advanced configuration can vary them per event. Email and Workflow routes require their corresponding destination settings, and personal Teams delivery requires an installation conversation. Disable paths you have not configured.
+Azure resources can incur charges. Review the selected region, polling scope, and retention needs before production use. See [Architecture and boundaries](docs/architecture.md) for retry and security details.
+
+## Common choices
+
+- Start with a dedicated test group instead of all users.
+- Keep the enrollment lookback at `0` for the first run.
+- Configure at least one administrator route.
+- Do not enable a route until its destination is ready.
+- Keep Teams Workflow callback URLs private; treat them like passwords.
+- Export records your organization must retain before cleanup.
+
+Advanced settings—including per-event routes, schedules, exclusions, privileged users, and quiet hours—are documented in [Configuration](docs/configuration.md).
 
 ## Documentation
 
 | Guide | Use it for |
 |---|---|
-| [Deployment](docs/deployment.md) | Phased setup, Teams and Exchange onboarding, and readiness checkpoints |
-| [Identity and permissions](docs/identity-and-permissions.md) | Human roles, Microsoft Graph access, Teams ownership, and Exchange Application RBAC |
-| [Configuration](docs/configuration.md) | Scope, routes, schedules, exclusions, severity, and quiet hours |
-| [Operations](docs/operations.md) | Validation, troubleshooting, maintenance, and teardown |
-| [Privacy and retention](docs/privacy.md) | Stored data, credentials, retention limitations, export, and purge expectations |
-| [Architecture](docs/architecture.md) | Polling, state, delivery, retries, and security boundaries |
+| [Deployment](docs/deployment.md) | Detailed Teams and Exchange setup |
+| [Identity and permissions](docs/identity-and-permissions.md) | Administrator roles and runtime access |
+| [Configuration](docs/configuration.md) | Scope, routes, schedules, and exclusions |
+| [Operations](docs/operations.md) | Tests, monitoring, troubleshooting, and teardown |
+| [Privacy and retention](docs/privacy.md) | Stored data, credentials, retention, and purge limits |
+| [Architecture](docs/architecture.md) | Polling, delivery, retries, and security boundaries |
 
 ## Cleanup
 
-Before deletion, export any notification history required for audit or incident-response records. Then remove Azure resources:
+Export any history that must be retained, then run:
 
 ```powershell
 azd down --purge --force
 ```
 
-The predown hook removes only exact Exchange objects recorded as created by this environment. Azure deletion does not remove the Teams custom app, Teams app assignments, administrator-owned Workflows, or adopted Exchange objects. Follow the ownership-aware [teardown checklist](docs/operations.md#teardown) and rotate the Workflow callback URL when retiring or transferring the solution.
+Cleanup removes only Exchange objects recorded as created by this environment. It does not remove the Teams custom app, Teams app assignments, administrator-owned Workflows, or adopted Exchange objects. Follow the [teardown checklist](docs/operations.md#teardown).
 
-## Security
+## For contributors
 
-Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md). Do not place Workflow callback URLs, tenant identifiers, user/device details, or notification content in public issues.
+Contributors need Node.js 22 to run tests and builds locally. Administrators deploying with `azd` do not.
+
+```powershell
+Set-Location ./src
+npm ci
+npm test
+npm run typecheck
+npm run build
+```
+
+Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md). Do not put Workflow callback URLs, tenant identifiers, user or device details, or notification content in public issues.

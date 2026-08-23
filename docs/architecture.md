@@ -1,5 +1,15 @@
 # Architecture and boundaries
 
+```mermaid
+flowchart LR
+    Entra[Entra device audits] --> Detect[Detect and normalize]
+    Intune[Intune managed devices] --> Detect
+    Detect --> State[Tables: checkpoints and history]
+    State --> Queue[Notification queue]
+    Queue --> Owner[Owner: Teams or email]
+    Queue --> Admin[Admins: Teams Workflow or email]
+```
+
 ## Collection and readiness
 
 Collection is disabled by default. The first deployment creates the Azure foundation and assigns runtime permissions, but polling does not begin until administrators configure destination prerequisites and prove every selected route through a protected synthetic endpoint. The endpoint is function-key protected, works only while collection is paused, and invokes the normal dispatch path. A fingerprint binds proof to the exact routing and destination configuration; changing it invalidates enablement proof.
@@ -13,6 +23,18 @@ The Intune timer queries `GET /deviceManagement/managedDevices` every 15 minutes
 Registration actor, explicit owner, Entra device ID, and Intune managed-device ID remain distinct. When an audit has no explicit owner, the registering user is the end-user recipient while remaining identified as the actor. Registration and enrollment are separate lifecycle facts even when they correlate to the same Entra device ID.
 
 ## State and retries
+
+```mermaid
+flowchart TD
+    Found[Event found] --> Reserve{New fingerprint?}
+    Reserve -- No --> Skip[Skip duplicate]
+    Reserve -- Yes --> Queue[Place on queue]
+    Queue --> Deliver[Try every selected route]
+    Deliver --> Record[Record successful routes]
+    Deliver --> Retry{Temporary failure?}
+    Retry -- Yes --> Queue
+    Retry -- After 5 attempts --> Poison[Poison queue for investigation]
+```
 
 - `DeviceNotificationState` stores watermarks, snapshots, and Teams conversation references.
 - `DeviceEventFingerprints` reserves normalized events before queueing and suppresses overlapping audit polls.
