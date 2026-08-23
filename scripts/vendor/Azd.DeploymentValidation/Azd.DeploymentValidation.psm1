@@ -108,6 +108,38 @@ function New-AzdCheckOutcome {
     return $outcome
 }
 
+function New-AzdCheckFailure {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [ValidatePattern('^[a-z][A-Za-z0-9.]+$')]
+        [string] $Code,
+
+        [Parameter(Mandatory)]
+        [string] $Summary,
+
+        [AllowNull()]
+        [object] $Expected,
+
+        [hashtable] $Details = @{},
+
+        [Parameter(Mandatory)]
+        [string] $Remediation
+    )
+
+    if (@($Details.Keys | Where-Object { [string]::Equals(
+                    [string] $_, 'failureCode', [System.StringComparison]::OrdinalIgnoreCase) }).Count -gt 0) {
+        throw "Details cannot redefine the reserved 'failureCode' field."
+    }
+
+    $actual = [ordered] @{ failureCode = $Code }
+    foreach ($name in $Details.Keys) {
+        $actual[[string] $name] = $Details[$name]
+    }
+    New-AzdCheckOutcome -Status fail -Summary $Summary -Expected $Expected `
+        -Actual $actual -Remediation $Remediation
+}
+
 function New-AzdValidationCheckDefinition {
     [CmdletBinding()]
     param(
@@ -137,6 +169,9 @@ function New-AzdValidationCheckDefinition {
         [AllowNull()]
         [string] $Remediation,
 
+        [ValidatePattern('^[a-z][a-z0-9.-]+$')]
+        [string[]] $DependsOn = @(),
+
         [string] $SkipReason
     )
 
@@ -149,6 +184,7 @@ function New-AzdValidationCheckDefinition {
         sideEffect = $SideEffect
         expected = $Expected
         remediation = $Remediation
+        dependsOn = @($DependsOn)
         skipReason = $SkipReason
     }
     $definition.PSObject.TypeNames.Insert(0, 'Azd.Validation.CheckDefinition')
@@ -167,11 +203,39 @@ function Invoke-AzdValidationSet {
         [switch] $AllowSyntheticDelivery
     )
 
+    $declaredIds = @{}
     foreach ($definition in $Definitions) {
         if ($definition.PSObject.TypeNames -notcontains 'Azd.Validation.CheckDefinition') {
             throw 'Project adapters must return definitions created by New-AzdValidationCheckDefinition.'
         }
-        Invoke-AzdValidationCheck `
+        if ($declaredIds.ContainsKey($definition.id)) {
+            throw "Project validation check ID '$($definition.id)' is duplicated."
+        }
+        foreach ($dependencyId in @($definition.dependsOn)) {
+            if (-not $declaredIds.ContainsKey($dependencyId)) {
+                throw "Project validation check '$($definition.id)' depends on unknown or non-earlier check '$dependencyId'."
+            }
+        }
+        $declaredIds[$definition.id] = $true
+    }
+
+    $completedStatuses = @{}
+    foreach ($definition in $Definitions) {
+        $effectiveSkipReason = $definition.skipReason
+        if (-not $Plan -and -not $effectiveSkipReason) {
+            $blockedDependencies = @(
+                foreach ($dependencyId in @($definition.dependsOn)) {
+                    if (-not $completedStatuses.ContainsKey($dependencyId) -or
+                        $completedStatuses[$dependencyId] -notin 'pass', 'warning', 'info') {
+                        $dependencyId
+                    }
+                }
+            )
+            if ($blockedDependencies.Count -gt 0) {
+                $effectiveSkipReason = 'Prerequisite checks did not pass: {0}.' -f ($blockedDependencies -join ', ')
+            }
+        }
+        $result = Invoke-AzdValidationCheck `
             -Id $definition.id `
             -Phase $definition.phase `
             -Title $definition.title `
@@ -180,9 +244,11 @@ function Invoke-AzdValidationSet {
             -SideEffect $definition.sideEffect `
             -Expected $definition.expected `
             -Remediation $definition.remediation `
-            -SkipReason $definition.skipReason `
+            -SkipReason $effectiveSkipReason `
             -Plan:$Plan `
             -AllowSyntheticDelivery:$AllowSyntheticDelivery
+        $completedStatuses[$definition.id] = $result.status
+        $result
     }
 }
 
@@ -510,6 +576,7 @@ Export-ModuleMember -Function @(
     'ConvertTo-AzdSafeData',
     'Invoke-AzdValidationSet',
     'Invoke-AzdValidationCheck',
+    'New-AzdCheckFailure',
     'New-AzdCheckOutcome',
     'New-AzdValidationCheckDefinition',
     'New-AzdValidationReport',
