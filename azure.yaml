@@ -6,12 +6,6 @@ requiredVersions:
 infra:
   provider: bicep
   path: infra
-services:
-  notifier:
-    project: ./src
-    language: ts
-    host: function
-    remoteBuild: true
 hooks:
   preprovision:
     shell: pwsh
@@ -22,6 +16,11 @@ hooks:
     shell: pwsh
     run: ./scripts/Post-Provision.ps1
     interactive: true
+    continueOnError: false
+  predeploy:
+    shell: pwsh
+    run: ./scripts/Deploy-FunctionPackage.ps1
+    interactive: false
     continueOnError: false
   postdeploy:
     shell: pwsh

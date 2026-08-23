@@ -26,6 +26,7 @@ function Get-NotificationConfiguration {
     $validTransports = @('teamsDm', 'teamsWebhook', 'email')
     $usesWebhook = $false
     $usesEmail = $false
+    $usesTeamsDm = $false
     $enabledRouteCount = 0
     foreach ($eventName in $eventNames) {
         $routeEvent = $routing.events.$eventName
@@ -45,6 +46,7 @@ function Get-NotificationConfiguration {
                 if ($audience -eq 'admin' -and $route -eq 'teamsDm') { throw "teamsDm is only valid for the user audience ($eventName)." }
                 if ($route -eq 'teamsWebhook') { $usesWebhook = $true }
                 if ($route -eq 'email') { $usesEmail = $true }
+                if ($route -eq 'teamsDm') { $usesTeamsDm = $true }
                 $enabledRouteCount++
             }
         }
@@ -112,6 +114,7 @@ function Get-NotificationConfiguration {
         Routing = $routing
         UsesWebhook = $usesWebhook
         UsesEmail = $usesEmail
+        UsesTeamsDm = $usesTeamsDm
         EnabledRouteCount = $enabledRouteCount
         AdminEmailRecipients = $emails
         EnrollmentLookbackHours = $lookback

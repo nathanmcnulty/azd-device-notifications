@@ -13,6 +13,7 @@
     "intunePollSchedule": { "value": "${INTUNE_POLL_SCHEDULE}" },
     "enrollmentLookbackHours": { "value": "${ENROLLMENT_LOOKBACK_HOURS}" },
     "auditOverlapMinutes": { "value": "${ENTRA_AUDIT_OVERLAP_MINUTES}" },
-    "collectionEnabled": { "value": "${DEVICE_NOTIFICATION_COLLECTION_ENABLED=false}" }
+    "collectionEnabled": { "value": "${DEVICE_NOTIFICATION_COLLECTION_ENABLED=false}" },
+    "teamsBotEnabled": { "value": "${DEVICE_NOTIFICATION_TEAMS_BOT_ENABLED=false}" }
   }
 }

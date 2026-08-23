@@ -29,9 +29,14 @@ jobs:
         run: npm ci
         working-directory: src
 
-      - name: Test, typecheck, and build
-        run: npm test && npm run typecheck && npm run build
+      - name: Test, typecheck, build, and verify committed runtime
+        run: npm test && npm run typecheck && npm run build && npm run bundle
         working-directory: src
+
+      - name: Confirm the committed runtime matches source
+        run: |
+          git diff --exit-code -- function-package/index.cjs
+          diff --strip-trailing-cr src/host.json function-package/host.json
 
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high

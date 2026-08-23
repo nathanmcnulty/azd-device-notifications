@@ -16,6 +16,7 @@ param enrollmentLookbackHours int
 @maxValue(1440)
 param auditOverlapMinutes int
 param collectionEnabled bool
+param teamsBotEnabled bool
 param tags object = {}
 
 var identityName = 'id-${namePrefix}-${resourceToken}'
@@ -223,7 +224,7 @@ resource diagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' 
   }
 }
 
-resource bot 'Microsoft.BotService/botServices@2022-09-15' = {
+resource bot 'Microsoft.BotService/botServices@2022-09-15' = if (teamsBotEnabled) {
   name: botName
   location: 'global'
   tags: tags
@@ -239,7 +240,7 @@ resource bot 'Microsoft.BotService/botServices@2022-09-15' = {
   }
 }
 
-resource teamsChannel 'Microsoft.BotService/botServices/channels@2022-09-15' = {
+resource teamsChannel 'Microsoft.BotService/botServices/channels@2022-09-15' = if (teamsBotEnabled) {
   parent: bot
   name: 'MsTeamsChannel'
   location: 'global'
@@ -254,4 +255,4 @@ output functionAppUrl string = 'https://${functionApp.properties.defaultHostName
 output storageAccountName string = storage.name
 output workloadClientId string = identity.properties.clientId
 output workloadPrincipalId string = identity.properties.principalId
-output botName string = bot.name
+output botName string = teamsBotEnabled ? bot.name : ''

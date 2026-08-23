@@ -6,9 +6,11 @@ flowchart LR
     Intune[Intune managed devices] --> Detect
     Detect --> State[Tables: checkpoints and history]
     State --> Queue[Notification queue]
-    Queue --> Owner[Owner: Teams or email]
+    Queue --> Owner[Owner: personal Teams bot or email]
     Queue --> Admin[Admins: Teams Workflow or email]
 ```
+
+The ready-to-run Node.js Function is committed in `function-package`; administrators do not build it or restore npm packages. The TypeScript source remains in `src`, and continuous integration proves that the committed bundle matches that source. Bot Service is deployed only when a personal Teams owner route is selected.
 
 ## Collection and readiness
 

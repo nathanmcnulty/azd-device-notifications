@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'Tenant.Guards.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'Configuration.Validation.psm1') -Force
 
-foreach ($command in @('az', 'azd', 'node', 'npm')) {
+foreach ($command in @('az', 'azd')) {
     if (-not (Get-Command $command -ErrorAction SilentlyContinue)) { throw "Required command '$command' was not found." }
 }
 foreach ($name in @('AZURE_SUBSCRIPTION_ID', 'AZURE_TENANT_ID', 'AZURE_ENV_NAME')) { [void](Get-AzdEnvironmentValue $name) }
@@ -149,6 +149,7 @@ $configuration = Get-NotificationConfiguration -RoutingJson $env:DEVICE_NOTIFICA
     -EmailSenderUpn $env:EMAIL_SENDER_UPN -EntraPollSchedule $env:ENTRA_POLL_SCHEDULE `
     -IntunePollSchedule $env:INTUNE_POLL_SCHEDULE -EnrollmentLookbackHours $env:ENROLLMENT_LOOKBACK_HOURS `
     -AuditOverlapMinutes $env:ENTRA_AUDIT_OVERLAP_MINUTES
+Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_TEAMS_BOT_ENABLED' $configuration.UsesTeamsDm.ToString().ToLowerInvariant()
 $userCount = @($configuration.Routing.monitoredUserIds).Count
 $groupCount = @($configuration.Routing.monitoredGroupIds).Count
 if ($userCount -eq 0 -and $groupCount -eq 0 -and $env:DEVICE_NOTIFICATION_TENANT_WIDE_CONFIRMED -ne 'true') {

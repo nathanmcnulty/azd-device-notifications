@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.46.1.21595",
-      "templateHash": "16412344928608116624"
+      "templateHash": "7539728786853925169"
     }
   },
   "parameters": {
@@ -56,6 +56,10 @@
       "maxValue": 1440
     },
     "collectionEnabled": {
+      "type": "bool",
+      "defaultValue": false
+    },
+    "teamsBotEnabled": {
       "type": "bool",
       "defaultValue": false
     }
@@ -126,6 +130,9 @@
           "collectionEnabled": {
             "value": "[parameters('collectionEnabled')]"
           },
+          "teamsBotEnabled": {
+            "value": "[parameters('teamsBotEnabled')]"
+          },
           "tags": {
             "value": "[variables('tags')]"
           }
@@ -137,7 +144,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.46.1.21595",
-              "templateHash": "6367666474894833134"
+              "templateHash": "4430038393464196583"
             }
           },
           "parameters": {
@@ -182,6 +189,9 @@
               "maxValue": 1440
             },
             "collectionEnabled": {
+              "type": "bool"
+            },
+            "teamsBotEnabled": {
               "type": "bool"
             },
             "tags": {
@@ -576,6 +586,7 @@
               ]
             },
             {
+              "condition": "[parameters('teamsBotEnabled')]",
               "type": "Microsoft.BotService/botServices",
               "apiVersion": "2022-09-15",
               "name": "[variables('botName')]",
@@ -599,6 +610,7 @@
               ]
             },
             {
+              "condition": "[parameters('teamsBotEnabled')]",
               "type": "Microsoft.BotService/botServices/channels",
               "apiVersion": "2022-09-15",
               "name": "[format('{0}/{1}', variables('botName'), 'MsTeamsChannel')]",
@@ -637,7 +649,7 @@
             },
             "botName": {
               "type": "string",
-              "value": "[variables('botName')]"
+              "value": "[if(parameters('teamsBotEnabled'), variables('botName'), '')]"
             }
           }
         }

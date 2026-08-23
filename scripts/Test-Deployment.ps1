@@ -11,7 +11,7 @@ foreach ($name in @('AZURE_SUBSCRIPTION_ID', 'AZURE_TENANT_ID', 'AZURE_RESOURCE_
         'ENTRA_POLL_SCHEDULE', 'INTUNE_POLL_SCHEDULE', 'ENROLLMENT_LOOKBACK_HOURS', 'ENTRA_AUDIT_OVERLAP_MINUTES',
         'DEVICE_NOTIFICATION_COLLECTION_ENABLED', 'DEVICE_NOTIFICATION_ONBOARDING_STATUS')) { [void](Get-AzdEnvironmentValue $name) }
 Assert-AzdTenantContext
-foreach ($name in @('AZURE_RESOURCE_GROUP', 'AZURE_FUNCTION_APP_NAME', 'AZURE_WORKLOAD_PRINCIPAL_ID', 'AZURE_WORKLOAD_CLIENT_ID', 'TEAMS_BOT_NAME')) {
+foreach ($name in @('AZURE_RESOURCE_GROUP', 'AZURE_FUNCTION_APP_NAME', 'AZURE_WORKLOAD_PRINCIPAL_ID', 'AZURE_WORKLOAD_CLIENT_ID')) {
     if (-not [Environment]::GetEnvironmentVariable($name)) { throw "$name is required." }
 }
 
@@ -37,12 +37,19 @@ foreach ($role in $managed | Where-Object { $_.Name -notin $requiredNames }) {
     if ($role.Id -in $assignments.value.appRoleId) { throw "Unneeded conditional Microsoft Graph role remains assigned: $($role.Name)." }
 }
 
-$bot = & az resource show --subscription $env:AZURE_SUBSCRIPTION_ID --resource-group $env:AZURE_RESOURCE_GROUP `
-    --resource-type Microsoft.BotService/botServices --name $env:TEAMS_BOT_NAME --api-version 2022-09-15 -o json | ConvertFrom-Json
-if ($LASTEXITCODE -ne 0 -or $bot.properties.msaAppId -ne $env:AZURE_WORKLOAD_CLIENT_ID -or
-    $bot.properties.endpoint -ne "$($env:AZURE_FUNCTION_APP_URL)/api/messages") { throw 'Azure Bot identity or endpoint configuration is incorrect.' }
-$response = Invoke-WebRequest -Method Post -Uri "$($env:AZURE_FUNCTION_APP_URL)/api/messages" -ContentType 'application/json' -Body '{}' -SkipHttpErrorCheck
-if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 300) { throw 'The Bot endpoint accepted an unauthenticated request.' }
+if ($configuration.UsesTeamsDm) {
+    if (-not $env:TEAMS_BOT_NAME) { throw 'TEAMS_BOT_NAME is required for personal Teams notification routes.' }
+    $bot = & az resource show --subscription $env:AZURE_SUBSCRIPTION_ID --resource-group $env:AZURE_RESOURCE_GROUP `
+        --resource-type Microsoft.BotService/botServices --name $env:TEAMS_BOT_NAME --api-version 2022-09-15 -o json | ConvertFrom-Json
+    if ($LASTEXITCODE -ne 0 -or $bot.properties.msaAppId -ne $env:AZURE_WORKLOAD_CLIENT_ID -or
+        $bot.properties.endpoint -ne "$($env:AZURE_FUNCTION_APP_URL)/api/messages") { throw 'Azure Bot identity or endpoint configuration is incorrect.' }
+    $response = Invoke-WebRequest -Method Post -Uri "$($env:AZURE_FUNCTION_APP_URL)/api/messages" -ContentType 'application/json' -Body '{}' -SkipHttpErrorCheck
+    if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 300) { throw 'The Bot endpoint accepted an unauthenticated request.' }
+} else {
+    $botCount = & az resource list --subscription $env:AZURE_SUBSCRIPTION_ID --resource-group $env:AZURE_RESOURCE_GROUP `
+        --resource-type Microsoft.BotService/botServices --query 'length(@)' -o tsv
+    if ($LASTEXITCODE -ne 0 -or $botCount -ne '0') { throw 'Bot Service must be absent when no personal Teams route is enabled.' }
+}
 
 foreach ($policyName in @('ftp', 'scm')) {
     $allow = & az resource show --subscription $env:AZURE_SUBSCRIPTION_ID --resource-group $env:AZURE_RESOURCE_GROUP `
