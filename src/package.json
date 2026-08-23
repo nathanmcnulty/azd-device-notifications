@@ -12,14 +12,14 @@
   "dependencies": {
     "@azure/data-tables": "^13.3.0",
     "@azure/functions": "^4.7.2",
-    "@azure/identity": "^4.11.1",
+    "@azure/identity": "^4.13.2",
     "@azure/storage-queue": "^12.27.0",
     "botbuilder": "^4.23.3"
   },
   "devDependencies": {
     "@types/node": "^22.15.30",
-    "typescript": "^5.8.3",
-    "vitest": "^3.2.3"
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.11"
   },
   "engines": {
     "node": ">=22"
