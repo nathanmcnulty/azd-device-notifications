@@ -5,4 +5,8 @@
 teams-app/*.zip
 src/dist/
 src/node_modules/
+reports/
+testResults.xml
 function-package/*.zip
+reports/
+testResults.xml

@@ -122,6 +122,6 @@ Noninteractive collection enablement additionally requires:
 - current `DEVICE_NOTIFICATION_DELIVERY_TESTED=true` and a matching `DEVICE_NOTIFICATION_DELIVERY_TEST_FINGERPRINT`; and
 - `DEVICE_NOTIFICATION_ENABLE_CONFIRMATION=ENABLE SELECTED SCOPE` or `ENABLE ALL USERS`, exactly matching the effective scope.
 
-The fingerprint is produced only by a complete `Test-NotificationDelivery.ps1` run. It is technical dispatch evidence but not proof of Graph event detection. Retain the actual Teams Workflow run, Teams message, email receipt, and later Graph-backed drill evidence outside the azd environment.
+The fingerprint is produced only by a complete `Test-Deployment.ps1 -TestDelivery` run. It is technical dispatch evidence but not proof of Graph event detection. Retain the actual Teams Workflow run, Teams message, email receipt, and later Graph-backed drill evidence outside the azd environment.
 
 `Enable-NotificationCollection.ps1 -AllowUntestedDestination` is an emergency override for a destination that cannot be tested. Interactive use requires the additional exact phrase `ENABLE WITHOUT DELIVERY PROOF` and warns that events may be missed. Avoid the override for normal deployment and record the accepted risk when it is unavoidable.

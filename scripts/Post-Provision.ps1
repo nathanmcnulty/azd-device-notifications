@@ -77,7 +77,7 @@ if ($configuration.UsesTeamsDm) {
 
 if ($env:DEVICE_NOTIFICATION_COLLECTION_ENABLED -ne 'true') {
     Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_ONBOARDING_STATUS' 'delivery-validation-required'
-    Write-Host 'Infrastructure permissions are ready. Collection remains PAUSED until Test-NotificationDelivery.ps1 passes and Enable-NotificationCollection.ps1 is run.'
+    Write-Host 'Infrastructure permissions are ready. Collection remains PAUSED until Test-Deployment.ps1 -TestDelivery passes and Enable-NotificationCollection.ps1 is run.'
 } else {
     Write-Host "Infrastructure permissions are ready. Collection remains ENABLED with onboarding status '$($env:DEVICE_NOTIFICATION_ONBOARDING_STATUS)'."
 }

@@ -105,10 +105,14 @@ While collection is still paused, run:
 
 ```powershell
 ./scripts/Test-Deployment.ps1
-./scripts/Test-NotificationDelivery.ps1
+./scripts/Test-Deployment.ps1 -TestDelivery
 ```
 
 The second command sends `[TEST]` notifications through the real delivery code. Confirm that every expected Teams card and email arrives. An HTTP success alone is not proof that a person received the message.
+
+`Test-Deployment.ps1` writes a schema-validated, secret-redacted report to
+`reports/deployment-validation.json`. Use `-Plan` to inspect the checks without
+authentication, cloud requests, endpoint probes, or delivery.
 
 When every selected path works, enable collection:
 
