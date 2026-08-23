@@ -3,66 +3,79 @@ param()
 
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'Tenant.Guards.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot 'Configuration.Validation.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot 'Graph.Management.psm1') -Force
+foreach ($name in @('AZURE_SUBSCRIPTION_ID', 'AZURE_TENANT_ID', 'AZURE_WORKLOAD_PRINCIPAL_ID', 'AZURE_WORKLOAD_CLIENT_ID',
+        'AZURE_FUNCTION_APP_URL', 'DEVICE_NOTIFICATION_ROUTING_JSON', 'TEAMS_ADMIN_WEBHOOK_URL', 'ADMIN_EMAIL_RECIPIENTS',
+        'EMAIL_SENDER_UPN', 'ENTRA_POLL_SCHEDULE', 'INTUNE_POLL_SCHEDULE', 'ENROLLMENT_LOOKBACK_HOURS', 'ENTRA_AUDIT_OVERLAP_MINUTES',
+        'DEVICE_NOTIFICATION_COLLECTION_ENABLED', 'DEVICE_NOTIFICATION_ONBOARDING_STATUS')) {
+    [void](Get-AzdEnvironmentValue $name)
+}
 Assert-AzdTenantContext
 
 foreach ($name in @('AZURE_WORKLOAD_PRINCIPAL_ID', 'AZURE_WORKLOAD_CLIENT_ID', 'AZURE_FUNCTION_APP_URL')) {
     if (-not [Environment]::GetEnvironmentVariable($name)) { throw "$name was not returned by provisioning." }
 }
 
-function Invoke-GraphJson {
-    param([Parameter(Mandatory)][string] $Method, [Parameter(Mandatory)][string] $Uri, [object] $Body)
-    $arguments = @('rest', '--method', $Method, '--url', "https://graph.microsoft.com/v1.0$Uri", '--headers', 'Content-Type=application/json')
-    if ($null -ne $Body) { $arguments += @('--body', ($Body | ConvertTo-Json -Depth 10 -Compress)) }
-    for ($attempt = 0; $attempt -lt 6; $attempt++) {
-        $result = & az @arguments 2>&1
-        if ($LASTEXITCODE -eq 0) {
-            if ($result) { return ($result -join "`n") | ConvertFrom-Json }
-            return
-        }
-        if ($attempt -lt 5) { Start-Sleep -Seconds ([Math]::Min([Math]::Pow(2, $attempt), 15)) }
-    }
-    throw "Microsoft Graph request failed after retries: $Method $Uri"
-}
-
-$graph = Invoke-GraphJson -Method GET -Uri "/servicePrincipals?`$filter=appId eq '00000003-0000-0000-c000-000000000000'&`$select=id,appRoles"
+$configuration = Get-NotificationConfiguration -RoutingJson $env:DEVICE_NOTIFICATION_ROUTING_JSON `
+    -TeamsWebhookUrl $env:TEAMS_ADMIN_WEBHOOK_URL -AdminEmailRecipients $env:ADMIN_EMAIL_RECIPIENTS `
+    -EmailSenderUpn $env:EMAIL_SENDER_UPN -EntraPollSchedule $env:ENTRA_POLL_SCHEDULE `
+    -IntunePollSchedule $env:INTUNE_POLL_SCHEDULE -EnrollmentLookbackHours $env:ENROLLMENT_LOOKBACK_HOURS `
+    -AuditOverlapMinutes $env:ENTRA_AUDIT_OVERLAP_MINUTES
+$graphArgs = @{ SubscriptionId = $env:AZURE_SUBSCRIPTION_ID }
+$graph = Invoke-GraphJson -Method GET -Uri "/servicePrincipals?`$filter=appId eq '00000003-0000-0000-c000-000000000000'&`$select=id,appRoles" @graphArgs
 if ($graph.value.Count -ne 1) { throw 'Unable to resolve the Microsoft Graph service principal.' }
 $graphServicePrincipal = $graph.value[0]
-$existing = Invoke-GraphJson -Method GET -Uri "/servicePrincipals/$($env:AZURE_WORKLOAD_PRINCIPAL_ID)/appRoleAssignments"
-$routing = $env:DEVICE_NOTIFICATION_ROUTING_JSON | ConvertFrom-Json
-$permissions = [System.Collections.Generic.List[string]]::new()
-$permissions.Add('AuditLog.Read.All')
-$permissions.Add('DeviceManagementManagedDevices.Read.All')
-if (@($routing.monitoredGroupIds).Count -gt 0) {
-    $permissions.Add('User.ReadBasic.All')
-    $permissions.Add('GroupMember.Read.All')
-}
+$permissions = @(Get-RequiredGraphPermissionNames -Routing $configuration.Routing)
+$plan = @(Resolve-GraphPermissionPlan -GraphServicePrincipal $graphServicePrincipal -RequiredNames $permissions)
+$managedNames = @('AuditLog.Read.All', 'DeviceManagementManagedDevices.Read.All', 'User.ReadBasic.All', 'GroupMember.Read.All')
+$managedRoles = @(Resolve-GraphPermissionPlan -GraphServicePrincipal $graphServicePrincipal -RequiredNames $managedNames)
+$existing = Invoke-GraphJson -Method GET -Uri "/servicePrincipals/$($env:AZURE_WORKLOAD_PRINCIPAL_ID)/appRoleAssignments?`$top=999" -RetryNotFound @graphArgs
 
-foreach ($permission in $permissions) {
-    $role = @($graphServicePrincipal.appRoles | Where-Object { $_.value -eq $permission -and $_.allowedMemberTypes -contains 'Application' })
-    if ($role.Count -ne 1) { throw "Unable to resolve Microsoft Graph application role '$permission'." }
-    if ($existing.value.appRoleId -contains $role[0].id) {
-        Write-Host "Microsoft Graph permission already assigned: $permission"
+foreach ($item in $plan) {
+    if ($existing.value.appRoleId -contains $item.Id) {
+        Write-Host "Microsoft Graph permission already assigned: $($item.Name)"
         continue
     }
     Invoke-GraphJson -Method POST -Uri "/servicePrincipals/$($env:AZURE_WORKLOAD_PRINCIPAL_ID)/appRoleAssignments" -Body @{
         principalId = $env:AZURE_WORKLOAD_PRINCIPAL_ID
         resourceId = $graphServicePrincipal.id
-        appRoleId = $role[0].id
-    } | Out-Null
-    Write-Host "Assigned Microsoft Graph permission: $permission"
+        appRoleId = $item.Id
+    } -RetryNotFound @graphArgs | Out-Null
+    Write-Host "Assigned Microsoft Graph permission: $($item.Name)"
 }
 
 foreach ($permission in @('User.ReadBasic.All', 'GroupMember.Read.All')) {
     if ($permissions -contains $permission) { continue }
-    $role = @($graphServicePrincipal.appRoles | Where-Object { $_.value -eq $permission -and $_.allowedMemberTypes -contains 'Application' })
-    $assignment = @($existing.value | Where-Object { $_.appRoleId -eq $role[0].id })
+    $role = $managedRoles | Where-Object Name -eq $permission
+    $assignment = @($existing.value | Where-Object { $_.appRoleId -eq $role.Id })
     foreach ($item in $assignment) {
-        Invoke-GraphJson -Method DELETE -Uri "/servicePrincipals/$($env:AZURE_WORKLOAD_PRINCIPAL_ID)/appRoleAssignments/$($item.id)" | Out-Null
+        Invoke-GraphJson -Method DELETE -Uri "/servicePrincipals/$($env:AZURE_WORKLOAD_PRINCIPAL_ID)/appRoleAssignments/$($item.id)" @graphArgs | Out-Null
         Write-Host "Removed unneeded Microsoft Graph permission: $permission"
     }
+}
+
+$verified = Invoke-GraphJson -Method GET -Uri "/servicePrincipals/$($env:AZURE_WORKLOAD_PRINCIPAL_ID)/appRoleAssignments?`$top=999" -RetryNotFound @graphArgs
+foreach ($item in $plan) {
+    if ($item.Id -notin $verified.value.appRoleId) { throw "Microsoft Graph permission verification failed: $($item.Name)." }
+}
+foreach ($item in $managedRoles | Where-Object { $_.Name -notin $permissions }) {
+    if ($item.Id -in $verified.value.appRoleId) { throw "Unneeded Microsoft Graph permission remains assigned: $($item.Name)." }
+}
+
+if ($configuration.UsesEmail -and (Get-AzdEnvironmentValue 'DEVICE_NOTIFICATION_EXCHANGE_CONFIGURED') -ne 'true') {
+    if ($env:AZD_NON_INTERACTIVE -eq 'true' -or $env:CI -eq 'true') {
+        throw 'Email routing is enabled but Exchange Application RBAC is not configured. Run Configure-ExchangeMail.ps1 interactively.'
+    }
+    & (Join-Path $PSScriptRoot 'Configure-ExchangeMail.ps1') -SenderMailbox $env:EMAIL_SENDER_UPN
 }
 
 & (Join-Path $PSScriptRoot 'New-TeamsAppPackage.ps1')
 if ($LASTEXITCODE -ne 0) { throw 'Teams app package generation failed.' }
 
-Write-Host 'Provisioning completed. Mail.Send was intentionally not granted; run Configure-ExchangeMail.ps1 only when email routing is enabled.'
+if ($env:DEVICE_NOTIFICATION_COLLECTION_ENABLED -ne 'true') {
+    Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_ONBOARDING_STATUS' 'delivery-validation-required'
+    Write-Host 'Infrastructure permissions are ready. Collection remains PAUSED until Test-NotificationDelivery.ps1 passes and Enable-NotificationCollection.ps1 is run.'
+} else {
+    Write-Host "Infrastructure permissions are ready. Collection remains ENABLED with onboarding status '$($env:DEVICE_NOTIFICATION_ONBOARDING_STATUS)'."
+}

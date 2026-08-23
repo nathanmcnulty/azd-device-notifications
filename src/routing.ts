@@ -37,11 +37,14 @@ const defaults: RoutingConfig = {
 };
 
 const transports = new Set<Transport>(["teamsDm", "teamsWebhook", "email"]);
-const validTransports = (value: unknown, fallback: Transport[], name: string): Transport[] => {
+const validTransports = (value: unknown, fallback: Transport[], name: string, audience: Audience): Transport[] => {
   if (value === undefined) return fallback;
   if (!Array.isArray(value) || value.some((item) => typeof item !== "string" || !transports.has(item as Transport))) {
     throw new Error(`${name} must be an array containing only teamsDm, teamsWebhook, or email`);
   }
+  if (audience === "user" && value.includes("teamsWebhook")) throw new Error(`${name} cannot contain teamsWebhook`);
+  if (audience === "admin" && value.includes("teamsDm")) throw new Error(`${name} cannot contain teamsDm`);
+  if (new Set(value).size !== value.length) throw new Error(`${name} cannot contain duplicate transports`);
   return value as Transport[];
 };
 
@@ -64,8 +67,8 @@ export function loadRoutingConfig(raw = process.env.ROUTING_CONFIG_JSON): Routin
   const input = JSON.parse(raw) as Partial<RoutingConfig>;
   const inputEvents = input.events ?? {} as RoutingConfig["events"];
   const events = Object.fromEntries((Object.keys(defaults.events) as EventType[]).map((type) => [type, {
-    user: validTransports(inputEvents[type]?.user, defaults.events[type].user, `events.${type}.user`),
-    admin: validTransports(inputEvents[type]?.admin, defaults.events[type].admin, `events.${type}.admin`)
+    user: validTransports(inputEvents[type]?.user, defaults.events[type].user, `events.${type}.user`, "user"),
+    admin: validTransports(inputEvents[type]?.admin, defaults.events[type].admin, `events.${type}.admin`, "admin")
   }])) as Record<EventType, EventRouteConfig>;
   const quietHours = input.quietHours;
   if (quietHours) {
@@ -106,9 +109,6 @@ function inQuietHours(date: Date, quiet: NonNullable<RoutingConfig["quietHours"]
 export function routeEvent(event: DeviceEvent, config: RoutingConfig, now = new Date()): DeliveryRoute[] {
   if (normalizedIncludes(config.excludedOwnership, event.device.ownership) ||
       normalizedIncludes(config.excludedOperatingSystems, event.device.operatingSystem)) return [];
-  const subjectId = event.owner?.id ?? event.actor?.id;
-  if (config.monitoredUserIds.length && (!subjectId || !normalizedIncludes(config.monitoredUserIds, subjectId))) return [];
-
   const severity: Severity = event.owner?.id && normalizedIncludes(config.privilegedUserIds, event.owner.id) ? "high" : event.severity;
   const quietUser = severity === "low" && config.quietHours ? inQuietHours(now, config.quietHours) : false;
   const route = config.events[event.type];

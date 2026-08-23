@@ -8,6 +8,7 @@ export interface DeviceEvent {
   type: EventType;
   occurredAt: string;
   severity: Severity;
+  synthetic?: boolean;
   device: {
     id?: string;
     azureADDeviceId?: string;
@@ -66,14 +67,20 @@ export interface ConversationRepository {
 export class PermanentDeliveryError extends Error {}
 
 export interface OutboxRepository {
-  reserve(fingerprint: string, event: DeviceEvent): Promise<boolean>;
+  reserve(fingerprint: string, event: DeviceEvent): Promise<"reserved" | "published" | "pending">;
   release(fingerprint: string): Promise<void>;
   enqueue(event: DeviceEvent): Promise<void>;
 }
 
+export type DeliveryReservation =
+  | { status: "reserved"; etag: string }
+  | { status: "delivered" }
+  | { status: "pending" };
+
 export interface NotificationHistoryRepository {
-  has(key: string): Promise<boolean>;
-  record(key: string, sentAt: string): Promise<void>;
+  reserveDelivery(key: string): Promise<DeliveryReservation>;
+  releaseDelivery(key: string, etag: string): Promise<void>;
+  completeDelivery(key: string, etag: string, sentAt: string): Promise<void>;
 }
 
 export interface Logger {

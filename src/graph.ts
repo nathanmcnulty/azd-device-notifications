@@ -13,33 +13,68 @@ export interface GraphClientLike {
 
 const sleep = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
+function requestIdentifier(response: Response): string {
+  for (const name of ["request-id", "client-request-id"]) {
+    const value = response.headers.get(name);
+    if (value && /^[a-z0-9._:-]{1,128}$/i.test(value)) return ` (${name}: ${value})`;
+  }
+  return "";
+}
+
+interface TokenCredentialLike {
+  getToken(scope: string): Promise<{ token: string } | null>;
+}
+
+function retryDelay(response: Response, attempt: number, now: () => number): number {
+  const header = response.headers.get("Retry-After");
+  if (header?.trim()) {
+    if (/^\d+$/.test(header.trim())) return Math.min(Number(header.trim()) * 1000, 60_000);
+    const retryAt = Date.parse(header);
+    if (Number.isFinite(retryAt)) return Math.min(Math.max(retryAt - now(), 0), 60_000);
+  }
+  return Math.min(2 ** attempt * 1000, 60_000);
+}
+
 export class GraphClient implements GraphClientLike {
   constructor(
-    private readonly credential = new DefaultAzureCredential({
+    private readonly credential: TokenCredentialLike = new DefaultAzureCredential({
       managedIdentityClientId: process.env.MANAGED_IDENTITY_CLIENT_ID
     }),
-    private readonly fetcher: typeof fetch = fetch
+    private readonly fetcher: typeof fetch = fetch,
+    private readonly sleeper: (milliseconds: number) => Promise<unknown> = sleep,
+    private readonly now: () => number = Date.now
   ) {}
 
   private async request(url: string, init?: RequestInit): Promise<Response> {
     for (let attempt = 0; attempt < 6; attempt++) {
-      const token = await this.credential.getToken("https://graph.microsoft.com/.default");
-      const response = await this.fetcher(url, {
-        ...init,
-        headers: {
-          Authorization: `Bearer ${token.token}`,
-          "Content-Type": "application/json",
-          ...init?.headers
+      let response: Response;
+      try {
+        const token = await this.credential.getToken("https://graph.microsoft.com/.default");
+        if (!token) throw new Error("TokenUnavailable");
+        response = await this.fetcher(url, {
+          ...init,
+          headers: {
+            Authorization: `Bearer ${token.token}`,
+            "Content-Type": "application/json",
+            ...init?.headers
+          }
+        });
+      } catch (error) {
+        if (attempt === 5) {
+          const errorName = error instanceof Error && /^[a-z0-9._-]{1,80}$/i.test(error.name) ? error.name : "UnknownError";
+          throw new Error(`Graph retry limit reached after ${errorName}`);
         }
-      });
-      if (response.ok) return response;
-      if (response.status !== 429 && response.status < 500) {
-        throw new Error(`Graph request failed with status ${response.status}`);
+        await this.sleeper(Math.min(2 ** attempt * 1000, 60_000));
+        continue;
       }
-      if (attempt === 5) throw new Error(`Graph retry limit reached with status ${response.status}`);
-      const retryAfter = response.headers.get("Retry-After");
-      const seconds = retryAfter && /^\d+$/.test(retryAfter) ? Number(retryAfter) : 2 ** attempt;
-      await sleep(Math.min(seconds * 1000, 60_000));
+      if (response.ok) return response;
+      const identifier = requestIdentifier(response);
+      if (response.status !== 408 && response.status !== 429 && response.status < 500) {
+        throw new Error(`Graph request failed with status ${response.status}${identifier}`);
+      }
+      if (attempt === 5) throw new Error(`Graph retry limit reached with status ${response.status}${identifier}`);
+      await response.body?.cancel().catch(() => undefined);
+      await this.sleeper(retryDelay(response, attempt, this.now));
     }
     throw new Error("Graph retry loop exhausted");
   }

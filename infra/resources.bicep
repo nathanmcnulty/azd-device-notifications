@@ -9,8 +9,13 @@ param emailSenderUpn string
 param teamsAdminWebhookUrl string
 param entraPollSchedule string
 param intunePollSchedule string
+@minValue(0)
+@maxValue(720)
 param enrollmentLookbackHours int
+@minValue(1)
+@maxValue(1440)
 param auditOverlapMinutes int
+param collectionEnabled bool
 param tags object = {}
 
 var identityName = 'id-${namePrefix}-${resourceToken}'
@@ -189,10 +194,23 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
         { name: 'INTUNE_POLL_SCHEDULE', value: intunePollSchedule }
         { name: 'ENROLLMENT_LOOKBACK_HOURS', value: string(enrollmentLookbackHours) }
         { name: 'ENTRA_AUDIT_OVERLAP_MINUTES', value: string(auditOverlapMinutes) }
+        { name: 'DEVICE_NOTIFICATION_COLLECTION_ENABLED', value: string(collectionEnabled) }
       ]
     }
   }
   dependsOn: [blobRole, queueRole, tableRole, insightsRole]
+}
+
+resource ftpPolicy 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2024-04-01' = {
+  parent: functionApp
+  name: 'ftp'
+  properties: { allow: false }
+}
+
+resource scmPolicy 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2024-04-01' = {
+  parent: functionApp
+  name: 'scm'
+  properties: { allow: false }
 }
 
 resource diagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {

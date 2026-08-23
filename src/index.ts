@@ -1,11 +1,13 @@
 import { app, type InvocationContext, type Timer } from "@azure/functions";
 import type { DeviceEvent, Logger } from "./domain.js";
 import { ManagedIdentityTeamsBot } from "./bot.js";
-import { dispatchEvent } from "./delivery.js";
+import { boundedNumber } from "./configuration.js";
+import { dispatchEvent, validateDeliveryConfiguration } from "./delivery.js";
 import { GraphClient } from "./graph.js";
 import { pollDirectoryAudits, pollManagedDevices } from "./pollers.js";
 import { AzureStateRepository } from "./repositories.js";
 import { loadRoutingConfig } from "./routing.js";
+import { runSyntheticDeliveryProof } from "./synthetic.js";
 
 const required = (name: string): string => {
   const value = process.env[name];
@@ -13,6 +15,14 @@ const required = (name: string): string => {
   return value;
 };
 
+const routing = loadRoutingConfig();
+const adminEmails = (process.env.ADMIN_EMAIL_RECIPIENTS ?? "").split(",").map((item) => item.trim()).filter(Boolean);
+const webhookUrl = process.env.TEAMS_ADMIN_WEBHOOK_URL;
+const emailSenderUpn = process.env.EMAIL_SENDER_UPN;
+validateDeliveryConfiguration(routing, { adminEmails, webhookUrl, emailSenderUpn });
+const collectionEnabled = process.env.DEVICE_NOTIFICATION_COLLECTION_ENABLED?.toLowerCase() === "true";
+const entraOverlapMs = boundedNumber("ENTRA_AUDIT_OVERLAP_MINUTES", process.env.ENTRA_AUDIT_OVERLAP_MINUTES, 15, 1, 1_440) * 60_000;
+const enrollmentLookbackMs = boundedNumber("ENROLLMENT_LOOKBACK_HOURS", process.env.ENROLLMENT_LOOKBACK_HOURS, 0, 0, 720) * 3_600_000;
 const storageAccount = required("STORAGE_ACCOUNT_NAME");
 const state = new AzureStateRepository({
   tableEndpoint: process.env.TABLE_ENDPOINT ?? `https://${storageAccount}.table.core.windows.net`,
@@ -21,7 +31,6 @@ const state = new AzureStateRepository({
   managedIdentityClientId: process.env.MANAGED_IDENTITY_CLIENT_ID
 });
 const graph = new GraphClient();
-const routing = loadRoutingConfig();
 
 const logger = (context: InvocationContext): Logger => ({
   info: (message, properties) => context.log(message, properties ?? {}),
@@ -40,16 +49,16 @@ app.timer("pollDirectoryAudits", {
   useMonitor: true,
   handler: async (_timer: Timer, context: InvocationContext) => pollDirectoryAudits({
     graph, watermarks: state, outbox: state, logger: logger(context), now: new Date(),
-    overlapMs: Number(process.env.ENTRA_AUDIT_OVERLAP_MINUTES ?? "15") * 60_000
+    overlapMs: entraOverlapMs, enabled: collectionEnabled
   })
 });
 
 app.timer("pollManagedDevices", {
-  schedule: process.env.INTUNE_POLL_SCHEDULE ?? "30 */5 * * * *",
+  schedule: process.env.INTUNE_POLL_SCHEDULE ?? "30 */15 * * * *",
   useMonitor: true,
   handler: async (_timer: Timer, context: InvocationContext) => pollManagedDevices({
     graph, snapshots: state, outbox: state, logger: logger(context), now: new Date(),
-    enrollmentLookbackMs: Number(process.env.ENROLLMENT_LOOKBACK_HOURS ?? "24") * 3_600_000
+    enrollmentLookbackMs, enabled: collectionEnabled
   })
 });
 
@@ -60,9 +69,7 @@ app.storageQueue("dispatchDeviceNotification", {
     const event = (typeof message === "string" ? JSON.parse(message) : message) as DeviceEvent;
     await dispatchEvent(event, {
       graph, bot, history: state, logger: logger(context), routing,
-      adminEmails: (process.env.ADMIN_EMAIL_RECIPIENTS ?? "").split(",").map((item) => item.trim()).filter(Boolean),
-      webhookUrl: process.env.TEAMS_ADMIN_WEBHOOK_URL,
-      emailSenderUpn: process.env.EMAIL_SENDER_UPN
+      adminEmails, webhookUrl, emailSenderUpn
     });
   }
 });
@@ -72,4 +79,21 @@ app.http("teamsMessages", {
   methods: ["POST"],
   authLevel: "anonymous",
   handler: (request) => bot.handle(request)
+});
+
+app.http("testNotificationDelivery", {
+  route: "test-notification-delivery",
+  methods: ["POST"],
+  authLevel: "function",
+  handler: async (request, context) => {
+    let input: Record<string, unknown>;
+    try {
+      input = await request.json() as Record<string, unknown>;
+    } catch {
+      return { status: 400, jsonBody: { success: false, status: "invalid", message: "Request body must be valid JSON." } };
+    }
+    return runSyntheticDeliveryProof(input, {
+      graph, bot, history: state, logger: logger(context), routing, adminEmails, webhookUrl, emailSenderUpn
+    }, collectionEnabled);
+  }
 });
