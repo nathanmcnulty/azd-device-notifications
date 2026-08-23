@@ -1,6 +1,6 @@
 @{
     RootModule = 'Azd.DeploymentValidation.psm1'
-    ModuleVersion = '0.2.0'
+    ModuleVersion = '0.3.2'
     GUID = '55b77c65-9a89-4b7f-9ed0-0c0d9a33e9d9'
     Author = 'Nathan McNulty'
     CompanyName = 'Community'
@@ -12,6 +12,7 @@
         'ConvertTo-AzdSafeData',
         'Invoke-AzdValidationSet',
         'Invoke-AzdValidationCheck',
+        'New-AzdCheckFailure',
         'New-AzdCheckOutcome',
         'New-AzdValidationCheckDefinition',
         'New-AzdValidationReport',

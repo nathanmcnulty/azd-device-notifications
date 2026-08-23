@@ -60,13 +60,7 @@ Describe 'Deployment validation adapter' {
                 foreach ($result in $results | Where-Object {
                         $_.id -ne 'context.template-root' -and $_.id -ne 'context.azure-session'
                     }) {
-                    $failureCode = if ($result.actual -is [System.Collections.IDictionary]) {
-                        $result.actual['failureCode']
-                    }
-                    else {
-                        $result.actual.PSObject.Properties['failureCode'].Value
-                    }
-                    if ($failureCode -ne 'context.prerequisite') {
+                    if ($result.status -ne 'skipped' -or $result.summary -notmatch 'context\.azure-session') {
                         "$($result.id):$($result.status)"
                     }
                 }
@@ -81,16 +75,21 @@ Describe 'Deployment validation adapter' {
 
     It 'accepts only authentication-specific Bot rejections as proof' {
         InModuleScope Deployment.Validation {
-            $script:ValidationContextReady = $true
-            $definition = @(Get-ProjectValidationDefinition | Where-Object id -eq 'security.bot-rejects-unauthenticated')
+            Mock Initialize-DeviceNotificationValidationContext
+            $definitions = @(Get-ProjectValidationDefinition | Where-Object id -in @(
+                    'context.azure-session',
+                    'security.bot-rejects-unauthenticated'
+                ))
 
             Mock Invoke-WebRequest { [pscustomobject] @{ StatusCode = 404 } }
-            $notFound = @(Invoke-AzdValidationSet -Definitions $definition)[0]
+            $notFound = @(Invoke-AzdValidationSet -Definitions $definitions) |
+                Where-Object id -eq 'security.bot-rejects-unauthenticated'
             $notFound.status | Should -Be 'fail'
             $notFound.actual.failureCode | Should -Be 'security.botUnexpectedStatus'
 
             Mock Invoke-WebRequest { [pscustomobject] @{ StatusCode = 401 } }
-            $unauthorized = @(Invoke-AzdValidationSet -Definitions $definition)[0]
+            $unauthorized = @(Invoke-AzdValidationSet -Definitions $definitions) |
+                Where-Object id -eq 'security.bot-rejects-unauthenticated'
             $unauthorized.status | Should -Be 'pass'
             $unauthorized.actual | Should -Be 401
         }
@@ -108,7 +107,7 @@ Describe 'Deployment validation adapter' {
         $component = @($lock.components | Where-Object id -eq 'deployment-validation')
 
         $component.Count | Should -Be 1
-        $component[0].version | Should -Be '0.2.0'
+        $component[0].version | Should -Be '0.3.2'
         $component[0].sourceRevision | Should -Match '^[0-9a-f]{40}$'
         foreach ($file in $component[0].files) {
             $actual = (Get-FileHash -LiteralPath (Join-Path $repoRoot $file.target) -Algorithm SHA256).Hash.ToLowerInvariant()

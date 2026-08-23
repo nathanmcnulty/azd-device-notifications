@@ -36,47 +36,8 @@ $script:RequiredEnvironmentNames = @(
     'TEAMS_BOT_NAME'
 )
 
-$script:ValidationContextReady = $false
 $script:DeliveryScriptPath = $null
 $script:DeliveryParameters = @{}
-
-function New-DeviceNotificationValidationFailure {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [ValidatePattern('^[a-z][A-Za-z0-9.]+$')]
-        [string] $Code,
-
-        [Parameter(Mandatory)]
-        [string] $Summary,
-
-        [Parameter(Mandatory)]
-        [string] $Remediation,
-
-        [AllowNull()]
-        [object] $Expected,
-
-        [hashtable] $Details = @{}
-    )
-
-    $actual = [ordered] @{ failureCode = $Code }
-    foreach ($name in $Details.Keys) {
-        $actual[[string] $name] = $Details[$name]
-    }
-    New-AzdCheckOutcome -Status fail -Summary $Summary -Expected $Expected `
-        -Actual $actual -Remediation $Remediation
-}
-
-function Get-DeviceNotificationContextFailure {
-    [CmdletBinding()]
-    param([Parameter(Mandatory)][string] $CheckName)
-
-    if ($script:ValidationContextReady) { return $null }
-    New-DeviceNotificationValidationFailure -Code 'context.prerequisite' `
-        -Summary "$CheckName was not attempted because exact tenant and subscription validation did not pass." `
-        -Expected 'A validated azd and Azure CLI context.' `
-        -Remediation 'Correct the context.azure-session failure and rerun validation.'
-}
 
 function Resolve-DeviceNotificationContextFailure {
     [CmdletBinding()]
@@ -85,7 +46,7 @@ function Resolve-DeviceNotificationContextFailure {
     $message = [string] $ErrorRecord.Exception.Message
     foreach ($name in $script:RequiredEnvironmentNames) {
         if ($message -eq "$name is required.") {
-            return New-DeviceNotificationValidationFailure -Code 'context.requiredValueMissing' `
+            return New-AzdCheckFailure -Code 'context.requiredValueMissing' `
                 -Summary "The required azd environment value $name is missing." `
                 -Expected 'All required deployment outputs are available.' `
                 -Remediation 'Confirm provisioning completed and the expected azd environment is selected.' `
@@ -93,18 +54,18 @@ function Resolve-DeviceNotificationContextFailure {
         }
     }
     if ($message -like 'Tenant context mismatch.*') {
-        return New-DeviceNotificationValidationFailure -Code 'context.tenantMismatch' `
+        return New-AzdCheckFailure -Code 'context.tenantMismatch' `
             -Summary 'The azd, subscription, and active Azure CLI tenants do not match.' `
             -Expected 'One exact tenant across azd and Azure CLI.' `
             -Remediation 'Sign in through the normal broker or browser flow for the expected tenant and rerun validation.'
     }
     if ($message -like 'Azure subscription mismatch.*') {
-        return New-DeviceNotificationValidationFailure -Code 'context.subscriptionMismatch' `
+        return New-AzdCheckFailure -Code 'context.subscriptionMismatch' `
             -Summary 'The active Azure CLI subscription does not match the azd environment.' `
             -Expected 'The azd subscription is active in Azure CLI.' `
             -Remediation 'Select the expected subscription with az account set and rerun validation.'
     }
-    New-DeviceNotificationValidationFailure -Code 'context.sessionUnavailable' `
+    New-AzdCheckFailure -Code 'context.sessionUnavailable' `
         -Summary 'The cached Azure CLI context could not be validated.' `
         -Expected 'A usable cached Azure CLI session for the azd tenant and subscription.' `
         -Remediation 'Use az login through the normal broker or browser flow, select the expected subscription, and rerun validation.'
@@ -167,10 +128,8 @@ function Get-ProjectValidationDefinition {
         -SideEffect readOnly `
         -Remediation 'Use az login through the normal broker or browser flow, select the expected subscription, and rerun validation.' `
         -Action {
-            $script:ValidationContextReady = $false
             try {
                 Initialize-DeviceNotificationValidationContext
-                $script:ValidationContextReady = $true
                 New-AzdCheckOutcome -Summary 'The cached Azure CLI session matches the azd tenant and subscription.' `
                     -Expected 'One exact tenant and subscription.' -Actual 'Validated'
             }
@@ -185,10 +144,9 @@ function Get-ProjectValidationDefinition {
         -Title 'Notification routing is valid' `
         -Summary 'Notification routes, destinations, polling schedules, and numeric bounds are internally consistent.' `
         -SideEffect none `
+        -DependsOn 'context.azure-session' `
         -Remediation 'Correct the azd environment values identified by the configuration documentation and rerun validation.' `
         -Action {
-            $prerequisite = Get-DeviceNotificationContextFailure -CheckName 'Notification routing validation'
-            if ($prerequisite) { return $prerequisite }
             try {
                 $configuration = Get-DeviceNotificationValidationConfiguration
                 New-AzdCheckOutcome -Summary 'Notification routing configuration is valid.' `
@@ -196,7 +154,7 @@ function Get-ProjectValidationDefinition {
                     -Actual ([ordered] @{ enabledRouteCount = [int] $configuration.EnabledRouteCount })
             }
             catch {
-                New-DeviceNotificationValidationFailure -Code 'configuration.invalid' `
+                New-AzdCheckFailure -Code 'configuration.invalid' `
                     -Summary 'Notification routing configuration is invalid.' `
                     -Expected 'Consistent routes, destinations, schedules, and numeric bounds.' `
                     -Remediation 'Review docs/configuration.md, correct the azd environment values, and rerun validation.'
@@ -209,21 +167,20 @@ function Get-ProjectValidationDefinition {
         -Title 'Function App is running' `
         -Summary 'The deployed notification Function App is running.' `
         -SideEffect readOnly `
+        -DependsOn 'context.azure-session' `
         -Expected 'Running' `
         -Remediation 'Inspect the Function App deployment and runtime logs, then rerun validation.' `
         -Action {
-            $prerequisite = Get-DeviceNotificationContextFailure -CheckName 'Function App runtime validation'
-            if ($prerequisite) { return $prerequisite }
             $state = & az functionapp show --subscription $env:AZURE_SUBSCRIPTION_ID `
                 --resource-group $env:AZURE_RESOURCE_GROUP --name $env:AZURE_FUNCTION_APP_NAME `
                 --query state --only-show-errors --output tsv
             if ($LASTEXITCODE -ne 0) {
-                return (New-DeviceNotificationValidationFailure -Code 'runtime.functionReadFailed' `
+                return (New-AzdCheckFailure -Code 'runtime.functionReadFailed' `
                     -Summary 'The Function App could not be read.' -Expected 'Running' `
                     -Remediation 'Confirm Azure resource read access and the Function App deployment, then rerun validation.')
             }
             if ($state -ne 'Running') {
-                return (New-DeviceNotificationValidationFailure -Code 'runtime.functionNotRunning' `
+                return (New-AzdCheckFailure -Code 'runtime.functionNotRunning' `
                     -Summary 'The Function App is not running.' -Expected 'Running' `
                     -Remediation 'Inspect the Function App deployment and runtime logs, then rerun validation.' `
                     -Details @{ state = [string] $state })
@@ -238,17 +195,16 @@ function Get-ProjectValidationDefinition {
         -Title 'Microsoft Graph application roles are least privilege' `
         -Summary 'Every required Graph application role is assigned and no managed conditional role is unnecessary.' `
         -SideEffect readOnly `
+        -DependsOn 'context.azure-session' `
         -Remediation 'Rerun provisioning after reviewing the configured routing scope and workload identity.' `
         -Action {
-            $prerequisite = Get-DeviceNotificationContextFailure -CheckName 'Microsoft Graph role validation'
-            if ($prerequisite) { return $prerequisite }
             try {
                 $configuration = Get-DeviceNotificationValidationConfiguration
                 $graphArgs = @{ SubscriptionId = $env:AZURE_SUBSCRIPTION_ID }
                 $graph = Invoke-GraphJson -Method GET `
                     -Uri "/servicePrincipals?`$filter=appId eq '00000003-0000-0000-c000-000000000000'&`$select=id,appRoles" @graphArgs
                 if (@($graph.value).Count -ne 1) {
-                    return (New-DeviceNotificationValidationFailure -Code 'identity.graphCatalogUnavailable' `
+                    return (New-AzdCheckFailure -Code 'identity.graphCatalogUnavailable' `
                         -Summary 'The Microsoft Graph application-role catalog could not be resolved exactly once.' `
                         -Expected 'One Microsoft Graph service principal.' `
                         -Remediation 'Confirm Graph directory read access and tenant context, then rerun validation.')
@@ -260,7 +216,7 @@ function Get-ProjectValidationDefinition {
                     -Uri "/servicePrincipals/$($env:AZURE_WORKLOAD_PRINCIPAL_ID)/appRoleAssignments?`$top=999" @graphArgs
                 foreach ($role in $required) {
                     if ($role.Id -notin $assignments.value.appRoleId) {
-                        return (New-DeviceNotificationValidationFailure -Code 'identity.requiredGraphRoleMissing' `
+                        return (New-AzdCheckFailure -Code 'identity.requiredGraphRoleMissing' `
                             -Summary "The required Microsoft Graph role $($role.Name) is missing." `
                             -Expected $requiredNames `
                             -Remediation 'Rerun provisioning after confirming Privileged Role Administrator activation.' `
@@ -272,7 +228,7 @@ function Get-ProjectValidationDefinition {
                 $managed = @(Resolve-GraphPermissionPlan -GraphServicePrincipal $graph.value[0] -RequiredNames $managedNames)
                 foreach ($role in $managed | Where-Object { $_.Name -notin $requiredNames }) {
                     if ($role.Id -in $assignments.value.appRoleId) {
-                        return (New-DeviceNotificationValidationFailure -Code 'identity.unnecessaryGraphRoleAssigned' `
+                        return (New-AzdCheckFailure -Code 'identity.unnecessaryGraphRoleAssigned' `
                             -Summary "The conditional Microsoft Graph role $($role.Name) is assigned but not required." `
                             -Expected $requiredNames `
                             -Remediation 'Rerun provisioning after reviewing the selected monitoring scope.' `
@@ -285,7 +241,7 @@ function Get-ProjectValidationDefinition {
                     -Evidence @{ verifiedRoleNames = $requiredNames }
             }
             catch {
-                New-DeviceNotificationValidationFailure -Code 'identity.graphRoleQueryFailed' `
+                New-AzdCheckFailure -Code 'identity.graphRoleQueryFailed' `
                     -Summary 'Microsoft Graph application-role validation could not be completed.' `
                     -Expected 'Readable role catalog and workload app-role assignments.' `
                     -Remediation 'Confirm Graph directory read access and the exact tenant context, then rerun validation.'
@@ -298,15 +254,14 @@ function Get-ProjectValidationDefinition {
         -Title 'Azure Bot identity and endpoint are exact' `
         -Summary 'The Azure Bot uses the deployed workload identity and Function message endpoint.' `
         -SideEffect readOnly `
+        -DependsOn 'context.azure-session' `
         -Remediation 'Rerun provisioning or correct the Bot identity and messaging endpoint.' `
         -Action {
-            $prerequisite = Get-DeviceNotificationContextFailure -CheckName 'Azure Bot configuration validation'
-            if ($prerequisite) { return $prerequisite }
             $botJson = & az resource show --subscription $env:AZURE_SUBSCRIPTION_ID `
                 --resource-group $env:AZURE_RESOURCE_GROUP --resource-type Microsoft.BotService/botServices `
                 --name $env:TEAMS_BOT_NAME --api-version 2022-09-15 --only-show-errors --output json
             if ($LASTEXITCODE -ne 0 -or -not $botJson) {
-                return (New-DeviceNotificationValidationFailure -Code 'configuration.botReadFailed' `
+                return (New-AzdCheckFailure -Code 'configuration.botReadFailed' `
                     -Summary 'The Azure Bot resource could not be read.' `
                     -Expected 'A readable Azure Bot resource.' `
                     -Remediation 'Confirm Azure resource read access and the Bot deployment, then rerun validation.')
@@ -314,13 +269,13 @@ function Get-ProjectValidationDefinition {
             $bot = $botJson | ConvertFrom-Json
             $expectedEndpoint = "$($env:AZURE_FUNCTION_APP_URL)/api/messages"
             if ($bot.properties.msaAppId -ne $env:AZURE_WORKLOAD_CLIENT_ID) {
-                return (New-DeviceNotificationValidationFailure -Code 'configuration.botIdentityMismatch' `
+                return (New-AzdCheckFailure -Code 'configuration.botIdentityMismatch' `
                     -Summary 'The Azure Bot application identity does not match the deployed workload identity.' `
                     -Expected ([string] $env:AZURE_WORKLOAD_CLIENT_ID) `
                     -Remediation 'Rerun provisioning or correct the Azure Bot application identity.')
             }
             if ($bot.properties.endpoint -ne $expectedEndpoint) {
-                return (New-DeviceNotificationValidationFailure -Code 'configuration.botEndpointMismatch' `
+                return (New-AzdCheckFailure -Code 'configuration.botEndpointMismatch' `
                     -Summary 'The Azure Bot messaging endpoint does not match the deployed Function App.' `
                     -Expected $expectedEndpoint `
                     -Remediation 'Rerun provisioning or correct the Azure Bot messaging endpoint.')
@@ -336,10 +291,9 @@ function Get-ProjectValidationDefinition {
         -Title 'Bot endpoint rejects unauthenticated requests' `
         -Summary 'The Bot endpoint rejects a harmless unauthenticated POST request.' `
         -SideEffect negativeProbe `
+        -DependsOn 'context.azure-session' `
         -Remediation 'Inspect Bot Framework authentication before enabling notification collection.' `
         -Action {
-            $prerequisite = Get-DeviceNotificationContextFailure -CheckName 'Bot authentication rejection probe'
-            if ($prerequisite) { return $prerequisite }
             $activity = @{
                 type = 'message'
                 id = 'azd-validation-probe'
@@ -356,13 +310,13 @@ function Get-ProjectValidationDefinition {
                     -ContentType 'application/json' -Body $activity -SkipHttpErrorCheck
             }
             catch {
-                return (New-DeviceNotificationValidationFailure -Code 'security.botProbeFailed' `
+                return (New-AzdCheckFailure -Code 'security.botProbeFailed' `
                     -Summary 'The Bot authentication probe could not reach the endpoint.' `
                     -Expected 'HTTP 401 or 403.' `
                     -Remediation 'Confirm the Function endpoint is reachable and rerun validation.')
             }
             if ($response.StatusCode -notin @(401, 403)) {
-                return (New-DeviceNotificationValidationFailure -Code 'security.botUnexpectedStatus' `
+                return (New-AzdCheckFailure -Code 'security.botUnexpectedStatus' `
                     -Summary 'The Bot endpoint did not return an authentication-specific rejection.' `
                     -Expected 'HTTP 401 or 403.' -Details @{ statusCode = [int] $response.StatusCode } `
                     -Remediation 'Inspect endpoint health and Bot Framework authentication before enabling collection.')
@@ -377,10 +331,9 @@ function Get-ProjectValidationDefinition {
         -Title 'Basic publishing credentials are disabled' `
         -Summary 'FTP and SCM basic publishing credentials are disabled for the Function App.' `
         -SideEffect readOnly `
+        -DependsOn 'context.azure-session' `
         -Remediation 'Disable FTP and SCM basic publishing credentials and rerun validation.' `
         -Action {
-            $prerequisite = Get-DeviceNotificationContextFailure -CheckName 'Basic publishing credential validation'
-            if ($prerequisite) { return $prerequisite }
             $verifiedPolicies = [System.Collections.Generic.List[string]]::new()
             foreach ($policyName in @('ftp', 'scm')) {
                 $allow = & az resource show --subscription $env:AZURE_SUBSCRIPTION_ID `
@@ -389,7 +342,7 @@ function Get-ProjectValidationDefinition {
                     --name "$($env:AZURE_FUNCTION_APP_NAME)/$policyName" --api-version 2024-04-01 `
                     --query properties.allow --only-show-errors --output tsv
                 if ($LASTEXITCODE -ne 0 -or $allow -ne 'false') {
-                    return (New-DeviceNotificationValidationFailure -Code 'security.basicPublishingEnabled' `
+                    return (New-AzdCheckFailure -Code 'security.basicPublishingEnabled' `
                         -Summary "Function App $policyName basic publishing credentials are not disabled." `
                         -Expected $false -Details @{ policyName = $policyName; allow = [string] $allow } `
                         -Remediation 'Disable FTP and SCM basic publishing credentials and rerun validation.')
@@ -406,16 +359,15 @@ function Get-ProjectValidationDefinition {
         -Title 'Notification collection readiness is explicit' `
         -Summary 'The deployed collection readiness setting is present and valid.' `
         -SideEffect readOnly `
+        -DependsOn 'context.azure-session' `
         -Remediation 'Keep collection paused until delivery testing passes; then use Enable-NotificationCollection.ps1.' `
         -Action {
-            $prerequisite = Get-DeviceNotificationContextFailure -CheckName 'Notification collection readiness validation'
-            if ($prerequisite) { return $prerequisite }
             $setting = & az functionapp config appsettings list --subscription $env:AZURE_SUBSCRIPTION_ID `
                 --resource-group $env:AZURE_RESOURCE_GROUP --name $env:AZURE_FUNCTION_APP_NAME `
                 --query "[?name=='DEVICE_NOTIFICATION_COLLECTION_ENABLED'].value | [0]" `
                 --only-show-errors --output tsv
             if ($LASTEXITCODE -ne 0 -or $setting -notin @('true', 'false')) {
-                return (New-DeviceNotificationValidationFailure -Code 'runtime.collectionSettingInvalid' `
+                return (New-AzdCheckFailure -Code 'runtime.collectionSettingInvalid' `
                     -Summary 'The collection readiness setting is missing or invalid.' `
                     -Expected 'true or false.' `
                     -Remediation 'Rerun provisioning and confirm DEVICE_NOTIFICATION_COLLECTION_ENABLED is present.')
@@ -437,17 +389,16 @@ function Get-ProjectValidationDefinition {
         -Title 'Configured notification routes deliver synthetic events' `
         -Summary 'Every selected synthetic event was delivered through all configured routes.' `
         -SideEffect syntheticDelivery `
+        -DependsOn 'context.azure-session' `
         -Remediation 'Keep collection paused, correct the failed Teams or email route, and rerun with -TestDelivery.' `
         -Action {
-            $prerequisite = Get-DeviceNotificationContextFailure -CheckName 'Synthetic notification delivery'
-            if ($prerequisite) { return $prerequisite }
             try {
                 & $script:DeliveryScriptPath @script:DeliveryParameters
                 New-AzdCheckOutcome -Summary 'Every selected synthetic event was delivered through all configured routes.' `
                     -Expected @($script:DeliveryParameters.EventType) -Actual @($script:DeliveryParameters.EventType)
             }
             catch {
-                New-DeviceNotificationValidationFailure -Code 'delivery.syntheticFailed' `
+                New-AzdCheckFailure -Code 'delivery.syntheticFailed' `
                     -Summary 'Synthetic notification delivery failed.' `
                     -Expected @($script:DeliveryParameters.EventType) `
                     -Remediation 'Keep collection paused, inspect the selected route evidence, and rerun with -TestDelivery.'
