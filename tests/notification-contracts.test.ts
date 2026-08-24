@@ -34,6 +34,17 @@ describe("notification contract adapter", () => {
     });
   });
 
+  it.each(["2026-08-23", "2026-08-23T12:34:56"])("normalizes parseable non-RFC3339 time %s", (occurredAt) => {
+    const envelope = normalizeDeviceNotification({ ...noncompliantEvent, occurredAt }, environment);
+    expect(envelope.occurredAt).toBe(new Date(occurredAt).toISOString());
+    expect(envelope.occurredAt).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+  });
+
+  it("rejects an unparseable occurrence time before route evaluation", () => {
+    expect(() => normalizeDeviceNotification({ ...noncompliantEvent, occurredAt: "not-a-date" }, environment))
+      .toThrow("Notification occurrence time is invalid");
+  });
+
   it("preserves Graph correlation and synthetic state without logging envelope data", () => {
     const envelope = normalizeDeviceNotification({
       ...noncompliantEvent,

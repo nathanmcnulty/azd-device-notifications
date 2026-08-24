@@ -28,6 +28,18 @@ function hasStatus(error: unknown, statusCode: number): boolean {
 const OUTBOX_STALE_MS = 15 * 60_000;
 const DELIVERY_STALE_MS = 2 * 60_000;
 
+export function classifyDeliveryReservation(
+  entity: Pick<ReservationEntity, "status" | "sentAt" | "reservedAt">,
+  now = Date.now()
+): "delivered" | "pending" | undefined {
+  if (entity.status === "delivered" || (!entity.status && entity.sentAt)) return "delivered";
+  const reservedAt = entity.reservedAt ? new Date(entity.reservedAt).valueOf() : Number.NaN;
+  if (entity.status === "pending" && Number.isFinite(reservedAt) && now - reservedAt <= DELIVERY_STALE_MS) {
+    return "pending";
+  }
+  return undefined;
+}
+
 export class AzureStateRepository implements WatermarkRepository, SnapshotRepository, OutboxRepository, NotificationHistoryRepository, ConversationRepository {
   private readonly state: TableClient;
   private readonly fingerprints: TableClient;
@@ -157,7 +169,8 @@ export class AzureStateRepository implements WatermarkRepository, SnapshotReposi
     if (legacyDeliveredKey && legacyDeliveredKey !== key) {
       try {
         const legacy = await this.history.getEntity<ReservationEntity>("notification", legacyDeliveredKey);
-        if (legacy.status === "delivered" || (!legacy.status && legacy.sentAt)) return { status: "delivered" };
+        const legacyState = classifyDeliveryReservation(legacy);
+        if (legacyState) return { status: legacyState };
       } catch (error) {
         if (!hasStatus(error, 404)) throw error;
       }
@@ -172,11 +185,8 @@ export class AzureStateRepository implements WatermarkRepository, SnapshotReposi
     } catch (error) {
       if (!isConflict(error)) throw error;
       const existing = await this.history.getEntity<ReservationEntity>("notification", key);
-      if (existing.status === "delivered" || (!existing.status && existing.sentAt)) return { status: "delivered" };
-      const reservedAt = existing.reservedAt ? new Date(existing.reservedAt).valueOf() : Number.NaN;
-      if (existing.status === "pending" && Number.isFinite(reservedAt) && Date.now() - reservedAt <= DELIVERY_STALE_MS) {
-        return { status: "pending" };
-      }
+      const existingState = classifyDeliveryReservation(existing);
+      if (existingState) return { status: existingState };
       try {
         await this.history.updateEntity({
           partitionKey: "notification", rowKey: key, reservedAt: new Date().toISOString(), status: "pending", etag: existing.etag
