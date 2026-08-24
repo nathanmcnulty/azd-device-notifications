@@ -7,6 +7,7 @@ describe("directory audit normalization", () => {
     const event = normalizeRegistration({ ...registrationAudit, targetResources: [...registrationAudit.targetResources!].reverse() });
     expect(event).toMatchObject({
       type: "deviceRegistered",
+      correlationId: "audit-correlation-1",
       device: { azureADDeviceId: ids.device },
       actor: { id: ids.actor },
       owner: { id: ids.owner }

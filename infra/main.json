@@ -100,8 +100,17 @@
           "resourceToken": {
             "value": "[variables('resourceToken')]"
           },
+          "environmentName": {
+            "value": "[parameters('environmentName')]"
+          },
           "tenantId": {
             "value": "[parameters('tenantId')]"
+          },
+          "subscriptionId": {
+            "value": "[subscription().subscriptionId]"
+          },
+          "resourceGroupName": {
+            "value": "[variables('resourceGroupName')]"
           },
           "routingConfigJson": {
             "value": "[parameters('routingConfigJson')]"
@@ -157,7 +166,16 @@
             "resourceToken": {
               "type": "string"
             },
+            "environmentName": {
+              "type": "string"
+            },
             "tenantId": {
+              "type": "string"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "resourceGroupName": {
               "type": "string"
             },
             "routingConfigJson": {
@@ -468,8 +486,20 @@
                       "value": "device-notifications"
                     },
                     {
+                      "name": "AZURE_ENV_NAME",
+                      "value": "[parameters('environmentName')]"
+                    },
+                    {
                       "name": "AZURE_TENANT_ID",
                       "value": "[parameters('tenantId')]"
+                    },
+                    {
+                      "name": "AZURE_SUBSCRIPTION_ID",
+                      "value": "[parameters('subscriptionId')]"
+                    },
+                    {
+                      "name": "AZURE_RESOURCE_GROUP",
+                      "value": "[parameters('resourceGroupName')]"
                     },
                     {
                       "name": "TEAMS_BOT_APP_ID",

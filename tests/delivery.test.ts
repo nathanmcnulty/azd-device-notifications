@@ -1,13 +1,20 @@
 import { describe, expect, it, vi } from "vitest";
 import { dispatchEvent, shapeAdaptiveCard, validateDeliveryConfiguration } from "../src/delivery.js";
-import type { DeliveryReservation, Logger, NotificationHistoryRepository } from "../src/domain.js";
+import { PermanentDeliveryError, type DeliveryReservation, type Logger, type NotificationHistoryRepository } from "../src/domain.js";
+import {
+  legacyDeliveryKey, normalizeDeviceNotification, notificationContractRoute, notificationIdempotencyKey,
+  type NotificationDeliveryResult
+} from "../src/notification-contracts.js";
 import { loadRoutingConfig } from "../src/routing.js";
 import { noncompliantEvent } from "./fixtures.js";
 
 class MemoryHistory implements NotificationHistoryRepository {
   private readonly states = new Map<string, { status: "pending" | "delivered"; etag: string }>();
+  readonly reservations: Array<{ key: string; legacyDeliveredKey?: string }> = [];
   private sequence = 0;
-  async reserveDelivery(key: string): Promise<DeliveryReservation> {
+  async reserveDelivery(key: string, legacyDeliveredKey?: string): Promise<DeliveryReservation> {
+    this.reservations.push({ key, legacyDeliveredKey });
+    if (legacyDeliveredKey && this.states.get(legacyDeliveredKey)?.status === "delivered") return { status: "delivered" };
     const existing = this.states.get(key);
     if (existing) return { status: existing.status };
     const etag = String(++this.sequence);
@@ -21,9 +28,30 @@ class MemoryHistory implements NotificationHistoryRepository {
     if (this.states.get(key)?.etag !== etag) throw new Error("reservation changed");
     this.states.set(key, { status: "delivered", etag });
   }
+  seedDelivered(key: string) { this.states.set(key, { status: "delivered", etag: "legacy" }); }
 }
 
 const logger: Logger = { info() {}, warn() {}, error() {} };
+const environment = {
+  name: "test", tenantId: "11111111-1111-4111-8111-111111111111",
+  subscriptionId: "22222222-2222-4222-8222-222222222222", resourceGroup: "rg-device-notifications-test"
+};
+
+function captureLogger() {
+  const entries: Array<{ message: string; properties?: Record<string, unknown> }> = [];
+  const logger: Logger = {
+    info: (message, properties) => entries.push({ message, properties }),
+    warn: (message, properties) => entries.push({ message, properties }),
+    error: (message, properties) => entries.push({ message, properties })
+  };
+  return { logger, entries };
+}
+
+function contractResults(entries: Array<{ message: string }>): NotificationDeliveryResult[] {
+  return entries
+    .filter(({ message }) => message.startsWith("AZD_NOTIFICATION_DELIVERY_RESULT "))
+    .map(({ message }) => JSON.parse(message.slice("AZD_NOTIFICATION_DELIVERY_RESULT ".length)) as NotificationDeliveryResult);
+}
 
 describe("delivery shaping", () => {
   it("shapes owner bot delivery without Graph chat sends", async () => {
@@ -35,13 +63,65 @@ describe("delivery shaping", () => {
     }));
     const dependencies = {
       graph: { async *pages<T>() { yield [] as T[]; }, post },
-      bot: { sendToEntraUser }, history, logger, routing, adminEmails: []
+      bot: { sendToEntraUser }, history, logger, routing, adminEmails: [], environment
     };
     await dispatchEvent(noncompliantEvent, dependencies);
     await dispatchEvent(noncompliantEvent, dependencies);
     expect(sendToEntraUser).toHaveBeenCalledTimes(1);
     expect(sendToEntraUser).toHaveBeenCalledWith(noncompliantEvent.owner?.id, expect.objectContaining({ type: "AdaptiveCard" }));
     expect(post).not.toHaveBeenCalled();
+  });
+
+  it("emits succeeded then already-delivered results under one canonical key", async () => {
+    const captured = captureLogger();
+    const history = new MemoryHistory();
+    const sendToEntraUser = vi.fn(async () => undefined);
+    const route = { audience: "user" as const, transport: "teamsDm" as const, severity: "high" as const };
+    const routing = loadRoutingConfig(JSON.stringify({
+      events: { deviceNoncompliant: { user: ["teamsDm"], admin: [] } }
+    }));
+    const dependencies = {
+      graph: { async *pages<T>() { yield [] as T[]; }, async post() {} },
+      bot: { sendToEntraUser }, history, logger: captured.logger, routing, adminEmails: [], environment,
+      now: new Date("2026-08-23T12:00:00.000Z")
+    };
+
+    await dispatchEvent(noncompliantEvent, dependencies);
+    await dispatchEvent(noncompliantEvent, dependencies);
+
+    const results = contractResults(captured.entries);
+    const envelope = normalizeDeviceNotification(noncompliantEvent, environment);
+    const contractRoute = notificationContractRoute(route);
+    const canonicalKey = notificationIdempotencyKey(
+      environment.tenantId, envelope.eventType, envelope.eventId, contractRoute.id
+    );
+    expect(results.map(({ status }) => status)).toEqual(["succeeded", "alreadyDelivered"]);
+    expect(results.every(({ idempotencyKey }) => idempotencyKey === canonicalKey)).toBe(true);
+    expect(history.reservations.every(({ key }) => key === canonicalKey)).toBe(true);
+    expect(sendToEntraUser).toHaveBeenCalledOnce();
+  });
+
+  it("recognizes a delivered legacy key but reserves new work only with the canonical key", async () => {
+    const captured = captureLogger();
+    const history = new MemoryHistory();
+    const sendToEntraUser = vi.fn(async () => undefined);
+    const route = { audience: "user" as const, transport: "teamsDm" as const, severity: "high" as const };
+    const legacyKey = legacyDeliveryKey(noncompliantEvent, route);
+    history.seedDelivered(legacyKey);
+    const routing = loadRoutingConfig(JSON.stringify({
+      events: { deviceNoncompliant: { user: ["teamsDm"], admin: [] } }
+    }));
+
+    await dispatchEvent(noncompliantEvent, {
+      graph: { async *pages<T>() { yield [] as T[]; }, async post() {} },
+      bot: { sendToEntraUser }, history, logger: captured.logger, routing, adminEmails: [], environment
+    });
+
+    const [reservation] = history.reservations;
+    expect(reservation.legacyDeliveredKey).toBe(legacyKey);
+    expect(reservation.key).not.toBe(legacyKey);
+    expect(contractResults(captured.entries)).toMatchObject([{ status: "alreadyDelivered", attempt: 0 }]);
+    expect(sendToEntraUser).not.toHaveBeenCalled();
   });
 
   it("does not put unsafe identifiers into card actions", () => {
@@ -61,6 +141,7 @@ describe("delivery shaping", () => {
       logger,
       routing,
       adminEmails: [],
+      environment,
       webhookUrl: "https://example.invalid/workflow",
       fetcher
     })).rejects.toThrow("1 notification route(s) failed");
@@ -82,7 +163,8 @@ describe("delivery shaping", () => {
       history: new MemoryHistory(),
       logger,
       routing,
-      adminEmails: []
+      adminEmails: [],
+      environment
     });
     expect(sendToEntraUser).not.toHaveBeenCalled();
   });
@@ -96,7 +178,7 @@ describe("delivery shaping", () => {
         async *pages<T>() { yield [] as T[]; }, async post() {},
         async checkUserMemberGroups() { return memberships; }
       },
-      bot: { sendToEntraUser }, history: new MemoryHistory(), logger, adminEmails: [],
+      bot: { sendToEntraUser }, history: new MemoryHistory(), logger, adminEmails: [], environment,
       routing: loadRoutingConfig(JSON.stringify({
         events: { deviceNoncompliant: { user: ["teamsDm"], admin: [] } },
         monitoredUserIds: [otherUser], monitoredGroupIds: [groupId]
@@ -116,9 +198,10 @@ describe("delivery shaping", () => {
     const sendToEntraUser = vi.fn(async () => blocked);
     const history = new MemoryHistory();
     const routing = loadRoutingConfig(JSON.stringify({ events: { deviceNoncompliant: { user: ["teamsDm"], admin: [] } } }));
+    const captured = captureLogger();
     const dependencies = {
       graph: { async *pages<T>() { yield [] as T[]; }, async post() {} },
-      bot: { sendToEntraUser }, history, logger, routing, adminEmails: []
+      bot: { sendToEntraUser }, history, logger: captured.logger, routing, adminEmails: [], environment
     };
     const first = dispatchEvent(noncompliantEvent, dependencies);
     await vi.waitFor(() => expect(sendToEntraUser).toHaveBeenCalledOnce());
@@ -127,20 +210,51 @@ describe("delivery shaping", () => {
     await first;
     await dispatchEvent(noncompliantEvent, dependencies);
     expect(sendToEntraUser).toHaveBeenCalledOnce();
+    expect(contractResults(captured.entries).map(({ status }) => status)).toEqual([
+      "skipped", "succeeded", "alreadyDelivered"
+    ]);
+    expect(contractResults(captured.entries)[0]).toMatchObject({
+      attempt: 0, skipReason: "concurrentDelivery"
+    });
+  });
+
+  it("maps a permanent provider outcome to a non-retryable safe failure", async () => {
+    const captured = captureLogger();
+    const routing = loadRoutingConfig(JSON.stringify({
+      events: { deviceNoncompliant: { user: ["teamsDm"], admin: [] } }
+    }));
+    const summary = await dispatchEvent(noncompliantEvent, {
+      graph: { async *pages<T>() { yield [] as T[]; }, async post() {} },
+      bot: { async sendToEntraUser() { throw new PermanentDeliveryError("private recipient detail"); } },
+      history: new MemoryHistory(), logger: captured.logger, routing, adminEmails: [], environment
+    });
+
+    expect(summary.routes).toMatchObject([{ status: "unavailable" }]);
+    expect(contractResults(captured.entries)).toMatchObject([{
+      status: "failed", attempt: 1,
+      failure: { category: "destinationUnavailable", retryable: false, code: "DestinationUnavailable" }
+    }]);
+    expect(JSON.stringify(captured.entries)).not.toContain("private recipient detail");
   });
 
   it("releases a failed route so a queue retry can deliver it", async () => {
+    const captured = captureLogger();
     const sendToEntraUser = vi.fn()
-      .mockRejectedValueOnce(new Error("temporary"))
+      .mockRejectedValueOnce(new Error("sensitive-token https://private.example.test?sig=secret"))
       .mockResolvedValueOnce(undefined);
     const dependencies = {
       graph: { async *pages<T>() { yield [] as T[]; }, async post() {} }, bot: { sendToEntraUser },
-      history: new MemoryHistory(), logger, adminEmails: [],
+      history: new MemoryHistory(), logger: captured.logger, adminEmails: [], environment,
       routing: loadRoutingConfig(JSON.stringify({ events: { deviceNoncompliant: { user: ["teamsDm"], admin: [] } } }))
     };
     await expect(dispatchEvent(noncompliantEvent, dependencies)).rejects.toThrow("1 notification route(s) failed");
     await dispatchEvent(noncompliantEvent, dependencies);
     expect(sendToEntraUser).toHaveBeenCalledTimes(2);
+    expect(contractResults(captured.entries)).toMatchObject([
+      { status: "failed", attempt: 1, failure: { category: "transientProvider", retryable: true, code: "TransientDeliveryFailure" } },
+      { status: "succeeded", attempt: 1 }
+    ]);
+    expect(JSON.stringify(captured.entries)).not.toMatch(/sensitive-token|private\.example\.test|[?&]sig=/);
   });
 
   it("rejects enabled routes whose required destinations are missing", () => {

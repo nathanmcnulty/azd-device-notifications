@@ -23,6 +23,24 @@
           "sha256": "f219f008bb04a2eed5230a623191a8caff5363b319d02cbd8c9dd0e239848828"
         }
       ]
+    },
+    {
+      "id": "notification-contracts",
+      "version": "1.0.0",
+      "sourceRepository": "https://github.com/nathanmcnulty/azd-reference",
+      "sourceRevision": "c8f827cb00b1369d64f468494db651eb84aa1d3c",
+      "files": [
+        {
+          "source": "schemas/notification-envelope.schema.json",
+          "target": "contracts/notifications/notification-envelope.schema.json",
+          "sha256": "627f13be9f5d5813cc350423d164c9bce97d56c3b050cfa753f8f702ee193b4e"
+        },
+        {
+          "source": "schemas/notification-delivery-result.schema.json",
+          "target": "contracts/notifications/notification-delivery-result.schema.json",
+          "sha256": "180f0bf8c23cf1797c5bf52f8cb66b79cb947145e03cc60d51d1c73d5ae2e552"
+        }
+      ]
     }
   ]
 }

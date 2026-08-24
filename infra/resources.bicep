@@ -1,7 +1,10 @@
 param location string
 param namePrefix string
 param resourceToken string
+param environmentName string
 param tenantId string
+param subscriptionId string
+param resourceGroupName string
 param routingConfigJson string
 param adminEmailRecipients string
 param emailSenderUpn string
@@ -182,7 +185,10 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
         { name: 'TABLE_ENDPOINT', value: storage.properties.primaryEndpoints.table }
         { name: 'QUEUE_ENDPOINT', value: storage.properties.primaryEndpoints.queue }
         { name: 'NOTIFICATION_QUEUE_NAME', value: 'device-notifications' }
+        { name: 'AZURE_ENV_NAME', value: environmentName }
         { name: 'AZURE_TENANT_ID', value: tenantId }
+        { name: 'AZURE_SUBSCRIPTION_ID', value: subscriptionId }
+        { name: 'AZURE_RESOURCE_GROUP', value: resourceGroupName }
         { name: 'TEAMS_BOT_APP_ID', value: identity.properties.clientId }
         { name: 'MicrosoftAppType', value: 'UserAssignedMSI' }
         { name: 'MicrosoftAppId', value: identity.properties.clientId }

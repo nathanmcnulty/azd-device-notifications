@@ -40,7 +40,10 @@ module resources 'resources.bicep' = {
     location: location
     namePrefix: take(replace(environmentName, '-', ''), 12)
     resourceToken: resourceToken
+    environmentName: environmentName
     tenantId: tenantId
+    subscriptionId: subscription().subscriptionId
+    resourceGroupName: resourceGroup.name
     routingConfigJson: routingConfigJson
     adminEmailRecipients: adminEmailRecipients
     emailSenderUpn: emailSenderUpn
