@@ -11,6 +11,7 @@ export const ids = {
 
 export const registrationAudit: DirectoryAudit = {
   id: ids.audit,
+  correlationId: "audit-correlation-1",
   activityDateTime: "2026-08-17T10:00:00.000Z",
   activityDisplayName: "Register device",
   result: "success",

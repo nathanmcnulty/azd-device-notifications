@@ -4,6 +4,7 @@ import { ManagedIdentityTeamsBot } from "./bot.js";
 import { boundedNumber } from "./configuration.js";
 import { dispatchEvent, validateDeliveryConfiguration } from "./delivery.js";
 import { GraphClient } from "./graph.js";
+import { loadNotificationEnvironment } from "./notification-contracts.js";
 import { pollDirectoryAudits, pollManagedDevices } from "./pollers.js";
 import { AzureStateRepository } from "./repositories.js";
 import { loadRoutingConfig } from "./routing.js";
@@ -21,6 +22,7 @@ const webhookUrl = process.env.TEAMS_ADMIN_WEBHOOK_URL;
 const emailSenderUpn = process.env.EMAIL_SENDER_UPN;
 validateDeliveryConfiguration(routing, { adminEmails, webhookUrl, emailSenderUpn });
 const collectionEnabled = process.env.DEVICE_NOTIFICATION_COLLECTION_ENABLED?.toLowerCase() === "true";
+const notificationEnvironment = loadNotificationEnvironment();
 const entraOverlapMs = boundedNumber("ENTRA_AUDIT_OVERLAP_MINUTES", process.env.ENTRA_AUDIT_OVERLAP_MINUTES, 15, 1, 1_440) * 60_000;
 const enrollmentLookbackMs = boundedNumber("ENROLLMENT_LOOKBACK_HOURS", process.env.ENROLLMENT_LOOKBACK_HOURS, 0, 0, 720) * 3_600_000;
 const storageAccount = required("STORAGE_ACCOUNT_NAME");
@@ -69,7 +71,7 @@ app.storageQueue("dispatchDeviceNotification", {
     const event = (typeof message === "string" ? JSON.parse(message) : message) as DeviceEvent;
     await dispatchEvent(event, {
       graph, bot, history: state, logger: logger(context), routing,
-      adminEmails, webhookUrl, emailSenderUpn
+      adminEmails, webhookUrl, emailSenderUpn, environment: notificationEnvironment
     });
   }
 });
@@ -93,7 +95,8 @@ app.http("testNotificationDelivery", {
       return { status: 400, jsonBody: { success: false, status: "invalid", message: "Request body must be valid JSON." } };
     }
     return runSyntheticDeliveryProof(input, {
-      graph, bot, history: state, logger: logger(context), routing, adminEmails, webhookUrl, emailSenderUpn
+      graph, bot, history: state, logger: logger(context), routing, adminEmails, webhookUrl, emailSenderUpn,
+      environment: notificationEnvironment
     }, collectionEnabled);
   }
 });

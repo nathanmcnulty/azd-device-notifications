@@ -8,6 +8,7 @@ export interface DeviceEvent {
   type: EventType;
   occurredAt: string;
   severity: Severity;
+  correlationId?: string;
   synthetic?: boolean;
   device: {
     id?: string;
@@ -78,7 +79,7 @@ export type DeliveryReservation =
   | { status: "pending" };
 
 export interface NotificationHistoryRepository {
-  reserveDelivery(key: string): Promise<DeliveryReservation>;
+  reserveDelivery(key: string, legacyDeliveredKey?: string): Promise<DeliveryReservation>;
   releaseDelivery(key: string, etag: string): Promise<void>;
   completeDelivery(key: string, etag: string, sentAt: string): Promise<void>;
 }

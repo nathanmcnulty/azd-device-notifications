@@ -12,6 +12,10 @@ class ProofHistory implements NotificationHistoryRepository {
 
 const logger = { info() {}, warn() {}, error() {} };
 const graph = { async *pages<T>() { yield [] as T[]; }, async post() {} };
+const environment = {
+  name: "test", tenantId: "11111111-1111-4111-8111-111111111111",
+  subscriptionId: "22222222-2222-4222-8222-222222222222", resourceGroup: "rg-device-notifications-test"
+};
 const emptyEvents = {
   deviceRegistered: { user: [] as never[], admin: [] as never[] },
   deviceEnrolled: { user: [] as never[], admin: [] as never[] },
@@ -26,7 +30,7 @@ describe("synthetic delivery proof", () => {
       testUser: { id: "00000000-0000-0000-0000-000000000000", upn: "", email: "", displayName: "Device notification test user" }
     }, {
       graph, bot: { async sendToEntraUser() {} }, history: new ProofHistory(), logger,
-      routing: loadRoutingConfig(JSON.stringify({ events: emptyEvents })), adminEmails: [], fetcher
+      routing: loadRoutingConfig(JSON.stringify({ events: emptyEvents })), adminEmails: [], fetcher, environment
     }, true);
     expect(response).toMatchObject({ status: 409, jsonBody: { success: false, eventType: "deviceRegistered", status: "refused" } });
     expect(fetcher).not.toHaveBeenCalled();
@@ -42,7 +46,7 @@ describe("synthetic delivery proof", () => {
       testUser: { id: "00000000-0000-0000-0000-000000000000", upn: "", email: "", displayName: "Device notification test user" }
     }, {
       graph, bot: { async sendToEntraUser() {} }, history: new ProofHistory(), logger, routing,
-      adminEmails: [], webhookUrl: "https://example.invalid/workflow", fetcher
+      adminEmails: [], webhookUrl: "https://example.invalid/workflow", fetcher, environment
     }, false, new Date("2026-08-22T12:00:00.000Z"));
     expect(response).toMatchObject({
       status: 200,
@@ -69,7 +73,7 @@ describe("synthetic delivery proof", () => {
     }, {
       graph,
       bot: { async sendToEntraUser() { throw new PermanentDeliveryError("No installation"); } },
-      history: new ProofHistory(), logger, routing, adminEmails: []
+      history: new ProofHistory(), logger, routing, adminEmails: [], environment
     }, false);
     expect(response).toMatchObject({
       status: 424,
@@ -86,7 +90,7 @@ describe("synthetic delivery proof", () => {
     const response = await runSyntheticDeliveryProof({
       eventType: "deviceRegistered", testUser: { id: "dddddddd-dddd-4ddd-8ddd-dddddddddddd" }
     }, {
-      graph, bot: { async sendToEntraUser() {} }, history: new ProofHistory(), logger, routing, adminEmails: []
+      graph, bot: { async sendToEntraUser() {} }, history: new ProofHistory(), logger, routing, adminEmails: [], environment
     }, false);
     expect(response).toMatchObject({ status: 424, jsonBody: { success: false,
       summary: { selectedRoutes: 0, suppressedReason: "subject outside monitored scope" } } });

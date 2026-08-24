@@ -34,14 +34,14 @@ export class ManagedIdentityTeamsBot implements TeamsBotSender {
       MicrosoftAppTenantId: tenantId
     });
     this.adapter = new CloudAdapter(authentication);
-    this.adapter.onTurnError = async (_context, error) => {
-      this.logger.error("Teams bot turn failed", { errorName: error.name, message: error.message });
+    this.adapter.onTurnError = async () => {
+      this.logger.error("Teams bot turn failed", { code: "TeamsBotTurnFailure" });
     };
   }
 
   async sendToEntraUser(ownerObjectId: string, card: unknown): Promise<void> {
     const reference = await this.conversations.getConversation(ownerObjectId) as Partial<ConversationReference> | undefined;
-    if (!reference?.serviceUrl || !reference.conversation) throw new PermanentDeliveryError(`No Teams bot installation conversation for owner ${ownerObjectId}`);
+    if (!reference?.serviceUrl || !reference.conversation) throw new PermanentDeliveryError("Teams bot installation conversation unavailable");
     await this.adapter.continueConversationAsync(this.appId, reference as ConversationReference, async (context) => {
       await context.sendActivity({ attachments: [{ contentType: "application/vnd.microsoft.card.adaptive", content: card }] });
     });

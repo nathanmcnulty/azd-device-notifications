@@ -152,8 +152,16 @@ export class AzureStateRepository implements WatermarkRepository, SnapshotReposi
     }, "Merge");
   }
 
-  async reserveDelivery(key: string): Promise<DeliveryReservation> {
+  async reserveDelivery(key: string, legacyDeliveredKey?: string): Promise<DeliveryReservation> {
     await this.ready;
+    if (legacyDeliveredKey && legacyDeliveredKey !== key) {
+      try {
+        const legacy = await this.history.getEntity<ReservationEntity>("notification", legacyDeliveredKey);
+        if (legacy.status === "delivered" || (!legacy.status && legacy.sentAt)) return { status: "delivered" };
+      } catch (error) {
+        if (!hasStatus(error, 404)) throw error;
+      }
+    }
     try {
       await this.history.createEntity({
         partitionKey: "notification", rowKey: key, reservedAt: new Date().toISOString(), status: "pending"

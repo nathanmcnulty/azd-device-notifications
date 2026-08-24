@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.46.1.21595",
-      "templateHash": "16412344928608116624"
+      "version": "0.42.1.51946",
+      "templateHash": "6028692800767362166"
     }
   },
   "parameters": {
@@ -96,8 +96,17 @@
           "resourceToken": {
             "value": "[variables('resourceToken')]"
           },
+          "environmentName": {
+            "value": "[parameters('environmentName')]"
+          },
           "tenantId": {
             "value": "[parameters('tenantId')]"
+          },
+          "subscriptionId": {
+            "value": "[subscription().subscriptionId]"
+          },
+          "resourceGroupName": {
+            "value": "[variables('resourceGroupName')]"
           },
           "routingConfigJson": {
             "value": "[parameters('routingConfigJson')]"
@@ -136,8 +145,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.46.1.21595",
-              "templateHash": "6367666474894833134"
+              "version": "0.42.1.51946",
+              "templateHash": "13969681487714007150"
             }
           },
           "parameters": {
@@ -150,7 +159,16 @@
             "resourceToken": {
               "type": "string"
             },
+            "environmentName": {
+              "type": "string"
+            },
             "tenantId": {
+              "type": "string"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "resourceGroupName": {
               "type": "string"
             },
             "routingConfigJson": {
@@ -458,8 +476,20 @@
                       "value": "device-notifications"
                     },
                     {
+                      "name": "AZURE_ENV_NAME",
+                      "value": "[parameters('environmentName')]"
+                    },
+                    {
                       "name": "AZURE_TENANT_ID",
                       "value": "[parameters('tenantId')]"
+                    },
+                    {
+                      "name": "AZURE_SUBSCRIPTION_ID",
+                      "value": "[parameters('subscriptionId')]"
+                    },
+                    {
+                      "name": "AZURE_RESOURCE_GROUP",
+                      "value": "[parameters('resourceGroupName')]"
                     },
                     {
                       "name": "TEAMS_BOT_APP_ID",

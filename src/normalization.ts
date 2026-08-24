@@ -11,6 +11,7 @@ interface AuditResource {
 
 export interface DirectoryAudit {
   id?: string;
+  correlationId?: string;
   activityDateTime?: string;
   activityDisplayName?: string;
   category?: string;
@@ -60,6 +61,7 @@ export function normalizeRegistration(audit: DirectoryAudit): DeviceEvent | unde
     type: "deviceRegistered",
     occurredAt,
     severity: "low",
+    correlationId: audit.correlationId,
     device: { id: device.id, azureADDeviceId, displayName: device.displayName },
     actor: actor ? { id: actor.id, displayName: actor.displayName, upn: actor.userPrincipalName } : undefined,
     owner: ownerId || ownerResource
