@@ -1,9 +1,21 @@
 import { describe, expect, it, vi } from "vitest";
+import { ProviderRequestError } from "../src/domain.js";
 import { GraphClient } from "../src/graph.js";
 
 const credential = { async getToken() { return { token: "test-token" }; } };
 
 describe("Graph client", () => {
+  it("sanitizes structured provider metadata at construction", () => {
+    const error = new ProviderRequestError(
+      "microsoftGraph", "unsafe code with https://private.example.test?sig=secret", 700,
+      "unsafe operation with spaces and private@example.test"
+    );
+    expect(error).toMatchObject({ code: "ProviderFailure", message: "ProviderFailure" });
+    expect(error.statusCode).toBeUndefined();
+    expect(error.operationId).toBeUndefined();
+    expect(JSON.stringify(error)).not.toMatch(/private|example\.test|[?&]sig=/);
+  });
+
   it("follows pagination links", async () => {
     const fetcher = vi.fn()
       .mockResolvedValueOnce(new Response(JSON.stringify({ value: [1], "@odata.nextLink": "https://graph.microsoft.com/v1.0/next" }), { status: 200 }))
@@ -100,16 +112,31 @@ describe("Graph client", () => {
     expect(sleeper).toHaveBeenCalledWith(5_000);
   });
 
-  it("fails permanent responses without exposing unsafe identifiers", async () => {
+  it.each([400, 401, 403, 404, 410, 418])("returns safe structured metadata for permanent HTTP %s", async (status) => {
     const fetcher = vi.fn(async () => new Response(undefined, {
-      status: 400, headers: { "request-id": "safe-request-id" }
+      status, headers: { "request-id": "safe-request-id" }
     }));
     await expect(new GraphClient(credential, fetcher).post("/bad", {}))
-      .rejects.toThrow("Graph request failed with status 400 (request-id: safe-request-id)");
+      .rejects.toMatchObject({
+        name: "ProviderRequestError", provider: "microsoftGraph", code: `GraphHttp${status}`,
+        statusCode: status, operationId: "safe-request-id", message: `GraphHttp${status}`
+      } satisfies Partial<ProviderRequestError>);
     expect(fetcher).toHaveBeenCalledOnce();
   });
 
-  it("bounds repeated network retries and sanitizes the terminal error", async () => {
+  it.each([408, 429, 500, 503])("returns safe structured metadata after exhausting HTTP %s retries", async (status) => {
+    const fetcher = vi.fn(async () => new Response("sensitive provider body", { status }));
+    const sleeper = vi.fn(async (_milliseconds: number) => undefined);
+    await expect(new GraphClient(credential, fetcher, sleeper).post("/items", {}))
+      .rejects.toMatchObject({
+        name: "ProviderRequestError", provider: "microsoftGraph", code: `GraphHttp${status}`,
+        statusCode: status, message: `GraphHttp${status}`
+      } satisfies Partial<ProviderRequestError>);
+    expect(fetcher).toHaveBeenCalledTimes(6);
+    expect(sleeper).toHaveBeenCalledTimes(5);
+  });
+
+  it("bounds repeated network retries and sanitizes an unclassified terminal error", async () => {
     const fetcher = vi.fn(async () => { throw new TypeError("secret-url-and-token"); });
     const sleeper = vi.fn(async (_milliseconds: number) => undefined);
     await expect(new GraphClient(credential, fetcher, sleeper).post("/items", {}))

@@ -67,6 +67,30 @@ export interface ConversationRepository {
 
 export class PermanentDeliveryError extends Error {}
 
+export class ProviderRequestError extends Error {
+  readonly code: string;
+  readonly statusCode?: number;
+  readonly operationId?: string;
+
+  constructor(
+    readonly provider: "microsoftGraph" | "teamsWorkflow",
+    code: string,
+    statusCode?: number,
+    operationId?: string
+  ) {
+    const safeCode = /^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(code) ? code : "ProviderFailure";
+    super(safeCode);
+    this.name = "ProviderRequestError";
+    this.code = safeCode;
+    this.statusCode = typeof statusCode === "number" && Number.isInteger(statusCode) && statusCode >= 100 && statusCode <= 599
+      ? statusCode
+      : undefined;
+    this.operationId = operationId && /^[A-Za-z0-9][A-Za-z0-9._:|-]{0,511}$/.test(operationId)
+      ? operationId
+      : undefined;
+  }
+}
+
 export interface OutboxRepository {
   reserve(fingerprint: string, event: DeviceEvent): Promise<"reserved" | "published" | "pending">;
   release(fingerprint: string): Promise<void>;

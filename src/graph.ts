@@ -1,4 +1,5 @@
 import { DefaultAzureCredential } from "@azure/identity";
+import { ProviderRequestError } from "./domain.js";
 
 export interface GraphPage<T> {
   value: T[];
@@ -93,10 +94,14 @@ export class GraphClient implements GraphClientLike {
       }
       if (response.ok) return response;
       const identifier = requestIdentifier(response);
+      const operationId = identifier ? identifier.slice(identifier.indexOf(": ") + 2, -1) : undefined;
       if (response.status !== 408 && response.status !== 429 && response.status < 500) {
-        throw new Error(`Graph request failed with status ${response.status}${identifier}`);
+        await response.body?.cancel().catch(() => undefined);
+        throw new ProviderRequestError("microsoftGraph", `GraphHttp${response.status}`, response.status, operationId);
       }
-      if (attempt === 5) throw new Error(`Graph retry limit reached with status ${response.status}${identifier}`);
+      if (attempt === 5) {
+        throw new ProviderRequestError("microsoftGraph", `GraphHttp${response.status}`, response.status, operationId);
+      }
       await response.body?.cancel().catch(() => undefined);
       await this.sleeper(retryDelay(response, attempt, this.now));
     }

@@ -28,7 +28,21 @@ export interface NotificationContractRoute {
   transport: "teams.bot" | "teams.workflowWebhook" | "email.graph";
 }
 
-type FailureCategory = "destinationUnavailable" | "transientProvider";
+type FailureCategory =
+  | "authentication"
+  | "authorization"
+  | "throttled"
+  | "timeout"
+  | "transientProvider"
+  | "invalidRequest"
+  | "destinationUnavailable"
+  | "unknown";
+
+export interface NotificationEvidence {
+  httpStatusCode?: number;
+  providerCode?: string;
+  operationId?: string;
+}
 
 export interface NotificationDeliveryResult {
   schemaVersion: "1.0";
@@ -44,14 +58,16 @@ export interface NotificationDeliveryResult {
   environment: NotificationEnvironment;
   durationMs?: number;
   skipReason?: "concurrentDelivery";
-  evidence: Record<string, never>;
+  evidence: NotificationEvidence;
   failure?: { category: FailureCategory; retryable: boolean; code: string };
 }
 
-type DeliveryResultOptions =
-  | { status: "succeeded" | "alreadyDelivered"; attempt: number; recordedAt: Date; durationMs?: number }
-  | { status: "skipped"; attempt: number; recordedAt: Date; durationMs?: number; skipReason: "concurrentDelivery" }
-  | { status: "failed"; attempt: number; recordedAt: Date; durationMs?: number; failure: NonNullable<NotificationDeliveryResult["failure"]> };
+type DeliveryResultMetadata = { attempt: number; recordedAt: Date; durationMs?: number; evidence?: NotificationEvidence };
+type DeliveryResultOptions = DeliveryResultMetadata & (
+  | { status: "succeeded" | "alreadyDelivered" }
+  | { status: "skipped"; skipReason: "concurrentDelivery" }
+  | { status: "failed"; failure: NonNullable<NotificationDeliveryResult["failure"]> }
+);
 
 const eventMappings = {
   deviceRegistered: { eventType: "entra.device.registered", source: "microsoftGraph.directoryAudit" },
@@ -93,14 +109,15 @@ export function normalizeDeviceNotification(
 ): NotificationEnvelope {
   const eventId = contractIdentifier(event.id, "event identifier");
   const correlationId = contractIdentifier(event.correlationId ?? eventId, "correlation identifier");
-  if (Number.isNaN(new Date(event.occurredAt).valueOf())) throw new Error("Notification occurrence time is invalid");
+  const occurredAt = new Date(event.occurredAt);
+  if (Number.isNaN(occurredAt.valueOf())) throw new Error("Notification occurrence time is invalid");
   const mapping = eventMappings[event.type];
   return {
     schemaVersion: "1.0",
     eventId,
     eventType: mapping.eventType,
     source: mapping.source,
-    occurredAt: event.occurredAt,
+    occurredAt: occurredAt.toISOString(),
     severity: event.severity,
     correlationId,
     isTest: event.synthetic === true,
@@ -170,7 +187,7 @@ export function newNotificationDeliveryResult(
     environment: { ...envelope.environment },
     ...(options.durationMs === undefined ? {} : { durationMs: Math.max(0, Math.trunc(options.durationMs)) }),
     ...(options.status === "skipped" ? { skipReason: options.skipReason } : {}),
-    evidence: {},
+    evidence: { ...(options.evidence ?? {}) },
     ...(options.status === "failed" ? { failure: { ...options.failure } } : {})
   };
 }

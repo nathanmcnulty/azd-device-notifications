@@ -1,4 +1,7 @@
-import { PermanentDeliveryError, type DeviceEvent, type Logger, type NotificationHistoryRepository } from "./domain.js";
+import {
+  PermanentDeliveryError, ProviderRequestError,
+  type DeviceEvent, type Logger, type NotificationHistoryRepository
+} from "./domain.js";
 import type { GraphClientLike } from "./graph.js";
 import { adminLinks } from "./normalization.js";
 import {
@@ -8,7 +11,9 @@ import {
   notificationContractRoute,
   notificationIdempotencyKey,
   recordNotificationDeliveryResult,
-  type NotificationEnvironment
+  type NotificationDeliveryResult,
+  type NotificationEnvironment,
+  type NotificationEvidence
 } from "./notification-contracts.js";
 import { routeEvent, type DeliveryRoute, type RoutingConfig } from "./routing.js";
 
@@ -123,6 +128,46 @@ function emailBody(event: DeviceEvent, audience: "user" | "admin", severity: str
   return `<p>${escapeHtml(title(event))}</p><p>Device: ${escapeHtml(event.device.displayName ?? "Unknown device")}</p><p>Severity: ${escapeHtml(severity)}</p>${linkText}`;
 }
 
+function classifyDeliveryFailure(error: unknown): {
+  failure: NonNullable<NotificationDeliveryResult["failure"]>;
+  evidence: NotificationEvidence;
+} {
+  if (error instanceof PermanentDeliveryError) {
+    return {
+      failure: { category: "destinationUnavailable", retryable: false, code: "DestinationUnavailable" },
+      evidence: {}
+    };
+  }
+  if (!(error instanceof ProviderRequestError)) {
+    return {
+      failure: { category: "unknown", retryable: true, code: "UnknownDeliveryFailure" },
+      evidence: {}
+    };
+  }
+
+  const evidence: NotificationEvidence = {
+    ...(error.statusCode === undefined ? {} : { httpStatusCode: error.statusCode }),
+    providerCode: error.code,
+    ...(error.operationId ? { operationId: error.operationId } : {})
+  };
+  const status = error.statusCode;
+  if (status === 400) return { failure: { category: "invalidRequest", retryable: false, code: error.code }, evidence };
+  if (status === 401) return { failure: { category: "authentication", retryable: false, code: error.code }, evidence };
+  if (status === 403) return { failure: { category: "authorization", retryable: false, code: error.code }, evidence };
+  if (status === 404 || status === 410) {
+    return { failure: { category: "destinationUnavailable", retryable: false, code: error.code }, evidence };
+  }
+  if (status === 408) return { failure: { category: "timeout", retryable: true, code: error.code }, evidence };
+  if (status === 429) return { failure: { category: "throttled", retryable: true, code: error.code }, evidence };
+  if (status !== undefined && status >= 500) {
+    return { failure: { category: "transientProvider", retryable: true, code: error.code }, evidence };
+  }
+  return {
+    failure: { category: "unknown", retryable: status === undefined, code: error.code },
+    evidence
+  };
+}
+
 async function deliver(event: DeviceEvent, route: DeliveryRoute, dependencies: DeliveryDependencies): Promise<boolean> {
   const card = shapeAdaptiveCard(event, route.audience, route.transport === "teamsWebhook" ? dependencies.routing.adminMentions : [], route.severity);
   if (route.transport === "teamsDm") {
@@ -132,11 +177,19 @@ async function deliver(event: DeviceEvent, route: DeliveryRoute, dependencies: D
   }
   if (route.transport === "teamsWebhook") {
     if (route.audience !== "admin" || !dependencies.webhookUrl) return false;
-    const response = await (dependencies.fetcher ?? fetch)(dependencies.webhookUrl, {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "message", attachments: [{ contentType: "application/vnd.microsoft.card.adaptive", contentUrl: null, content: card }] })
-    });
-    if (!response.ok) throw new Error(`Teams webhook failed with status ${response.status}`);
+    let response: Response;
+    try {
+      response = await (dependencies.fetcher ?? fetch)(dependencies.webhookUrl, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "message", attachments: [{ contentType: "application/vnd.microsoft.card.adaptive", contentUrl: null, content: card }] })
+      });
+    } catch {
+      throw new ProviderRequestError("teamsWorkflow", "TeamsTransportError");
+    }
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new ProviderRequestError("teamsWorkflow", `TeamsHttp${response.status}`, response.status);
+    }
     return true;
   }
   if (!dependencies.emailSenderUpn) return false;
@@ -238,14 +291,18 @@ export async function dispatchEvent(event: DeviceEvent, dependencies: DeliveryDe
           reservationReleased = false;
         }
       }
-      const permanent = error instanceof PermanentDeliveryError && reservationReleased;
+      const classified = reservationReleased
+        ? classifyDeliveryFailure(error)
+        : {
+            failure: { category: "unknown" as const, retryable: true, code: "DeliveryStateReleaseFailed" },
+            evidence: {}
+          };
       recordNotificationDeliveryResult(dependencies.logger, newNotificationDeliveryResult(envelope, contractRoute, {
         status: "failed", attempt: reservationEtag ? 1 : 0, recordedAt: dependencies.now ?? new Date(), durationMs: Date.now() - startedAt,
-        failure: permanent
-          ? { category: "destinationUnavailable", retryable: false, code: "DestinationUnavailable" }
-          : { category: "transientProvider", retryable: true, code: "TransientDeliveryFailure" }
+        failure: classified.failure,
+        evidence: classified.evidence
       }));
-      if (permanent) {
+      if (!classified.failure.retryable) {
         summary.unavailableRoutes++;
         summary.routes.push({ audience: route.audience, transport: route.transport, status: "unavailable" });
         dependencies.logger.warn("Notification route is not currently available", {
