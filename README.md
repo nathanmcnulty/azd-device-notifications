@@ -158,6 +158,7 @@ Advanced settings—including per-event routes, schedules, exclusions, privilege
 | [Operations](docs/operations.md) | Tests, monitoring, troubleshooting, and teardown |
 | [Privacy and retention](docs/privacy.md) | Stored data, credentials, retention, and purge limits |
 | [Architecture](docs/architecture.md) | Polling, delivery, retries, and security boundaries |
+| [Notification contracts](docs/notification-contracts.md) | Versioned event mappings, safe route results, and upgrade sequencing |
 
 ## Cleanup
 

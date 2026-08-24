@@ -43,6 +43,8 @@ flowchart TD
 
 One retryable route failure does not prevent attempts to other routes. Successful routes are recorded and skipped on queue retry. Stale pending event reservations are recovered after 15 minutes so a Function termination cannot permanently suppress an event. Delivery is at least once: a process termination after an external service accepts a message but before history is recorded can still produce a duplicate.
 
+Each evaluated route also emits a versioned, administrator-safe delivery result. Canonical keys include the tenant, namespaced event type, stable event ID, and logical route ID. A read-only legacy-key fallback prevents duplicate delivery during upgrade. See [Notification contracts](notification-contracts.md).
+
 An unavailable route is different from a retryable failure. For example, a missing Teams personal conversation or a route with no configured destination cannot prove delivery and may be consumed without retry. The readiness gate exists to prevent collection until these prerequisites have been tested. Administrators must monitor warnings and delivery history rather than treating queue completion as message receipt.
 
 ## Delivery

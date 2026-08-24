@@ -46,6 +46,8 @@ azd init --template nathanmcnulty/azd-device-notifications --branch v1.0.0
 
 The initial deployment should report the Function App state and exact core Graph application-role assignments. It also creates `teams-app/device-notifications.zip`.
 
+When upgrading an existing environment to a version that includes notification contracts, run `azd provision` before any code-only `azd deploy notifier`. Provisioning adds the environment metadata required for schema-valid delivery results; deploying the Function first causes startup to fail closed. See [Notification contracts](notification-contracts.md#provision-before-a-code-only-deployment).
+
 At this point `DEVICE_NOTIFICATION_COLLECTION_ENABLED` remains `false`. This is expected: a running Function App and assigned Graph permissions prove infrastructure readiness, not message delivery. Finish every selected destination below.
 
 ## 4. Verify a Teams Workflow
