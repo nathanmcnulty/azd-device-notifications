@@ -13,6 +13,29 @@ export interface GraphClientLike {
 
 const sleep = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
+function validateGraphRequestUrl(value: string): string {
+  let url: URL;
+  try {
+    url = new URL(value);
+  } catch {
+    throw new Error("Graph request URL rejected");
+  }
+
+  if (
+    url.protocol !== "https:"
+    || url.hostname !== "graph.microsoft.com"
+    || url.port !== ""
+    || url.username !== ""
+    || url.password !== ""
+    || (url.pathname !== "/v1.0" && !url.pathname.startsWith("/v1.0/"))
+    || url.hash !== ""
+  ) {
+    throw new Error("Graph request URL rejected");
+  }
+
+  return url.href;
+}
+
 function requestIdentifier(response: Response): string {
   for (const name of ["request-id", "client-request-id"]) {
     const value = response.headers.get(name);
@@ -46,12 +69,13 @@ export class GraphClient implements GraphClientLike {
   ) {}
 
   private async request(url: string, init?: RequestInit): Promise<Response> {
+    const validatedUrl = validateGraphRequestUrl(url);
     for (let attempt = 0; attempt < 6; attempt++) {
       let response: Response;
       try {
         const token = await this.credential.getToken("https://graph.microsoft.com/.default");
         if (!token) throw new Error("TokenUnavailable");
-        response = await this.fetcher(url, {
+        response = await this.fetcher(validatedUrl, {
           ...init,
           headers: {
             Authorization: `Bearer ${token.token}`,
