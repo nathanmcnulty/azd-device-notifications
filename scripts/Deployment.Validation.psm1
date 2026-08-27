@@ -276,6 +276,32 @@ function Get-ProjectValidationDefinition {
                     -Expected 'A provisioned Azure Bot name.' `
                     -Remediation 'Rerun provisioning and confirm the personal Teams route is enabled.')
             }
+            $identityJson = & az functionapp identity show --subscription $env:AZURE_SUBSCRIPTION_ID `
+                --resource-group $env:AZURE_RESOURCE_GROUP --name $env:AZURE_FUNCTION_APP_NAME `
+                --only-show-errors --output json
+            if ($LASTEXITCODE -ne 0 -or -not $identityJson) {
+                return (New-AzdCheckFailure -Code 'configuration.workloadIdentityReadFailed' `
+                    -Summary 'The Function App workload identity could not be read.' `
+                    -Expected 'One readable user-assigned workload identity.' `
+                    -Remediation 'Confirm Azure resource read access and the Function App identity configuration.')
+            }
+            $identity = $identityJson | ConvertFrom-Json
+            $assignedIdentities = @($identity.userAssignedIdentities.PSObject.Properties)
+            if ($assignedIdentities.Count -ne 1) {
+                return (New-AzdCheckFailure -Code 'configuration.workloadIdentityAmbiguous' `
+                    -Summary 'The Function App does not have exactly one user-assigned workload identity.' `
+                    -Expected 'One user-assigned workload identity.' `
+                    -Remediation 'Configure exactly the solution workload identity on the Function App.')
+            }
+            $workloadIdentityResourceId = [string] $assignedIdentities[0].Name
+            $workloadIdentity = $assignedIdentities[0].Value
+            if ($workloadIdentity.clientId -ne $env:AZURE_WORKLOAD_CLIENT_ID -or `
+                $workloadIdentity.principalId -ne $env:AZURE_WORKLOAD_PRINCIPAL_ID) {
+                return (New-AzdCheckFailure -Code 'configuration.workloadIdentityMismatch' `
+                    -Summary 'The Function App workload identity does not match the deployed identity outputs.' `
+                    -Expected 'The configured workload client and principal identifiers.' `
+                    -Remediation 'Rerun provisioning or correct the Function App user-assigned identity.')
+            }
             $botJson = & az resource show --subscription $env:AZURE_SUBSCRIPTION_ID `
                 --resource-group $env:AZURE_RESOURCE_GROUP --resource-type Microsoft.BotService/botServices `
                 --name $env:TEAMS_BOT_NAME --api-version 2022-09-15 --only-show-errors --output json
@@ -293,15 +319,49 @@ function Get-ProjectValidationDefinition {
                     -Expected ([string] $env:AZURE_WORKLOAD_CLIENT_ID) `
                     -Remediation 'Rerun provisioning or correct the Azure Bot application identity.')
             }
+            if (-not [System.StringComparer]::OrdinalIgnoreCase.Equals([string] $bot.properties.msaAppMSIResourceId, $workloadIdentityResourceId)) {
+                return (New-AzdCheckFailure -Code 'configuration.botManagedIdentityMismatch' `
+                    -Summary 'The Azure Bot managed identity resource does not match the Function App workload identity.' `
+                    -Expected 'The Function App user-assigned workload identity resource.' `
+                    -Remediation 'Rerun provisioning or correct the Azure Bot managed identity resource.')
+            }
+            if ($bot.properties.msaAppTenantId -ne $env:AZURE_TENANT_ID) {
+                return (New-AzdCheckFailure -Code 'configuration.botTenantMismatch' `
+                    -Summary 'The Azure Bot tenant does not match the selected deployment tenant.' `
+                    -Expected 'The azd environment tenant.' `
+                    -Remediation 'Rerun provisioning in the selected tenant or correct the Azure Bot tenant configuration.')
+            }
+            if ($bot.properties.msaAppType -ne 'UserAssignedMSI') {
+                return (New-AzdCheckFailure -Code 'configuration.botIdentityTypeMismatch' `
+                    -Summary 'The Azure Bot is not configured to use a user-assigned managed identity.' `
+                    -Expected 'UserAssignedMSI.' `
+                    -Remediation 'Rerun provisioning or correct the Azure Bot identity type.')
+            }
             if ($bot.properties.endpoint -ne $expectedEndpoint) {
                 return (New-AzdCheckFailure -Code 'configuration.botEndpointMismatch' `
                     -Summary 'The Azure Bot messaging endpoint does not match the deployed Function App.' `
                     -Expected $expectedEndpoint `
                     -Remediation 'Rerun provisioning or correct the Azure Bot messaging endpoint.')
             }
-            New-AzdCheckOutcome -Summary 'Azure Bot identity and endpoint configuration are exact.' `
-                -Expected ([ordered] @{ endpoint = $expectedEndpoint; workloadClientId = $env:AZURE_WORKLOAD_CLIENT_ID }) `
-                -Actual ([ordered] @{ endpoint = [string] $bot.properties.endpoint; workloadClientId = [string] $bot.properties.msaAppId })
+            $channelJson = & az resource show --subscription $env:AZURE_SUBSCRIPTION_ID `
+                --resource-group $env:AZURE_RESOURCE_GROUP --resource-type Microsoft.BotService/botServices/channels `
+                --name "$($env:TEAMS_BOT_NAME)/MsTeamsChannel" --api-version 2022-09-15 --only-show-errors --output json
+            if ($LASTEXITCODE -ne 0 -or -not $channelJson) {
+                return (New-AzdCheckFailure -Code 'configuration.teamsChannelReadFailed' `
+                    -Summary 'The Microsoft Teams channel could not be read from the Azure Bot.' `
+                    -Expected 'An enabled MsTeamsChannel resource.' `
+                    -Remediation 'Rerun provisioning or enable the Microsoft Teams channel on the Azure Bot.')
+            }
+            $channel = $channelJson | ConvertFrom-Json
+            if ($channel.properties.channelName -ne 'MsTeamsChannel' -or $channel.properties.properties.isEnabled -ne $true) {
+                return (New-AzdCheckFailure -Code 'configuration.teamsChannelDisabled' `
+                    -Summary 'The Microsoft Teams channel is missing or not enabled on the Azure Bot.' `
+                    -Expected 'MsTeamsChannel with isEnabled=true.' `
+                    -Remediation 'Enable the Microsoft Teams channel on the Azure Bot and rerun validation.')
+            }
+            New-AzdCheckOutcome -Summary 'Azure Bot identity, tenant, endpoint, and Microsoft Teams channel configuration are exact.' `
+                -Expected ([ordered] @{ endpoint = $expectedEndpoint; workloadClientId = $env:AZURE_WORKLOAD_CLIENT_ID; teamsChannelEnabled = $true }) `
+                -Actual ([ordered] @{ endpoint = [string] $bot.properties.endpoint; workloadClientId = [string] $bot.properties.msaAppId; teamsChannelEnabled = $true })
         }
 
     New-AzdValidationCheckDefinition `

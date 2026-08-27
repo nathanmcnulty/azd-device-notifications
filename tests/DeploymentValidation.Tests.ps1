@@ -105,7 +105,7 @@ Describe 'Deployment validation adapter' {
             Mock Get-DeviceNotificationValidationConfiguration {
                 [pscustomobject] @{ UsesTeamsDm = $false }
             }
-            Mock az { '0' }
+            Mock az { $global:LASTEXITCODE = 0; '0' }
             Mock Invoke-WebRequest { throw 'Bot probing is not applicable.' }
 
             $definitions = @(Get-ProjectValidationDefinition | Where-Object id -in @(
@@ -118,6 +118,43 @@ Describe 'Deployment validation adapter' {
             ($results | Where-Object id -eq 'configuration.bot-endpoint').status | Should -Be 'pass'
             ($results | Where-Object id -eq 'security.bot-rejects-unauthenticated').status | Should -Be 'skipped'
             Assert-MockCalled Invoke-WebRequest -Times 0 -Exactly
+        }
+    }
+
+    It 'requires the exact workload identity, tenant, and enabled Microsoft Teams channel' {
+        InModuleScope Deployment.Validation {
+            $env:AZURE_SUBSCRIPTION_ID = '11111111-1111-4111-8111-111111111111'
+            $env:AZURE_TENANT_ID = '22222222-2222-4222-8222-222222222222'
+            $env:AZURE_RESOURCE_GROUP = 'rg-test'
+            $env:AZURE_FUNCTION_APP_NAME = 'func-test'
+            $env:AZURE_FUNCTION_APP_URL = 'https://func-test.azurewebsites.net'
+            $env:AZURE_WORKLOAD_CLIENT_ID = '33333333-3333-4333-8333-333333333333'
+            $env:AZURE_WORKLOAD_PRINCIPAL_ID = '44444444-4444-4444-8444-444444444444'
+            $env:TEAMS_BOT_NAME = 'bot-test'
+            $identityResourceId = '/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/rg-test/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-test'
+            Mock Initialize-DeviceNotificationValidationContext
+            Mock Get-DeviceNotificationValidationConfiguration {
+                [pscustomobject] @{ UsesTeamsDm = $true }
+            }
+            Mock az {
+                $global:LASTEXITCODE = 0
+                if ($args -contains 'identity') {
+                    "{`"userAssignedIdentities`":{`"$identityResourceId`":{`"clientId`":`"$env:AZURE_WORKLOAD_CLIENT_ID`",`"principalId`":`"$env:AZURE_WORKLOAD_PRINCIPAL_ID`"}}}"
+                } elseif ($args -contains 'Microsoft.BotService/botServices/channels') {
+                    '{"properties":{"channelName":"MsTeamsChannel","properties":{"isEnabled":true}}}'
+                } else {
+                    "{`"properties`":{`"msaAppId`":`"$env:AZURE_WORKLOAD_CLIENT_ID`",`"msaAppMSIResourceId`":`"$identityResourceId`",`"msaAppTenantId`":`"$env:AZURE_TENANT_ID`",`"msaAppType`":`"UserAssignedMSI`",`"endpoint`":`"$env:AZURE_FUNCTION_APP_URL/api/messages`"}}"
+                }
+            }
+
+            $definitions = @(Get-ProjectValidationDefinition | Where-Object id -in @(
+                    'context.azure-session',
+                    'configuration.bot-endpoint'
+                ))
+            $result = @(Invoke-AzdValidationSet -Definitions $definitions) | Where-Object id -eq 'configuration.bot-endpoint'
+
+            $result.status | Should -Be 'pass'
+            Assert-MockCalled az -Times 3 -Exactly
         }
     }
 
