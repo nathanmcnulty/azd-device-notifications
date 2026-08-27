@@ -91,6 +91,11 @@ Describe 'Lifecycle safety contracts' {
         Test-Path (Join-Path $repoRoot 'scripts/Invoke-Azd.ps1') | Should -BeFalse
     }
 
+    It 'marks the reproducible runtime bundle as generated without weakening handwritten diff checks' {
+        $attributes = Get-Content (Join-Path $repoRoot '.gitattributes') -Raw
+        $attributes | Should -Match 'function-package/index\.cjs linguist-generated=true -whitespace'
+    }
+
     It 'does not require Bot Service for email-only owner delivery' {
         $emailRouting = $routing.Replace('"teamsDm"', '"email"')
         $result = Get-NotificationConfiguration -RoutingJson $emailRouting -EmailSenderUpn 'notifications@contoso.com' `

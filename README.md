@@ -185,6 +185,6 @@ npm run build
 npm run bundle
 ```
 
-Continuous integration rebuilds `function-package/index.cjs` and rejects a change when the committed runtime does not exactly match the reviewed source.
+Continuous integration rebuilds `function-package/index.cjs` and rejects a change when the committed runtime does not exactly match the reviewed source. GitHub marks that reproducibly generated bundle as generated; Git whitespace checks are disabled only for this upstream-generated artifact and remain enforced for all handwritten files.
 
 Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md). Do not put Workflow callback URLs, tenant identifiers, user or device details, or notification content in public issues.

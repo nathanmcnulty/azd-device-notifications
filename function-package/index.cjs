@@ -111465,6 +111465,21 @@ var import_botbuilder = __toESM(require_lib16(), 1);
 // domain.ts
 var PermanentDeliveryError = class extends Error {
 };
+var ProviderRequestError = class extends Error {
+  constructor(provider, code, statusCode, operationId) {
+    const safeCode = /^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(code) ? code : "ProviderFailure";
+    super(safeCode);
+    this.provider = provider;
+    this.name = "ProviderRequestError";
+    this.code = safeCode;
+    this.statusCode = typeof statusCode === "number" && Number.isInteger(statusCode) && statusCode >= 100 && statusCode <= 599 ? statusCode : void 0;
+    this.operationId = operationId && /^[A-Za-z0-9][A-Za-z0-9._:|-]{0,511}$/.test(operationId) ? operationId : void 0;
+  }
+  provider;
+  code;
+  statusCode;
+  operationId;
+};
 
 // bot.ts
 var ManagedIdentityTeamsBot = class {
@@ -111479,8 +111494,8 @@ var ManagedIdentityTeamsBot = class {
       MicrosoftAppTenantId: tenantId
     });
     this.adapter = new import_botbuilder.CloudAdapter(authentication);
-    this.adapter.onTurnError = async (_context, error) => {
-      this.logger.error("Teams bot turn failed", { errorName: error.name, message: error.message });
+    this.adapter.onTurnError = async () => {
+      this.logger.error("Teams bot turn failed", { code: "TeamsBotTurnFailure" });
     };
   }
   appId;
@@ -111489,7 +111504,7 @@ var ManagedIdentityTeamsBot = class {
   adapter;
   async sendToEntraUser(ownerObjectId, card) {
     const reference = await this.conversations.getConversation(ownerObjectId);
-    if (!reference?.serviceUrl || !reference.conversation) throw new PermanentDeliveryError(`No Teams bot installation conversation for owner ${ownerObjectId}`);
+    if (!reference?.serviceUrl || !reference.conversation) throw new PermanentDeliveryError("Teams bot installation conversation unavailable");
     await this.adapter.continueConversationAsync(this.appId, reference, async (context3) => {
       await context3.sendActivity({ attachments: [{ contentType: "application/vnd.microsoft.card.adaptive", content: card }] });
     });
@@ -111546,9 +111561,6 @@ function boundedNumber(name3, raw, fallback, minimum, maximum) {
   return value;
 }
 
-// delivery.ts
-var import_node_crypto2 = require("node:crypto");
-
 // normalization.ts
 var import_node_crypto = require("node:crypto");
 var cleanJsonString = (value) => {
@@ -111584,6 +111596,7 @@ function normalizeRegistration(audit) {
     type: "deviceRegistered",
     occurredAt,
     severity: "low",
+    correlationId: audit.correlationId,
     device: { id: device.id, azureADDeviceId, displayName: device.displayName },
     actor: actor ? { id: actor.id, displayName: actor.displayName, upn: actor.userPrincipalName } : void 0,
     owner: ownerId || ownerResource ? { id: ownerId, displayName: ownerResource?.displayName, upn: ownerResource?.userPrincipalName } : actor ? { id: actor.id, displayName: actor.displayName, upn: actor.userPrincipalName } : void 0
@@ -111596,6 +111609,113 @@ function adminLinks(event) {
   const entra = isValidGuid(event.device.azureADDeviceId) ? `https://entra.microsoft.com/#view/Microsoft_AAD_Devices/DeviceDetailsMenuBlade/~/Overview/deviceId/${encodeURIComponent(event.device.azureADDeviceId)}` : void 0;
   const intune = isValidGuid(event.device.id) ? `https://intune.microsoft.com/#view/Microsoft_Intune_Devices/DeviceSettingsMenuBlade/~/overview/mdmDeviceId/${encodeURIComponent(event.device.id)}` : void 0;
   return { entra, intune };
+}
+
+// notification-contracts.ts
+var import_node_crypto2 = require("node:crypto");
+var eventMappings = {
+  deviceRegistered: { eventType: "entra.device.registered", source: "microsoftGraph.directoryAudit" },
+  deviceEnrolled: { eventType: "intune.device.enrolled", source: "microsoftGraph.deviceManagement" },
+  deviceNoncompliant: { eventType: "intune.device.complianceChanged", source: "microsoftGraph.deviceManagement" }
+};
+function requiredSetting(source, name3, maximumLength) {
+  const value = source[name3]?.trim();
+  if (!value || value.length > maximumLength) throw new Error(`Notification environment setting ${name3} is invalid`);
+  return value;
+}
+function contractIdentifier(value, name3) {
+  if (!/^[A-Za-z0-9][A-Za-z0-9._:|-]{0,255}$/.test(value)) {
+    throw new Error(`Notification ${name3} is invalid`);
+  }
+  return value;
+}
+function loadNotificationEnvironment(source = process.env) {
+  const tenantId = requiredSetting(source, "AZURE_TENANT_ID", 36);
+  const subscriptionId = requiredSetting(source, "AZURE_SUBSCRIPTION_ID", 36);
+  const guid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!guid.test(tenantId) || !guid.test(subscriptionId)) {
+    throw new Error("Notification environment tenant or subscription identifier is invalid");
+  }
+  return {
+    name: requiredSetting(source, "AZURE_ENV_NAME", 128),
+    tenantId,
+    subscriptionId,
+    resourceGroup: requiredSetting(source, "AZURE_RESOURCE_GROUP", 256)
+  };
+}
+function normalizeDeviceNotification(event, environment) {
+  const eventId2 = contractIdentifier(event.id, "event identifier");
+  const correlationId = contractIdentifier(event.correlationId ?? eventId2, "correlation identifier");
+  const occurredAt = new Date(event.occurredAt);
+  if (Number.isNaN(occurredAt.valueOf())) throw new Error("Notification occurrence time is invalid");
+  const mapping = eventMappings[event.type];
+  return {
+    schemaVersion: "1.0",
+    eventId: eventId2,
+    eventType: mapping.eventType,
+    source: mapping.source,
+    occurredAt: occurredAt.toISOString(),
+    severity: event.severity,
+    correlationId,
+    isTest: event.synthetic === true,
+    environment: { ...environment },
+    data: {
+      device: { ...event.device },
+      ...event.actor ? { actor: { ...event.actor } } : {},
+      ...event.owner ? { owner: { ...event.owner } } : {},
+      ...event.previousComplianceState ? { previousComplianceState: event.previousComplianceState } : {},
+      ...event.complianceState ? { complianceState: event.complianceState } : {},
+      ...event.gracePeriodExpirationDateTime ? { gracePeriodExpirationDateTime: event.gracePeriodExpirationDateTime } : {}
+    }
+  };
+}
+function notificationContractRoute(route) {
+  if (route.transport === "teamsDm" && route.audience === "user") {
+    return { id: "user-teams-dm", audience: "user", transport: "teams.bot" };
+  }
+  if (route.transport === "teamsWebhook" && route.audience === "admin") {
+    return { id: "admin-teams-workflow", audience: "admin", transport: "teams.workflowWebhook" };
+  }
+  if (route.transport === "email") {
+    return route.audience === "user" ? { id: "user-email", audience: "user", transport: "email.graph" } : { id: "admin-email", audience: "admin", transport: "email.graph" };
+  }
+  throw new Error("Notification route is invalid");
+}
+function notificationIdempotencyKey(tenantId, eventType, eventId2, routeId) {
+  return (0, import_node_crypto2.createHash)("sha256").update(`${tenantId}
+${eventType}
+${eventId2}
+${routeId}`, "utf8").digest("hex");
+}
+function legacyDeliveryKey(event, route) {
+  return (0, import_node_crypto2.createHash)("sha256").update(`${event.id}:${route.audience}:${route.transport}`, "utf8").digest("hex");
+}
+function newNotificationDeliveryResult(envelope, route, options) {
+  return {
+    schemaVersion: "1.0",
+    eventId: envelope.eventId,
+    eventType: envelope.eventType,
+    correlationId: envelope.correlationId,
+    idempotencyKey: notificationIdempotencyKey(
+      envelope.environment.tenantId,
+      envelope.eventType,
+      envelope.eventId,
+      route.id
+    ),
+    route: { ...route },
+    status: options.status,
+    attempt: options.attempt,
+    recordedAt: options.recordedAt.toISOString(),
+    isTest: envelope.isTest,
+    environment: { ...envelope.environment },
+    ...options.durationMs === void 0 ? {} : { durationMs: Math.max(0, Math.trunc(options.durationMs)) },
+    ...options.status === "skipped" ? { skipReason: options.skipReason } : {},
+    evidence: { ...options.evidence ?? {} },
+    ...options.status === "failed" ? { failure: { ...options.failure } } : {}
+  };
+}
+function recordNotificationDeliveryResult(logger32, result) {
+  logger32.info(`AZD_NOTIFICATION_DELIVERY_RESULT ${JSON.stringify(result)}`);
 }
 
 // routing.ts
@@ -111771,6 +111891,41 @@ function emailBody(event, audience, severity) {
   const linkText = audience === "admin" ? [links.entra, links.intune].filter(Boolean).map((link) => `<p><a href="${link}">Open device administration</a></p>`).join("") : "";
   return `<p>${escapeHtml(title(event))}</p><p>Device: ${escapeHtml(event.device.displayName ?? "Unknown device")}</p><p>Severity: ${escapeHtml(severity)}</p>${linkText}`;
 }
+function classifyDeliveryFailure(error) {
+  if (error instanceof PermanentDeliveryError) {
+    return {
+      failure: { category: "destinationUnavailable", retryable: false, code: "DestinationUnavailable" },
+      evidence: {}
+    };
+  }
+  if (!(error instanceof ProviderRequestError)) {
+    return {
+      failure: { category: "unknown", retryable: true, code: "UnknownDeliveryFailure" },
+      evidence: {}
+    };
+  }
+  const evidence = {
+    ...error.statusCode === void 0 ? {} : { httpStatusCode: error.statusCode },
+    providerCode: error.code,
+    ...error.operationId ? { operationId: error.operationId } : {}
+  };
+  const status = error.statusCode;
+  if (status === 400) return { failure: { category: "invalidRequest", retryable: false, code: error.code }, evidence };
+  if (status === 401) return { failure: { category: "authentication", retryable: false, code: error.code }, evidence };
+  if (status === 403) return { failure: { category: "authorization", retryable: false, code: error.code }, evidence };
+  if (status === 404 || status === 410) {
+    return { failure: { category: "destinationUnavailable", retryable: false, code: error.code }, evidence };
+  }
+  if (status === 408) return { failure: { category: "timeout", retryable: true, code: error.code }, evidence };
+  if (status === 429) return { failure: { category: "throttled", retryable: true, code: error.code }, evidence };
+  if (status !== void 0 && status >= 500) {
+    return { failure: { category: "transientProvider", retryable: true, code: error.code }, evidence };
+  }
+  return {
+    failure: { category: "unknown", retryable: status === void 0, code: error.code },
+    evidence
+  };
+}
 async function deliver(event, route, dependencies) {
   const card = shapeAdaptiveCard(event, route.audience, route.transport === "teamsWebhook" ? dependencies.routing.adminMentions : [], route.severity);
   if (route.transport === "teamsDm") {
@@ -111780,12 +111935,20 @@ async function deliver(event, route, dependencies) {
   }
   if (route.transport === "teamsWebhook") {
     if (route.audience !== "admin" || !dependencies.webhookUrl) return false;
-    const response = await (dependencies.fetcher ?? fetch)(dependencies.webhookUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "message", attachments: [{ contentType: "application/vnd.microsoft.card.adaptive", contentUrl: null, content: card }] })
-    });
-    if (!response.ok) throw new Error(`Teams webhook failed with status ${response.status}`);
+    let response;
+    try {
+      response = await (dependencies.fetcher ?? fetch)(dependencies.webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "message", attachments: [{ contentType: "application/vnd.microsoft.card.adaptive", contentUrl: null, content: card }] })
+      });
+    } catch {
+      throw new ProviderRequestError("teamsWorkflow", "TeamsTransportError");
+    }
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => void 0);
+      throw new ProviderRequestError("teamsWorkflow", `TeamsHttp${response.status}`, response.status);
+    }
     return true;
   }
   if (!dependencies.emailSenderUpn) return false;
@@ -111826,59 +111989,112 @@ async function dispatchEvent(event, dependencies) {
     if (!directlyMonitored && !memberships.length) return { ...summary, suppressedReason: "subject outside monitored scope" };
   }
   const failures = [];
+  const envelope = normalizeDeviceNotification(event, dependencies.environment);
   const routes = routeEvent(event, dependencies.routing, dependencies.now);
   summary.selectedRoutes = routes.length;
   for (const route of routes) {
-    const key = (0, import_node_crypto2.createHash)("sha256").update(`${event.id}:${route.audience}:${route.transport}`).digest("hex");
-    const reservation = await dependencies.history.reserveDelivery(key);
-    if (reservation.status === "delivered") {
-      summary.alreadyDeliveredRoutes++;
-      summary.routes.push({ audience: route.audience, transport: route.transport, status: "alreadyDelivered" });
-      continue;
-    }
-    if (reservation.status === "pending") {
-      summary.unavailableRoutes++;
-      summary.routes.push({ audience: route.audience, transport: route.transport, status: "pending" });
-      failures.push(new Error(`Notification route ${route.audience}:${route.transport} is pending delivery`));
-      continue;
-    }
+    const startedAt = Date.now();
+    const contractRoute = notificationContractRoute(route);
+    const key = notificationIdempotencyKey(
+      envelope.environment.tenantId,
+      envelope.eventType,
+      envelope.eventId,
+      contractRoute.id
+    );
+    let reservationEtag;
     try {
+      const reservation = await dependencies.history.reserveDelivery(key, legacyDeliveryKey(event, route));
+      if (reservation.status === "delivered") {
+        summary.alreadyDeliveredRoutes++;
+        summary.routes.push({ audience: route.audience, transport: route.transport, status: "alreadyDelivered" });
+        recordNotificationDeliveryResult(dependencies.logger, newNotificationDeliveryResult(envelope, contractRoute, {
+          status: "alreadyDelivered",
+          attempt: 0,
+          recordedAt: dependencies.now ?? /* @__PURE__ */ new Date(),
+          durationMs: Date.now() - startedAt
+        }));
+        continue;
+      }
+      if (reservation.status === "pending") {
+        summary.unavailableRoutes++;
+        summary.routes.push({ audience: route.audience, transport: route.transport, status: "pending" });
+        recordNotificationDeliveryResult(dependencies.logger, newNotificationDeliveryResult(envelope, contractRoute, {
+          status: "skipped",
+          attempt: 0,
+          recordedAt: dependencies.now ?? /* @__PURE__ */ new Date(),
+          durationMs: Date.now() - startedAt,
+          skipReason: "concurrentDelivery"
+        }));
+        failures.push(new Error("Notification delivery is already pending"));
+        continue;
+      }
+      reservationEtag = reservation.etag;
       if (await deliver(event, route, dependencies)) {
         await dependencies.history.completeDelivery(key, reservation.etag, (dependencies.now ?? /* @__PURE__ */ new Date()).toISOString());
+        reservationEtag = void 0;
         summary.deliveredRoutes++;
         summary.routes.push({ audience: route.audience, transport: route.transport, status: "delivered" });
+        recordNotificationDeliveryResult(dependencies.logger, newNotificationDeliveryResult(envelope, contractRoute, {
+          status: "succeeded",
+          attempt: 1,
+          recordedAt: dependencies.now ?? /* @__PURE__ */ new Date(),
+          durationMs: Date.now() - startedAt
+        }));
         dependencies.logger.info("Notification delivered", { eventId: event.id, eventType: event.type, audience: route.audience, transport: route.transport });
       } else {
         await dependencies.history.releaseDelivery(key, reservation.etag);
+        reservationEtag = void 0;
         summary.unavailableRoutes++;
         summary.routes.push({ audience: route.audience, transport: route.transport, status: "unavailable" });
+        recordNotificationDeliveryResult(dependencies.logger, newNotificationDeliveryResult(envelope, contractRoute, {
+          status: "failed",
+          attempt: 0,
+          recordedAt: dependencies.now ?? /* @__PURE__ */ new Date(),
+          durationMs: Date.now() - startedAt,
+          failure: { category: "destinationUnavailable", retryable: false, code: "DestinationUnavailable" }
+        }));
         dependencies.logger.warn("Notification route has no configured recipient", { eventId: event.id, audience: route.audience, transport: route.transport });
       }
     } catch (error) {
-      const failure = error instanceof Error ? error : new Error(String(error));
-      await dependencies.history.releaseDelivery(key, reservation.etag);
-      if (failure instanceof PermanentDeliveryError) {
+      let reservationReleased = true;
+      if (reservationEtag) {
+        try {
+          await dependencies.history.releaseDelivery(key, reservationEtag);
+        } catch {
+          reservationReleased = false;
+        }
+      }
+      const classified = reservationReleased ? classifyDeliveryFailure(error) : {
+        failure: { category: "unknown", retryable: true, code: "DeliveryStateReleaseFailed" },
+        evidence: {}
+      };
+      recordNotificationDeliveryResult(dependencies.logger, newNotificationDeliveryResult(envelope, contractRoute, {
+        status: "failed",
+        attempt: reservationEtag ? 1 : 0,
+        recordedAt: dependencies.now ?? /* @__PURE__ */ new Date(),
+        durationMs: Date.now() - startedAt,
+        failure: classified.failure,
+        evidence: classified.evidence
+      }));
+      if (!classified.failure.retryable) {
         summary.unavailableRoutes++;
         summary.routes.push({ audience: route.audience, transport: route.transport, status: "unavailable" });
         dependencies.logger.warn("Notification route is not currently available", {
           eventId: event.id,
           eventType: event.type,
           audience: route.audience,
-          transport: route.transport,
-          message: failure.message
+          transport: route.transport
         });
         continue;
       }
       summary.unavailableRoutes++;
       summary.routes.push({ audience: route.audience, transport: route.transport, status: "failed" });
-      failures.push(failure);
+      failures.push(new Error("Notification delivery requires retry"));
       dependencies.logger.error("Notification delivery failed", {
         eventId: event.id,
         eventType: event.type,
         audience: route.audience,
-        transport: route.transport,
-        errorName: failure.name,
-        message: failure.message
+        transport: route.transport
       });
     }
   }
@@ -130851,6 +131067,18 @@ var logger27 = credentialLogger(credentialName5);
 
 // graph.ts
 var sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+function validateGraphRequestUrl(value) {
+  let url3;
+  try {
+    url3 = new URL(value);
+  } catch {
+    throw new Error("Graph request URL rejected");
+  }
+  if (url3.protocol !== "https:" || url3.hostname !== "graph.microsoft.com" || url3.port !== "" || url3.username !== "" || url3.password !== "" || url3.pathname !== "/v1.0" && !url3.pathname.startsWith("/v1.0/") || url3.hash !== "") {
+    throw new Error("Graph request URL rejected");
+  }
+  return url3.href;
+}
 function requestIdentifier(response) {
   for (const name3 of ["request-id", "client-request-id"]) {
     const value = response.headers.get(name3);
@@ -130881,12 +131109,13 @@ var GraphClient = class {
   sleeper;
   now;
   async request(url3, init) {
+    const validatedUrl = validateGraphRequestUrl(url3);
     for (let attempt = 0; attempt < 6; attempt++) {
       let response;
       try {
         const token = await this.credential.getToken("https://graph.microsoft.com/.default");
         if (!token) throw new Error("TokenUnavailable");
-        response = await this.fetcher(url3, {
+        response = await this.fetcher(validatedUrl, {
           ...init,
           headers: {
             Authorization: `Bearer ${token.token}`,
@@ -130904,10 +131133,14 @@ var GraphClient = class {
       }
       if (response.ok) return response;
       const identifier = requestIdentifier(response);
+      const operationId = identifier ? identifier.slice(identifier.indexOf(": ") + 2, -1) : void 0;
       if (response.status !== 408 && response.status !== 429 && response.status < 500) {
-        throw new Error(`Graph request failed with status ${response.status}${identifier}`);
+        await response.body?.cancel().catch(() => void 0);
+        throw new ProviderRequestError("microsoftGraph", `GraphHttp${response.status}`, response.status, operationId);
       }
-      if (attempt === 5) throw new Error(`Graph retry limit reached with status ${response.status}${identifier}`);
+      if (attempt === 5) {
+        throw new ProviderRequestError("microsoftGraph", `GraphHttp${response.status}`, response.status, operationId);
+      }
       await response.body?.cancel().catch(() => void 0);
       await this.sleeper(retryDelay(response, attempt, this.now));
     }
@@ -148473,6 +148706,14 @@ function hasStatus(error, statusCode) {
 }
 var OUTBOX_STALE_MS = 15 * 6e4;
 var DELIVERY_STALE_MS = 2 * 6e4;
+function classifyDeliveryReservation(entity, now = Date.now()) {
+  if (entity.status === "delivered" || !entity.status && entity.sentAt) return "delivered";
+  const reservedAt = entity.reservedAt ? new Date(entity.reservedAt).valueOf() : Number.NaN;
+  if (entity.status === "pending" && Number.isFinite(reservedAt) && now - reservedAt <= DELIVERY_STALE_MS) {
+    return "pending";
+  }
+  return void 0;
+}
 var AzureStateRepository = class {
   state;
   fingerprints;
@@ -148603,8 +148844,17 @@ var AzureStateRepository = class {
       status: "published"
     }, "Merge");
   }
-  async reserveDelivery(key) {
+  async reserveDelivery(key, legacyDeliveredKey) {
     await this.ready;
+    if (legacyDeliveredKey && legacyDeliveredKey !== key) {
+      try {
+        const legacy = await this.history.getEntity("notification", legacyDeliveredKey);
+        const legacyState = classifyDeliveryReservation(legacy);
+        if (legacyState) return { status: legacyState };
+      } catch (error) {
+        if (!hasStatus(error, 404)) throw error;
+      }
+    }
     try {
       await this.history.createEntity({
         partitionKey: "notification",
@@ -148618,11 +148868,8 @@ var AzureStateRepository = class {
     } catch (error) {
       if (!isConflict(error)) throw error;
       const existing = await this.history.getEntity("notification", key);
-      if (existing.status === "delivered" || !existing.status && existing.sentAt) return { status: "delivered" };
-      const reservedAt = existing.reservedAt ? new Date(existing.reservedAt).valueOf() : Number.NaN;
-      if (existing.status === "pending" && Number.isFinite(reservedAt) && Date.now() - reservedAt <= DELIVERY_STALE_MS) {
-        return { status: "pending" };
-      }
+      const existingState = classifyDeliveryReservation(existing);
+      if (existingState) return { status: existingState };
       try {
         await this.history.updateEntity({
           partitionKey: "notification",
@@ -148742,6 +148989,7 @@ var webhookUrl = process.env.TEAMS_ADMIN_WEBHOOK_URL;
 var emailSenderUpn = process.env.EMAIL_SENDER_UPN;
 validateDeliveryConfiguration(routing, { adminEmails, webhookUrl, emailSenderUpn });
 var collectionEnabled = process.env.DEVICE_NOTIFICATION_COLLECTION_ENABLED?.toLowerCase() === "true";
+var notificationEnvironment = loadNotificationEnvironment();
 var entraOverlapMs = boundedNumber("ENTRA_AUDIT_OVERLAP_MINUTES", process.env.ENTRA_AUDIT_OVERLAP_MINUTES, 15, 1, 1440) * 6e4;
 var enrollmentLookbackMs = boundedNumber("ENROLLMENT_LOOKBACK_HOURS", process.env.ENROLLMENT_LOOKBACK_HOURS, 0, 0, 720) * 36e5;
 var storageAccount = required("STORAGE_ACCOUNT_NAME");
@@ -148801,7 +149049,8 @@ import_functions.app.storageQueue("dispatchDeviceNotification", {
       routing,
       adminEmails,
       webhookUrl,
-      emailSenderUpn
+      emailSenderUpn,
+      environment: notificationEnvironment
     });
   }
 });
@@ -148830,7 +149079,8 @@ import_functions.app.http("testNotificationDelivery", {
       routing,
       adminEmails,
       webhookUrl,
-      emailSenderUpn
+      emailSenderUpn,
+      environment: notificationEnvironment
     }, collectionEnabled);
   }
 });

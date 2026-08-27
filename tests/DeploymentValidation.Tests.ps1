@@ -76,6 +76,9 @@ Describe 'Deployment validation adapter' {
     It 'accepts only authentication-specific Bot rejections as proof' {
         InModuleScope Deployment.Validation {
             Mock Initialize-DeviceNotificationValidationContext
+            Mock Get-DeviceNotificationValidationConfiguration {
+                [pscustomobject] @{ UsesTeamsDm = $true }
+            }
             $definitions = @(Get-ProjectValidationDefinition | Where-Object id -in @(
                     'context.azure-session',
                     'security.bot-rejects-unauthenticated'
@@ -92,6 +95,29 @@ Describe 'Deployment validation adapter' {
                 Where-Object id -eq 'security.bot-rejects-unauthenticated'
             $unauthorized.status | Should -Be 'pass'
             $unauthorized.actual | Should -Be 401
+        }
+    }
+
+    It 'does not require or probe Bot Service for email-only delivery' {
+        InModuleScope Deployment.Validation {
+            $env:TEAMS_BOT_NAME = $null
+            Mock Initialize-DeviceNotificationValidationContext
+            Mock Get-DeviceNotificationValidationConfiguration {
+                [pscustomobject] @{ UsesTeamsDm = $false }
+            }
+            Mock az { '0' }
+            Mock Invoke-WebRequest { throw 'Bot probing is not applicable.' }
+
+            $definitions = @(Get-ProjectValidationDefinition | Where-Object id -in @(
+                    'context.azure-session',
+                    'configuration.bot-endpoint',
+                    'security.bot-rejects-unauthenticated'
+                ))
+            $results = @(Invoke-AzdValidationSet -Definitions $definitions)
+
+            ($results | Where-Object id -eq 'configuration.bot-endpoint').status | Should -Be 'pass'
+            ($results | Where-Object id -eq 'security.bot-rejects-unauthenticated').status | Should -Be 'skipped'
+            Assert-MockCalled Invoke-WebRequest -Times 0 -Exactly
         }
     }
 

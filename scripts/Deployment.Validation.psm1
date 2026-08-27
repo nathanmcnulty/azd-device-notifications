@@ -32,8 +32,7 @@ $script:RequiredEnvironmentNames = @(
     'AZURE_FUNCTION_APP_NAME',
     'AZURE_FUNCTION_APP_URL',
     'AZURE_WORKLOAD_PRINCIPAL_ID',
-    'AZURE_WORKLOAD_CLIENT_ID',
-    'TEAMS_BOT_NAME'
+    'AZURE_WORKLOAD_CLIENT_ID'
 )
 
 $script:DeliveryScriptPath = $null
@@ -257,6 +256,26 @@ function Get-ProjectValidationDefinition {
         -DependsOn 'context.azure-session' `
         -Remediation 'Rerun provisioning or correct the Bot identity and messaging endpoint.' `
         -Action {
+            $configuration = Get-DeviceNotificationValidationConfiguration
+            if (-not $configuration.UsesTeamsDm) {
+                $botCount = & az resource list --subscription $env:AZURE_SUBSCRIPTION_ID `
+                    --resource-group $env:AZURE_RESOURCE_GROUP --resource-type Microsoft.BotService/botServices `
+                    --query 'length(@)' --only-show-errors --output tsv
+                if ($LASTEXITCODE -ne 0 -or $botCount -ne '0') {
+                    return (New-AzdCheckFailure -Code 'configuration.unexpectedBotResource' `
+                        -Summary 'Bot Service is present or could not be verified when no personal Teams route is configured.' `
+                        -Expected 'No Azure Bot resource.' `
+                        -Remediation 'Remove the unused Bot Service resource or enable a personal Teams route intentionally.')
+                }
+                return (New-AzdCheckOutcome -Summary 'No Azure Bot resource is deployed because no personal Teams route is configured.' `
+                    -Expected 0 -Actual 0)
+            }
+            if (-not $env:TEAMS_BOT_NAME) {
+                return (New-AzdCheckFailure -Code 'configuration.botNameMissing' `
+                    -Summary 'The Azure Bot name is missing for a personal Teams route.' `
+                    -Expected 'A provisioned Azure Bot name.' `
+                    -Remediation 'Rerun provisioning and confirm the personal Teams route is enabled.')
+            }
             $botJson = & az resource show --subscription $env:AZURE_SUBSCRIPTION_ID `
                 --resource-group $env:AZURE_RESOURCE_GROUP --resource-type Microsoft.BotService/botServices `
                 --name $env:TEAMS_BOT_NAME --api-version 2022-09-15 --only-show-errors --output json
@@ -294,6 +313,11 @@ function Get-ProjectValidationDefinition {
         -DependsOn 'context.azure-session' `
         -Remediation 'Inspect Bot Framework authentication before enabling notification collection.' `
         -Action {
+            $configuration = Get-DeviceNotificationValidationConfiguration
+            if (-not $configuration.UsesTeamsDm) {
+                return (New-AzdCheckOutcome -Status skipped `
+                    -Summary 'Bot authentication probing is not applicable because no personal Teams route is configured.')
+            }
             $activity = @{
                 type = 'message'
                 id = 'azd-validation-probe'
