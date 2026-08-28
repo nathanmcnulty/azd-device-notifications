@@ -8,6 +8,9 @@ This template tells users and administrators when:
 
 Notifications can go to the device owner, an administrator, or both. Supported destinations are a personal Teams message, a Teams Workflow, and email from one shared mailbox.
 
+> [!WARNING]
+> This repository does not yet have a stable release. Use `main` for review and test deployments only, and prove every selected notification route before enabling collection. The solution detects and notifies; it does not remediate devices.
+
 > [!IMPORTANT]
 > This solution only detects and notifies. It never deletes, disables, retires, or wipes a device, changes compliance, or performs another remediation action.
 
@@ -70,12 +73,13 @@ At least one route is required. An administrator route is strongly recommended. 
 
 ## Deploy
 
-This repository does not yet have a stable release. Use the default branch only for review and test deployments:
+Use the default branch only for review and test deployments:
 
 ```powershell
-azd init --template nathanmcnulty/azd-device-notifications
-azd up
+azd init -t nathanmcnulty/azd-device-notifications && azd up
 ```
+
+The `azd` hooks run the interactive setup wizard and the post-deploy delivery check.
 
 The setup wizard asks you to:
 
