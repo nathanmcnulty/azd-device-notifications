@@ -5,6 +5,10 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    groups:
+      npm:
+        patterns:
+          - "*"
     ignore:
       # Keep type definitions aligned with the Node 22 Azure Functions runtime.
       - dependency-name: "@types/node"
@@ -14,3 +18,7 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns:
+          - "*"
