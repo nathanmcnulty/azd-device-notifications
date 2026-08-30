@@ -375,8 +375,8 @@ Describe 'Lifecycle safety contracts' {
         $renderedParameters = [regex]::Replace($renderedParameters, '\$\{[^}]+\}', 'safe')
         $parsedParameters = $renderedParameters | ConvertFrom-Json
         $parsedParameters.parameters.routingConfigBase64.value | Should -BeExactly $sampleBase64
-        $main | Should -Match '(?s)@minLength\(1\)\s*param routingConfigBase64 string'
         $main | Should -Match 'param routingConfigBase64 string'
+        $main | Should -Not -Match '(?s)@minLength\(1\)\s*param routingConfigBase64 string'
         $main | Should -Match 'base64ToString\(routingConfigBase64\)'
         $main | Should -Match 'json\(routingConfigJson\)'
         $main | Should -Match 'routingConfigJson: string\(validatedRoutingConfig\)'
@@ -392,6 +392,8 @@ Describe 'Lifecycle safety contracts' {
 
     It 'emits root deployment expressions that force every required object and array path' {
         $compiled = Get-Content (Join-Path $repoRoot 'infra/main.json') -Raw | ConvertFrom-Json -Depth 100
+        $compiled.parameters.routingConfigBase64.type | Should -BeExactly 'string'
+        $compiled.parameters.routingConfigBase64.PSObject.Properties.Name | Should -Not -Contain 'minLength'
         foreach ($eventName in @('deviceRegistered', 'deviceEnrolled', 'deviceNoncompliant')) {
             $expression = [string]$compiled.variables."${eventName}Routing"
             $expression | Should -Match "union\(variables\('routingConfig'\)\.events\.$eventName"
@@ -424,6 +426,20 @@ param routingConfigBase64 = '$encoded'
         }
 
         try {
+            $emptyContent = @"
+using '../infra/main.bicep'
+
+param environmentName = 'routing-test'
+param location = 'westus2'
+param tenantId = '$contextId'
+param routingConfigBase64 = ''
+"@
+            [IO.File]::WriteAllText($fixture, $emptyContent, [Text.Encoding]::UTF8)
+            $emptyDiagnostics = @(& az bicep snapshot --file $fixture --subscription-id $contextId `
+                    --tenant-id $contextId --location westus2 --only-show-errors 2>&1)
+            $LASTEXITCODE | Should -Not -Be 0 -Because 'An absent first-run derived value must fail at root evaluation after preprovision'
+            ($emptyDiagnostics -join "`n") | Should -Match 'Template snapshotting could not be completed'
+
             Write-RoutingSnapshotParameters $routing
             $validDiagnostics = @(& az bicep snapshot --file $fixture --subscription-id $contextId `
                     --tenant-id $contextId --location westus2 --only-show-errors 2>&1)
