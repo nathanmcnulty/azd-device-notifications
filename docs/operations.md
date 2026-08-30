@@ -170,7 +170,7 @@ Wait for active Function executions and queues to settle. Preserve poison messag
 
 Retain the azd environment until exact ownership records have been reviewed. Do not infer ownership from a display name alone.
 
-When Exchange setup has any recorded intent, cleanup requires the ExchangeOnlineManagement module. It first closes other Exchange sessions, then authenticates the recorded administrator UPN through the normal browser flow and requires exactly one active connection matching both that user and the exact azd tenant. If safe cleanup or post-delete absence verification cannot complete, `azd down` stops without clearing ownership evidence.
+When Exchange setup has any recorded intent, cleanup requires the ExchangeOnlineManagement module. It first closes other Exchange sessions, then reuses the selected Azure CLI account's cached Exchange Online token for the exact recorded tenant; it does not start a separate device-code flow. The connection is explicitly bound to that tenant and administrator UPN and must report exactly one active session matching both. If cached token acquisition, connection, safe cleanup, or post-delete absence verification cannot complete, `azd down` stops without clearing ownership evidence.
 
 ### 3. Remove Azure resources
 

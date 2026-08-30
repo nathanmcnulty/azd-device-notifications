@@ -94,6 +94,47 @@ Describe 'Exchange ownership and context safety' {
                 -ExpectedTenantId $exact.TenantID -ExpectedAdminUpn 'other@contoso.com' } | Should -Throw '*expected administrator*'
     }
 
+    It 'connects with a cached tenant-scoped token and preserves exact session validation' {
+        $tenantId = '11111111-1111-4111-8111-111111111111'
+        $adminUpn = 'admin@contoso.com'
+        Mock Get-AzureCliExchangeAccessToken -ModuleName Exchange.Management { 'opaque-test-token' }
+        Mock Invoke-ExchangeOnlineTokenConnection -ModuleName Exchange.Management {}
+        Mock Get-ActiveExchangeOnlineConnections -ModuleName Exchange.Management {
+            [pscustomobject]@{ State = 'Connected'; TenantID = $tenantId; UserPrincipalName = $adminUpn }
+        }
+
+        Connect-AzdExchangeOnline -ExpectedTenantId $tenantId -ExpectedAdminUpn $adminUpn | Out-Null
+
+        Assert-MockCalled Get-AzureCliExchangeAccessToken -ModuleName Exchange.Management -Times 1 -Exactly `
+            -ParameterFilter { $ExpectedTenantId -eq $tenantId }
+        Assert-MockCalled Invoke-ExchangeOnlineTokenConnection -ModuleName Exchange.Management -Times 1 -Exactly `
+            -ParameterFilter {
+                $AccessToken -eq 'opaque-test-token' -and $ExpectedTenantId -eq $tenantId -and $ExpectedAdminUpn -eq $adminUpn
+            }
+    }
+
+    It 'fails closed when cached token acquisition or exact session validation fails' {
+        $tenantId = '11111111-1111-4111-8111-111111111111'
+        $adminUpn = 'admin@contoso.com'
+        Mock Get-AzureCliExchangeAccessToken -ModuleName Exchange.Management { throw 'cached token unavailable' }
+        Mock Invoke-ExchangeOnlineTokenConnection -ModuleName Exchange.Management {}
+        { Connect-AzdExchangeOnline -ExpectedTenantId $tenantId -ExpectedAdminUpn $adminUpn } |
+            Should -Throw '*cached token unavailable*'
+        Assert-MockCalled Invoke-ExchangeOnlineTokenConnection -ModuleName Exchange.Management -Times 0 -Exactly
+
+        Mock Get-AzureCliExchangeAccessToken -ModuleName Exchange.Management { 'opaque-test-token' }
+        Mock Invoke-ExchangeOnlineTokenConnection -ModuleName Exchange.Management { throw 'Exchange token connection failed' }
+        { Connect-AzdExchangeOnline -ExpectedTenantId $tenantId -ExpectedAdminUpn $adminUpn } |
+            Should -Throw '*token connection failed*'
+
+        Mock Invoke-ExchangeOnlineTokenConnection -ModuleName Exchange.Management {}
+        Mock Get-ActiveExchangeOnlineConnections -ModuleName Exchange.Management {
+            [pscustomobject]@{ State = 'Connected'; TenantID = '22222222-2222-4222-8222-222222222222'; UserPrincipalName = $adminUpn }
+        }
+        { Connect-AzdExchangeOnline -ExpectedTenantId $tenantId -ExpectedAdminUpn $adminUpn } |
+            Should -Throw '*instead of expected tenant*'
+    }
+
     It 'requires explicit adoption but resumes objects covered by pending creation receipts' {
         { Resolve-ExchangeObjectOwnership -Exists $true -RecordedOwnership '' -ObjectDescription 'scope' } |
             Should -Throw '*AdoptExisting*'
@@ -306,9 +347,15 @@ Describe 'Lifecycle safety contracts' {
         $cleanup = Get-Content (Join-Path $repoRoot 'scripts/Remove-TenantObjects.ps1') -Raw
         $pre = Get-Content (Join-Path $repoRoot 'scripts/Pre-Provision.ps1') -Raw
         $post = Get-Content (Join-Path $repoRoot 'scripts/Post-Provision.ps1') -Raw
-        $configure | Should -Match 'Connect-ExchangeOnline -UserPrincipalName \$AdminUpn'
-        $configure | Should -Match 'Assert-ExactExchangeConnection'
-        $cleanup | Should -Match 'Connect-ExchangeOnline -UserPrincipalName \$env:DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN'
+        $exchangeModule = Get-Content (Join-Path $repoRoot 'scripts/Exchange.Management.psm1') -Raw
+        $configure | Should -Match 'Connect-AzdExchangeOnline'
+        $cleanup | Should -Match 'Connect-AzdExchangeOnline'
+        $configure | Should -Not -Match '(?m)^\s*Connect-ExchangeOnline\b'
+        $cleanup | Should -Not -Match '(?m)^\s*Connect-ExchangeOnline\b'
+        $exchangeModule | Should -Match "az account get-access-token --tenant \`$ExpectedTenantId"
+        $exchangeModule | Should -Match "--resource 'https://outlook\.office365\.com'"
+        $exchangeModule | Should -Match 'Connect-ExchangeOnline -AccessToken \$AccessToken -Organization \$ExpectedTenantId'
+        $exchangeModule | Should -Match 'Assert-ExactExchangeConnection -Connections'
         $pre | Should -Match 'Initialize-AzdResourceGroupOwnership'
         $post | Should -Match 'Get-AzdFunctionTarget'
         $cleanup | Should -Match 'Get-AzdFunctionTarget -AllowMissing'

@@ -26,6 +26,80 @@ function Assert-ExactExchangeConnection {
     return $connection
 }
 
+function Get-AzureCliExchangeAccessToken {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][string] $ExpectedTenantId)
+
+    if (-not (Get-Command az -ErrorAction SilentlyContinue)) {
+        throw 'Azure CLI is required to acquire the Exchange Online access token.'
+    }
+    $responseJson = $null
+    $response = $null
+    try {
+        $responseJson = & az account get-access-token --tenant $ExpectedTenantId `
+            --resource 'https://outlook.office365.com' --query '{accessToken:accessToken,tenant:tenant}' `
+            --output json --only-show-errors 2>$null
+        if ($LASTEXITCODE -ne 0 -or -not $responseJson) {
+            throw 'Azure CLI could not acquire a cached Exchange Online access token for the expected tenant.'
+        }
+        try { $response = $responseJson | ConvertFrom-Json -ErrorAction Stop } catch {
+            throw 'Azure CLI returned an invalid Exchange Online access-token response.'
+        }
+        if (-not (Test-OrdinalIgnoreCaseEqual ([string]$response.tenant) $ExpectedTenantId)) {
+            throw 'Azure CLI returned an Exchange Online access token for a different tenant.'
+        }
+        $accessToken = [string]$response.accessToken
+        if ([string]::IsNullOrWhiteSpace($accessToken)) {
+            throw 'Azure CLI returned an empty Exchange Online access token.'
+        }
+        return $accessToken
+    }
+    finally {
+        $responseJson = $null
+        $response = $null
+    }
+}
+
+function Invoke-ExchangeOnlineTokenConnection {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string] $AccessToken,
+        [Parameter(Mandatory)][string] $ExpectedTenantId,
+        [Parameter(Mandatory)][string] $ExpectedAdminUpn
+    )
+
+    Disconnect-ExchangeOnline -Confirm:$false -ErrorAction SilentlyContinue
+    Connect-ExchangeOnline -AccessToken $AccessToken -Organization $ExpectedTenantId `
+        -UserPrincipalName $ExpectedAdminUpn -ShowBanner:$false -ErrorAction Stop
+}
+
+function Get-ActiveExchangeOnlineConnections {
+    [CmdletBinding()]
+    param()
+
+    return @(Get-ConnectionInformation)
+}
+
+function Connect-AzdExchangeOnline {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string] $ExpectedTenantId,
+        [Parameter(Mandatory)][string] $ExpectedAdminUpn
+    )
+
+    $accessToken = $null
+    try {
+        $accessToken = Get-AzureCliExchangeAccessToken -ExpectedTenantId $ExpectedTenantId
+        Invoke-ExchangeOnlineTokenConnection -AccessToken $accessToken -ExpectedTenantId $ExpectedTenantId `
+            -ExpectedAdminUpn $ExpectedAdminUpn
+        return Assert-ExactExchangeConnection -Connections @(Get-ActiveExchangeOnlineConnections) `
+            -ExpectedTenantId $ExpectedTenantId -ExpectedAdminUpn $ExpectedAdminUpn
+    }
+    finally {
+        $accessToken = $null
+    }
+}
+
 function Assert-RecordedExchangeBinding {
     [CmdletBinding()]
     param(
@@ -157,6 +231,6 @@ function Wait-ExchangeObjectAbsent {
     throw "$ObjectDescription still exists after deletion. Ownership receipts were retained."
 }
 
-Export-ModuleMember -Function Assert-ExactExchangeConnection, Assert-RecordedExchangeBinding,
+Export-ModuleMember -Function Assert-ExactExchangeConnection, Connect-AzdExchangeOnline, Assert-RecordedExchangeBinding,
     Resolve-ExchangeObjectOwnership, Test-ExchangeOwnershipRemovable, Assert-ExchangeServicePrincipalExact,
     Assert-ExchangeScopeExact, Assert-ExchangeAssignmentExact, Wait-ExchangeObjectAbsent

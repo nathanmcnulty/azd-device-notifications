@@ -61,10 +61,7 @@ foreach ($binding in @(
 
 Import-Module ExchangeOnlineManagement
 try {
-    Disconnect-ExchangeOnline -Confirm:$false -ErrorAction SilentlyContinue
-    Connect-ExchangeOnline -UserPrincipalName $AdminUpn -ShowBanner:$false
-    Assert-ExactExchangeConnection -Connections @(Get-ConnectionInformation) `
-        -ExpectedTenantId $env:AZURE_TENANT_ID -ExpectedAdminUpn $AdminUpn | Out-Null
+    Connect-AzdExchangeOnline -ExpectedTenantId $env:AZURE_TENANT_ID -ExpectedAdminUpn $AdminUpn | Out-Null
 
     $servicePrincipals = @(Get-ServicePrincipal -Identity $env:AZURE_WORKLOAD_CLIENT_ID -ErrorAction SilentlyContinue)
     if ($servicePrincipals.Count -gt 1) { throw 'More than one Exchange service-principal pointer matched the exact workload client ID.' }

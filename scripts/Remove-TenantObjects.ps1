@@ -74,10 +74,8 @@ $removeServicePrincipal = Test-ExchangeOwnershipRemovable $env:DEVICE_NOTIFICATI
 
 Import-Module ExchangeOnlineManagement
 try {
-    Disconnect-ExchangeOnline -Confirm:$false -ErrorAction SilentlyContinue
-    Connect-ExchangeOnline -UserPrincipalName $env:DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN -ShowBanner:$false
-    Assert-ExactExchangeConnection -Connections @(Get-ConnectionInformation) `
-        -ExpectedTenantId $env:AZURE_TENANT_ID -ExpectedAdminUpn $env:DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN | Out-Null
+    Connect-AzdExchangeOnline -ExpectedTenantId $env:AZURE_TENANT_ID `
+        -ExpectedAdminUpn $env:DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN | Out-Null
 
     $servicePrincipals = @(Get-ServicePrincipal -Identity $env:DEVICE_NOTIFICATION_EXCHANGE_WORKLOAD_CLIENT_ID -ErrorAction SilentlyContinue)
     if ($servicePrincipals.Count -gt 1) { throw 'More than one Exchange service-principal pointer matched the recorded workload client ID.' }
