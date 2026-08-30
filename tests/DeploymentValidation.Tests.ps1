@@ -170,8 +170,11 @@ Describe 'Deployment validation adapter' {
         $component = @($lock.components | Where-Object id -eq 'deployment-validation')
 
         $component.Count | Should -Be 1
-        $component[0].version | Should -Be '0.3.2'
         $component[0].sourceRevision | Should -Match '^[0-9a-f]{40}$'
+        $moduleFile = @($component[0].files | Where-Object target -eq 'scripts/vendor/Azd.DeploymentValidation/Azd.DeploymentValidation.psd1')
+        $moduleFile.Count | Should -Be 1
+        $moduleManifest = Import-PowerShellDataFile -LiteralPath (Join-Path $repoRoot $moduleFile[0].target)
+        $moduleManifest.ModuleVersion.ToString() | Should -Be $component[0].version
         foreach ($file in $component[0].files) {
             $actual = (Get-FileHash -LiteralPath (Join-Path $repoRoot $file.target) -Algorithm SHA256).Hash.ToLowerInvariant()
             $actual | Should -Be $file.sha256

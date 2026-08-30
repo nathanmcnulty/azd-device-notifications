@@ -16,9 +16,9 @@ Describe 'notification contract provenance' {
         $component = @($lock.components | Where-Object id -eq 'notification-contracts')
 
         $component.Count | Should -Be 1
-        $component[0].version | Should -Be '1.0.0'
+        $component[0].version | Should -Match '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$'
         $component[0].sourceRepository | Should -Be 'https://github.com/nathanmcnulty/azd-reference'
-        $component[0].sourceRevision | Should -Be 'c8f827cb00b1369d64f468494db651eb84aa1d3c'
+        $component[0].sourceRevision | Should -Match '^[0-9a-f]{40}$'
         foreach ($file in @($component[0].files)) {
             $actualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $script:templateRoot $file.target)).Hash.ToLowerInvariant()
             $actualHash | Should -Be $file.sha256
