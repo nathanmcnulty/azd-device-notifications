@@ -32,3 +32,8 @@ hooks:
     run: ./scripts/Remove-TenantObjects.ps1
     interactive: true
     continueOnError: false
+  postdown:
+    shell: pwsh
+    run: ./scripts/Test-DownCleanup.ps1
+    interactive: false
+    continueOnError: false

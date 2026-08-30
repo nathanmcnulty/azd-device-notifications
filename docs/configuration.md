@@ -84,6 +84,8 @@ Ownership values are `create-pending`, `created`, or `adopted`. `create-pending`
 
 Azure resource-group creation is also receipt-bound. A first provision requires `rg-<environment-name>` to be absent. Later provisioning accepts that group only when the same local azd environment holds its creation receipt and the exact `azd-env-name` and `workload=device-notifications` tags still match. Choose a new environment name instead of adopting an unrelated resource group.
 
+Resource-target values used by deployment and lifecycle scripts are refreshed from the active azd environment rather than accepted from inherited process variables. `AZURE_RESOURCE_GROUP` must equal `rg-<environment-name>`. The Function App must be in that exact resource group and carry exact `azd-env-name`, `workload=device-notifications`, and `azd-service-name=notifier` tags before any deployment, key retrieval, test delivery, collection toggle, packaging, or cleanup pause can continue.
+
 ## First-run enrollment behavior
 
 | Variable | Default | Effect |

@@ -187,6 +187,7 @@ if ($env:DEVICE_NOTIFICATION_COLLECTION_ENABLED -eq 'true') {
         [void](Get-AzdEnvironmentValue $name)
     }
     if (-not $env:AZURE_FUNCTION_APP_NAME -or -not $env:AZURE_WORKLOAD_CLIENT_ID) { throw 'Enabled collection requires existing Function App outputs.' }
+    Get-AzdFunctionTarget | Out-Null
     $expectedFingerprint = Get-NotificationDeliveryFingerprint -RoutingJson $env:DEVICE_NOTIFICATION_ROUTING_JSON `
         -TeamsWebhookUrl $env:TEAMS_ADMIN_WEBHOOK_URL -AdminEmailRecipients $env:ADMIN_EMAIL_RECIPIENTS `
         -EmailSenderUpn $env:EMAIL_SENDER_UPN -FunctionAppName $env:AZURE_FUNCTION_APP_NAME -WorkloadClientId $env:AZURE_WORKLOAD_CLIENT_ID

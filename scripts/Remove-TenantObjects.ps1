@@ -23,12 +23,10 @@ foreach ($name in @('AZURE_SUBSCRIPTION_ID', 'AZURE_TENANT_ID', 'AZURE_ENV_NAME'
     [void](Get-AzdEnvironmentValue $name)
 }
 Assert-AzdTenantContext
-[void](Confirm-AzdResourceGroupOwnership -AllowMissing)
+$functionTarget = Get-AzdFunctionTarget -AllowMissing
 
-if ($env:AZURE_RESOURCE_GROUP -and $env:AZURE_FUNCTION_APP_NAME) {
-    $functionExists = & az functionapp show --subscription $env:AZURE_SUBSCRIPTION_ID --resource-group $env:AZURE_RESOURCE_GROUP `
-        --name $env:AZURE_FUNCTION_APP_NAME --query name -o tsv 2>$null
-    if ($LASTEXITCODE -eq 0 -and $functionExists -and $PSCmdlet.ShouldProcess($env:AZURE_FUNCTION_APP_NAME, 'Pause collection before tenant cleanup')) {
+if ($functionTarget) {
+    if ($PSCmdlet.ShouldProcess($env:AZURE_FUNCTION_APP_NAME, 'Pause collection before tenant cleanup')) {
         & az functionapp config appsettings set --subscription $env:AZURE_SUBSCRIPTION_ID --resource-group $env:AZURE_RESOURCE_GROUP `
             --name $env:AZURE_FUNCTION_APP_NAME --settings DEVICE_NOTIFICATION_COLLECTION_ENABLED=false --only-show-errors | Out-Null
         if ($LASTEXITCODE -ne 0) { throw 'Unable to pause collection before tenant cleanup.' }

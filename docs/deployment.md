@@ -19,6 +19,8 @@ Do not use device-code authentication. The preprovision guard stops when the act
 
 Use a fresh azd environment name. Preprovision refuses an existing `rg-<environment-name>` unless the same local environment recorded its creation and its exact ownership tags still match; there is no implicit Azure resource-group adoption.
 
+After provisioning, every script that can deploy to, read keys from, test, enable, or pause the Function App refreshes the target from the active azd environment. It requires the exact `rg-<environment-name>` resource group and exact Function App resource ID and ownership tags. A stale terminal value or an app from another environment is rejected before the operation.
+
 ## 2. Initialize and review choices
 
 Until the first stable release is published, use the default branch only for review and test deployments:

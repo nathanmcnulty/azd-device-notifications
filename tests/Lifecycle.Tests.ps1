@@ -32,6 +32,47 @@ Describe 'Tenant and subscription safety' {
                 -Tags ([pscustomobject]@{ 'azd-env-name' = 'other'; workload = 'device-notifications' }) `
                 -EnvironmentName 'proof-123' } | Should -Throw '*ownership tags*'
     }
+
+    It 'rejects a stale resource-group output after an azd environment switch' {
+        { Assert-AzdResourceGroupNameBinding -EnvironmentName 'current' -ResourceGroupName 'rg-previous' `
+                -RecordedResourceGroupName 'rg-current' } | Should -Throw '*does not match exact target*'
+        Assert-AzdResourceGroupNameBinding -EnvironmentName 'current' -ResourceGroupName 'rg-current' `
+            -RecordedResourceGroupName 'rg-current' | Should -Be 'rg-current'
+    }
+
+    It 'requires the Function App exact resource ID and all ownership tags' {
+        $function = [pscustomobject]@{
+            name = 'func-current'
+            resourceGroup = 'rg-current'
+            id = '/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/rg-current/providers/Microsoft.Web/sites/func-current'
+            tags = [pscustomobject]@{
+                'azd-env-name' = 'current'
+                workload = 'device-notifications'
+                'azd-service-name' = 'notifier'
+            }
+        }
+        $parameters = @{
+            Function = $function
+            SubscriptionId = '11111111-1111-4111-8111-111111111111'
+            ResourceGroupName = 'rg-current'
+            FunctionAppName = 'func-current'
+            EnvironmentName = 'current'
+        }
+        { Assert-AzdFunctionResourceBinding @parameters } | Should -Not -Throw
+        $function.resourceGroup = 'rg-previous'
+        { Assert-AzdFunctionResourceBinding @parameters } | Should -Throw '*exact resource ID and ownership tags*'
+        $function.resourceGroup = 'rg-current'
+        $function.tags.workload = 'other'
+        { Assert-AzdFunctionResourceBinding @parameters } | Should -Throw '*exact resource ID and ownership tags*'
+    }
+
+    It 'authoritatively refreshes azd values instead of trusting stale process state' {
+        $env:AZD_STALE_TARGET_TEST = 'stale-value'
+        Mock azd -ModuleName Tenant.Guards { $global:LASTEXITCODE = 0; 'authoritative-value' }
+        Get-AzdEnvironmentValue 'AZD_STALE_TARGET_TEST' -Authoritative | Should -Be 'authoritative-value'
+        $env:AZD_STALE_TARGET_TEST | Should -Be 'authoritative-value'
+        Remove-Item Env:AZD_STALE_TARGET_TEST -ErrorAction SilentlyContinue
+    }
 }
 
 Describe 'Exchange ownership and context safety' {
@@ -269,8 +310,35 @@ Describe 'Lifecycle safety contracts' {
         $configure | Should -Match 'Assert-ExactExchangeConnection'
         $cleanup | Should -Match 'Connect-ExchangeOnline -UserPrincipalName \$env:DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN'
         $pre | Should -Match 'Initialize-AzdResourceGroupOwnership'
-        $post | Should -Match 'Confirm-AzdResourceGroupOwnership'
-        $cleanup | Should -Match 'Confirm-AzdResourceGroupOwnership -AllowMissing'
+        $post | Should -Match 'Get-AzdFunctionTarget'
+        $cleanup | Should -Match 'Get-AzdFunctionTarget -AllowMissing'
+    }
+
+    It 'validates the exact Function target before every sensitive Function operation' {
+        foreach ($path in @(
+                'scripts/Deploy-FunctionPackage.ps1',
+                'scripts/Test-NotificationDelivery.ps1',
+                'scripts/Enable-NotificationCollection.ps1',
+                'scripts/Remove-TenantObjects.ps1',
+                'scripts/New-TeamsAppPackage.ps1',
+                'scripts/Configure-ExchangeMail.ps1',
+                'scripts/Post-Provision.ps1'
+            )) {
+            Get-Content (Join-Path $repoRoot $path) -Raw | Should -Match 'Get-AzdFunctionTarget'
+        }
+        Get-Content (Join-Path $repoRoot 'scripts/Deployment.Validation.psm1') -Raw |
+            Should -Match 'Get-AzdFunctionTarget'
+    }
+
+    It 'verifies exact resource-group absence after down before clearing ownership receipts' {
+        $down = Get-Content (Join-Path $repoRoot 'scripts/Test-DownCleanup.ps1') -Raw
+        $down | Should -Match 'Assert-AzdResourceGroupTarget -AllowDerived'
+        $down | Should -Match 'az group exists'
+        $verifyIndex = $down.IndexOf("if (`$existsText -eq 'true')")
+        $clearIndex = $down.IndexOf("Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_AZURE_RESOURCE_GROUP_NAME' ''")
+        $verifyIndex | Should -BeGreaterOrEqual 0
+        $clearIndex | Should -BeGreaterThan $verifyIndex
+        Get-Content (Join-Path $repoRoot 'azure.yaml') -Raw | Should -Match 'postdown:[\s\S]*Test-DownCleanup\.ps1'
     }
 
     It 'persists collection enablement only after the live setting is verified' {

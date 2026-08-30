@@ -10,6 +10,7 @@ foreach ($name in @('AZURE_SUBSCRIPTION_ID', 'AZURE_RESOURCE_GROUP', 'AZURE_FUNC
     if (-not [Environment]::GetEnvironmentVariable($name)) { throw "$name is required to deploy the Function package." }
 }
 Assert-AzdTenantContext
+Get-AzdFunctionTarget | Out-Null
 
 $packageRoot = Join-Path (Split-Path $PSScriptRoot -Parent) 'function-package'
 $requiredFiles = @(

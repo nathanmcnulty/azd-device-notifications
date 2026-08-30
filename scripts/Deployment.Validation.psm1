@@ -83,6 +83,7 @@ function Initialize-DeviceNotificationValidationContext {
         }
     }
     Assert-AzdTenantContext
+    Get-AzdFunctionTarget | Out-Null
 }
 
 function Get-DeviceNotificationValidationConfiguration {

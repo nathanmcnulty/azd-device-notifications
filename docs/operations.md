@@ -158,7 +158,7 @@ azd env set DEVICE_NOTIFICATION_COLLECTION_ENABLED false
 azd provision
 ```
 
-Confirm the Function App setting is `false` before tenant cleanup.
+Confirm the Function App setting is `false` before tenant cleanup. The pause and cleanup scripts first refresh the active azd target and require the Function App to belong to the exact `rg-<environment-name>` group with matching environment, workload, and service tags.
 
 Wait for active Function executions and queues to settle. Preserve poison messages and history required by policy.
 
@@ -178,4 +178,4 @@ When Exchange setup has any recorded intent, cleanup requires the ExchangeOnline
 azd down --purge --force
 ```
 
-The predown hook runs the same ownership-aware tenant cleanup before deleting the resource group, including notification state and history. If tenant cleanup cannot prove ownership, teardown stops rather than broadening deletion. Confirm the resource group and managed identity no longer exist. Finally, remove the local azd environment only after no ownership evidence is needed for tenant cleanup.
+The predown hook runs the same ownership-aware tenant cleanup before deleting the resource group, including notification state and history. If tenant cleanup cannot prove ownership, teardown stops rather than broadening deletion. The postdown hook then queries the exact subscription and `rg-<environment-name>` target and clears the local Azure resource-group receipt only after Azure reports that group absent; a still-present group fails teardown and preserves the receipt. Confirm the managed identity service principal no longer exists. Finally, remove the local azd environment only after no ownership evidence is needed for tenant cleanup.

@@ -29,7 +29,7 @@ if (-not $env:AZURE_WORKLOAD_CLIENT_ID -or -not $env:AZURE_WORKLOAD_PRINCIPAL_ID
     throw 'Run this from an initialized azd environment after provisioning.'
 }
 Assert-AzdTenantContext
-Confirm-AzdResourceGroupOwnership | Out-Null
+Get-AzdFunctionTarget | Out-Null
 if ($env:DEVICE_NOTIFICATION_COLLECTION_ENABLED -eq 'true') { throw 'Pause notification collection before changing Exchange delivery authorization.' }
 if (-not (Get-Module ExchangeOnlineManagement -ListAvailable)) {
     throw 'Install ExchangeOnlineManagement, then rerun this script.'
