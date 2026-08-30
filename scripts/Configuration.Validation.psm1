@@ -6,6 +6,12 @@ function Test-NotificationCronSchedule {
     return $Schedule -match '^[0-9A-Za-z*?,/\-]+(?:\s+[0-9A-Za-z*?,/\-]+){5}$'
 }
 
+function Test-NotificationJsonObject {
+    param([AllowNull()][object] $Value)
+
+    return $null -ne $Value -and ($Value -is [pscustomobject] -or $Value -is [System.Collections.IDictionary])
+}
+
 function Get-NotificationConfiguration {
     [CmdletBinding()]
     param(
@@ -21,7 +27,8 @@ function Get-NotificationConfiguration {
 
     try { $routing = $RoutingJson | ConvertFrom-Json -ErrorAction Stop }
     catch { throw 'DEVICE_NOTIFICATION_ROUTING_JSON must contain valid JSON.' }
-    if (-not $routing.events) { throw 'Routing configuration must contain an events object.' }
+    if (-not (Test-NotificationJsonObject $routing)) { throw 'Routing configuration must be a JSON object.' }
+    if (-not (Test-NotificationJsonObject $routing.events)) { throw 'Routing configuration must contain an events object.' }
     $eventNames = @('deviceRegistered', 'deviceEnrolled', 'deviceNoncompliant')
     $validTransports = @('teamsDm', 'teamsWebhook', 'email')
     $usesWebhook = $false
@@ -30,7 +37,9 @@ function Get-NotificationConfiguration {
     $enabledRouteCount = 0
     foreach ($eventName in $eventNames) {
         $routeEvent = $routing.events.$eventName
-        if (-not $routeEvent) { throw "Routing configuration must define '$eventName'." }
+        if (-not (Test-NotificationJsonObject $routeEvent)) {
+            throw "Routing configuration must define '$eventName' as an object."
+        }
         foreach ($audience in @('user', 'admin')) {
             $routeValue = $routeEvent.$audience
             if ($null -eq $routeValue -or $routeValue -is [string] -or -not ($routeValue -is [System.Collections.IEnumerable])) {
