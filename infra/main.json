@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.46.1.21595",
-      "templateHash": "7103562031432528873"
+      "templateHash": "4220016401773210671"
     }
   },
   "parameters": {
@@ -21,7 +21,8 @@
       "defaultValue": "[tenant().tenantId]"
     },
     "routingConfigBase64": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "adminEmailRecipients": {
       "type": "string",
@@ -68,6 +69,7 @@
     "resourceToken": "[toLower(uniqueString(subscription().id, parameters('environmentName')))]",
     "resourceGroupName": "[format('rg-{0}', parameters('environmentName'))]",
     "routingConfigJson": "[base64ToString(parameters('routingConfigBase64'))]",
+    "routingConfig": "[json(variables('routingConfigJson'))]",
     "tags": {
       "azd-env-name": "[parameters('environmentName')]",
       "workload": "device-notifications"
@@ -114,7 +116,7 @@
             "value": "[variables('resourceGroupName')]"
           },
           "routingConfigJson": {
-            "value": "[variables('routingConfigJson')]"
+            "value": "[string(variables('routingConfig'))]"
           },
           "adminEmailRecipients": {
             "value": "[parameters('adminEmailRecipients')]"

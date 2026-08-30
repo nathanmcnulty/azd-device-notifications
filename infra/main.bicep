@@ -4,6 +4,7 @@ targetScope = 'subscription'
 param environmentName string
 param location string
 param tenantId string = tenant().tenantId
+@minLength(1)
 param routingConfigBase64 string
 param adminEmailRecipients string = ''
 param emailSenderUpn string = ''
@@ -23,6 +24,7 @@ param teamsBotEnabled bool = false
 var resourceToken = toLower(uniqueString(subscription().id, environmentName))
 var resourceGroupName = 'rg-${environmentName}'
 var routingConfigJson = base64ToString(routingConfigBase64)
+var routingConfig = json(routingConfigJson)
 var tags = {
   'azd-env-name': environmentName
   workload: 'device-notifications'
@@ -45,7 +47,7 @@ module resources 'resources.bicep' = {
     tenantId: tenantId
     subscriptionId: subscription().subscriptionId
     resourceGroupName: resourceGroup.name
-    routingConfigJson: routingConfigJson
+    routingConfigJson: string(routingConfig)
     adminEmailRecipients: adminEmailRecipients
     emailSenderUpn: emailSenderUpn
     teamsAdminWebhookUrl: teamsAdminWebhookUrl

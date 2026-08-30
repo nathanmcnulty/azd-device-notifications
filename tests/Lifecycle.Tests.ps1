@@ -232,6 +232,16 @@ Describe 'Configuration validation' {
         $encoded | Should -Match '^[A-Za-z0-9+/]+={0,2}$'
         [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($encoded)) | Should -BeExactly $raw
     }
+
+    It 'bootstraps the derived transport only after validating first-run raw routing' {
+        $derivedBase64 = $null
+        { Get-NotificationConfiguration -RoutingJson $routing -EntraPollSchedule '0 */5 * * * *' `
+                -IntunePollSchedule '30 */15 * * * *' -EnrollmentLookbackHours 0 -AuditOverlapMinutes 15 } |
+            Should -Not -Throw
+        $derivedBase64 | Should -BeNullOrEmpty
+        $derivedBase64 = ConvertTo-RoutingConfigBase64 -RoutingJson $routing
+        $derivedBase64 | Should -Not -BeNullOrEmpty
+    }
 }
 
 Describe 'Graph permission planning' {
@@ -337,16 +347,23 @@ Describe 'Lifecycle safety contracts' {
         $main = Get-Content (Join-Path $repoRoot 'infra/main.bicep') -Raw
         $resources = Get-Content (Join-Path $repoRoot 'infra/resources.bicep') -Raw
         $pre = Get-Content (Join-Path $repoRoot 'scripts/Pre-Provision.ps1') -Raw
-        $parameters | Should -Match '\$\{DEVICE_NOTIFICATION_ROUTING_BASE64\}'
+        $parameters | Should -Match '\$\{DEVICE_NOTIFICATION_ROUTING_BASE64=\}'
         $parameters | Should -Not -Match '\$\{DEVICE_NOTIFICATION_ROUTING_JSON\}'
+        $firstRunParameters = $parameters.Replace('${DEVICE_NOTIFICATION_ROUTING_BASE64=}', '')
+        $firstRunParameters = [regex]::Replace($firstRunParameters, '\$\{[^}]+\}', 'safe')
+        ($firstRunParameters | ConvertFrom-Json).parameters.routingConfigBase64.value | Should -BeExactly ''
         $sampleJson = '{"quoted":"a \"value\"","path":"C:\\proof","label":"café"}'
         $sampleBase64 = ConvertTo-RoutingConfigBase64 -RoutingJson $sampleJson
-        $renderedParameters = $parameters.Replace('${DEVICE_NOTIFICATION_ROUTING_BASE64}', $sampleBase64)
+        $renderedParameters = $parameters.Replace('${DEVICE_NOTIFICATION_ROUTING_BASE64=}', $sampleBase64)
         $renderedParameters = [regex]::Replace($renderedParameters, '\$\{[^}]+\}', 'safe')
         $parsedParameters = $renderedParameters | ConvertFrom-Json
         $parsedParameters.parameters.routingConfigBase64.value | Should -BeExactly $sampleBase64
+        $main | Should -Match '(?s)@minLength\(1\)\s*param routingConfigBase64 string'
         $main | Should -Match 'param routingConfigBase64 string'
         $main | Should -Match 'base64ToString\(routingConfigBase64\)'
+        $main | Should -Match 'json\(routingConfigJson\)'
+        $main | Should -Match 'routingConfigJson: string\(routingConfig\)'
+        $main | Should -Match '(?s)@secure\(\)\s*param teamsAdminWebhookUrl string'
         $resources | Should -Match "name: 'ROUTING_CONFIG_JSON', value: routingConfigJson"
         $validationIndex = $pre.LastIndexOf('$configuration = Get-NotificationConfiguration')
         $transportIndex = $pre.IndexOf("Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_ROUTING_BASE64'")
