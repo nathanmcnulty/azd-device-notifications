@@ -90,6 +90,34 @@ Invoke-CheckedCommand npm @('run', 'build') $sourceRoot 'TypeScript build'
 Invoke-CheckedCommand npm @('run', 'bundle') $sourceRoot 'Function bundle build'
 Invoke-CheckedCommand npm @('audit', '--omit=dev', '--audit-level=high') $sourceRoot 'Production dependency audit'
 
+$deploymentPackageFiles = @('host.json', 'index.cjs', 'index.cjs.LEGAL.txt', 'package.json')
+foreach ($file in $deploymentPackageFiles) {
+    if (-not (Test-Path -LiteralPath (Join-Path $repositoryRoot "function-package/$file") -PathType Leaf)) {
+        throw "The packaged Function artifact is missing required file: function-package/$file."
+    }
+}
+$packageRoot = Join-Path $repositoryRoot 'function-package'
+$packageArchive = Join-Path ([System.IO.Path]::GetTempPath()) ("azd-device-notifications-$([guid]::NewGuid().ToString('N')).zip")
+try {
+    Compress-Archive -Path ($deploymentPackageFiles | ForEach-Object { Join-Path $packageRoot $_ }) `
+        -DestinationPath $packageArchive -CompressionLevel Optimal
+    $archive = [System.IO.Compression.ZipFile]::OpenRead($packageArchive)
+    try {
+        $archiveEntries = @($archive.Entries | ForEach-Object FullName | Sort-Object)
+    }
+    finally {
+        $archive.Dispose()
+    }
+    if (@(Compare-Object -ReferenceObject ($deploymentPackageFiles | Sort-Object) -DifferenceObject $archiveEntries).Count -gt 0) {
+        throw 'The rebuilt Function ZIP does not contain exactly the required deployment artifact files.'
+    }
+}
+finally {
+    if (Test-Path -LiteralPath $packageArchive -PathType Leaf) {
+        [System.IO.File]::Delete($packageArchive)
+    }
+}
+
 $sourceHost = (Get-Content -LiteralPath (Join-Path $sourceRoot 'host.json') -Raw) -replace "`r`n", "`n"
 $packagedHost = (Get-Content -LiteralPath (Join-Path $repositoryRoot 'function-package/host.json') -Raw) -replace "`r`n", "`n"
 if ($sourceHost -cne $packagedHost) {
@@ -131,9 +159,9 @@ if ($LASTEXITCODE -ne 0) {
 Invoke-CheckedCommand az @('bicep', 'build', '--file', 'infra/main.bicep', '--no-restore') $repositoryRoot 'Bicep build'
 Get-Content -LiteralPath (Join-Path $repositoryRoot 'infra/main.json') -Raw | ConvertFrom-Json -Depth 100 | Out-Null
 
-& git -C $repositoryRoot diff --exit-code -- function-package/index.cjs infra/main.json
+& git -C $repositoryRoot diff --exit-code -- function-package/index.cjs function-package/index.cjs.LEGAL.txt infra/main.json
 if ($LASTEXITCODE -ne 0) {
-    throw 'Generated Function or ARM output differs from the checked-in artifact.'
+    throw 'Generated Function bundle, legal notice, or ARM output differs from the checked-in artifact.'
 }
 & git -C $repositoryRoot diff --check
 if ($LASTEXITCODE -ne 0) {

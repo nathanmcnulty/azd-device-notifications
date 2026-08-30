@@ -19,6 +19,9 @@ Describe 'Deployment validation adapter' {
     }
 
     It 'plans every check without Azure, azd, web, or delivery calls' {
+        if (-not (Get-Command azd -ErrorAction SilentlyContinue)) {
+            function global:azd { throw 'azd must not run in Plan mode.' }
+        }
         Mock az { throw 'az must not run in Plan mode.' }
         Mock azd { throw 'azd must not run in Plan mode.' }
         Mock Invoke-WebRequest { throw 'HTTP must not run in Plan mode.' }

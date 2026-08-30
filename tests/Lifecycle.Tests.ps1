@@ -86,14 +86,26 @@ Describe 'Lifecycle safety contracts' {
         $deployment = Get-Content (Join-Path $repoRoot 'scripts/Deploy-FunctionPackage.ps1') -Raw
         $deployment | Should -Match 'function-package'
         $deployment | Should -Match '--build-remote false'
+        $deployment | Should -Match "'index\.cjs\.LEGAL\.txt'"
         $deployment | Should -Not -Match 'npm|nodejs\.org'
         Test-Path (Join-Path $repoRoot 'function-package/index.cjs') | Should -BeTrue
+        Test-Path (Join-Path $repoRoot 'function-package/index.cjs.LEGAL.txt') | Should -BeTrue
         Test-Path (Join-Path $repoRoot 'scripts/Invoke-Azd.ps1') | Should -BeFalse
     }
 
     It 'marks the reproducible runtime bundle as generated without weakening handwritten diff checks' {
         $attributes = Get-Content (Join-Path $repoRoot '.gitattributes') -Raw
         $attributes | Should -Match 'function-package/index\.cjs linguist-generated=true -whitespace'
+        $attributes | Should -Match 'function-package/index\.cjs\.LEGAL\.txt linguist-generated=true -whitespace'
+    }
+
+    It 'retains the generated third-party legal notice in the reproducible deployment package' {
+        $package = Get-Content (Join-Path $repoRoot 'src/package.json') -Raw
+        $repositoryValidation = Get-Content (Join-Path $repoRoot 'scripts/Test-Repository.ps1') -Raw
+        $package | Should -Match '--legal-comments=external'
+        $repositoryValidation | Should -Match "'index\.cjs\.LEGAL\.txt'"
+        $repositoryValidation | Should -Match 'function-package/index\.cjs\.LEGAL\.txt'
+        $repositoryValidation | Should -Match 'Compress-Archive'
     }
 
     It 'does not require Bot Service for email-only owner delivery' {
