@@ -242,6 +242,20 @@ Describe 'Configuration validation' {
         $derivedBase64 = ConvertTo-RoutingConfigBase64 -RoutingJson $routing
         $derivedBase64 | Should -Not -BeNullOrEmpty
     }
+
+    It 'rejects empty, array, null, scalar, and scalar-event routing structures' {
+        foreach ($invalidRouting in @(
+                '{}',
+                '[]',
+                'null',
+                '"scalar"',
+                '{"events":{"deviceRegistered":"invalid","deviceEnrolled":{},"deviceNoncompliant":{}}}'
+            )) {
+            { Get-NotificationConfiguration -RoutingJson $invalidRouting -EntraPollSchedule '0 */5 * * * *' `
+                    -IntunePollSchedule '30 */15 * * * *' -EnrollmentLookbackHours 0 -AuditOverlapMinutes 15 } |
+                Should -Throw
+        }
+    }
 }
 
 Describe 'Graph permission planning' {
@@ -362,14 +376,68 @@ Describe 'Lifecycle safety contracts' {
         $main | Should -Match 'param routingConfigBase64 string'
         $main | Should -Match 'base64ToString\(routingConfigBase64\)'
         $main | Should -Match 'json\(routingConfigJson\)'
-        $main | Should -Match 'routingConfigJson: string\(routingConfig\)'
+        $main | Should -Match 'routingConfig: routingConfig'
         $main | Should -Match '(?s)@secure\(\)\s*param teamsAdminWebhookUrl string'
-        $resources | Should -Match "name: 'ROUTING_CONFIG_JSON', value: routingConfigJson"
+        $resources | Should -Match '(?s)type routingEventDefinition = \{\s*user: array\s*admin: array\s*\}'
+        foreach ($eventName in @('deviceRegistered', 'deviceEnrolled', 'deviceNoncompliant')) {
+            $resources | Should -Match "$eventName`: routingEventDefinition"
+        }
+        $resources | Should -Match 'param routingConfig routingConfiguration'
+        $resources | Should -Match "name: 'ROUTING_CONFIG_JSON', value: string\(routingConfig\)"
         $validationIndex = $pre.LastIndexOf('$configuration = Get-NotificationConfiguration')
         $transportIndex = $pre.IndexOf("Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_ROUTING_BASE64'")
         $validationIndex | Should -BeGreaterOrEqual 0
         $transportIndex | Should -BeGreaterThan $validationIndex
         $pre | Should -Match 'Get-NotificationDeliveryFingerprint -RoutingJson \$env:DEVICE_NOTIFICATION_ROUTING_JSON'
+    }
+
+    It 'rejects empty, array, null, scalar, and malformed event routing at the Bicep module boundary' {
+        $moduleTemplate = @'
+module invalid__NAME__ '../infra/resources.bicep' = {
+  name: 'invalid-__NAME__'
+  scope: resourceGroup('rg-test')
+  params: {
+    location: 'westus2'
+    namePrefix: 'test'
+    resourceToken: 'token'
+    environmentName: 'test'
+    tenantId: '11111111-1111-4111-8111-111111111111'
+    subscriptionId: '11111111-1111-4111-8111-111111111111'
+    resourceGroupName: 'rg-test'
+    routingConfig: __VALUE__
+    adminEmailRecipients: ''
+    emailSenderUpn: ''
+    teamsAdminWebhookUrl: ''
+    entraPollSchedule: '0 */5 * * * *'
+    intunePollSchedule: '30 */15 * * * *'
+    enrollmentLookbackHours: 0
+    auditOverlapMinutes: 15
+    collectionEnabled: false
+    teamsBotEnabled: false
+  }
+}
+'@
+        $cases = [ordered]@{
+            empty = '{}'
+            array = '[]'
+            null = 'null'
+            scalar = "'scalar'"
+            eventshape = '{ events: { deviceRegistered: {}, deviceEnrolled: { user: [], admin: [] }, deviceNoncompliant: { user: [], admin: [] } } }'
+        }
+        $fixture = Join-Path $repoRoot "tests/.invalid-routing-$([guid]::NewGuid().ToString('N')).bicep"
+        try {
+            foreach ($case in $cases.GetEnumerator()) {
+                $content = "targetScope = 'subscription'`n" +
+                    $moduleTemplate.Replace('__NAME__', $case.Key).Replace('__VALUE__', $case.Value)
+                [IO.File]::WriteAllText($fixture, $content, [Text.Encoding]::UTF8)
+                $diagnostics = @(& az bicep build --file $fixture --stdout --no-restore 2>&1)
+                $LASTEXITCODE | Should -Not -Be 0 -Because "$($case.Key) routing must fail Bicep validation"
+                ($diagnostics -join "`n") | Should -Match 'Error BCP0(?:35|36)'
+            }
+        }
+        finally {
+            if (Test-Path -LiteralPath $fixture) { [IO.File]::Delete($fixture) }
+        }
     }
 
     It 'records Exchange intent before mutation and cleans crash-resumable ownership states' {

@@ -47,7 +47,7 @@ module resources 'resources.bicep' = {
     tenantId: tenantId
     subscriptionId: subscription().subscriptionId
     resourceGroupName: resourceGroup.name
-    routingConfigJson: string(routingConfig)
+    routingConfig: routingConfig
     adminEmailRecipients: adminEmailRecipients
     emailSenderUpn: emailSenderUpn
     teamsAdminWebhookUrl: teamsAdminWebhookUrl

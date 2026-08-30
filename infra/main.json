@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.46.1.21595",
-      "templateHash": "4220016401773210671"
+      "templateHash": "2823932211903002003"
     }
   },
   "parameters": {
@@ -115,8 +115,8 @@
           "resourceGroupName": {
             "value": "[variables('resourceGroupName')]"
           },
-          "routingConfigJson": {
-            "value": "[string(variables('routingConfig'))]"
+          "routingConfig": {
+            "value": "[variables('routingConfig')]"
           },
           "adminEmailRecipients": {
             "value": "[parameters('adminEmailRecipients')]"
@@ -151,12 +151,45 @@
         },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "languageVersion": "2.0",
           "contentVersion": "1.0.0.0",
           "metadata": {
             "_generator": {
               "name": "bicep",
               "version": "0.46.1.21595",
-              "templateHash": "183645625022292469"
+              "templateHash": "14581905478931920545"
+            }
+          },
+          "definitions": {
+            "routingEventDefinition": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "array"
+                },
+                "admin": {
+                  "type": "array"
+                }
+              }
+            },
+            "routingConfiguration": {
+              "type": "object",
+              "properties": {
+                "events": {
+                  "type": "object",
+                  "properties": {
+                    "deviceRegistered": {
+                      "$ref": "#/definitions/routingEventDefinition"
+                    },
+                    "deviceEnrolled": {
+                      "$ref": "#/definitions/routingEventDefinition"
+                    },
+                    "deviceNoncompliant": {
+                      "$ref": "#/definitions/routingEventDefinition"
+                    }
+                  }
+                }
+              }
             }
           },
           "parameters": {
@@ -181,8 +214,8 @@
             "resourceGroupName": {
               "type": "string"
             },
-            "routingConfigJson": {
-              "type": "string"
+            "routingConfig": {
+              "$ref": "#/definitions/routingConfiguration"
             },
             "adminEmailRecipients": {
               "type": "string"
@@ -232,15 +265,15 @@
             "tableDataContributor": "0a9a7e1f-b9d0-4cc4-a60d-0319b160aaa3",
             "monitoringMetricsPublisher": "3913510d-42f4-4e42-8a64-420c390055eb"
           },
-          "resources": [
-            {
+          "resources": {
+            "identity": {
               "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
               "apiVersion": "2023-01-31",
               "name": "[variables('identityName')]",
               "location": "[parameters('location')]",
               "tags": "[parameters('tags')]"
             },
-            {
+            "storage": {
               "type": "Microsoft.Storage/storageAccounts",
               "apiVersion": "2023-05-01",
               "name": "[variables('storageName')]",
@@ -258,7 +291,7 @@
                 "supportsHttpsTrafficOnly": true
               }
             },
-            {
+            "blobService": {
               "type": "Microsoft.Storage/storageAccounts/blobServices",
               "apiVersion": "2023-05-01",
               "name": "[format('{0}/{1}', variables('storageName'), 'default')]",
@@ -269,10 +302,10 @@
                 }
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+                "storage"
               ]
             },
-            {
+            "deploymentContainer": {
               "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
               "apiVersion": "2023-05-01",
               "name": "[format('{0}/{1}/{2}', variables('storageName'), 'default', 'function-releases')]",
@@ -280,55 +313,55 @@
                 "publicAccess": "None"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('storageName'), 'default')]"
+                "blobService"
               ]
             },
-            {
+            "blobRole": {
               "type": "Microsoft.Authorization/roleAssignments",
               "apiVersion": "2022-04-01",
               "scope": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
               "name": "[guid(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), variables('blobDataOwner'))]",
               "properties": {
-                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2023-01-31').principalId]",
+                "principalId": "[reference('identity').principalId]",
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('blobDataOwner'))]"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+                "identity",
+                "storage"
               ]
             },
-            {
+            "queueRole": {
               "type": "Microsoft.Authorization/roleAssignments",
               "apiVersion": "2022-04-01",
               "scope": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
               "name": "[guid(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), variables('queueDataContributor'))]",
               "properties": {
-                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2023-01-31').principalId]",
+                "principalId": "[reference('identity').principalId]",
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('queueDataContributor'))]"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+                "identity",
+                "storage"
               ]
             },
-            {
+            "tableRole": {
               "type": "Microsoft.Authorization/roleAssignments",
               "apiVersion": "2022-04-01",
               "scope": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
               "name": "[guid(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), variables('tableDataContributor'))]",
               "properties": {
-                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2023-01-31').principalId]",
+                "principalId": "[reference('identity').principalId]",
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('tableDataContributor'))]"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+                "identity",
+                "storage"
               ]
             },
-            {
+            "workspace": {
               "type": "Microsoft.OperationalInsights/workspaces",
               "apiVersion": "2023-09-01",
               "name": "[variables('workspaceName')]",
@@ -341,7 +374,7 @@
                 }
               }
             },
-            {
+            "insights": {
               "type": "Microsoft.Insights/components",
               "apiVersion": "2020-02-02",
               "name": "[variables('insightsName')]",
@@ -354,25 +387,25 @@
                 "DisableLocalAuth": true
               },
               "dependsOn": [
-                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                "workspace"
               ]
             },
-            {
+            "insightsRole": {
               "type": "Microsoft.Authorization/roleAssignments",
               "apiVersion": "2022-04-01",
               "scope": "[resourceId('Microsoft.Insights/components', variables('insightsName'))]",
               "name": "[guid(resourceId('Microsoft.Insights/components', variables('insightsName')), resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), variables('monitoringMetricsPublisher'))]",
               "properties": {
-                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2023-01-31').principalId]",
+                "principalId": "[reference('identity').principalId]",
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('monitoringMetricsPublisher'))]"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]",
-                "[resourceId('Microsoft.Insights/components', variables('insightsName'))]"
+                "identity",
+                "insights"
               ]
             },
-            {
+            "plan": {
               "type": "Microsoft.Web/serverfarms",
               "apiVersion": "2024-04-01",
               "name": "[format('{0}-fc', variables('functionName'))]",
@@ -387,7 +420,7 @@
                 "reserved": true
               }
             },
-            {
+            "functionApp": {
               "type": "Microsoft.Web/sites",
               "apiVersion": "2024-04-01",
               "name": "[variables('functionName')]",
@@ -408,7 +441,7 @@
                   "deployment": {
                     "storage": {
                       "type": "blobContainer",
-                      "value": "[format('{0}{1}', reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2023-05-01').primaryEndpoints.blob, 'function-releases')]",
+                      "value": "[format('{0}{1}', reference('storage').primaryEndpoints.blob, 'function-releases')]",
                       "authentication": {
                         "type": "UserAssignedIdentity",
                         "userAssignedIdentityResourceId": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
@@ -438,11 +471,11 @@
                     },
                     {
                       "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                      "value": "[reference(resourceId('Microsoft.Insights/components', variables('insightsName')), '2020-02-02').ConnectionString]"
+                      "value": "[reference('insights').ConnectionString]"
                     },
                     {
                       "name": "APPLICATIONINSIGHTS_AUTHENTICATION_STRING",
-                      "value": "[format('Authorization=AAD;ClientId={0}', reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2023-01-31').clientId)]"
+                      "value": "[format('Authorization=AAD;ClientId={0}', reference('identity').clientId)]"
                     },
                     {
                       "name": "AzureWebJobsStorage__accountName",
@@ -450,15 +483,15 @@
                     },
                     {
                       "name": "AzureWebJobsStorage__blobServiceUri",
-                      "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2023-05-01').primaryEndpoints.blob]"
+                      "value": "[reference('storage').primaryEndpoints.blob]"
                     },
                     {
                       "name": "AzureWebJobsStorage__queueServiceUri",
-                      "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2023-05-01').primaryEndpoints.queue]"
+                      "value": "[reference('storage').primaryEndpoints.queue]"
                     },
                     {
                       "name": "AzureWebJobsStorage__tableServiceUri",
-                      "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2023-05-01').primaryEndpoints.table]"
+                      "value": "[reference('storage').primaryEndpoints.table]"
                     },
                     {
                       "name": "AzureWebJobsStorage__credential",
@@ -466,11 +499,11 @@
                     },
                     {
                       "name": "AzureWebJobsStorage__clientId",
-                      "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2023-01-31').clientId]"
+                      "value": "[reference('identity').clientId]"
                     },
                     {
                       "name": "MANAGED_IDENTITY_CLIENT_ID",
-                      "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2023-01-31').clientId]"
+                      "value": "[reference('identity').clientId]"
                     },
                     {
                       "name": "STORAGE_ACCOUNT_NAME",
@@ -478,11 +511,11 @@
                     },
                     {
                       "name": "TABLE_ENDPOINT",
-                      "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2023-05-01').primaryEndpoints.table]"
+                      "value": "[reference('storage').primaryEndpoints.table]"
                     },
                     {
                       "name": "QUEUE_ENDPOINT",
-                      "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2023-05-01').primaryEndpoints.queue]"
+                      "value": "[reference('storage').primaryEndpoints.queue]"
                     },
                     {
                       "name": "NOTIFICATION_QUEUE_NAME",
@@ -506,7 +539,7 @@
                     },
                     {
                       "name": "TEAMS_BOT_APP_ID",
-                      "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2023-01-31').clientId]"
+                      "value": "[reference('identity').clientId]"
                     },
                     {
                       "name": "MicrosoftAppType",
@@ -514,7 +547,7 @@
                     },
                     {
                       "name": "MicrosoftAppId",
-                      "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2023-01-31').clientId]"
+                      "value": "[reference('identity').clientId]"
                     },
                     {
                       "name": "MicrosoftAppTenantId",
@@ -522,7 +555,7 @@
                     },
                     {
                       "name": "ROUTING_CONFIG_JSON",
-                      "value": "[parameters('routingConfigJson')]"
+                      "value": "[string(parameters('routingConfig'))]"
                     },
                     {
                       "name": "ADMIN_EMAIL_RECIPIENTS",
@@ -560,18 +593,18 @@
                 }
               },
               "dependsOn": [
-                "[extensionResourceId(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), 'Microsoft.Authorization/roleAssignments', guid(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), variables('blobDataOwner')))]",
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('storageName'), 'default', 'function-releases')]",
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]",
-                "[resourceId('Microsoft.Insights/components', variables('insightsName'))]",
-                "[extensionResourceId(resourceId('Microsoft.Insights/components', variables('insightsName')), 'Microsoft.Authorization/roleAssignments', guid(resourceId('Microsoft.Insights/components', variables('insightsName')), resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), variables('monitoringMetricsPublisher')))]",
-                "[resourceId('Microsoft.Web/serverfarms', format('{0}-fc', variables('functionName')))]",
-                "[extensionResourceId(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), 'Microsoft.Authorization/roleAssignments', guid(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), variables('queueDataContributor')))]",
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
-                "[extensionResourceId(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), 'Microsoft.Authorization/roleAssignments', guid(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), variables('tableDataContributor')))]"
+                "blobRole",
+                "deploymentContainer",
+                "identity",
+                "insights",
+                "insightsRole",
+                "plan",
+                "queueRole",
+                "storage",
+                "tableRole"
               ]
             },
-            {
+            "ftpPolicy": {
               "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
               "apiVersion": "2024-04-01",
               "name": "[format('{0}/{1}', variables('functionName'), 'ftp')]",
@@ -579,10 +612,10 @@
                 "allow": false
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('functionName'))]"
+                "functionApp"
               ]
             },
-            {
+            "scmPolicy": {
               "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
               "apiVersion": "2024-04-01",
               "name": "[format('{0}/{1}', variables('functionName'), 'scm')]",
@@ -590,10 +623,10 @@
                 "allow": false
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('functionName'))]"
+                "functionApp"
               ]
             },
-            {
+            "diagnostics": {
               "type": "Microsoft.Insights/diagnosticSettings",
               "apiVersion": "2021-05-01-preview",
               "scope": "[resourceId('Microsoft.Web/sites', variables('functionName'))]",
@@ -614,11 +647,11 @@
                 ]
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('functionName'))]",
-                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                "functionApp",
+                "workspace"
               ]
             },
-            {
+            "bot": {
               "condition": "[parameters('teamsBotEnabled')]",
               "type": "Microsoft.BotService/botServices",
               "apiVersion": "2022-09-15",
@@ -631,18 +664,18 @@
               },
               "properties": {
                 "displayName": "Device lifecycle notifications",
-                "endpoint": "[format('https://{0}/api/messages', reference(resourceId('Microsoft.Web/sites', variables('functionName')), '2024-04-01').defaultHostName)]",
-                "msaAppId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2023-01-31').clientId]",
+                "endpoint": "[format('https://{0}/api/messages', reference('functionApp').defaultHostName)]",
+                "msaAppId": "[reference('identity').clientId]",
                 "msaAppMSIResourceId": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]",
                 "msaAppTenantId": "[parameters('tenantId')]",
                 "msaAppType": "UserAssignedMSI"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('functionName'))]",
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
+                "functionApp",
+                "identity"
               ]
             },
-            {
+            "teamsChannel": {
               "condition": "[parameters('teamsBotEnabled')]",
               "type": "Microsoft.BotService/botServices/channels",
               "apiVersion": "2022-09-15",
@@ -655,10 +688,10 @@
                 }
               },
               "dependsOn": [
-                "[resourceId('Microsoft.BotService/botServices', variables('botName'))]"
+                "bot"
               ]
             }
-          ],
+          },
           "outputs": {
             "functionAppName": {
               "type": "string",
@@ -666,7 +699,7 @@
             },
             "functionAppUrl": {
               "type": "string",
-              "value": "[format('https://{0}', reference(resourceId('Microsoft.Web/sites', variables('functionName')), '2024-04-01').defaultHostName)]"
+              "value": "[format('https://{0}', reference('functionApp').defaultHostName)]"
             },
             "storageAccountName": {
               "type": "string",
@@ -674,11 +707,11 @@
             },
             "workloadClientId": {
               "type": "string",
-              "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2023-01-31').clientId]"
+              "value": "[reference('identity').clientId]"
             },
             "workloadPrincipalId": {
               "type": "string",
-              "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2023-01-31').principalId]"
+              "value": "[reference('identity').principalId]"
             },
             "botName": {
               "type": "string",

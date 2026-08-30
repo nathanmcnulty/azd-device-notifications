@@ -1,3 +1,16 @@
+type routingEventDefinition = {
+  user: array
+  admin: array
+}
+
+type routingConfiguration = {
+  events: {
+    deviceRegistered: routingEventDefinition
+    deviceEnrolled: routingEventDefinition
+    deviceNoncompliant: routingEventDefinition
+  }
+}
+
 param location string
 param namePrefix string
 param resourceToken string
@@ -5,7 +18,7 @@ param environmentName string
 param tenantId string
 param subscriptionId string
 param resourceGroupName string
-param routingConfigJson string
+param routingConfig routingConfiguration
 param adminEmailRecipients string
 param emailSenderUpn string
 @secure()
@@ -193,7 +206,7 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
         { name: 'MicrosoftAppType', value: 'UserAssignedMSI' }
         { name: 'MicrosoftAppId', value: identity.properties.clientId }
         { name: 'MicrosoftAppTenantId', value: tenantId }
-        { name: 'ROUTING_CONFIG_JSON', value: routingConfigJson }
+        { name: 'ROUTING_CONFIG_JSON', value: string(routingConfig) }
         { name: 'ADMIN_EMAIL_RECIPIENTS', value: adminEmailRecipients }
         { name: 'EMAIL_SENDER_UPN', value: emailSenderUpn }
         { name: 'TEAMS_ADMIN_WEBHOOK_URL', value: teamsAdminWebhookUrl }
