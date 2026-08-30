@@ -87,9 +87,13 @@ Describe 'Lifecycle safety contracts' {
         $deployment | Should -Match 'function-package'
         $deployment | Should -Match '--build-remote false'
         $deployment | Should -Match "'index\.cjs\.LEGAL\.txt'"
+        $deployment | Should -Match "'THIRD-PARTY-NOTICES\.txt'"
+        $deployment | Should -Match "'UNLICENSE\.txt'"
         $deployment | Should -Not -Match 'npm|nodejs\.org'
         Test-Path (Join-Path $repoRoot 'function-package/index.cjs') | Should -BeTrue
         Test-Path (Join-Path $repoRoot 'function-package/index.cjs.LEGAL.txt') | Should -BeTrue
+        Test-Path (Join-Path $repoRoot 'function-package/THIRD-PARTY-NOTICES.txt') | Should -BeTrue
+        Test-Path (Join-Path $repoRoot 'function-package/UNLICENSE.txt') | Should -BeTrue
         Test-Path (Join-Path $repoRoot 'scripts/Invoke-Azd.ps1') | Should -BeFalse
     }
 
@@ -97,14 +101,20 @@ Describe 'Lifecycle safety contracts' {
         $attributes = Get-Content (Join-Path $repoRoot '.gitattributes') -Raw
         $attributes | Should -Match 'function-package/index\.cjs linguist-generated=true -whitespace'
         $attributes | Should -Match 'function-package/index\.cjs\.LEGAL\.txt linguist-generated=true -whitespace'
+        $attributes | Should -Match 'function-package/THIRD-PARTY-NOTICES\.txt linguist-generated=true -whitespace'
+        $attributes | Should -Match 'function-package/UNLICENSE\.txt linguist-generated=true -whitespace'
     }
 
     It 'retains the generated third-party legal notice in the reproducible deployment package' {
         $package = Get-Content (Join-Path $repoRoot 'src/package.json') -Raw
         $repositoryValidation = Get-Content (Join-Path $repoRoot 'scripts/Test-Repository.ps1') -Raw
-        $package | Should -Match '--legal-comments=external'
+        $package | Should -Match 'scripts/bundle\.mjs'
+        Get-Content (Join-Path $repoRoot 'src/scripts/bundle.mjs') -Raw | Should -Match "legalComments: 'external'"
         $repositoryValidation | Should -Match "'index\.cjs\.LEGAL\.txt'"
+        $repositoryValidation | Should -Match "'THIRD-PARTY-NOTICES\.txt'"
+        $repositoryValidation | Should -Match "'UNLICENSE\.txt'"
         $repositoryValidation | Should -Match 'function-package/index\.cjs\.LEGAL\.txt'
+        $repositoryValidation | Should -Match 'function-package/THIRD-PARTY-NOTICES\.txt'
         $repositoryValidation | Should -Match 'Compress-Archive'
     }
 

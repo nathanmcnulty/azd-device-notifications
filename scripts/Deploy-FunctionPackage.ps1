@@ -12,7 +12,14 @@ foreach ($name in @('AZURE_SUBSCRIPTION_ID', 'AZURE_RESOURCE_GROUP', 'AZURE_FUNC
 Assert-AzdTenantContext
 
 $packageRoot = Join-Path (Split-Path $PSScriptRoot -Parent) 'function-package'
-$requiredFiles = @('host.json', 'index.cjs', 'index.cjs.LEGAL.txt', 'package.json')
+$requiredFiles = @(
+    'host.json',
+    'index.cjs',
+    'index.cjs.LEGAL.txt',
+    'package.json',
+    'THIRD-PARTY-NOTICES.txt',
+    'UNLICENSE.txt'
+)
 foreach ($file in $requiredFiles) {
     if (-not (Test-Path -LiteralPath (Join-Path $packageRoot $file) -PathType Leaf)) {
         throw "The repository deployment artifact is incomplete: function-package/$file is missing."

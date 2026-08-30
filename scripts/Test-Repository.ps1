@@ -90,7 +90,14 @@ Invoke-CheckedCommand npm @('run', 'build') $sourceRoot 'TypeScript build'
 Invoke-CheckedCommand npm @('run', 'bundle') $sourceRoot 'Function bundle build'
 Invoke-CheckedCommand npm @('audit', '--omit=dev', '--audit-level=high') $sourceRoot 'Production dependency audit'
 
-$deploymentPackageFiles = @('host.json', 'index.cjs', 'index.cjs.LEGAL.txt', 'package.json')
+$deploymentPackageFiles = @(
+    'host.json',
+    'index.cjs',
+    'index.cjs.LEGAL.txt',
+    'package.json',
+    'THIRD-PARTY-NOTICES.txt',
+    'UNLICENSE.txt'
+)
 foreach ($file in $deploymentPackageFiles) {
     if (-not (Test-Path -LiteralPath (Join-Path $repositoryRoot "function-package/$file") -PathType Leaf)) {
         throw "The packaged Function artifact is missing required file: function-package/$file."
@@ -159,9 +166,10 @@ if ($LASTEXITCODE -ne 0) {
 Invoke-CheckedCommand az @('bicep', 'build', '--file', 'infra/main.bicep', '--no-restore') $repositoryRoot 'Bicep build'
 Get-Content -LiteralPath (Join-Path $repositoryRoot 'infra/main.json') -Raw | ConvertFrom-Json -Depth 100 | Out-Null
 
-& git -C $repositoryRoot diff --exit-code -- function-package/index.cjs function-package/index.cjs.LEGAL.txt infra/main.json
+& git -C $repositoryRoot diff --exit-code -- function-package/index.cjs function-package/index.cjs.LEGAL.txt `
+    function-package/THIRD-PARTY-NOTICES.txt function-package/UNLICENSE.txt infra/main.json
 if ($LASTEXITCODE -ne 0) {
-    throw 'Generated Function bundle, legal notice, or ARM output differs from the checked-in artifact.'
+    throw 'Generated Function bundle, license files, or ARM output differs from the checked-in artifact.'
 }
 & git -C $repositoryRoot diff --check
 if ($LASTEXITCODE -ne 0) {

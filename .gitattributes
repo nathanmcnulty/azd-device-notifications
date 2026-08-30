@@ -3,3 +3,5 @@ scripts/vendor/** text eol=lf
 contracts/notifications/** text eol=lf
 function-package/index.cjs linguist-generated=true -whitespace
 function-package/index.cjs.LEGAL.txt linguist-generated=true -whitespace
+function-package/THIRD-PARTY-NOTICES.txt linguist-generated=true -whitespace
+function-package/UNLICENSE.txt linguist-generated=true -whitespace
