@@ -13,6 +13,7 @@ The first-run wizard is the recommended configuration path. It validates choices
 | `DEVICE_NOTIFICATION_ONBOARDING_STATUS` | Managed by setup | Progresses through `delivery-validation-required`, `delivery-tested`, and `enabled-awaiting-live-event-validation` |
 | `DEVICE_NOTIFICATION_DELIVERY_TESTED` | Managed by test | Becomes `true` only after all three synthetic event types succeed on every selected route |
 | `DEVICE_NOTIFICATION_DELIVERY_TEST_FINGERPRINT` | Managed by test | SHA-256 binds proof to the exact routes, destinations, Function App, and workload identity |
+| `DEVICE_NOTIFICATION_ROUTING_BASE64` | Managed by preprovision | UTF-8 base64 transport copy of validated routing JSON used only to cross the azd parameter boundary safely |
 
 An empty `monitoredUserIds` and empty `monitoredGroupIds` combination means all discovered users. The deployment fails closed unless `DEVICE_NOTIFICATION_SCOPE_MODE=all` and `DEVICE_NOTIFICATION_TENANT_WIDE_CONFIRMED=true` were recorded through an explicit review.
 
@@ -48,6 +49,8 @@ Do not set `DEVICE_NOTIFICATION_COLLECTION_ENABLED=true` directly. Use [protecte
 ```
 
 Valid transports are `teamsDm`, `teamsWebhook`, and `email`. An empty audience array disables delivery to that audience for that event. Every enabled transport must have its matching destination configured and tested.
+
+Keep `DEVICE_NOTIFICATION_ROUTING_JSON` as the editable source of truth. Preprovision validates that raw JSON, derives `DEVICE_NOTIFICATION_ROUTING_BASE64`, and Bicep decodes it before setting the Function App's `ROUTING_CONFIG_JSON` value. Do not edit the derived base64 value; it is refreshed on every provision so quotes, backslashes, Unicode, and other JSON content cannot corrupt the deployment parameters document.
 
 `monitoredUserIds` and `privilegedUserIds` contain Entra user object IDs. `monitoredGroupIds` supports transitive membership and causes the runtime to receive `User.ReadBasic.All` and `GroupMember.Read.All`. Graph group checks run in batches of 20. Do not use hidden-membership groups because the additional `Member.Read.Hidden` permission is intentionally not granted.
 

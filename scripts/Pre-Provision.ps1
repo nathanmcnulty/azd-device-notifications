@@ -150,6 +150,8 @@ $configuration = Get-NotificationConfiguration -RoutingJson $env:DEVICE_NOTIFICA
     -EmailSenderUpn $env:EMAIL_SENDER_UPN -EntraPollSchedule $env:ENTRA_POLL_SCHEDULE `
     -IntunePollSchedule $env:INTUNE_POLL_SCHEDULE -EnrollmentLookbackHours $env:ENROLLMENT_LOOKBACK_HOURS `
     -AuditOverlapMinutes $env:ENTRA_AUDIT_OVERLAP_MINUTES
+Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_ROUTING_BASE64' `
+    (ConvertTo-RoutingConfigBase64 -RoutingJson $env:DEVICE_NOTIFICATION_ROUTING_JSON)
 if ($configuration.UsesEmail) {
     $exchangeAdminUpn = Get-AzdEnvironmentValue 'DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN'
     if (-not $exchangeAdminUpn) {

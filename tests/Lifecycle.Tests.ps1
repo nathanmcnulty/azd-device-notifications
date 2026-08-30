@@ -225,6 +225,13 @@ Describe 'Configuration validation' {
         { Get-NotificationConfiguration -RoutingJson $duplicateRouting -EntraPollSchedule '0 */5 * * * *' `
                 -IntunePollSchedule '30 */15 * * * *' -EnrollmentLookbackHours 0 -AuditOverlapMinutes 15 } | Should -Throw '*duplicate transports*'
     }
+
+    It 'round-trips routing JSON through a JSON-safe UTF-8 base64 transport' {
+        $raw = '{"text":"quote \" backslash \\ and snowman ☃","lines":"one\ntwo"}'
+        $encoded = ConvertTo-RoutingConfigBase64 -RoutingJson $raw
+        $encoded | Should -Match '^[A-Za-z0-9+/]+={0,2}$'
+        [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($encoded)) | Should -BeExactly $raw
+    }
 }
 
 Describe 'Graph permission planning' {
@@ -323,6 +330,29 @@ Describe 'Lifecycle safety contracts' {
         $enable | Should -Match 'DEVICE_NOTIFICATION_DELIVERY_TEST_FINGERPRINT'
         $enable | Should -Match "EXCHANGE_INTENT_STATUS -ne 'complete'"
         $enable | Should -Match 'Assert-RecordedExchangeBinding'
+    }
+
+    It 'transports validated routing JSON through base64 and decodes it before Function configuration' {
+        $parameters = Get-Content (Join-Path $repoRoot 'infra/main.parameters.json') -Raw
+        $main = Get-Content (Join-Path $repoRoot 'infra/main.bicep') -Raw
+        $resources = Get-Content (Join-Path $repoRoot 'infra/resources.bicep') -Raw
+        $pre = Get-Content (Join-Path $repoRoot 'scripts/Pre-Provision.ps1') -Raw
+        $parameters | Should -Match '\$\{DEVICE_NOTIFICATION_ROUTING_BASE64\}'
+        $parameters | Should -Not -Match '\$\{DEVICE_NOTIFICATION_ROUTING_JSON\}'
+        $sampleJson = '{"quoted":"a \"value\"","path":"C:\\proof","label":"café"}'
+        $sampleBase64 = ConvertTo-RoutingConfigBase64 -RoutingJson $sampleJson
+        $renderedParameters = $parameters.Replace('${DEVICE_NOTIFICATION_ROUTING_BASE64}', $sampleBase64)
+        $renderedParameters = [regex]::Replace($renderedParameters, '\$\{[^}]+\}', 'safe')
+        $parsedParameters = $renderedParameters | ConvertFrom-Json
+        $parsedParameters.parameters.routingConfigBase64.value | Should -BeExactly $sampleBase64
+        $main | Should -Match 'param routingConfigBase64 string'
+        $main | Should -Match 'base64ToString\(routingConfigBase64\)'
+        $resources | Should -Match "name: 'ROUTING_CONFIG_JSON', value: routingConfigJson"
+        $validationIndex = $pre.LastIndexOf('$configuration = Get-NotificationConfiguration')
+        $transportIndex = $pre.IndexOf("Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_ROUTING_BASE64'")
+        $validationIndex | Should -BeGreaterOrEqual 0
+        $transportIndex | Should -BeGreaterThan $validationIndex
+        $pre | Should -Match 'Get-NotificationDeliveryFingerprint -RoutingJson \$env:DEVICE_NOTIFICATION_ROUTING_JSON'
     }
 
     It 'records Exchange intent before mutation and cleans crash-resumable ownership states' {

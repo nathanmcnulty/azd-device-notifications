@@ -137,4 +137,12 @@ function Get-NotificationDeliveryFingerprint {
     return [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($bytes))
 }
 
-Export-ModuleMember -Function Test-NotificationCronSchedule, Get-NotificationConfiguration, Get-NotificationDeliveryFingerprint
+function ConvertTo-RoutingConfigBase64 {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][string] $RoutingJson)
+
+    return [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($RoutingJson))
+}
+
+Export-ModuleMember -Function Test-NotificationCronSchedule, Get-NotificationConfiguration, Get-NotificationDeliveryFingerprint,
+    ConvertTo-RoutingConfigBase64

@@ -4,7 +4,7 @@ targetScope = 'subscription'
 param environmentName string
 param location string
 param tenantId string = tenant().tenantId
-param routingConfigJson string
+param routingConfigBase64 string
 param adminEmailRecipients string = ''
 param emailSenderUpn string = ''
 @secure()
@@ -22,6 +22,7 @@ param teamsBotEnabled bool = false
 
 var resourceToken = toLower(uniqueString(subscription().id, environmentName))
 var resourceGroupName = 'rg-${environmentName}'
+var routingConfigJson = base64ToString(routingConfigBase64)
 var tags = {
   'azd-env-name': environmentName
   workload: 'device-notifications'
