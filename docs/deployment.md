@@ -17,6 +17,8 @@ azd auth login
 
 Do not use device-code authentication. The preprovision guard stops when the active Azure CLI tenant, subscription tenant, and azd tenant do not match.
 
+Use a fresh azd environment name. Preprovision refuses an existing `rg-<environment-name>` unless the same local environment recorded its creation and its exact ownership tags still match; there is no implicit Azure resource-group adoption.
+
 ## 2. Initialize and review choices
 
 Until the first stable release is published, use the default branch only for review and test deployments:
@@ -87,11 +89,15 @@ Use these steps only when an `email` route is selected. Do not grant the managed
 During interactive `azd up`, postprovision connects through the normal Exchange Online browser flow and configures mailbox-scoped Application RBAC automatically. If that step was interrupted or the sender mailbox changes, repair it with:
 
 ```powershell
-./scripts/Configure-ExchangeMail.ps1 -SenderMailbox notifications@contoso.com
+./scripts/Configure-ExchangeMail.ps1 `
+    -SenderMailbox notifications@contoso.com `
+    -AdminUpn exchange-admin@contoso.com
 azd provision
 ```
 
-The script creates or explicitly adopts an Exchange service-principal pointer, a recipient scope that resolves only to the requested mailbox, and an `Application Mail.Send` management-role assignment. It records exact names and ownership in the azd environment so teardown can avoid deleting externally owned objects.
+The script disconnects other Exchange sessions, opens one connection for the exact administrator UPN, and verifies that connection's tenant and user before mutation. It creates an Exchange service-principal pointer, a recipient scope that resolves only to the requested mailbox, and an `Application Mail.Send` management-role assignment. Exact target intent and per-object `create-pending` checkpoints are recorded before mutation so an interrupted setup remains cleanable.
+
+If exact matching objects already exist but have no creation receipt in this azd environment, setup stops. After independently verifying their provenance and exact app, principal, scope, role, and mailbox binding, explicitly opt in with `-AdoptExisting`. Adopted objects are recorded but never removed by automated teardown.
 
 Before continuing:
 

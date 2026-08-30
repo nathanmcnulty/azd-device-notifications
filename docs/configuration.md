@@ -66,18 +66,23 @@ Review exclusions carefully. Values in `excludedOwnership` and `excludedOperatin
 | `TEAMS_ADMIN_WEBHOOK_URL` | Any admin `teamsWebhook` route | Callback URL for one administrator channel or chat Workflow |
 | `ADMIN_EMAIL_RECIPIENTS` | Any admin `email` route | Comma-separated administrator email addresses |
 | `EMAIL_SENDER_UPN` | Any owner or admin `email` route | Shared mailbox authorized through Exchange Application RBAC |
+| `DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN` | Any owner or admin `email` route | Exact administrator used for the single Exchange Online connection during setup and cleanup |
 
 For multiple administrator Teams destinations, keep fanout inside an administrator-owned Workflow. The callback URL is a credential. Although it is passed to ARM as a secure parameter, it remains readable to administrators who can read the local azd environment or Function App settings.
 
 Email setup also records exact ownership metadata:
 
 - `DEVICE_NOTIFICATION_EXCHANGE_CONFIGURED`
+- `DEVICE_NOTIFICATION_EXCHANGE_INTENT_STATUS`
+- the exact administrator, workload client ID, and workload principal ID
 - `DEVICE_NOTIFICATION_EXCHANGE_SERVICE_PRINCIPAL_OWNERSHIP`
 - `DEVICE_NOTIFICATION_EXCHANGE_SCOPE_OWNERSHIP`
 - `DEVICE_NOTIFICATION_EXCHANGE_ASSIGNMENT_OWNERSHIP`
 - the exact recorded scope and assignment names
 
-Ownership values are `created` or `adopted`. Do not edit them to make teardown delete an object whose provenance has not been verified.
+Ownership values are `create-pending`, `created`, or `adopted`. `create-pending` is a crash-recovery checkpoint written before a tenant mutation; cleanup treats it as solution-owned only after validating the exact object. Do not edit ownership or binding values to retarget teardown.
+
+Azure resource-group creation is also receipt-bound. A first provision requires `rg-<environment-name>` to be absent. Later provisioning accepts that group only when the same local azd environment holds its creation receipt and the exact `azd-env-name` and `workload=device-notifications` tags still match. Choose a new environment name instead of adopting an unrelated resource group.
 
 ## First-run enrollment behavior
 

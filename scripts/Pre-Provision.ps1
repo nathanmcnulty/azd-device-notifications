@@ -10,6 +10,7 @@ foreach ($command in @('az', 'azd')) {
 }
 foreach ($name in @('AZURE_SUBSCRIPTION_ID', 'AZURE_TENANT_ID', 'AZURE_ENV_NAME')) { [void](Get-AzdEnvironmentValue $name) }
 Assert-AzdTenantContext
+Initialize-AzdResourceGroupOwnership | Out-Null
 
 function Read-YesNo {
     param([Parameter(Mandatory)][string] $Prompt, [bool] $Default = $false)
@@ -149,6 +150,24 @@ $configuration = Get-NotificationConfiguration -RoutingJson $env:DEVICE_NOTIFICA
     -EmailSenderUpn $env:EMAIL_SENDER_UPN -EntraPollSchedule $env:ENTRA_POLL_SCHEDULE `
     -IntunePollSchedule $env:INTUNE_POLL_SCHEDULE -EnrollmentLookbackHours $env:ENROLLMENT_LOOKBACK_HOURS `
     -AuditOverlapMinutes $env:ENTRA_AUDIT_OVERLAP_MINUTES
+if ($configuration.UsesEmail) {
+    $exchangeAdminUpn = Get-AzdEnvironmentValue 'DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN'
+    if (-not $exchangeAdminUpn) {
+        if ($nonInteractive) { throw 'DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN is required for noninteractive email deployment.' }
+        $activeAdminUpn = (& az account show --query user.name --output tsv 2>$null | Out-String).Trim()
+        $prompt = if ($activeAdminUpn -match '^[^@\s]+@[^@\s]+$') {
+            "Enter the Exchange administrator UPN (blank uses $activeAdminUpn)"
+        } else {
+            'Enter the Exchange administrator UPN'
+        }
+        $exchangeAdminUpn = (Read-Host $prompt).Trim()
+        if (-not $exchangeAdminUpn) { $exchangeAdminUpn = $activeAdminUpn }
+        if ($exchangeAdminUpn -notmatch '^[^@\s]+@[^@\s]+$') { throw 'The Exchange administrator UPN is invalid.' }
+        Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN' $exchangeAdminUpn
+    } elseif ($exchangeAdminUpn -notmatch '^[^@\s]+@[^@\s]+$') {
+        throw 'DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN is invalid.'
+    }
+}
 Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_TEAMS_BOT_ENABLED' $configuration.UsesTeamsDm.ToString().ToLowerInvariant()
 $userCount = @($configuration.Routing.monitoredUserIds).Count
 $groupCount = @($configuration.Routing.monitoredGroupIds).Count

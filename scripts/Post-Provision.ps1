@@ -5,13 +5,18 @@ $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'Tenant.Guards.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'Configuration.Validation.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'Graph.Management.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot 'Exchange.Management.psm1') -Force
 foreach ($name in @('AZURE_SUBSCRIPTION_ID', 'AZURE_TENANT_ID', 'AZURE_WORKLOAD_PRINCIPAL_ID', 'AZURE_WORKLOAD_CLIENT_ID',
         'AZURE_FUNCTION_APP_URL', 'DEVICE_NOTIFICATION_ROUTING_JSON', 'TEAMS_ADMIN_WEBHOOK_URL', 'ADMIN_EMAIL_RECIPIENTS',
         'EMAIL_SENDER_UPN', 'ENTRA_POLL_SCHEDULE', 'INTUNE_POLL_SCHEDULE', 'ENROLLMENT_LOOKBACK_HOURS', 'ENTRA_AUDIT_OVERLAP_MINUTES',
-        'DEVICE_NOTIFICATION_COLLECTION_ENABLED', 'DEVICE_NOTIFICATION_ONBOARDING_STATUS')) {
+        'DEVICE_NOTIFICATION_COLLECTION_ENABLED', 'DEVICE_NOTIFICATION_ONBOARDING_STATUS', 'DEVICE_NOTIFICATION_EXCHANGE_CONFIGURED',
+        'DEVICE_NOTIFICATION_EXCHANGE_INTENT_STATUS', 'DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN',
+        'DEVICE_NOTIFICATION_EXCHANGE_TENANT_ID', 'DEVICE_NOTIFICATION_EXCHANGE_SENDER_UPN',
+        'DEVICE_NOTIFICATION_EXCHANGE_WORKLOAD_CLIENT_ID', 'DEVICE_NOTIFICATION_EXCHANGE_WORKLOAD_PRINCIPAL_ID')) {
     [void](Get-AzdEnvironmentValue $name)
 }
 Assert-AzdTenantContext
+Confirm-AzdResourceGroupOwnership | Out-Null
 
 foreach ($name in @('AZURE_WORKLOAD_PRINCIPAL_ID', 'AZURE_WORKLOAD_CLIENT_ID', 'AZURE_FUNCTION_APP_URL')) {
     if (-not [Environment]::GetEnvironmentVariable($name)) { throw "$name was not returned by provisioning." }
@@ -63,11 +68,29 @@ foreach ($item in $managedRoles | Where-Object { $_.Name -notin $permissions }) 
     if ($item.Id -in $verified.value.appRoleId) { throw "Unneeded Microsoft Graph permission remains assigned: $($item.Name)." }
 }
 
-if ($configuration.UsesEmail -and (Get-AzdEnvironmentValue 'DEVICE_NOTIFICATION_EXCHANGE_CONFIGURED') -ne 'true') {
-    if ($env:AZD_NON_INTERACTIVE -eq 'true' -or $env:CI -eq 'true') {
-        throw 'Email routing is enabled but Exchange Application RBAC is not configured. Run Configure-ExchangeMail.ps1 interactively.'
+if ($configuration.UsesEmail -and $env:DEVICE_NOTIFICATION_EXCHANGE_CONFIGURED -eq 'true') {
+    if ($env:DEVICE_NOTIFICATION_EXCHANGE_INTENT_STATUS -ne 'complete') {
+        throw 'Recorded Exchange configuration is not complete. Reconcile or clean up the pending intent before continuing.'
     }
-    & (Join-Path $PSScriptRoot 'Configure-ExchangeMail.ps1') -SenderMailbox $env:EMAIL_SENDER_UPN
+    Assert-RecordedExchangeBinding `
+        -RecordedClientId $env:DEVICE_NOTIFICATION_EXCHANGE_WORKLOAD_CLIENT_ID `
+        -RecordedPrincipalId $env:DEVICE_NOTIFICATION_EXCHANGE_WORKLOAD_PRINCIPAL_ID `
+        -RecordedAdminUpn $env:DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN `
+        -RecordedTenantId $env:DEVICE_NOTIFICATION_EXCHANGE_TENANT_ID `
+        -RecordedSenderMailbox $env:DEVICE_NOTIFICATION_EXCHANGE_SENDER_UPN `
+        -ExpectedClientId $env:AZURE_WORKLOAD_CLIENT_ID -ExpectedPrincipalId $env:AZURE_WORKLOAD_PRINCIPAL_ID `
+        -ExpectedAdminUpn $env:DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN -ExpectedTenantId $env:AZURE_TENANT_ID `
+        -ExpectedSenderMailbox $env:EMAIL_SENDER_UPN -RequireRecorded
+}
+if ($configuration.UsesEmail -and $env:DEVICE_NOTIFICATION_EXCHANGE_CONFIGURED -ne 'true') {
+    if ($env:AZD_NON_INTERACTIVE -eq 'true' -or $env:CI -eq 'true') {
+        throw 'Email routing is enabled but Exchange Application RBAC is not configured. Run Configure-ExchangeMail.ps1 with the exact sender and administrator UPN.'
+    }
+    if (-not $env:DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN) {
+        throw 'Email routing requires the exact DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN recorded during preprovision.'
+    }
+    & (Join-Path $PSScriptRoot 'Configure-ExchangeMail.ps1') -SenderMailbox $env:EMAIL_SENDER_UPN `
+        -AdminUpn $env:DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN
 }
 
 if ($configuration.UsesTeamsDm) {

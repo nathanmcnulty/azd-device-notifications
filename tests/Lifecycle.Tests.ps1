@@ -18,6 +18,97 @@ Describe 'Tenant and subscription safety' {
     It 'enforces the active subscription identifier' {
         Get-Content (Join-Path $repoRoot 'scripts/Tenant.Guards.psm1') -Raw | Should -Match '\$active\.id -ne \$env:AZURE_SUBSCRIPTION_ID'
     }
+
+    It 'requires a fresh resource group or an exact local creation receipt and tags' {
+        Resolve-AzdResourceGroupOwnership -Exists $false -RecordedOwnership '' -Tags $null -EnvironmentName 'proof-123' |
+            Should -Be 'create-pending'
+        { Resolve-AzdResourceGroupOwnership -Exists $true -RecordedOwnership '' `
+                -Tags ([pscustomobject]@{ 'azd-env-name' = 'proof-123'; workload = 'device-notifications' }) `
+                -EnvironmentName 'proof-123' } | Should -Throw '*fresh azd environment name*'
+        Resolve-AzdResourceGroupOwnership -Exists $true -RecordedOwnership 'create-pending' `
+            -Tags ([pscustomobject]@{ 'azd-env-name' = 'proof-123'; workload = 'device-notifications' }) `
+            -EnvironmentName 'proof-123' | Should -Be 'created'
+        { Resolve-AzdResourceGroupOwnership -Exists $true -RecordedOwnership 'created' `
+                -Tags ([pscustomobject]@{ 'azd-env-name' = 'other'; workload = 'device-notifications' }) `
+                -EnvironmentName 'proof-123' } | Should -Throw '*ownership tags*'
+    }
+}
+
+Describe 'Exchange ownership and context safety' {
+    BeforeAll { Import-Module (Join-Path $repoRoot 'scripts/Exchange.Management.psm1') -Force }
+
+    It 'requires exactly one Exchange connection bound to the expected tenant and administrator' {
+        $exact = [pscustomobject]@{
+            State = 'Connected'
+            TenantID = '11111111-1111-4111-8111-111111111111'
+            UserPrincipalName = 'admin@contoso.com'
+        }
+        { Assert-ExactExchangeConnection -Connections @($exact) `
+                -ExpectedTenantId $exact.TenantID -ExpectedAdminUpn $exact.UserPrincipalName } | Should -Not -Throw
+        { Assert-ExactExchangeConnection -Connections @($exact, $exact) `
+                -ExpectedTenantId $exact.TenantID -ExpectedAdminUpn $exact.UserPrincipalName } | Should -Throw '*exactly one*'
+        { Assert-ExactExchangeConnection -Connections @() `
+                -ExpectedTenantId $exact.TenantID -ExpectedAdminUpn $exact.UserPrincipalName } | Should -Throw '*found 0*'
+        { Assert-ExactExchangeConnection -Connections @($exact) `
+                -ExpectedTenantId $exact.TenantID -ExpectedAdminUpn 'other@contoso.com' } | Should -Throw '*expected administrator*'
+    }
+
+    It 'requires explicit adoption but resumes objects covered by pending creation receipts' {
+        { Resolve-ExchangeObjectOwnership -Exists $true -RecordedOwnership '' -ObjectDescription 'scope' } |
+            Should -Throw '*AdoptExisting*'
+        Resolve-ExchangeObjectOwnership -Exists $true -RecordedOwnership '' -AdoptExisting -ObjectDescription 'scope' |
+            Should -Be 'adopted'
+        Resolve-ExchangeObjectOwnership -Exists $true -RecordedOwnership 'create-pending' -ObjectDescription 'scope' |
+            Should -Be 'created'
+        Resolve-ExchangeObjectOwnership -Exists $false -RecordedOwnership '' -ObjectDescription 'scope' |
+            Should -Be 'create-pending'
+        { Resolve-ExchangeObjectOwnership -Exists $false -RecordedOwnership 'adopted' -ObjectDescription 'scope' } |
+            Should -Throw '*adopted*missing*'
+    }
+
+    It 'treats a create-pending checkpoint as removable after a crash and preserves adopted objects' {
+        Test-ExchangeOwnershipRemovable 'create-pending' | Should -BeTrue
+        Test-ExchangeOwnershipRemovable 'created' | Should -BeTrue
+        Test-ExchangeOwnershipRemovable 'adopted' | Should -BeFalse
+    }
+
+    It 'binds an Exchange pointer to both exact workload identifiers' {
+        $pointer = [pscustomobject]@{ AppId = '11111111-1111-4111-8111-111111111111'; ObjectId = '22222222-2222-4222-8222-222222222222' }
+        { Assert-ExchangeServicePrincipalExact -ServicePrincipal $pointer `
+                -ExpectedClientId $pointer.AppId -ExpectedPrincipalId $pointer.ObjectId } | Should -Not -Throw
+        { Assert-ExchangeServicePrincipalExact -ServicePrincipal $pointer `
+                -ExpectedClientId $pointer.AppId -ExpectedPrincipalId '33333333-3333-4333-8333-333333333333' } | Should -Throw '*exact workload*'
+    }
+
+    It 'refuses to retarget recorded tenant, administrator, workload, or sender bindings' {
+        $parameters = @{
+            RecordedClientId = '11111111-1111-4111-8111-111111111111'
+            RecordedPrincipalId = '22222222-2222-4222-8222-222222222222'
+            RecordedAdminUpn = 'admin@contoso.com'
+            RecordedTenantId = '33333333-3333-4333-8333-333333333333'
+            RecordedSenderMailbox = 'notifications@contoso.com'
+            ExpectedClientId = '11111111-1111-4111-8111-111111111111'
+            ExpectedPrincipalId = '22222222-2222-4222-8222-222222222222'
+            ExpectedAdminUpn = 'admin@contoso.com'
+            ExpectedTenantId = '33333333-3333-4333-8333-333333333333'
+            ExpectedSenderMailbox = 'other@contoso.com'
+        }
+        { Assert-RecordedExchangeBinding @parameters } | Should -Throw '*sender mailbox*Refusing to retarget*'
+        $parameters.RecordedSenderMailbox = ''
+        $parameters.ExpectedSenderMailbox = 'notifications@contoso.com'
+        { Assert-RecordedExchangeBinding @parameters -RequireRecorded } | Should -Throw '*sender mailbox is missing*'
+    }
+
+    It 'waits for post-delete absence and fails closed when an object remains' {
+        $script:lookupCount = 0
+        { Wait-ExchangeObjectAbsent -ObjectDescription 'test object' -DelaySeconds 0 -Attempts 3 -Lookup {
+                $script:lookupCount++
+                if ($script:lookupCount -lt 2) { [pscustomobject]@{ id = 'still-present' } }
+            } } | Should -Not -Throw
+        { Wait-ExchangeObjectAbsent -ObjectDescription 'test object' -DelaySeconds 0 -Attempts 2 -Lookup {
+                [pscustomobject]@{ id = 'still-present' }
+            } } | Should -Throw '*receipts were retained*'
+    }
 }
 
 Describe 'Configuration validation' {
@@ -148,15 +239,38 @@ Describe 'Lifecycle safety contracts' {
         $enable = Get-Content (Join-Path $repoRoot 'scripts/Enable-NotificationCollection.ps1') -Raw
         $enable | Should -Match 'ENABLE ALL USERS'
         $enable | Should -Match 'DEVICE_NOTIFICATION_DELIVERY_TEST_FINGERPRINT'
+        $enable | Should -Match "EXCHANGE_INTENT_STATUS -ne 'complete'"
+        $enable | Should -Match 'Assert-RecordedExchangeBinding'
     }
 
-    It 'removes only recorded created Exchange objects and preserves adopted objects' {
+    It 'records Exchange intent before mutation and cleans crash-resumable ownership states' {
+        $configure = Get-Content (Join-Path $repoRoot 'scripts/Configure-ExchangeMail.ps1') -Raw
         $cleanup = Get-Content (Join-Path $repoRoot 'scripts/Remove-TenantObjects.ps1') -Raw
-        $cleanup | Should -Match "ASSIGNMENT_OWNERSHIP -eq 'created'"
-        $cleanup | Should -Match "SCOPE_OWNERSHIP -eq 'created'"
+        $intentIndex = $configure.IndexOf("Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_EXCHANGE_INTENT_STATUS' 'pending'")
+        $firstWriteIndex = $configure.IndexOf('New-ServicePrincipal')
+        $intentIndex | Should -BeGreaterOrEqual 0
+        $firstWriteIndex | Should -BeGreaterThan $intentIndex
+        $configure | Should -Match '\[switch\] \$AdoptExisting'
+        $configure | Should -Match "SERVICE_PRINCIPAL_OWNERSHIP' 'created'"
+        $configure | Should -Match "SCOPE_OWNERSHIP' 'created'"
+        $configure | Should -Match "ASSIGNMENT_OWNERSHIP' 'created'"
+        $cleanup | Should -Not -Match "EXCHANGE_CONFIGURED -ne 'true'"
+        $cleanup | Should -Match 'Test-ExchangeOwnershipRemovable'
+        $cleanup | Should -Match 'Wait-ExchangeObjectAbsent'
         $cleanup | Should -Match 'adopted objects were preserved'
-        $cleanup | Should -Match "Role -ne 'Application Mail.Send'"
-        $cleanup | Should -Match 'RecipientTypeDetails -ne ''SharedMailbox'''
+    }
+
+    It 'binds Exchange login and Azure resource-group ownership before lifecycle mutation' {
+        $configure = Get-Content (Join-Path $repoRoot 'scripts/Configure-ExchangeMail.ps1') -Raw
+        $cleanup = Get-Content (Join-Path $repoRoot 'scripts/Remove-TenantObjects.ps1') -Raw
+        $pre = Get-Content (Join-Path $repoRoot 'scripts/Pre-Provision.ps1') -Raw
+        $post = Get-Content (Join-Path $repoRoot 'scripts/Post-Provision.ps1') -Raw
+        $configure | Should -Match 'Connect-ExchangeOnline -UserPrincipalName \$AdminUpn'
+        $configure | Should -Match 'Assert-ExactExchangeConnection'
+        $cleanup | Should -Match 'Connect-ExchangeOnline -UserPrincipalName \$env:DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN'
+        $pre | Should -Match 'Initialize-AzdResourceGroupOwnership'
+        $post | Should -Match 'Confirm-AzdResourceGroupOwnership'
+        $cleanup | Should -Match 'Confirm-AzdResourceGroupOwnership -AllowMissing'
     }
 
     It 'persists collection enablement only after the live setting is verified' {

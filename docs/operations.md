@@ -164,13 +164,13 @@ Wait for active Function executions and queues to settle. Preserve poison messag
 
 ### 2. Remove tenant-side configuration by ownership
 
-- **Exchange:** preview ownership-aware cleanup with `./scripts/Remove-TenantObjects.ps1 -WhatIf`, then run `./scripts/Remove-TenantObjects.ps1`. It removes only the exact service-principal pointer, management scope, and role assignment recorded as `created` by this environment. Do not remove an `adopted` object without a separate administrator decision. Verify the role assignment is gone and the identity is no longer authorized for the mailbox.
+- **Exchange:** preview ownership-aware cleanup with `./scripts/Remove-TenantObjects.ps1 -WhatIf`, then run `./scripts/Remove-TenantObjects.ps1`. It removes and verifies absence of exact objects recorded as `created` or `create-pending`, including a partially completed setup where `DEVICE_NOTIFICATION_EXCHANGE_CONFIGURED` was never reached. It preserves `adopted` objects. Do not remove an adopted object without a separate administrator decision.
 - **Teams custom app:** remove setup-policy assignments and user installations created for this solution, then remove the uploaded custom app when it is not shared by another deployment.
 - **Teams Workflow:** an administrator-owned Workflow is never deleted automatically. Disable/delete it or transfer ownership, remove obsolete connections, and rotate/revoke its callback URL.
 
 Retain the azd environment until exact ownership records have been reviewed. Do not infer ownership from a display name alone.
 
-When Exchange was configured, cleanup requires the ExchangeOnlineManagement module and an Exchange administrator authenticated to the exact azd tenant through the normal browser flow. If that safe cleanup cannot run, `azd down` stops before deleting the ownership evidence; it does not fall back to ambiguous deletion.
+When Exchange setup has any recorded intent, cleanup requires the ExchangeOnlineManagement module. It first closes other Exchange sessions, then authenticates the recorded administrator UPN through the normal browser flow and requires exactly one active connection matching both that user and the exact azd tenant. If safe cleanup or post-delete absence verification cannot complete, `azd down` stops without clearing ownership evidence.
 
 ### 3. Remove Azure resources
 

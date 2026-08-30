@@ -6,10 +6,14 @@ param(
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'Tenant.Guards.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'Configuration.Validation.psm1') -Force
+Import-Module (Join-Path $PSScriptRoot 'Exchange.Management.psm1') -Force
 foreach ($name in @('AZURE_SUBSCRIPTION_ID', 'AZURE_TENANT_ID', 'AZURE_RESOURCE_GROUP', 'AZURE_FUNCTION_APP_NAME',
         'DEVICE_NOTIFICATION_ROUTING_JSON', 'TEAMS_ADMIN_WEBHOOK_URL', 'ADMIN_EMAIL_RECIPIENTS', 'EMAIL_SENDER_UPN',
         'ENTRA_POLL_SCHEDULE', 'INTUNE_POLL_SCHEDULE', 'ENROLLMENT_LOOKBACK_HOURS', 'ENTRA_AUDIT_OVERLAP_MINUTES',
         'DEVICE_NOTIFICATION_TENANT_WIDE_CONFIRMED', 'DEVICE_NOTIFICATION_EXCHANGE_CONFIGURED',
+        'DEVICE_NOTIFICATION_EXCHANGE_INTENT_STATUS', 'DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN',
+        'DEVICE_NOTIFICATION_EXCHANGE_TENANT_ID', 'DEVICE_NOTIFICATION_EXCHANGE_SENDER_UPN',
+        'DEVICE_NOTIFICATION_EXCHANGE_WORKLOAD_CLIENT_ID', 'DEVICE_NOTIFICATION_EXCHANGE_WORKLOAD_PRINCIPAL_ID',
         'DEVICE_NOTIFICATION_ONBOARDING_STATUS', 'DEVICE_NOTIFICATION_DELIVERY_TESTED', 'DEVICE_NOTIFICATION_DELIVERY_TEST_FINGERPRINT',
         'AZURE_WORKLOAD_CLIENT_ID')) {
     [void](Get-AzdEnvironmentValue $name)
@@ -24,7 +28,20 @@ $userCount = @($configuration.Routing.monitoredUserIds).Count
 $groupCount = @($configuration.Routing.monitoredGroupIds).Count
 $tenantWide = $userCount -eq 0 -and $groupCount -eq 0
 if ($tenantWide -and $env:DEVICE_NOTIFICATION_TENANT_WIDE_CONFIRMED -ne 'true') { throw 'Tenant-wide collection was not explicitly confirmed.' }
-if ($configuration.UsesEmail -and $env:DEVICE_NOTIFICATION_EXCHANGE_CONFIGURED -ne 'true') { throw 'Email is routed but Exchange Application RBAC is not recorded as configured.' }
+if ($configuration.UsesEmail) {
+    if ($env:DEVICE_NOTIFICATION_EXCHANGE_CONFIGURED -ne 'true' -or $env:DEVICE_NOTIFICATION_EXCHANGE_INTENT_STATUS -ne 'complete') {
+        throw 'Email is routed but exact Exchange Application RBAC setup is not recorded as complete.'
+    }
+    Assert-RecordedExchangeBinding `
+        -RecordedClientId $env:DEVICE_NOTIFICATION_EXCHANGE_WORKLOAD_CLIENT_ID `
+        -RecordedPrincipalId $env:DEVICE_NOTIFICATION_EXCHANGE_WORKLOAD_PRINCIPAL_ID `
+        -RecordedAdminUpn $env:DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN `
+        -RecordedTenantId $env:DEVICE_NOTIFICATION_EXCHANGE_TENANT_ID `
+        -RecordedSenderMailbox $env:DEVICE_NOTIFICATION_EXCHANGE_SENDER_UPN `
+        -ExpectedClientId $env:AZURE_WORKLOAD_CLIENT_ID -ExpectedPrincipalId $env:AZURE_WORKLOAD_PRINCIPAL_ID `
+        -ExpectedAdminUpn $env:DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN -ExpectedTenantId $env:AZURE_TENANT_ID `
+        -ExpectedSenderMailbox $env:EMAIL_SENDER_UPN -RequireRecorded
+}
 
 Write-Host 'Collection enablement review:'
 Write-Host "  Tenant: $($env:AZURE_TENANT_ID)"

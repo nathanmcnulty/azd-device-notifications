@@ -65,7 +65,7 @@ Administrator Teams delivery uses a Power Automate Workflows callback URL. The W
 
 Email uses Exchange Online Application RBAC rather than tenant-wide Entra `Mail.Send`. The configured management scope must resolve exclusively to the selected shared mailbox, and `Test-ServicePrincipalAuthorization` must report the identity in scope for that mailbox.
 
-The configuration process records whether the Exchange service-principal pointer, scope, and role assignment were created by this azd environment or adopted. Teardown may remove only exact objects whose ownership is recorded as `created`; adopted objects require an explicit administrator decision.
+The configuration process binds one exact Exchange administrator, tenant, workload client ID, workload principal ID, scope, and assignment. It writes a pending intent and per-object `create-pending` receipt before mutation, then checkpoints successful creation as `created`. Pre-existing exact objects require the explicit `-AdoptExisting` switch and are preserved by teardown. Cleanup also reconciles interrupted pending intent and clears receipts only after every solution-owned object is verified absent.
 
 ## Permission review checklist
 
