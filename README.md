@@ -191,4 +191,6 @@ npm run bundle
 
 Continuous integration rebuilds `function-package/index.cjs` and rejects a change when the committed runtime does not exactly match the reviewed source. GitHub marks that reproducibly generated bundle as generated; Git whitespace checks are disabled only for this upstream-generated artifact and remain enforced for all handwritten files.
 
+Maintainers can use the manually dispatched **Build release artifacts** workflow to validate a prerelease and produce a deterministic Function ZIP, SHA-256 checksum manifest, SPDX 2.3 SBOM, and GitHub build-provenance attestations. Publishing additionally requires approval through the protected `release` environment. Stable versions remain blocked in `.release/readiness.json` until the personal Teams direct-message route has been proved after administrator-owned app approval and installation; the release workflow never grants app-installation permission or performs tenant setup.
+
 Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md). Do not put Workflow callback URLs, tenant identifiers, user or device details, or notification content in public issues.

@@ -147,6 +147,12 @@ Inspect the original event and each route's Function error before replay. Correc
 - Review Azure cost and Log Analytics ingestion.
 - Export required audit evidence and run the approved data-purge process.
 
+## Release evidence
+
+The manually dispatched **Build release artifacts** workflow runs the complete offline repository validation and creates a deterministic Function ZIP, `SHA256SUMS`, an SPDX 2.3 JSON SBOM, and GitHub build-provenance attestations. Its optional publishing job is protected by the `release` GitHub environment and creates prereleases only.
+
+Stable release generation is fail-closed while `.release/readiness.json` records outstanding evidence. Do not approve a stable release merely because synthetic dispatch succeeded: retain proof that the approved Teams app was installed in personal scope, the bot received its installation activity, and the intended user received the personal `[TEST]` messages. App approval and installation remain explicit administrator-owned prerequisites and are never automated by the release workflow.
+
 ## Teardown
 
 Teardown has Azure, Exchange, and Teams ownership boundaries. Export required history before deleting storage.

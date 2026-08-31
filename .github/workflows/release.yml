@@ -1,0 +1,202 @@
+name: Build release artifacts
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Prerelease semantic version, such as v0.1.0-rc.1
+        required: true
+        type: string
+      publish:
+        description: Create a GitHub prerelease after validation
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Require the exact default-branch revision
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "+refs/heads/$DEFAULT_BRANCH:refs/remotes/origin/$DEFAULT_BRANCH"
+          default_revision="$(git rev-parse "refs/remotes/origin/$DEFAULT_BRANCH")"
+          if [[ "$GITHUB_SHA" != "$default_revision" ]]; then
+            echo "Release artifacts must be built from the current $DEFAULT_BRANCH revision." >&2
+            echo "Requested: $GITHUB_SHA" >&2
+            echo "Current:   $default_revision" >&2
+            exit 1
+          fi
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: src/package-lock.json
+
+      - name: Install repository validation dependencies
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Install-Module PSScriptAnalyzer -RequiredVersion 1.24.0 -Force -Scope CurrentUser
+          Install-Module Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser
+          az bicep install --version v0.46.1
+
+      - name: Run offline repository validation
+        shell: pwsh
+        run: ./scripts/Test-Repository.ps1
+
+      - name: Build deterministic release assets
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+        shell: pwsh
+        run: ./scripts/New-ReleaseArtifacts.ps1 -Version $env:RELEASE_VERSION -OutputDirectory ./release
+
+      - name: Attest release assets
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3.1.0
+        with:
+          subject-path: release/*
+
+      - name: Upload release assets
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-${{ inputs.version }}
+          path: release/*
+          if-no-files-found: error
+          retention-days: 14
+
+  publish-prerelease:
+    if: inputs.publish
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: release
+    permissions:
+      contents: write
+    steps:
+      - name: Download validated assets
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: release-${{ inputs.version }}
+          path: release
+
+      - name: Create prerelease
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          encoded_default_branch="$(jq -nr --arg branch "$DEFAULT_BRANCH" '$branch | @uri')"
+          current_default_revision="$(gh api "repos/$GITHUB_REPOSITORY/commits/$encoded_default_branch" --jq .sha)"
+          if [[ "$GITHUB_SHA" != "$current_default_revision" ]]; then
+            echo "The default branch advanced after artifacts were built; run the workflow again." >&2
+            echo "Built:   $GITHUB_SHA" >&2
+            echo "Current: $current_default_revision" >&2
+            exit 1
+          fi
+          version_without_build="${VERSION%%+*}"
+          if [[ "$version_without_build" != *-* ]]; then
+            echo 'Only prerelease versions may be published until stable-release evidence is approved.' >&2
+            exit 1
+          fi
+          encoded_version="$(jq -nr --arg version "$VERSION" '$version | @uri')"
+          error_file="$(mktemp)"
+          trap 'rm -f "$error_file"' EXIT
+          set +e
+          tag_object="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$encoded_version" --jq '[.object.type, .object.sha] | @tsv' 2>"$error_file")"
+          tag_status=$?
+          set -e
+          tag_exists=false
+          if [[ $tag_status -eq 0 ]]; then
+            tag_exists=true
+          elif grep -Eq '\(HTTP 404\)[[:space:]]*$' "$error_file"; then
+            tag_object=''
+          else
+            cat "$error_file" >&2
+            exit "$tag_status"
+          fi
+
+          if [[ "$tag_exists" == true ]]; then
+            IFS=$'\t' read -r object_type existing_target <<< "$tag_object"
+            peel_depth=0
+            while [[ "$object_type" == tag ]]; do
+              if (( peel_depth >= 8 )); then
+                echo "Tag $VERSION exceeds the supported annotated-tag depth." >&2
+                exit 1
+              fi
+              tag_object="$(gh api "repos/$GITHUB_REPOSITORY/git/tags/$existing_target" --jq '[.object.type, .object.sha] | @tsv')"
+              IFS=$'\t' read -r object_type existing_target <<< "$tag_object"
+              ((peel_depth += 1))
+            done
+            if [[ "$object_type" != commit ]]; then
+              echo "Tag $VERSION resolves to unsupported Git object type $object_type." >&2
+              exit 1
+            fi
+          fi
+          if [[ "$tag_exists" == true && "$existing_target" != "$GITHUB_SHA" ]]; then
+            echo "Tag $VERSION already targets a different revision." >&2
+            exit 1
+          fi
+          if [[ "$tag_exists" == false ]]; then
+            : > "$error_file"
+            set +e
+            gh api "repos/$GITHUB_REPOSITORY/git/refs" \
+              --method POST \
+              -f ref="refs/tags/$VERSION" \
+              -f sha="$GITHUB_SHA" \
+              > /dev/null 2>"$error_file"
+            create_status=$?
+            set -e
+            if [[ $create_status -eq 0 ]]; then
+              existing_target="$GITHUB_SHA"
+            elif grep -Eq '\(HTTP 422\)[[:space:]]*$' "$error_file"; then
+              tag_object="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$encoded_version" --jq '[.object.type, .object.sha] | @tsv')"
+              IFS=$'\t' read -r object_type existing_target <<< "$tag_object"
+              peel_depth=0
+              while [[ "$object_type" == tag ]]; do
+                if (( peel_depth >= 8 )); then
+                  echo "Tag $VERSION exceeds the supported annotated-tag depth." >&2
+                  exit 1
+                fi
+                tag_object="$(gh api "repos/$GITHUB_REPOSITORY/git/tags/$existing_target" --jq '[.object.type, .object.sha] | @tsv')"
+                IFS=$'\t' read -r object_type existing_target <<< "$tag_object"
+                ((peel_depth += 1))
+              done
+              if [[ "$object_type" != commit ]]; then
+                echo "Tag $VERSION resolves to unsupported Git object type $object_type." >&2
+                exit 1
+              fi
+            else
+              cat "$error_file" >&2
+              exit "$create_status"
+            fi
+            if [[ "$existing_target" != "$GITHUB_SHA" ]]; then
+              echo "Tag $VERSION was concurrently created for a different revision." >&2
+              exit 1
+            fi
+          fi
+          release_args=(
+            "$VERSION" release/*
+            --repo "$GITHUB_REPOSITORY"
+            --prerelease
+            --generate-notes
+            --title "$VERSION"
+            --verify-tag
+          )
+          gh release create "${release_args[@]}"
