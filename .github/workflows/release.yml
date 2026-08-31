@@ -153,16 +153,50 @@ jobs:
             echo "Tag $VERSION already targets a different revision." >&2
             exit 1
           fi
+          if [[ "$tag_exists" == false ]]; then
+            : > "$error_file"
+            set +e
+            gh api "repos/$GITHUB_REPOSITORY/git/refs" \
+              --method POST \
+              -f ref="refs/tags/$VERSION" \
+              -f sha="$GITHUB_SHA" \
+              > /dev/null 2>"$error_file"
+            create_status=$?
+            set -e
+            if [[ $create_status -eq 0 ]]; then
+              existing_target="$GITHUB_SHA"
+            elif grep -Eq '\(HTTP 422\)[[:space:]]*$' "$error_file"; then
+              tag_object="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$encoded_version" --jq '[.object.type, .object.sha] | @tsv')"
+              IFS=$'\t' read -r object_type existing_target <<< "$tag_object"
+              peel_depth=0
+              while [[ "$object_type" == tag ]]; do
+                if (( peel_depth >= 8 )); then
+                  echo "Tag $VERSION exceeds the supported annotated-tag depth." >&2
+                  exit 1
+                fi
+                tag_object="$(gh api "repos/$GITHUB_REPOSITORY/git/tags/$existing_target" --jq '[.object.type, .object.sha] | @tsv')"
+                IFS=$'\t' read -r object_type existing_target <<< "$tag_object"
+                ((peel_depth += 1))
+              done
+              if [[ "$object_type" != commit ]]; then
+                echo "Tag $VERSION resolves to unsupported Git object type $object_type." >&2
+                exit 1
+              fi
+            else
+              cat "$error_file" >&2
+              exit "$create_status"
+            fi
+            if [[ "$existing_target" != "$GITHUB_SHA" ]]; then
+              echo "Tag $VERSION was concurrently created for a different revision." >&2
+              exit 1
+            fi
+          fi
           release_args=(
             "$VERSION" release/*
             --repo "$GITHUB_REPOSITORY"
             --prerelease
             --generate-notes
             --title "$VERSION"
+            --verify-tag
           )
-          if [[ "$tag_exists" == true ]]; then
-            release_args+=(--verify-tag)
-          else
-            release_args+=(--target "$GITHUB_SHA")
-          fi
           gh release create "${release_args[@]}"

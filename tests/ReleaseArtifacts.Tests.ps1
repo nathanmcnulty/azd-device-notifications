@@ -49,3 +49,14 @@ Describe 'Release artifact generation' {
         } | Should -Throw
     }
 }
+
+Describe 'Release publication workflow' {
+    It 'creates an exact tag before publishing and never asks release creation to create it' {
+        $workflow = Get-Content -LiteralPath (Join-Path $script:RepositoryRoot '.github/workflows/release.yml') -Raw
+        $workflow | Should -Match '(?m)^\s+--method POST \\$'
+        $workflow | Should -Match '-f ref="refs/tags/\$VERSION"'
+        $workflow | Should -Match 'HTTP 422'
+        $workflow | Should -Match '--verify-tag'
+        $workflow | Should -Not -Match '--target'
+    }
+}
