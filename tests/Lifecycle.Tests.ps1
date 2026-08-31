@@ -375,7 +375,7 @@ Describe 'Lifecycle safety contracts' {
         $renderedParameters = [regex]::Replace($renderedParameters, '\$\{[^}]+\}', 'safe')
         $parsedParameters = $renderedParameters | ConvertFrom-Json
         $parsedParameters.parameters.routingConfigBase64.value | Should -BeExactly $sampleBase64
-        $main | Should -Match 'param routingConfigBase64 string'
+        $main | Should -Match "param routingConfigBase64 string = ''"
         $main | Should -Not -Match '(?s)@minLength\(1\)\s*param routingConfigBase64 string'
         $main | Should -Match 'base64ToString\(routingConfigBase64\)'
         $main | Should -Match 'json\(routingConfigJson\)'
@@ -394,6 +394,8 @@ Describe 'Lifecycle safety contracts' {
         $compiled = Get-Content (Join-Path $repoRoot 'infra/main.json') -Raw | ConvertFrom-Json -Depth 100
         $compiled.parameters.routingConfigBase64.type | Should -BeExactly 'string'
         $compiled.parameters.routingConfigBase64.PSObject.Properties.Name | Should -Not -Contain 'minLength'
+        $compiled.parameters.routingConfigBase64.PSObject.Properties.Name | Should -Contain 'defaultValue'
+        [string]$compiled.parameters.routingConfigBase64.defaultValue | Should -BeExactly ''
         foreach ($eventName in @('deviceRegistered', 'deviceEnrolled', 'deviceNoncompliant')) {
             $expression = [string]$compiled.variables."${eventName}Routing"
             $expression | Should -Match "union\(variables\('routingConfig'\)\.events\.$eventName"

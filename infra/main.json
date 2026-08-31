@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.46.1.21595",
-      "templateHash": "6486289081354205339"
+      "templateHash": "12984171467344099869"
     }
   },
   "parameters": {
@@ -21,7 +21,8 @@
       "defaultValue": "[tenant().tenantId]"
     },
     "routingConfigBase64": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": ""
     },
     "adminEmailRecipients": {
       "type": "string",
