@@ -1,0 +1,104 @@
+name: Build release artifacts
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Prerelease semantic version, such as v0.1.0-rc.1
+        required: true
+        type: string
+      publish:
+        description: Create a GitHub prerelease after validation
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: src/package-lock.json
+
+      - name: Install repository validation dependencies
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Install-Module PSScriptAnalyzer -RequiredVersion 1.24.0 -Force -Scope CurrentUser
+          Install-Module Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser
+          az bicep install --version v0.46.1
+
+      - name: Run offline repository validation
+        shell: pwsh
+        run: ./scripts/Test-Repository.ps1
+
+      - name: Build deterministic release assets
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+        shell: pwsh
+        run: ./scripts/New-ReleaseArtifacts.ps1 -Version $env:RELEASE_VERSION -OutputDirectory ./release
+
+      - name: Attest release assets
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3.1.0
+        with:
+          subject-path: release/*
+
+      - name: Upload release assets
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-${{ inputs.version }}
+          path: release/*
+          if-no-files-found: error
+          retention-days: 14
+
+  publish-prerelease:
+    if: inputs.publish
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: release
+    permissions:
+      contents: write
+    steps:
+      - name: Download validated assets
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: release-${{ inputs.version }}
+          path: release
+
+      - name: Create prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$VERSION" != *-* ]]; then
+            echo 'Only prerelease versions may be published until stable-release evidence is approved.' >&2
+            exit 1
+          fi
+          existing_target="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$VERSION" --jq .object.sha 2>/dev/null || true)"
+          if [[ -n "$existing_target" && "$existing_target" != "$GITHUB_SHA" ]]; then
+            echo "Tag $VERSION already targets a different revision." >&2
+            exit 1
+          fi
+          gh release create "$VERSION" release/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --verify-tag=false \
+            --prerelease \
+            --generate-notes \
+            --title "$VERSION"
