@@ -312,10 +312,10 @@ Describe 'Lifecycle safety contracts' {
 
     It 'marks the reproducible runtime bundle as generated without weakening handwritten diff checks' {
         $attributes = Get-Content (Join-Path $repoRoot '.gitattributes') -Raw
-        $attributes | Should -Match 'function-package/index\.cjs linguist-generated=true -whitespace'
-        $attributes | Should -Match 'function-package/index\.cjs\.LEGAL\.txt linguist-generated=true -whitespace'
-        $attributes | Should -Match 'function-package/THIRD-PARTY-NOTICES\.txt linguist-generated=true -whitespace'
-        $attributes | Should -Match 'function-package/UNLICENSE\.txt linguist-generated=true -whitespace'
+        $attributes | Should -Match 'function-package/index\.cjs text eol=lf linguist-generated=true -whitespace'
+        $attributes | Should -Match 'function-package/index\.cjs\.LEGAL\.txt text eol=lf linguist-generated=true -whitespace'
+        $attributes | Should -Match 'function-package/THIRD-PARTY-NOTICES\.txt text eol=lf linguist-generated=true -whitespace'
+        $attributes | Should -Match 'function-package/UNLICENSE\.txt text eol=lf linguist-generated=true -whitespace'
     }
 
     It 'retains the generated third-party legal notice in the reproducible deployment package' {
