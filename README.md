@@ -53,7 +53,7 @@ Install-Module ExchangeOnlineManagement -Scope CurrentUser
 |---|---|
 | Azure Owner, or Contributor plus User Access Administrator | Create Azure resources and managed-identity assignments |
 | Privileged Role Administrator | Assign the exact Microsoft Graph application permissions |
-| Teams Administrator | Upload and approve the custom Teams app when personal messages are selected |
+| Teams Administrator | Upload the custom Teams app to the organization catalog and control its availability and installation when personal messages are selected |
 | Teams Workflow owner | Own the administrator channel or chat Workflow |
 | Exchange Administrator | Limit email sending to one shared mailbox |
 
@@ -63,7 +63,7 @@ The Azure CLI, Azure subscription, and `azd` environment must use the same tenan
 
 | Destination | Recipient | What you prepare |
 |---|---|---|
-| Personal Teams message | Device owner | Upload and approve the generated Teams app, then install it for test users |
+| Personal Teams message | Device owner | Upload the generated Teams app to the organization catalog, then make it available to and install it for test users |
 | Teams Workflow | Administrators | Create the Workflow, add a co-owner, and copy its callback URL before `azd up` |
 | Shared-mailbox email | Owners or administrators | Choose one shared mailbox; setup limits the app to that mailbox |
 
@@ -101,7 +101,7 @@ azd init --template nathanmcnulty/azd-device-notifications --branch v1.0.0
 
 Complete only the destinations you selected:
 
-1. **Personal Teams messages:** upload `teams-app/device-notifications.zip` in the Teams admin center, approve it, and install it for each test user.
+1. **Personal Teams messages:** upload `teams-app/device-notifications.zip` to the organization app catalog in the Teams admin center, restrict availability to the intended users or groups, and install it in personal scope for each test user. Do not add it to a Team or channel.
 2. **Teams Workflow:** confirm the Workflow has a durable co-owner, then verify both a successful run and the message in the intended channel or chat.
 3. **Email:** `azd up` configures mailbox-limited Exchange access. If the step was interrupted or the mailbox changes, follow [Deployment](docs/deployment.md#6-configure-shared-mailbox-email).
 
