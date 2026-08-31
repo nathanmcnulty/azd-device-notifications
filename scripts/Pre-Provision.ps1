@@ -5,11 +5,12 @@ $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'Tenant.Guards.psm1') -Force
 Import-Module (Join-Path $PSScriptRoot 'Configuration.Validation.psm1') -Force
 
-foreach ($command in @('az', 'azd', 'node', 'npm')) {
+foreach ($command in @('az', 'azd')) {
     if (-not (Get-Command $command -ErrorAction SilentlyContinue)) { throw "Required command '$command' was not found." }
 }
 foreach ($name in @('AZURE_SUBSCRIPTION_ID', 'AZURE_TENANT_ID', 'AZURE_ENV_NAME')) { [void](Get-AzdEnvironmentValue $name) }
 Assert-AzdTenantContext
+Initialize-AzdResourceGroupOwnership | Out-Null
 
 function Read-YesNo {
     param([Parameter(Mandatory)][string] $Prompt, [bool] $Default = $false)
@@ -149,6 +150,27 @@ $configuration = Get-NotificationConfiguration -RoutingJson $env:DEVICE_NOTIFICA
     -EmailSenderUpn $env:EMAIL_SENDER_UPN -EntraPollSchedule $env:ENTRA_POLL_SCHEDULE `
     -IntunePollSchedule $env:INTUNE_POLL_SCHEDULE -EnrollmentLookbackHours $env:ENROLLMENT_LOOKBACK_HOURS `
     -AuditOverlapMinutes $env:ENTRA_AUDIT_OVERLAP_MINUTES
+Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_ROUTING_BASE64' `
+    (ConvertTo-RoutingConfigBase64 -RoutingJson $env:DEVICE_NOTIFICATION_ROUTING_JSON)
+if ($configuration.UsesEmail) {
+    $exchangeAdminUpn = Get-AzdEnvironmentValue 'DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN'
+    if (-not $exchangeAdminUpn) {
+        if ($nonInteractive) { throw 'DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN is required for noninteractive email deployment.' }
+        $activeAdminUpn = (& az account show --query user.name --output tsv 2>$null | Out-String).Trim()
+        $prompt = if ($activeAdminUpn -match '^[^@\s]+@[^@\s]+$') {
+            "Enter the Exchange administrator UPN (blank uses $activeAdminUpn)"
+        } else {
+            'Enter the Exchange administrator UPN'
+        }
+        $exchangeAdminUpn = (Read-Host $prompt).Trim()
+        if (-not $exchangeAdminUpn) { $exchangeAdminUpn = $activeAdminUpn }
+        if ($exchangeAdminUpn -notmatch '^[^@\s]+@[^@\s]+$') { throw 'The Exchange administrator UPN is invalid.' }
+        Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN' $exchangeAdminUpn
+    } elseif ($exchangeAdminUpn -notmatch '^[^@\s]+@[^@\s]+$') {
+        throw 'DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN is invalid.'
+    }
+}
+Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_TEAMS_BOT_ENABLED' $configuration.UsesTeamsDm.ToString().ToLowerInvariant()
 $userCount = @($configuration.Routing.monitoredUserIds).Count
 $groupCount = @($configuration.Routing.monitoredGroupIds).Count
 if ($userCount -eq 0 -and $groupCount -eq 0 -and $env:DEVICE_NOTIFICATION_TENANT_WIDE_CONFIRMED -ne 'true') {
@@ -167,6 +189,7 @@ if ($env:DEVICE_NOTIFICATION_COLLECTION_ENABLED -eq 'true') {
         [void](Get-AzdEnvironmentValue $name)
     }
     if (-not $env:AZURE_FUNCTION_APP_NAME -or -not $env:AZURE_WORKLOAD_CLIENT_ID) { throw 'Enabled collection requires existing Function App outputs.' }
+    Get-AzdFunctionTarget | Out-Null
     $expectedFingerprint = Get-NotificationDeliveryFingerprint -RoutingJson $env:DEVICE_NOTIFICATION_ROUTING_JSON `
         -TeamsWebhookUrl $env:TEAMS_ADMIN_WEBHOOK_URL -AdminEmailRecipients $env:ADMIN_EMAIL_RECIPIENTS `
         -EmailSenderUpn $env:EMAIL_SENDER_UPN -FunctionAppName $env:AZURE_FUNCTION_APP_NAME -WorkloadClientId $env:AZURE_WORKLOAD_CLIENT_ID

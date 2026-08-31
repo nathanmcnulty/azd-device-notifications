@@ -4,7 +4,7 @@ targetScope = 'subscription'
 param environmentName string
 param location string
 param tenantId string = tenant().tenantId
-param routingConfigJson string
+param routingConfigBase64 string = ''
 param adminEmailRecipients string = ''
 param emailSenderUpn string = ''
 @secure()
@@ -18,9 +18,31 @@ param enrollmentLookbackHours int = 0
 @maxValue(1440)
 param auditOverlapMinutes int = 15
 param collectionEnabled bool = false
+param teamsBotEnabled bool = false
 
 var resourceToken = toLower(uniqueString(subscription().id, environmentName))
 var resourceGroupName = 'rg-${environmentName}'
+var routingConfigJson = base64ToString(routingConfigBase64)
+var routingConfig = json(routingConfigJson)
+var deviceRegisteredRouting = union(routingConfig.events.deviceRegistered, {
+  user: concat([], routingConfig.events.deviceRegistered.user)
+  admin: concat([], routingConfig.events.deviceRegistered.admin)
+})
+var deviceEnrolledRouting = union(routingConfig.events.deviceEnrolled, {
+  user: concat([], routingConfig.events.deviceEnrolled.user)
+  admin: concat([], routingConfig.events.deviceEnrolled.admin)
+})
+var deviceNoncompliantRouting = union(routingConfig.events.deviceNoncompliant, {
+  user: concat([], routingConfig.events.deviceNoncompliant.user)
+  admin: concat([], routingConfig.events.deviceNoncompliant.admin)
+})
+var validatedRoutingConfig = union(routingConfig, {
+  events: union(routingConfig.events, {
+    deviceRegistered: deviceRegisteredRouting
+    deviceEnrolled: deviceEnrolledRouting
+    deviceNoncompliant: deviceNoncompliantRouting
+  })
+})
 var tags = {
   'azd-env-name': environmentName
   workload: 'device-notifications'
@@ -39,8 +61,11 @@ module resources 'resources.bicep' = {
     location: location
     namePrefix: take(replace(environmentName, '-', ''), 12)
     resourceToken: resourceToken
+    environmentName: environmentName
     tenantId: tenantId
-    routingConfigJson: routingConfigJson
+    subscriptionId: subscription().subscriptionId
+    resourceGroupName: resourceGroup.name
+    routingConfigJson: string(validatedRoutingConfig)
     adminEmailRecipients: adminEmailRecipients
     emailSenderUpn: emailSenderUpn
     teamsAdminWebhookUrl: teamsAdminWebhookUrl
@@ -49,6 +74,7 @@ module resources 'resources.bicep' = {
     enrollmentLookbackHours: enrollmentLookbackHours
     auditOverlapMinutes: auditOverlapMinutes
     collectionEnabled: collectionEnabled
+    teamsBotEnabled: teamsBotEnabled
     tags: tags
   }
 }

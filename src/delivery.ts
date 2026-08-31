@@ -1,7 +1,20 @@
-import { createHash } from "node:crypto";
-import { PermanentDeliveryError, type DeviceEvent, type Logger, type NotificationHistoryRepository } from "./domain.js";
+import {
+  PermanentDeliveryError, ProviderRequestError,
+  type DeviceEvent, type Logger, type NotificationHistoryRepository
+} from "./domain.js";
 import type { GraphClientLike } from "./graph.js";
 import { adminLinks } from "./normalization.js";
+import {
+  legacyDeliveryKey,
+  newNotificationDeliveryResult,
+  normalizeDeviceNotification,
+  notificationContractRoute,
+  notificationIdempotencyKey,
+  recordNotificationDeliveryResult,
+  type NotificationDeliveryResult,
+  type NotificationEnvironment,
+  type NotificationEvidence
+} from "./notification-contracts.js";
 import { routeEvent, type DeliveryRoute, type RoutingConfig } from "./routing.js";
 
 export interface TeamsBotSender {
@@ -18,6 +31,7 @@ export interface DeliveryDependencies {
   adminEmails: string[];
   webhookUrl?: string;
   emailSenderUpn?: string;
+  environment: NotificationEnvironment;
   now?: Date;
 }
 
@@ -114,6 +128,46 @@ function emailBody(event: DeviceEvent, audience: "user" | "admin", severity: str
   return `<p>${escapeHtml(title(event))}</p><p>Device: ${escapeHtml(event.device.displayName ?? "Unknown device")}</p><p>Severity: ${escapeHtml(severity)}</p>${linkText}`;
 }
 
+function classifyDeliveryFailure(error: unknown): {
+  failure: NonNullable<NotificationDeliveryResult["failure"]>;
+  evidence: NotificationEvidence;
+} {
+  if (error instanceof PermanentDeliveryError) {
+    return {
+      failure: { category: "destinationUnavailable", retryable: false, code: "DestinationUnavailable" },
+      evidence: {}
+    };
+  }
+  if (!(error instanceof ProviderRequestError)) {
+    return {
+      failure: { category: "unknown", retryable: true, code: "UnknownDeliveryFailure" },
+      evidence: {}
+    };
+  }
+
+  const evidence: NotificationEvidence = {
+    ...(error.statusCode === undefined ? {} : { httpStatusCode: error.statusCode }),
+    providerCode: error.code,
+    ...(error.operationId ? { operationId: error.operationId } : {})
+  };
+  const status = error.statusCode;
+  if (status === 400) return { failure: { category: "invalidRequest", retryable: false, code: error.code }, evidence };
+  if (status === 401) return { failure: { category: "authentication", retryable: false, code: error.code }, evidence };
+  if (status === 403) return { failure: { category: "authorization", retryable: false, code: error.code }, evidence };
+  if (status === 404 || status === 410) {
+    return { failure: { category: "destinationUnavailable", retryable: false, code: error.code }, evidence };
+  }
+  if (status === 408) return { failure: { category: "timeout", retryable: true, code: error.code }, evidence };
+  if (status === 429) return { failure: { category: "throttled", retryable: true, code: error.code }, evidence };
+  if (status !== undefined && status >= 500) {
+    return { failure: { category: "transientProvider", retryable: true, code: error.code }, evidence };
+  }
+  return {
+    failure: { category: "unknown", retryable: status === undefined, code: error.code },
+    evidence
+  };
+}
+
 async function deliver(event: DeviceEvent, route: DeliveryRoute, dependencies: DeliveryDependencies): Promise<boolean> {
   const card = shapeAdaptiveCard(event, route.audience, route.transport === "teamsWebhook" ? dependencies.routing.adminMentions : [], route.severity);
   if (route.transport === "teamsDm") {
@@ -123,11 +177,19 @@ async function deliver(event: DeviceEvent, route: DeliveryRoute, dependencies: D
   }
   if (route.transport === "teamsWebhook") {
     if (route.audience !== "admin" || !dependencies.webhookUrl) return false;
-    const response = await (dependencies.fetcher ?? fetch)(dependencies.webhookUrl, {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "message", attachments: [{ contentType: "application/vnd.microsoft.card.adaptive", contentUrl: null, content: card }] })
-    });
-    if (!response.ok) throw new Error(`Teams webhook failed with status ${response.status}`);
+    let response: Response;
+    try {
+      response = await (dependencies.fetcher ?? fetch)(dependencies.webhookUrl, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "message", attachments: [{ contentType: "application/vnd.microsoft.card.adaptive", contentUrl: null, content: card }] })
+      });
+    } catch {
+      throw new ProviderRequestError("teamsWorkflow", "TeamsTransportError");
+    }
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new ProviderRequestError("teamsWorkflow", `TeamsHttp${response.status}`, response.status);
+    }
     return true;
   }
   if (!dependencies.emailSenderUpn) return false;
@@ -166,51 +228,93 @@ export async function dispatchEvent(event: DeviceEvent, dependencies: DeliveryDe
     if (!directlyMonitored && !memberships.length) return { ...summary, suppressedReason: "subject outside monitored scope" };
   }
   const failures: Error[] = [];
+  const envelope = normalizeDeviceNotification(event, dependencies.environment);
   const routes = routeEvent(event, dependencies.routing, dependencies.now);
   summary.selectedRoutes = routes.length;
   for (const route of routes) {
-    const key = createHash("sha256").update(`${event.id}:${route.audience}:${route.transport}`).digest("hex");
-    const reservation = await dependencies.history.reserveDelivery(key);
-    if (reservation.status === "delivered") {
-      summary.alreadyDeliveredRoutes++;
-      summary.routes.push({ audience: route.audience, transport: route.transport, status: "alreadyDelivered" });
-      continue;
-    }
-    if (reservation.status === "pending") {
-      summary.unavailableRoutes++;
-      summary.routes.push({ audience: route.audience, transport: route.transport, status: "pending" });
-      failures.push(new Error(`Notification route ${route.audience}:${route.transport} is pending delivery`));
-      continue;
-    }
+    const startedAt = Date.now();
+    const contractRoute = notificationContractRoute(route);
+    const key = notificationIdempotencyKey(
+      envelope.environment.tenantId,
+      envelope.eventType,
+      envelope.eventId,
+      contractRoute.id
+    );
+    let reservationEtag: string | undefined;
     try {
+      const reservation = await dependencies.history.reserveDelivery(key, legacyDeliveryKey(event, route));
+      if (reservation.status === "delivered") {
+        summary.alreadyDeliveredRoutes++;
+        summary.routes.push({ audience: route.audience, transport: route.transport, status: "alreadyDelivered" });
+        recordNotificationDeliveryResult(dependencies.logger, newNotificationDeliveryResult(envelope, contractRoute, {
+          status: "alreadyDelivered", attempt: 0, recordedAt: dependencies.now ?? new Date(), durationMs: Date.now() - startedAt
+        }));
+        continue;
+      }
+      if (reservation.status === "pending") {
+        summary.unavailableRoutes++;
+        summary.routes.push({ audience: route.audience, transport: route.transport, status: "pending" });
+        recordNotificationDeliveryResult(dependencies.logger, newNotificationDeliveryResult(envelope, contractRoute, {
+          status: "skipped", attempt: 0, recordedAt: dependencies.now ?? new Date(), durationMs: Date.now() - startedAt,
+          skipReason: "concurrentDelivery"
+        }));
+        failures.push(new Error("Notification delivery is already pending"));
+        continue;
+      }
+      reservationEtag = reservation.etag;
       if (await deliver(event, route, dependencies)) {
         await dependencies.history.completeDelivery(key, reservation.etag, (dependencies.now ?? new Date()).toISOString());
+        reservationEtag = undefined;
         summary.deliveredRoutes++;
         summary.routes.push({ audience: route.audience, transport: route.transport, status: "delivered" });
+        recordNotificationDeliveryResult(dependencies.logger, newNotificationDeliveryResult(envelope, contractRoute, {
+          status: "succeeded", attempt: 1, recordedAt: dependencies.now ?? new Date(), durationMs: Date.now() - startedAt
+        }));
         dependencies.logger.info("Notification delivered", { eventId: event.id, eventType: event.type, audience: route.audience, transport: route.transport });
       } else {
         await dependencies.history.releaseDelivery(key, reservation.etag);
+        reservationEtag = undefined;
         summary.unavailableRoutes++;
         summary.routes.push({ audience: route.audience, transport: route.transport, status: "unavailable" });
+        recordNotificationDeliveryResult(dependencies.logger, newNotificationDeliveryResult(envelope, contractRoute, {
+          status: "failed", attempt: 0, recordedAt: dependencies.now ?? new Date(), durationMs: Date.now() - startedAt,
+          failure: { category: "destinationUnavailable", retryable: false, code: "DestinationUnavailable" }
+        }));
         dependencies.logger.warn("Notification route has no configured recipient", { eventId: event.id, audience: route.audience, transport: route.transport });
       }
     } catch (error) {
-      const failure = error instanceof Error ? error : new Error(String(error));
-      await dependencies.history.releaseDelivery(key, reservation.etag);
-      if (failure instanceof PermanentDeliveryError) {
+      let reservationReleased = true;
+      if (reservationEtag) {
+        try {
+          await dependencies.history.releaseDelivery(key, reservationEtag);
+        } catch {
+          reservationReleased = false;
+        }
+      }
+      const classified = reservationReleased
+        ? classifyDeliveryFailure(error)
+        : {
+            failure: { category: "unknown" as const, retryable: true, code: "DeliveryStateReleaseFailed" },
+            evidence: {}
+          };
+      recordNotificationDeliveryResult(dependencies.logger, newNotificationDeliveryResult(envelope, contractRoute, {
+        status: "failed", attempt: reservationEtag ? 1 : 0, recordedAt: dependencies.now ?? new Date(), durationMs: Date.now() - startedAt,
+        failure: classified.failure,
+        evidence: classified.evidence
+      }));
+      if (!classified.failure.retryable) {
         summary.unavailableRoutes++;
         summary.routes.push({ audience: route.audience, transport: route.transport, status: "unavailable" });
         dependencies.logger.warn("Notification route is not currently available", {
-          eventId: event.id, eventType: event.type, audience: route.audience, transport: route.transport, message: failure.message
+          eventId: event.id, eventType: event.type, audience: route.audience, transport: route.transport
         });
         continue;
       }
       summary.unavailableRoutes++;
       summary.routes.push({ audience: route.audience, transport: route.transport, status: "failed" });
-      failures.push(failure);
+      failures.push(new Error("Notification delivery requires retry"));
       dependencies.logger.error("Notification delivery failed", {
-        eventId: event.id, eventType: event.type, audience: route.audience, transport: route.transport,
-        errorName: failure.name, message: failure.message
+        eventId: event.id, eventType: event.type, audience: route.audience, transport: route.transport
       });
     }
   }

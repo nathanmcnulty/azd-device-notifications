@@ -33,7 +33,7 @@ function Invoke-GraphJson {
     $url = if ($Uri.StartsWith('https://')) { $Uri } else { "https://graph.microsoft.com/v1.0$Uri" }
     $maxAttempts = if ($RetryNotFound) { 9 } else { 6 }
     for ($attempt = 0; $attempt -lt $maxAttempts; $attempt++) {
-        $token = & az account get-access-token --subscription $SubscriptionId --tenant $TenantId --resource-type ms-graph --query accessToken -o tsv
+        $token = & az account get-access-token --subscription $SubscriptionId --resource-type ms-graph --query accessToken -o tsv
         if ($LASTEXITCODE -ne 0 -or -not $token) { throw 'Unable to acquire a Microsoft Graph token from the active Azure CLI session.' }
         try {
             $parameters = @{ Method = $Method; Uri = $url; Headers = @{ Authorization = "Bearer $token" }; ContentType = 'application/json' }

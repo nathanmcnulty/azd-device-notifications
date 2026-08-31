@@ -1,0 +1,9 @@
+{
+  "name": "azd-device-notifications-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.cjs",
+  "engines": {
+    "node": ">=22"
+  }
+}

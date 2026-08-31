@@ -8,6 +8,9 @@ This template tells users and administrators when:
 
 Notifications can go to the device owner, an administrator, or both. Supported destinations are a personal Teams message, a Teams Workflow, and email from one shared mailbox.
 
+> [!WARNING]
+> This repository does not yet have a stable release. Use `main` for review and test deployments only, and prove every selected notification route before enabling collection. The solution detects and notifies; it does not remediate devices.
+
 > [!IMPORTANT]
 > This solution only detects and notifies. It never deletes, disables, retires, or wipes a device, changes compliance, or performs another remediation action.
 
@@ -36,7 +39,7 @@ Install:
 - [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
 - [PowerShell 7](https://learn.microsoft.com/powershell/scripting/install/installing-powershell)
 
-Node.js does not need to be installed on Windows administrator workstations. The deployment command downloads a pinned, hash-checked portable copy into the ignored local `.azure` folder when `npm` is unavailable. Azure performs the Function build remotely.
+Node.js and npm are not required on administrator workstations. The reviewed, ready-to-run Function code—including its application, Azure SDK, and Bot Framework dependencies—is included in [`function-package`](function-package). `azd` deploys it without running npm or building source code. The readable TypeScript source remains in [`src`](src) for review by people or coding agents.
 
 If you use email, install the Exchange Online PowerShell module:
 
@@ -64,16 +67,19 @@ The Azure CLI, Azure subscription, and `azd` environment must use the same tenan
 | Teams Workflow | Administrators | Create the Workflow, add a co-owner, and copy its callback URL before `azd up` |
 | Shared-mailbox email | Owners or administrators | Choose one shared mailbox; setup limits the app to that mailbox |
 
+Choose the personal Teams bot when owners should receive notifications inside Teams. Choose email when you prefer mailbox delivery without Bot Service or a custom Teams app. You may enable both. The bot resources are created only when personal Teams messages are selected.
+
 At least one route is required. An administrator route is strongly recommended. Empty user and group lists mean **all discovered users**, so the setup wizard requires an explicit all-users confirmation.
 
 ## Deploy
 
-This repository does not yet have a stable release. Use the default branch only for review and test deployments:
+Use the default branch only for review and test deployments:
 
 ```powershell
-azd init --template nathanmcnulty/azd-device-notifications
-./scripts/Invoke-Azd.ps1 up
+azd init -t nathanmcnulty/azd-device-notifications && azd up
 ```
+
+The `azd` hooks run the interactive setup wizard and the post-deploy delivery check.
 
 The setup wizard asks you to:
 
@@ -83,7 +89,7 @@ The setup wizard asks you to:
 4. Choose whether existing recent enrollments should generate messages. The recommended first-run value is `0`, which creates a baseline without sending old enrollment notifications.
 5. Review everything before Azure or tenant changes begin.
 
-Rerunning `./scripts/Invoke-Azd.ps1 up` reuses and rechecks saved choices. If Node.js 22 or later is already available, the script uses it instead of downloading the portable copy.
+Rerunning `azd up` reuses and rechecks saved choices. No Node.js installation or npm package restore is performed on the administrator workstation or in Azure.
 
 After a `v1.0.0` release exists, production deployments should pin it:
 
@@ -103,10 +109,14 @@ While collection is still paused, run:
 
 ```powershell
 ./scripts/Test-Deployment.ps1
-./scripts/Test-NotificationDelivery.ps1
+./scripts/Test-Deployment.ps1 -TestDelivery
 ```
 
 The second command sends `[TEST]` notifications through the real delivery code. Confirm that every expected Teams card and email arrives. An HTTP success alone is not proof that a person received the message.
+
+`Test-Deployment.ps1` writes a schema-validated, secret-redacted report to
+`reports/deployment-validation.json`. Use `-Plan` to inspect the checks without
+authentication, cloud requests, endpoint probes, or delivery.
 
 When every selected path works, enable collection:
 
@@ -154,6 +164,7 @@ Advanced settings—including per-event routes, schedules, exclusions, privilege
 | [Operations](docs/operations.md) | Tests, monitoring, troubleshooting, and teardown |
 | [Privacy and retention](docs/privacy.md) | Stored data, credentials, retention, and purge limits |
 | [Architecture](docs/architecture.md) | Polling, delivery, retries, and security boundaries |
+| [Notification contracts](docs/notification-contracts.md) | Versioned event mappings, safe route results, and upgrade sequencing |
 
 ## Cleanup
 
@@ -167,7 +178,7 @@ Cleanup removes only Exchange objects recorded as created by this environment. I
 
 ## For contributors
 
-Contributors need Node.js 22 to run tests and builds locally. Administrators deploying with `azd` do not.
+Contributors need Node.js 22 to run tests and rebuild the committed runtime. Administrators deploying with `azd` do not.
 
 ```powershell
 Set-Location ./src
@@ -175,6 +186,9 @@ npm ci
 npm test
 npm run typecheck
 npm run build
+npm run bundle
 ```
+
+Continuous integration rebuilds `function-package/index.cjs` and rejects a change when the committed runtime does not exactly match the reviewed source. GitHub marks that reproducibly generated bundle as generated; Git whitespace checks are disabled only for this upstream-generated artifact and remain enforced for all handwritten files.
 
 Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md). Do not put Workflow callback URLs, tenant identifiers, user or device details, or notification content in public issues.

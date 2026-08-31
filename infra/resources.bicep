@@ -1,7 +1,10 @@
 param location string
 param namePrefix string
 param resourceToken string
+param environmentName string
 param tenantId string
+param subscriptionId string
+param resourceGroupName string
 param routingConfigJson string
 param adminEmailRecipients string
 param emailSenderUpn string
@@ -16,6 +19,7 @@ param enrollmentLookbackHours int
 @maxValue(1440)
 param auditOverlapMinutes int
 param collectionEnabled bool
+param teamsBotEnabled bool
 param tags object = {}
 
 var identityName = 'id-${namePrefix}-${resourceToken}'
@@ -163,11 +167,8 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
       scaleAndConcurrency: { maximumInstanceCount: 10, instanceMemoryMB: 2048 }
     }
     siteConfig: {
-      ftpsState: 'Disabled'
       minTlsVersion: '1.2'
       appSettings: [
-        { name: 'FUNCTIONS_EXTENSION_VERSION', value: '~4' }
-        { name: 'FUNCTIONS_WORKER_RUNTIME', value: 'node' }
         { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: insights.properties.ConnectionString }
         { name: 'APPLICATIONINSIGHTS_AUTHENTICATION_STRING', value: 'Authorization=AAD;ClientId=${identity.properties.clientId}' }
         { name: 'AzureWebJobsStorage__accountName', value: storage.name }
@@ -181,7 +182,10 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
         { name: 'TABLE_ENDPOINT', value: storage.properties.primaryEndpoints.table }
         { name: 'QUEUE_ENDPOINT', value: storage.properties.primaryEndpoints.queue }
         { name: 'NOTIFICATION_QUEUE_NAME', value: 'device-notifications' }
+        { name: 'AZURE_ENV_NAME', value: environmentName }
         { name: 'AZURE_TENANT_ID', value: tenantId }
+        { name: 'AZURE_SUBSCRIPTION_ID', value: subscriptionId }
+        { name: 'AZURE_RESOURCE_GROUP', value: resourceGroupName }
         { name: 'TEAMS_BOT_APP_ID', value: identity.properties.clientId }
         { name: 'MicrosoftAppType', value: 'UserAssignedMSI' }
         { name: 'MicrosoftAppId', value: identity.properties.clientId }
@@ -223,7 +227,7 @@ resource diagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' 
   }
 }
 
-resource bot 'Microsoft.BotService/botServices@2022-09-15' = {
+resource bot 'Microsoft.BotService/botServices@2022-09-15' = if (teamsBotEnabled) {
   name: botName
   location: 'global'
   tags: tags
@@ -239,7 +243,7 @@ resource bot 'Microsoft.BotService/botServices@2022-09-15' = {
   }
 }
 
-resource teamsChannel 'Microsoft.BotService/botServices/channels@2022-09-15' = {
+resource teamsChannel 'Microsoft.BotService/botServices/channels@2022-09-15' = if (teamsBotEnabled) {
   parent: bot
   name: 'MsTeamsChannel'
   location: 'global'
@@ -254,4 +258,4 @@ output functionAppUrl string = 'https://${functionApp.properties.defaultHostName
 output storageAccountName string = storage.name
 output workloadClientId string = identity.properties.clientId
 output workloadPrincipalId string = identity.properties.principalId
-output botName string = bot.name
+output botName string = teamsBotEnabled ? bot.name : ''

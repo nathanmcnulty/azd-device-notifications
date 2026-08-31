@@ -1,0 +1,46 @@
+{
+  "manifestVersion": "1.0",
+  "components": [
+    {
+      "id": "deployment-validation",
+      "version": "0.3.3",
+      "sourceRepository": "https://github.com/nathanmcnulty/azd-reference",
+      "sourceRevision": "bc2cf2aad4ff5ebadabe8fd0f0efcf71d94d0e0f",
+      "files": [
+        {
+          "source": "components/powershell/deployment-validation/Azd.DeploymentValidation.psd1",
+          "target": "scripts/vendor/Azd.DeploymentValidation/Azd.DeploymentValidation.psd1",
+          "sha256": "8e1b19232570582da7ca8f92fee529f2d93efa6c57fb6fdfe5dbb0d2a0771978"
+        },
+        {
+          "source": "components/powershell/deployment-validation/Azd.DeploymentValidation.psm1",
+          "target": "scripts/vendor/Azd.DeploymentValidation/Azd.DeploymentValidation.psm1",
+          "sha256": "fcf075cbea2dea568ad18145632185a82cb50210628ea332765434c3b62f7b5e"
+        },
+        {
+          "source": "schemas/deployment-validation.schema.json",
+          "target": "scripts/vendor/Azd.DeploymentValidation/deployment-validation.schema.json",
+          "sha256": "f219f008bb04a2eed5230a623191a8caff5363b319d02cbd8c9dd0e239848828"
+        }
+      ]
+    },
+    {
+      "id": "notification-contracts",
+      "version": "1.0.0",
+      "sourceRepository": "https://github.com/nathanmcnulty/azd-reference",
+      "sourceRevision": "bc2cf2aad4ff5ebadabe8fd0f0efcf71d94d0e0f",
+      "files": [
+        {
+          "source": "schemas/notification-envelope.schema.json",
+          "target": "contracts/notifications/notification-envelope.schema.json",
+          "sha256": "627f13be9f5d5813cc350423d164c9bce97d56c3b050cfa753f8f702ee193b4e"
+        },
+        {
+          "source": "schemas/notification-delivery-result.schema.json",
+          "target": "contracts/notifications/notification-delivery-result.schema.json",
+          "sha256": "180f0bf8c23cf1797c5bf52f8cb66b79cb947145e03cc60d51d1c73d5ae2e552"
+        }
+      ]
+    }
+  ]
+}

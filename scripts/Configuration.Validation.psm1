@@ -6,6 +6,12 @@ function Test-NotificationCronSchedule {
     return $Schedule -match '^[0-9A-Za-z*?,/\-]+(?:\s+[0-9A-Za-z*?,/\-]+){5}$'
 }
 
+function Test-NotificationJsonObject {
+    param([AllowNull()][object] $Value)
+
+    return $null -ne $Value -and ($Value -is [pscustomobject] -or $Value -is [System.Collections.IDictionary])
+}
+
 function Get-NotificationConfiguration {
     [CmdletBinding()]
     param(
@@ -21,15 +27,19 @@ function Get-NotificationConfiguration {
 
     try { $routing = $RoutingJson | ConvertFrom-Json -ErrorAction Stop }
     catch { throw 'DEVICE_NOTIFICATION_ROUTING_JSON must contain valid JSON.' }
-    if (-not $routing.events) { throw 'Routing configuration must contain an events object.' }
+    if (-not (Test-NotificationJsonObject $routing)) { throw 'Routing configuration must be a JSON object.' }
+    if (-not (Test-NotificationJsonObject $routing.events)) { throw 'Routing configuration must contain an events object.' }
     $eventNames = @('deviceRegistered', 'deviceEnrolled', 'deviceNoncompliant')
     $validTransports = @('teamsDm', 'teamsWebhook', 'email')
     $usesWebhook = $false
     $usesEmail = $false
+    $usesTeamsDm = $false
     $enabledRouteCount = 0
     foreach ($eventName in $eventNames) {
         $routeEvent = $routing.events.$eventName
-        if (-not $routeEvent) { throw "Routing configuration must define '$eventName'." }
+        if (-not (Test-NotificationJsonObject $routeEvent)) {
+            throw "Routing configuration must define '$eventName' as an object."
+        }
         foreach ($audience in @('user', 'admin')) {
             $routeValue = $routeEvent.$audience
             if ($null -eq $routeValue -or $routeValue -is [string] -or -not ($routeValue -is [System.Collections.IEnumerable])) {
@@ -45,6 +55,7 @@ function Get-NotificationConfiguration {
                 if ($audience -eq 'admin' -and $route -eq 'teamsDm') { throw "teamsDm is only valid for the user audience ($eventName)." }
                 if ($route -eq 'teamsWebhook') { $usesWebhook = $true }
                 if ($route -eq 'email') { $usesEmail = $true }
+                if ($route -eq 'teamsDm') { $usesTeamsDm = $true }
                 $enabledRouteCount++
             }
         }
@@ -112,6 +123,7 @@ function Get-NotificationConfiguration {
         Routing = $routing
         UsesWebhook = $usesWebhook
         UsesEmail = $usesEmail
+        UsesTeamsDm = $usesTeamsDm
         EnabledRouteCount = $enabledRouteCount
         AdminEmailRecipients = $emails
         EnrollmentLookbackHours = $lookback
@@ -134,4 +146,12 @@ function Get-NotificationDeliveryFingerprint {
     return [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($bytes))
 }
 
-Export-ModuleMember -Function Test-NotificationCronSchedule, Get-NotificationConfiguration, Get-NotificationDeliveryFingerprint
+function ConvertTo-RoutingConfigBase64 {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][string] $RoutingJson)
+
+    return [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($RoutingJson))
+}
+
+Export-ModuleMember -Function Test-NotificationCronSchedule, Get-NotificationConfiguration, Get-NotificationDeliveryFingerprint,
+    ConvertTo-RoutingConfigBase64

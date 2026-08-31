@@ -8,6 +8,7 @@ export interface DeviceEvent {
   type: EventType;
   occurredAt: string;
   severity: Severity;
+  correlationId?: string;
   synthetic?: boolean;
   device: {
     id?: string;
@@ -66,6 +67,30 @@ export interface ConversationRepository {
 
 export class PermanentDeliveryError extends Error {}
 
+export class ProviderRequestError extends Error {
+  readonly code: string;
+  readonly statusCode?: number;
+  readonly operationId?: string;
+
+  constructor(
+    readonly provider: "microsoftGraph" | "teamsWorkflow",
+    code: string,
+    statusCode?: number,
+    operationId?: string
+  ) {
+    const safeCode = /^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(code) ? code : "ProviderFailure";
+    super(safeCode);
+    this.name = "ProviderRequestError";
+    this.code = safeCode;
+    this.statusCode = typeof statusCode === "number" && Number.isInteger(statusCode) && statusCode >= 100 && statusCode <= 599
+      ? statusCode
+      : undefined;
+    this.operationId = operationId && /^[A-Za-z0-9][A-Za-z0-9._:|-]{0,511}$/.test(operationId)
+      ? operationId
+      : undefined;
+  }
+}
+
 export interface OutboxRepository {
   reserve(fingerprint: string, event: DeviceEvent): Promise<"reserved" | "published" | "pending">;
   release(fingerprint: string): Promise<void>;
@@ -78,7 +103,7 @@ export type DeliveryReservation =
   | { status: "pending" };
 
 export interface NotificationHistoryRepository {
-  reserveDelivery(key: string): Promise<DeliveryReservation>;
+  reserveDelivery(key: string, legacyDeliveredKey?: string): Promise<DeliveryReservation>;
   releaseDelivery(key: string, etag: string): Promise<void>;
   completeDelivery(key: string, etag: string, sentAt: string): Promise<void>;
 }

@@ -20,19 +20,25 @@ Keep collection paused and run all three event types through the deployed Functi
 
 ```powershell
 ./scripts/Test-Deployment.ps1
-./scripts/Test-NotificationDelivery.ps1
+./scripts/Test-Deployment.ps1 -TestDelivery
 ```
 
 When owner routes are enabled, provide a prepared test user's Entra object ID, UPN, and email address at the prompts. The user must be directly selected, belong to a selected monitored group, or be covered by the explicitly confirmed all-users scope. You can also provide the values explicitly:
 
 ```powershell
-./scripts/Test-NotificationDelivery.ps1 `
+./scripts/Test-Deployment.ps1 -TestDelivery `
     -TestUserId <entra-user-object-id> `
     -TestUserUpn test-user@contoso.com `
     -TestUserEmail test-user@contoso.com
 ```
 
 The script obtains a Function host key without printing it, calls only the test endpoint, and clears the key reference afterward. The endpoint refuses testing when either the azd environment or live Function setting says collection is enabled. Messages are labeled `[TEST]` and use the normal route dispatcher and delivery-history path.
+
+Every run writes `reports/deployment-validation.json` using the shared portfolio
+validation contract. The report is redacted and ignored by Git. Run
+`./scripts/Test-Deployment.ps1 -Plan` to inspect the exact check set without
+authentication, Azure or Graph reads, the unauthenticated endpoint probe, or
+synthetic delivery.
 
 A complete default run tests `deviceRegistered`, `deviceEnrolled`, and `deviceNoncompliant`, then records `DEVICE_NOTIFICATION_DELIVERY_TESTED=true` plus a SHA-256 fingerprint of the exact routing and destinations. Testing only selected `-EventType` values is useful for diagnosis but does not record enablement proof.
 
@@ -103,7 +109,7 @@ azd env get-value DEVICE_NOTIFICATION_DELIVERY_TESTED
 azd env get-value DEVICE_NOTIFICATION_COLLECTION_ENABLED
 ```
 
-Do not force the collection flag merely to clear the status. Correct the readiness issue, run `./scripts/Test-Deployment.ps1` and `./scripts/Test-NotificationDelivery.ps1`, inspect the delivered messages, and then use `./scripts/Enable-NotificationCollection.ps1`.
+Do not force the collection flag merely to clear the status. Correct the readiness issue, run `./scripts/Test-Deployment.ps1` and `./scripts/Test-Deployment.ps1 -TestDelivery`, inspect the delivered messages, and then use `./scripts/Enable-NotificationCollection.ps1`.
 
 `-AllowUntestedDestination` is an explicit last-resort override. It requires an additional warning acknowledgement and accepts that events may be missed. Do not use it to avoid diagnosing a normal setup failure.
 
@@ -152,19 +158,19 @@ azd env set DEVICE_NOTIFICATION_COLLECTION_ENABLED false
 azd provision
 ```
 
-Confirm the Function App setting is `false` before tenant cleanup.
+Confirm the Function App setting is `false` before tenant cleanup. The pause and cleanup scripts first refresh the active azd target and require the Function App to belong to the exact `rg-<environment-name>` group with matching environment, workload, and service tags.
 
 Wait for active Function executions and queues to settle. Preserve poison messages and history required by policy.
 
 ### 2. Remove tenant-side configuration by ownership
 
-- **Exchange:** preview ownership-aware cleanup with `./scripts/Remove-TenantObjects.ps1 -WhatIf`, then run `./scripts/Remove-TenantObjects.ps1`. It removes only the exact service-principal pointer, management scope, and role assignment recorded as `created` by this environment. Do not remove an `adopted` object without a separate administrator decision. Verify the role assignment is gone and the identity is no longer authorized for the mailbox.
+- **Exchange:** preview ownership-aware cleanup with `./scripts/Remove-TenantObjects.ps1 -WhatIf`, then run `./scripts/Remove-TenantObjects.ps1`. It removes and verifies absence of exact objects recorded as `created` or `create-pending`, including a partially completed setup where `DEVICE_NOTIFICATION_EXCHANGE_CONFIGURED` was never reached. It preserves `adopted` objects. Do not remove an adopted object without a separate administrator decision.
 - **Teams custom app:** remove setup-policy assignments and user installations created for this solution, then remove the uploaded custom app when it is not shared by another deployment.
 - **Teams Workflow:** an administrator-owned Workflow is never deleted automatically. Disable/delete it or transfer ownership, remove obsolete connections, and rotate/revoke its callback URL.
 
 Retain the azd environment until exact ownership records have been reviewed. Do not infer ownership from a display name alone.
 
-When Exchange was configured, cleanup requires the ExchangeOnlineManagement module and an Exchange administrator authenticated to the exact azd tenant through the normal browser flow. If that safe cleanup cannot run, `azd down` stops before deleting the ownership evidence; it does not fall back to ambiguous deletion.
+When Exchange setup has any recorded intent, cleanup requires the ExchangeOnlineManagement module. It first closes other Exchange sessions, then reuses the selected Azure CLI account's cached Exchange Online token for the exact recorded tenant; it does not start a separate device-code flow. The connection is explicitly bound to that tenant and administrator UPN and must report exactly one active session matching both. If cached token acquisition, connection, safe cleanup, or post-delete absence verification cannot complete, `azd down` stops without clearing ownership evidence.
 
 ### 3. Remove Azure resources
 
@@ -172,4 +178,4 @@ When Exchange was configured, cleanup requires the ExchangeOnlineManagement modu
 azd down --purge --force
 ```
 
-The predown hook runs the same ownership-aware tenant cleanup before deleting the resource group, including notification state and history. If tenant cleanup cannot prove ownership, teardown stops rather than broadening deletion. Confirm the resource group and managed identity no longer exist. Finally, remove the local azd environment only after no ownership evidence is needed for tenant cleanup.
+The predown hook runs the same ownership-aware tenant cleanup before deleting the resource group, including notification state and history. If tenant cleanup cannot prove ownership, teardown stops rather than broadening deletion. The postdown hook then queries the exact subscription and `rg-<environment-name>` target and clears the local Azure resource-group receipt only after Azure reports that group absent; a still-present group fails teardown and preserves the receipt. Confirm the managed identity service principal no longer exists. Finally, remove the local azd environment only after no ownership evidence is needed for tenant cleanup.

@@ -13,6 +13,7 @@ The first-run wizard is the recommended configuration path. It validates choices
 | `DEVICE_NOTIFICATION_ONBOARDING_STATUS` | Managed by setup | Progresses through `delivery-validation-required`, `delivery-tested`, and `enabled-awaiting-live-event-validation` |
 | `DEVICE_NOTIFICATION_DELIVERY_TESTED` | Managed by test | Becomes `true` only after all three synthetic event types succeed on every selected route |
 | `DEVICE_NOTIFICATION_DELIVERY_TEST_FINGERPRINT` | Managed by test | SHA-256 binds proof to the exact routes, destinations, Function App, and workload identity |
+| `DEVICE_NOTIFICATION_ROUTING_BASE64` | Managed by preprovision | UTF-8 base64 transport copy of validated routing JSON used only to cross the azd parameter boundary safely |
 
 An empty `monitoredUserIds` and empty `monitoredGroupIds` combination means all discovered users. The deployment fails closed unless `DEVICE_NOTIFICATION_SCOPE_MODE=all` and `DEVICE_NOTIFICATION_TENANT_WIDE_CONFIRMED=true` were recorded through an explicit review.
 
@@ -49,6 +50,8 @@ Do not set `DEVICE_NOTIFICATION_COLLECTION_ENABLED=true` directly. Use [protecte
 
 Valid transports are `teamsDm`, `teamsWebhook`, and `email`. An empty audience array disables delivery to that audience for that event. Every enabled transport must have its matching destination configured and tested.
 
+Keep `DEVICE_NOTIFICATION_ROUTING_JSON` as the editable source of truth. The derived value is allowed to be absent while azd performs its first parameter-file parse; preprovision then validates the raw JSON and writes `DEVICE_NOTIFICATION_ROUTING_BASE64`. Root deployment expressions decode it and reconstruct the configuration only after object operations succeed for `events` and all three required event objects and array operations succeed for every `user` and `admin` route. Valid empty route arrays and unrelated routing properties are preserved. Do not edit the derived base64 value; it is refreshed on every provision so quotes, backslashes, Unicode, and other JSON content cannot corrupt the deployment parameters document.
+
 `monitoredUserIds` and `privilegedUserIds` contain Entra user object IDs. `monitoredGroupIds` supports transitive membership and causes the runtime to receive `User.ReadBasic.All` and `GroupMember.Read.All`. Graph group checks run in batches of 20. Do not use hidden-membership groups because the additional `Member.Read.Hidden` permission is intentionally not granted.
 
 `privilegedUserIds` elevates an owned event to high severity. `adminMentions` applies only to Teams Workflow cards and contains objects such as:
@@ -66,18 +69,25 @@ Review exclusions carefully. Values in `excludedOwnership` and `excludedOperatin
 | `TEAMS_ADMIN_WEBHOOK_URL` | Any admin `teamsWebhook` route | Callback URL for one administrator channel or chat Workflow |
 | `ADMIN_EMAIL_RECIPIENTS` | Any admin `email` route | Comma-separated administrator email addresses |
 | `EMAIL_SENDER_UPN` | Any owner or admin `email` route | Shared mailbox authorized through Exchange Application RBAC |
+| `DEVICE_NOTIFICATION_EXCHANGE_ADMIN_UPN` | Any owner or admin `email` route | Exact administrator used for the single Exchange Online connection during setup and cleanup |
 
 For multiple administrator Teams destinations, keep fanout inside an administrator-owned Workflow. The callback URL is a credential. Although it is passed to ARM as a secure parameter, it remains readable to administrators who can read the local azd environment or Function App settings.
 
 Email setup also records exact ownership metadata:
 
 - `DEVICE_NOTIFICATION_EXCHANGE_CONFIGURED`
+- `DEVICE_NOTIFICATION_EXCHANGE_INTENT_STATUS`
+- the exact administrator, workload client ID, and workload principal ID
 - `DEVICE_NOTIFICATION_EXCHANGE_SERVICE_PRINCIPAL_OWNERSHIP`
 - `DEVICE_NOTIFICATION_EXCHANGE_SCOPE_OWNERSHIP`
 - `DEVICE_NOTIFICATION_EXCHANGE_ASSIGNMENT_OWNERSHIP`
 - the exact recorded scope and assignment names
 
-Ownership values are `created` or `adopted`. Do not edit them to make teardown delete an object whose provenance has not been verified.
+Ownership values are `create-pending`, `created`, or `adopted`. `create-pending` is a crash-recovery checkpoint written before a tenant mutation; cleanup treats it as solution-owned only after validating the exact object. Do not edit ownership or binding values to retarget teardown.
+
+Azure resource-group creation is also receipt-bound. A first provision requires `rg-<environment-name>` to be absent. Later provisioning accepts that group only when the same local azd environment holds its creation receipt and the exact `azd-env-name` and `workload=device-notifications` tags still match. Choose a new environment name instead of adopting an unrelated resource group.
+
+Resource-target values used by deployment and lifecycle scripts are refreshed from the active azd environment rather than accepted from inherited process variables. `AZURE_RESOURCE_GROUP` must equal `rg-<environment-name>`. The Function App must be in that exact resource group and carry exact `azd-env-name`, `workload=device-notifications`, and `azd-service-name=notifier` tags before any deployment, key retrieval, test delivery, collection toggle, packaging, or cleanup pause can continue.
 
 ## First-run enrollment behavior
 
@@ -122,6 +132,6 @@ Noninteractive collection enablement additionally requires:
 - current `DEVICE_NOTIFICATION_DELIVERY_TESTED=true` and a matching `DEVICE_NOTIFICATION_DELIVERY_TEST_FINGERPRINT`; and
 - `DEVICE_NOTIFICATION_ENABLE_CONFIRMATION=ENABLE SELECTED SCOPE` or `ENABLE ALL USERS`, exactly matching the effective scope.
 
-The fingerprint is produced only by a complete `Test-NotificationDelivery.ps1` run. It is technical dispatch evidence but not proof of Graph event detection. Retain the actual Teams Workflow run, Teams message, email receipt, and later Graph-backed drill evidence outside the azd environment.
+The fingerprint is produced only by a complete `Test-Deployment.ps1 -TestDelivery` run. It is technical dispatch evidence but not proof of Graph event detection. Retain the actual Teams Workflow run, Teams message, email receipt, and later Graph-backed drill evidence outside the azd environment.
 
 `Enable-NotificationCollection.ps1 -AllowUntestedDestination` is an emergency override for a destination that cannot be tested. Interactive use requires the additional exact phrase `ENABLE WITHOUT DELIVERY PROOF` and warns that events may be missed. Avoid the override for normal deployment and record the accepted risk when it is unavoidable.

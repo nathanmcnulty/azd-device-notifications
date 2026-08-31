@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.46.1.21595",
-      "templateHash": "16412344928608116624"
+      "templateHash": "16370132755544830535"
     }
   },
   "parameters": {
@@ -20,8 +20,9 @@
       "type": "string",
       "defaultValue": "[tenant().tenantId]"
     },
-    "routingConfigJson": {
-      "type": "string"
+    "routingConfigBase64": {
+      "type": "string",
+      "defaultValue": ""
     },
     "adminEmailRecipients": {
       "type": "string",
@@ -58,11 +59,21 @@
     "collectionEnabled": {
       "type": "bool",
       "defaultValue": false
+    },
+    "teamsBotEnabled": {
+      "type": "bool",
+      "defaultValue": false
     }
   },
   "variables": {
     "resourceToken": "[toLower(uniqueString(subscription().id, parameters('environmentName')))]",
     "resourceGroupName": "[format('rg-{0}', parameters('environmentName'))]",
+    "routingConfigJson": "[base64ToString(parameters('routingConfigBase64'))]",
+    "routingConfig": "[json(variables('routingConfigJson'))]",
+    "deviceRegisteredRouting": "[union(variables('routingConfig').events.deviceRegistered, createObject('user', concat(createArray(), variables('routingConfig').events.deviceRegistered.user), 'admin', concat(createArray(), variables('routingConfig').events.deviceRegistered.admin)))]",
+    "deviceEnrolledRouting": "[union(variables('routingConfig').events.deviceEnrolled, createObject('user', concat(createArray(), variables('routingConfig').events.deviceEnrolled.user), 'admin', concat(createArray(), variables('routingConfig').events.deviceEnrolled.admin)))]",
+    "deviceNoncompliantRouting": "[union(variables('routingConfig').events.deviceNoncompliant, createObject('user', concat(createArray(), variables('routingConfig').events.deviceNoncompliant.user), 'admin', concat(createArray(), variables('routingConfig').events.deviceNoncompliant.admin)))]",
+    "validatedRoutingConfig": "[union(variables('routingConfig'), createObject('events', union(variables('routingConfig').events, createObject('deviceRegistered', variables('deviceRegisteredRouting'), 'deviceEnrolled', variables('deviceEnrolledRouting'), 'deviceNoncompliant', variables('deviceNoncompliantRouting')))))]",
     "tags": {
       "azd-env-name": "[parameters('environmentName')]",
       "workload": "device-notifications"
@@ -96,11 +107,20 @@
           "resourceToken": {
             "value": "[variables('resourceToken')]"
           },
+          "environmentName": {
+            "value": "[parameters('environmentName')]"
+          },
           "tenantId": {
             "value": "[parameters('tenantId')]"
           },
+          "subscriptionId": {
+            "value": "[subscription().subscriptionId]"
+          },
+          "resourceGroupName": {
+            "value": "[variables('resourceGroupName')]"
+          },
           "routingConfigJson": {
-            "value": "[parameters('routingConfigJson')]"
+            "value": "[string(variables('validatedRoutingConfig'))]"
           },
           "adminEmailRecipients": {
             "value": "[parameters('adminEmailRecipients')]"
@@ -126,6 +146,9 @@
           "collectionEnabled": {
             "value": "[parameters('collectionEnabled')]"
           },
+          "teamsBotEnabled": {
+            "value": "[parameters('teamsBotEnabled')]"
+          },
           "tags": {
             "value": "[variables('tags')]"
           }
@@ -137,7 +160,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.46.1.21595",
-              "templateHash": "6367666474894833134"
+              "templateHash": "16869205058748106277"
             }
           },
           "parameters": {
@@ -150,7 +173,16 @@
             "resourceToken": {
               "type": "string"
             },
+            "environmentName": {
+              "type": "string"
+            },
             "tenantId": {
+              "type": "string"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "resourceGroupName": {
               "type": "string"
             },
             "routingConfigJson": {
@@ -182,6 +214,9 @@
               "maxValue": 1440
             },
             "collectionEnabled": {
+              "type": "bool"
+            },
+            "teamsBotEnabled": {
               "type": "bool"
             },
             "tags": {
@@ -394,17 +429,8 @@
                   }
                 },
                 "siteConfig": {
-                  "ftpsState": "Disabled",
                   "minTlsVersion": "1.2",
                   "appSettings": [
-                    {
-                      "name": "FUNCTIONS_EXTENSION_VERSION",
-                      "value": "~4"
-                    },
-                    {
-                      "name": "FUNCTIONS_WORKER_RUNTIME",
-                      "value": "node"
-                    },
                     {
                       "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
                       "value": "[reference(resourceId('Microsoft.Insights/components', variables('insightsName')), '2020-02-02').ConnectionString]"
@@ -458,8 +484,20 @@
                       "value": "device-notifications"
                     },
                     {
+                      "name": "AZURE_ENV_NAME",
+                      "value": "[parameters('environmentName')]"
+                    },
+                    {
                       "name": "AZURE_TENANT_ID",
                       "value": "[parameters('tenantId')]"
+                    },
+                    {
+                      "name": "AZURE_SUBSCRIPTION_ID",
+                      "value": "[parameters('subscriptionId')]"
+                    },
+                    {
+                      "name": "AZURE_RESOURCE_GROUP",
+                      "value": "[parameters('resourceGroupName')]"
                     },
                     {
                       "name": "TEAMS_BOT_APP_ID",
@@ -576,6 +614,7 @@
               ]
             },
             {
+              "condition": "[parameters('teamsBotEnabled')]",
               "type": "Microsoft.BotService/botServices",
               "apiVersion": "2022-09-15",
               "name": "[variables('botName')]",
@@ -599,6 +638,7 @@
               ]
             },
             {
+              "condition": "[parameters('teamsBotEnabled')]",
               "type": "Microsoft.BotService/botServices/channels",
               "apiVersion": "2022-09-15",
               "name": "[format('{0}/{1}', variables('botName'), 'MsTeamsChannel')]",
@@ -637,7 +677,7 @@
             },
             "botName": {
               "type": "string",
-              "value": "[variables('botName')]"
+              "value": "[if(parameters('teamsBotEnabled'), variables('botName'), '')]"
             }
           }
         }

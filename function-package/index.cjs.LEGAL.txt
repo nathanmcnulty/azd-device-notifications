@@ -1,0 +1,154 @@
+Bundled license information:
+
+cookie/index.js:
+  /*!
+   * cookie
+   * Copyright(c) 2012-2014 Roman Shtylman
+   * Copyright(c) 2015 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+safe-buffer/index.js:
+  /*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+mime-db/index.js:
+  /*!
+   * mime-db
+   * Copyright(c) 2014 Jonathan Ong
+   * Copyright(c) 2015-2022 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+mime-types/index.js:
+  /*!
+   * mime-types
+   * Copyright(c) 2014 Jonathan Ong
+   * Copyright(c) 2015 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+axios/dist/node/axios.cjs:
+  /*! Axios v1.19.0 Copyright (c) 2026 Matt Zabriskie and contributors */
+
+@azure/msal-node/lib/msal-node.cjs:
+  /*! @azure/msal-node v2.16.3 2025-08-05 */
+  /*! @azure/msal-common v14.16.1 2025-08-05 */
+
+@azure/msal-node/lib/msal-node.cjs:
+  /*! @azure/msal-node v5.5.0 2026-08-04 */
+  /*! @azure/msal-common v16.12.0 2026-08-04 */
+
+@azure/msal-node/dist/cache/serializer/Serializer.mjs:
+@azure/msal-node/dist/cache/serializer/Deserializer.mjs:
+@azure/msal-node/dist/internals.mjs:
+@azure/msal-node/dist/utils/Constants.mjs:
+@azure/msal-node/dist/network/HttpClient.mjs:
+@azure/msal-node/dist/error/ManagedIdentityErrorCodes.mjs:
+@azure/msal-node/dist/error/ManagedIdentityError.mjs:
+@azure/msal-node/dist/config/ManagedIdentityId.mjs:
+@azure/msal-node/dist/error/NodeAuthError.mjs:
+@azure/msal-node/dist/config/Configuration.mjs:
+@azure/msal-node/dist/crypto/GuidGenerator.mjs:
+@azure/msal-node/dist/utils/EncodingUtils.mjs:
+@azure/msal-node/dist/crypto/HashUtils.mjs:
+@azure/msal-node/dist/crypto/PkceGenerator.mjs:
+@azure/msal-node/dist/crypto/CryptoProvider.mjs:
+@azure/msal-node/dist/cache/CacheHelpers.mjs:
+@azure/msal-node/dist/cache/NodeStorage.mjs:
+@azure/msal-node/dist/cache/TokenCache.mjs:
+@azure/msal-node/dist/error/ClientAuthErrorCodes.mjs:
+@azure/msal-node/dist/client/ClientAssertion.mjs:
+@azure/msal-node/dist/packageMetadata.mjs:
+@azure/msal-node/dist/client/BaseClient.mjs:
+@azure/msal-node/dist/client/UsernamePasswordClient.mjs:
+@azure/msal-node/dist/protocol/Authorize.mjs:
+@azure/msal-node/dist/client/ClientApplication.mjs:
+@azure/msal-node/dist/network/LoopbackClient.mjs:
+@azure/msal-node/dist/client/DeviceCodeClient.mjs:
+@azure/msal-node/dist/client/PublicClientApplication.mjs:
+@azure/msal-node/dist/client/ClientCredentialClient.mjs:
+@azure/msal-node/dist/client/OnBehalfOfClient.mjs:
+@azure/msal-node/dist/client/UserFederatedIdentityCredentialClient.mjs:
+@azure/msal-node/dist/client/ConfidentialClientApplication.mjs:
+@azure/msal-node/dist/utils/TimeUtils.mjs:
+@azure/msal-node/dist/network/HttpClientWithRetries.mjs:
+@azure/msal-node/dist/client/ManagedIdentitySources/BaseManagedIdentitySource.mjs:
+@azure/msal-node/dist/retry/LinearRetryStrategy.mjs:
+@azure/msal-node/dist/retry/DefaultManagedIdentityRetryPolicy.mjs:
+@azure/msal-node/dist/config/ManagedIdentityRequestParameters.mjs:
+@azure/msal-node/dist/client/ManagedIdentitySources/AppService.mjs:
+@azure/msal-node/dist/client/ManagedIdentitySources/AzureArc.mjs:
+@azure/msal-node/dist/client/ManagedIdentitySources/CloudShell.mjs:
+@azure/msal-node/dist/retry/ExponentialRetryStrategy.mjs:
+@azure/msal-node/dist/retry/ImdsRetryPolicy.mjs:
+@azure/msal-node/dist/client/ManagedIdentitySources/Imds.mjs:
+@azure/msal-node/dist/client/ManagedIdentitySources/ServiceFabric.mjs:
+@azure/msal-node/dist/client/ManagedIdentitySources/MachineLearning.mjs:
+@azure/msal-node/dist/client/ManagedIdentityClient.mjs:
+@azure/msal-node/dist/client/ManagedIdentityApplication.mjs:
+@azure/msal-node/dist/cache/distributed/DistributedCachePlugin.mjs:
+@azure/msal-node/dist/index.mjs:
+  /*! @azure/msal-node v5.5.0 2026-08-04 */
+
+@azure/msal-common/dist/constants/AADServerParamKeys.mjs:
+@azure/msal-common/dist/utils/Constants.mjs:
+@azure/msal-common/dist/error/AuthError.mjs:
+@azure/msal-common/dist/error/ClientAuthError.mjs:
+@azure/msal-common/dist/error/ClientAuthErrorCodes.mjs:
+@azure/msal-common/dist/account/ClientInfo.mjs:
+@azure/msal-common/dist/account/AuthToken.mjs:
+@azure/msal-common/dist/account/AccountInfo.mjs:
+@azure/msal-common/dist/authority/AuthorityType.mjs:
+@azure/msal-common/dist/account/TokenClaims.mjs:
+@azure/msal-common/dist/authority/ProtocolMode.mjs:
+@azure/msal-common/dist/cache/utils/AccountEntityUtils.mjs:
+@azure/msal-common/dist/error/AuthErrorCodes.mjs:
+@azure/msal-common/dist/error/ClientConfigurationError.mjs:
+@azure/msal-common/dist/error/ClientConfigurationErrorCodes.mjs:
+@azure/msal-common/dist/authority/OpenIdConfigResponse.mjs:
+@azure/msal-common/dist/utils/StringUtils.mjs:
+@azure/msal-common/dist/url/UrlString.mjs:
+@azure/msal-common/dist/authority/AuthorityMetadata.mjs:
+@azure/msal-common/dist/authority/AuthorityOptions.mjs:
+@azure/msal-common/dist/authority/CloudInstanceDiscoveryResponse.mjs:
+@azure/msal-common/dist/authority/CloudInstanceDiscoveryErrorResponse.mjs:
+@azure/msal-common/dist/telemetry/performance/PerformanceEvents.mjs:
+@azure/msal-common/dist/utils/FunctionWrappers.mjs:
+@azure/msal-common/dist/authority/RegionDiscovery.mjs:
+@azure/msal-common/dist/utils/TimeUtils.mjs:
+@azure/msal-common/dist/cache/utils/CacheHelpers.mjs:
+@azure/msal-common/dist/authority/Authority.mjs:
+@azure/msal-common/dist/authority/AuthorityFactory.mjs:
+@azure/msal-common/dist/request/ScopeSet.mjs:
+@azure/msal-common/dist/request/RequestParameterBuilder.mjs:
+@azure/msal-common/dist/utils/UrlUtils.mjs:
+@azure/msal-common/dist/crypto/ICrypto.mjs:
+@azure/msal-common/dist/logger/Logger.mjs:
+@azure/msal-common/dist/packageMetadata.mjs:
+@azure/msal-common/dist/error/CacheErrorCodes.mjs:
+@azure/msal-common/dist/error/CacheError.mjs:
+@azure/msal-common/dist/cache/CacheManager.mjs:
+@azure/msal-common/dist/telemetry/performance/PerformanceEvent.mjs:
+@azure/msal-common/dist/telemetry/performance/StubPerformanceClient.mjs:
+@azure/msal-common/dist/config/ClientConfiguration.mjs:
+@azure/msal-common/dist/cache/persistence/TokenCacheContext.mjs:
+@azure/msal-common/dist/crypto/PopTokenGenerator.mjs:
+@azure/msal-common/dist/error/InteractionRequiredAuthErrorCodes.mjs:
+@azure/msal-common/dist/error/InteractionRequiredAuthError.mjs:
+@azure/msal-common/dist/error/ServerError.mjs:
+@azure/msal-common/dist/utils/ProtocolUtils.mjs:
+@azure/msal-common/dist/response/ResponseHandler.mjs:
+@azure/msal-common/dist/account/CcsCredential.mjs:
+@azure/msal-common/dist/utils/ClientAssertionUtils.mjs:
+@azure/msal-common/dist/network/RequestThumbprint.mjs:
+@azure/msal-common/dist/network/ThrottlingUtils.mjs:
+@azure/msal-common/dist/error/NetworkError.mjs:
+@azure/msal-common/dist/protocol/Token.mjs:
+@azure/msal-common/dist/client/AuthorizationCodeClient.mjs:
+@azure/msal-common/dist/protocol/Authorize.mjs:
+@azure/msal-common/dist/client/RefreshTokenClient.mjs:
+@azure/msal-common/dist/telemetry/server/ServerTelemetryManager.mjs:
+@azure/msal-common/dist/client/SilentFlowClient.mjs:
+@azure/msal-common/dist/request/BaseAuthRequest.mjs:
+@azure/msal-common/dist/index-node.mjs:
+  /*! @azure/msal-common v16.12.0 2026-08-04 */

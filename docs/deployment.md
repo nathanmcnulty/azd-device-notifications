@@ -4,7 +4,7 @@ Deployment is intentionally phased. The first `azd up` creates and validates the
 
 ## 1. Prepare the administrator session
 
-Install Azure CLI, Azure Developer CLI 1.23 or later, and PowerShell 7. Email setup additionally requires the ExchangeOnlineManagement PowerShell module. Node.js does not need to be installed on Windows administrator workstations: the repository deployment command downloads a pinned, hash-checked portable copy into the ignored local `.azure` folder when needed, and Azure builds the Function remotely.
+Install Azure CLI, Azure Developer CLI 1.23 or later, and PowerShell 7. Email setup additionally requires the ExchangeOnlineManagement PowerShell module. Administrators do not install Node.js or npm: the repository contains the ready-to-run Function package, including its application dependencies, and deployment performs no local or remote npm restore or source build.
 
 If an administrator Teams Workflow route will be selected, create **Post to a chat or channel when a webhook request is received** now, choose the intended destination, add a durable co-owner, and copy the callback URL. The first-run wizard requires and validates that credential before it enables the route.
 
@@ -17,13 +17,17 @@ azd auth login
 
 Do not use device-code authentication. The preprovision guard stops when the active Azure CLI tenant, subscription tenant, and azd tenant do not match.
 
+Use a fresh azd environment name. Preprovision refuses an existing `rg-<environment-name>` unless the same local environment recorded its creation and its exact ownership tags still match; there is no implicit Azure resource-group adoption.
+
+After provisioning, every script that can deploy to, read keys from, test, enable, or pause the Function App refreshes the target from the active azd environment. It requires the exact `rg-<environment-name>` resource group and exact Function App resource ID and ownership tags. A stale terminal value or an app from another environment is rejected before the operation.
+
 ## 2. Initialize and review choices
 
 Until the first stable release is published, use the default branch only for review and test deployments:
 
 ```powershell
 azd init --template nathanmcnulty/azd-device-notifications
-./scripts/Invoke-Azd.ps1 up
+azd up
 ```
 
 The first-run review covers:
@@ -44,7 +48,9 @@ azd init --template nathanmcnulty/azd-device-notifications --branch v1.0.0
 
 ## 3. Confirm foundation readiness
 
-The initial deployment should report the Function App state and exact core Graph application-role assignments. It also creates `teams-app/device-notifications.zip`.
+The initial deployment uploads the reviewed Function package already contained in the repository, with remote build disabled. It should report the Function App state and exact core Graph application-role assignments. When personal Teams messages are selected, it also creates `teams-app/device-notifications.zip`.
+
+When upgrading an existing environment to a version that includes notification contracts, run `azd provision` before any code-only `azd deploy notifier`. Provisioning adds the environment metadata required for schema-valid delivery results; deploying the Function first causes startup to fail closed. See [Notification contracts](notification-contracts.md#provision-before-a-code-only-deployment).
 
 At this point `DEVICE_NOTIFICATION_COLLECTION_ENABLED` remains `false`. This is expected: a running Function App and assigned Graph permissions prove infrastructure readiness, not message delivery. Finish every selected destination below.
 
@@ -85,11 +91,15 @@ Use these steps only when an `email` route is selected. Do not grant the managed
 During interactive `azd up`, postprovision connects through the normal Exchange Online browser flow and configures mailbox-scoped Application RBAC automatically. If that step was interrupted or the sender mailbox changes, repair it with:
 
 ```powershell
-./scripts/Configure-ExchangeMail.ps1 -SenderMailbox notifications@contoso.com
+./scripts/Configure-ExchangeMail.ps1 `
+    -SenderMailbox notifications@contoso.com `
+    -AdminUpn exchange-admin@contoso.com
 azd provision
 ```
 
-The script creates or explicitly adopts an Exchange service-principal pointer, a recipient scope that resolves only to the requested mailbox, and an `Application Mail.Send` management-role assignment. It records exact names and ownership in the azd environment so teardown can avoid deleting externally owned objects.
+The script disconnects other Exchange sessions, opens one connection for the exact administrator UPN, and verifies that connection's tenant and user before mutation. It creates an Exchange service-principal pointer, a recipient scope that resolves only to the requested mailbox, and an `Application Mail.Send` management-role assignment. Exact target intent and per-object `create-pending` checkpoints are recorded before mutation so an interrupted setup remains cleanable.
+
+If exact matching objects already exist but have no creation receipt in this azd environment, setup stops. After independently verifying their provenance and exact app, principal, scope, role, and mailbox binding, explicitly opt in with `-AdoptExisting`. Adopted objects are recorded but never removed by automated teardown.
 
 Before continuing:
 
@@ -105,7 +115,7 @@ With collection still paused, rerun infrastructure/configuration validation and 
 
 ```powershell
 ./scripts/Test-Deployment.ps1
-./scripts/Test-NotificationDelivery.ps1
+./scripts/Test-Deployment.ps1 -TestDelivery
 ```
 
 Owner routes prompt for a prepared test user's object ID, UPN, and email address. Confirm every expected `[TEST]` Teams card and email reaches its intended recipient. A complete run records a fingerprint of the exact routes and destinations.

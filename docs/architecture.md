@@ -6,9 +6,11 @@ flowchart LR
     Intune[Intune managed devices] --> Detect
     Detect --> State[Tables: checkpoints and history]
     State --> Queue[Notification queue]
-    Queue --> Owner[Owner: Teams or email]
+    Queue --> Owner[Owner: personal Teams bot or email]
     Queue --> Admin[Admins: Teams Workflow or email]
 ```
+
+The ready-to-run Node.js Function is committed in `function-package`; administrators do not build it or restore npm packages. The TypeScript source remains in `src`, and continuous integration proves that the committed bundle matches that source. Bot Service is deployed only when a personal Teams owner route is selected.
 
 ## Collection and readiness
 
@@ -42,6 +44,8 @@ flowchart TD
 - `device-notifications` is the outbox. Azure Functions retries failed deliveries five times before moving them to the standard poison queue.
 
 One retryable route failure does not prevent attempts to other routes. Successful routes are recorded and skipped on queue retry. Stale pending event reservations are recovered after 15 minutes so a Function termination cannot permanently suppress an event. Delivery is at least once: a process termination after an external service accepts a message but before history is recorded can still produce a duplicate.
+
+Each evaluated route also emits a versioned, administrator-safe delivery result. Canonical keys include the tenant, namespaced event type, stable event ID, and logical route ID. A read-only legacy-key fallback recognizes delivered and fresh pending legacy rows during upgrade; the two row keys cannot provide a transactional cutover after a legacy reservation becomes stale. See [Notification contracts](notification-contracts.md).
 
 An unavailable route is different from a retryable failure. For example, a missing Teams personal conversation or a route with no configured destination cannot prove delivery and may be consumed without retry. The readiness gate exists to prevent collection until these prerequisites have been tested. Administrators must monitor warnings and delivery history rather than treating queue completion as message receipt.
 

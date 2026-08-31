@@ -9,6 +9,7 @@ foreach ($name in @('AZURE_SUBSCRIPTION_ID', 'AZURE_TENANT_ID', 'AZURE_WORKLOAD_
     [void](Get-AzdEnvironmentValue $name)
 }
 Assert-AzdTenantContext
+Get-AzdFunctionTarget | Out-Null
 foreach ($name in @('AZURE_WORKLOAD_CLIENT_ID', 'AZURE_FUNCTION_APP_URL')) {
     if (-not [Environment]::GetEnvironmentVariable($name)) { throw "$name is required." }
 }

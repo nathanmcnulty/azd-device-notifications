@@ -1,0 +1,7 @@
+name: "Device Notifications source"
+
+paths:
+  - src
+paths-ignore:
+  - src/node_modules
+  - src/dist

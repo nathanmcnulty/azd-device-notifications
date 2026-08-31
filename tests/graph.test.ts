@@ -1,9 +1,21 @@
 import { describe, expect, it, vi } from "vitest";
+import { ProviderRequestError } from "../src/domain.js";
 import { GraphClient } from "../src/graph.js";
 
 const credential = { async getToken() { return { token: "test-token" }; } };
 
 describe("Graph client", () => {
+  it("sanitizes structured provider metadata at construction", () => {
+    const error = new ProviderRequestError(
+      "microsoftGraph", "unsafe code with https://private.example.test?sig=secret", 700,
+      "unsafe operation with spaces and private@example.test"
+    );
+    expect(error).toMatchObject({ code: "ProviderFailure", message: "ProviderFailure" });
+    expect(error.statusCode).toBeUndefined();
+    expect(error.operationId).toBeUndefined();
+    expect(JSON.stringify(error)).not.toMatch(/private|example\.test|[?&]sig=/);
+  });
+
   it("follows pagination links", async () => {
     const fetcher = vi.fn()
       .mockResolvedValueOnce(new Response(JSON.stringify({ value: [1], "@odata.nextLink": "https://graph.microsoft.com/v1.0/next" }), { status: 200 }))
@@ -12,6 +24,68 @@ describe("Graph client", () => {
     for await (const page of new GraphClient(credential, fetcher).pages<number>("/items")) pages.push(page);
     expect(pages).toEqual([[1], [2]]);
     expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+
+  it("accepts an exact v1.0 Graph URL on the default HTTPS port", async () => {
+    const getToken = vi.fn(async () => ({ token: "test-token" }));
+    const fetcher = vi.fn(async () => new Response(JSON.stringify({ value: [] }), { status: 200 }));
+
+    for await (const _page of new GraphClient({ getToken }, fetcher).pages("https://graph.microsoft.com:443/v1.0/items")) {
+      /* consume */
+    }
+
+    expect(getToken).toHaveBeenCalledTimes(1);
+    expect(fetcher).toHaveBeenCalledWith(
+      "https://graph.microsoft.com/v1.0/items",
+      expect.objectContaining({ headers: expect.objectContaining({ Authorization: "Bearer test-token" }) })
+    );
+  });
+
+  it.each([
+    "http://graph.microsoft.com/v1.0/items",
+    "https://graph.microsoft.com.evil.example/v1.0/items",
+    "https://graph.microsoft.com:444/v1.0/items",
+    "https://user:password@graph.microsoft.com/v1.0/items",
+    "https://graph.microsoft.com/beta/items",
+    "https://graph.microsoft.com/v2.0/items",
+    "https://graph.microsoft.com/v1.0/items#sensitive-fragment"
+  ])("rejects an unsafe initial Graph URL before acquiring a token: %s", async (path) => {
+    const getToken = vi.fn(async () => ({ token: "test-token" }));
+    const fetcher = vi.fn();
+    const sleeper = vi.fn(async (_milliseconds: number) => undefined);
+
+    const read = async () => {
+      for await (const _page of new GraphClient({ getToken }, fetcher, sleeper).pages(path)) { /* consume */ }
+    };
+    await expect(read()).rejects.toThrow("Graph request URL rejected");
+
+    expect(getToken).not.toHaveBeenCalled();
+    expect(fetcher).not.toHaveBeenCalled();
+    expect(sleeper).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    "http://graph.microsoft.com/v1.0/next",
+    "https://graph.microsoft.com.evil.example/v1.0/next",
+    "https://graph.microsoft.com:444/v1.0/next",
+    "https://user:password@graph.microsoft.com/v1.0/next",
+    "https://graph.microsoft.com/beta/next"
+  ])("rejects an unsafe Graph continuation before forwarding another token: %s", async (nextLink) => {
+    const getToken = vi.fn(async () => ({ token: "test-token" }));
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ value: [1], "@odata.nextLink": nextLink }), { status: 200 }));
+    const sleeper = vi.fn(async (_milliseconds: number) => undefined);
+    const pages: number[][] = [];
+
+    const read = async () => {
+      for await (const page of new GraphClient({ getToken }, fetcher, sleeper).pages<number>("/items")) pages.push(page);
+    };
+    await expect(read()).rejects.toThrow("Graph request URL rejected");
+
+    expect(pages).toEqual([[1]]);
+    expect(getToken).toHaveBeenCalledTimes(1);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(sleeper).not.toHaveBeenCalled();
   });
 
   it("retries a network failure and transient HTTP statuses", async () => {
@@ -38,16 +112,31 @@ describe("Graph client", () => {
     expect(sleeper).toHaveBeenCalledWith(5_000);
   });
 
-  it("fails permanent responses without exposing unsafe identifiers", async () => {
+  it.each([400, 401, 403, 404, 410, 418])("returns safe structured metadata for permanent HTTP %s", async (status) => {
     const fetcher = vi.fn(async () => new Response(undefined, {
-      status: 400, headers: { "request-id": "safe-request-id" }
+      status, headers: { "request-id": "safe-request-id" }
     }));
     await expect(new GraphClient(credential, fetcher).post("/bad", {}))
-      .rejects.toThrow("Graph request failed with status 400 (request-id: safe-request-id)");
+      .rejects.toMatchObject({
+        name: "ProviderRequestError", provider: "microsoftGraph", code: `GraphHttp${status}`,
+        statusCode: status, operationId: "safe-request-id", message: `GraphHttp${status}`
+      } satisfies Partial<ProviderRequestError>);
     expect(fetcher).toHaveBeenCalledOnce();
   });
 
-  it("bounds repeated network retries and sanitizes the terminal error", async () => {
+  it.each([408, 429, 500, 503])("returns safe structured metadata after exhausting HTTP %s retries", async (status) => {
+    const fetcher = vi.fn(async () => new Response("sensitive provider body", { status }));
+    const sleeper = vi.fn(async (_milliseconds: number) => undefined);
+    await expect(new GraphClient(credential, fetcher, sleeper).post("/items", {}))
+      .rejects.toMatchObject({
+        name: "ProviderRequestError", provider: "microsoftGraph", code: `GraphHttp${status}`,
+        statusCode: status, message: `GraphHttp${status}`
+      } satisfies Partial<ProviderRequestError>);
+    expect(fetcher).toHaveBeenCalledTimes(6);
+    expect(sleeper).toHaveBeenCalledTimes(5);
+  });
+
+  it("bounds repeated network retries and sanitizes an unclassified terminal error", async () => {
     const fetcher = vi.fn(async () => { throw new TypeError("secret-url-and-token"); });
     const sleeper = vi.fn(async (_milliseconds: number) => undefined);
     await expect(new GraphClient(credential, fetcher, sleeper).post("/items", {}))
