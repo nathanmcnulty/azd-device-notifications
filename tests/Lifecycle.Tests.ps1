@@ -286,6 +286,12 @@ Describe 'Graph permission planning' {
         $post | Should -Match '\$verified = Invoke-GraphJson -Method GET'
         $post | Should -Match '-RetryNotFound'
     }
+
+    It 'acquires Graph tokens through the exact guarded subscription context' {
+        $graphModule = Get-Content (Join-Path $repoRoot 'scripts/Graph.Management.psm1') -Raw
+        $graphModule | Should -Match 'az account get-access-token --subscription \$SubscriptionId --resource-type ms-graph'
+        $graphModule | Should -Not -Match 'get-access-token --subscription \$SubscriptionId --tenant'
+    }
 }
 
 Describe 'Lifecycle safety contracts' {
