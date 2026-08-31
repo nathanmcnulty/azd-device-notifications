@@ -32,4 +32,20 @@ Describe 'Release artifact generation' {
             & $script:ReleaseScript -Version 'v1.0.0' -OutputDirectory (Join-Path $TestDrive 'stable')
         } | Should -Throw '*Personal Teams direct-message delivery*'
     }
+
+    It 'rejects a version that is not strict SemVer' -ForEach @(
+        'v01.0.0-rc.1',
+        'v1.00.0-rc.1',
+        'v1.0.03-rc.1',
+        'v1.0.0-01',
+        'v1.0.0-rc..1',
+        'v1.0.0-rc.',
+        'v1.0.0-',
+        'v1.0.0+build..1',
+        '1.0.0-rc.1'
+    ) {
+        {
+            & $script:ReleaseScript -Version $_ -OutputDirectory (Join-Path $TestDrive 'invalid')
+        } | Should -Throw
+    }
 }

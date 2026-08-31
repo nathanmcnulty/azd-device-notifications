@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory)][ValidatePattern('^v\d+\.\d+\.\d+(?:-[0-9A-Za-z][0-9A-Za-z.-]*)?$')]
+    [Parameter(Mandatory)]
+    [ValidatePattern('^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$')]
     [string] $Version,
 
     [Parameter(Mandatory)]
@@ -12,7 +13,7 @@ $ErrorActionPreference = 'Stop'
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
 $readinessPath = Join-Path $repositoryRoot '.release/readiness.json'
 $readiness = Get-Content -LiteralPath $readinessPath -Raw | ConvertFrom-Json
-$isPrerelease = $Version.Contains('-')
+$isPrerelease = $Version.Split('+', 2)[0].Contains('-')
 if (-not $isPrerelease -and $readiness.stableReleaseApproved -ne $true) {
     $reasons = @($readiness.blockingEvidence) -join ' '
     throw "Stable releases are blocked by .release/readiness.json. $reasons"
