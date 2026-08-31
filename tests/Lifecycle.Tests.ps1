@@ -539,6 +539,13 @@ param routingConfigBase64 = ''
         $cleanup | Should -Match 'Get-AzdFunctionTarget -AllowMissing'
     }
 
+    It 'checks the Exchange authorization result using its actual RoleName contract' {
+        $configure = Get-Content (Join-Path $repoRoot 'scripts/Configure-ExchangeMail.ps1') -Raw
+        $configure | Should -Match "\`$_.RoleName -eq 'Application Mail.Send'"
+        $configure | Should -Not -Match "\`$_.Role -eq 'Application Mail.Send'"
+        $configure | Should -Match '\$_.InScope -eq \$true'
+    }
+
     It 'validates the exact Function target before every sensitive Function operation' {
         foreach ($path in @(
                 'scripts/Deploy-FunctionPackage.ps1',

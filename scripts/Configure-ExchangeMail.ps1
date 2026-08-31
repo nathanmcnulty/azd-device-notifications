@@ -152,7 +152,7 @@ try {
 
     $authorization = @(Test-ServicePrincipalAuthorization -Identity $servicePrincipal.Identity -Resource $SenderMailbox)
     $authorization | Format-Table
-    if (-not ($authorization | Where-Object { $_.Role -eq 'Application Mail.Send' -and $_.InScope -eq $true })) {
+    if (-not ($authorization | Where-Object { $_.RoleName -eq 'Application Mail.Send' -and $_.InScope -eq $true })) {
         throw "Exchange did not report Application Mail.Send in scope for '$SenderMailbox'."
     }
     Set-AzdEnvironmentValue 'DEVICE_NOTIFICATION_EXCHANGE_CONFIGURED' 'true'
