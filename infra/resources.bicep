@@ -167,11 +167,8 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
       scaleAndConcurrency: { maximumInstanceCount: 10, instanceMemoryMB: 2048 }
     }
     siteConfig: {
-      ftpsState: 'Disabled'
       minTlsVersion: '1.2'
       appSettings: [
-        { name: 'FUNCTIONS_EXTENSION_VERSION', value: '~4' }
-        { name: 'FUNCTIONS_WORKER_RUNTIME', value: 'node' }
         { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: insights.properties.ConnectionString }
         { name: 'APPLICATIONINSIGHTS_AUTHENTICATION_STRING', value: 'Authorization=AAD;ClientId=${identity.properties.clientId}' }
         { name: 'AzureWebJobsStorage__accountName', value: storage.name }

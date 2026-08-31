@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.46.1.21595",
-      "templateHash": "12984171467344099869"
+      "templateHash": "16370132755544830535"
     }
   },
   "parameters": {
@@ -160,7 +160,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.46.1.21595",
-              "templateHash": "183645625022292469"
+              "templateHash": "16869205058748106277"
             }
           },
           "parameters": {
@@ -429,17 +429,8 @@
                   }
                 },
                 "siteConfig": {
-                  "ftpsState": "Disabled",
                   "minTlsVersion": "1.2",
                   "appSettings": [
-                    {
-                      "name": "FUNCTIONS_EXTENSION_VERSION",
-                      "value": "~4"
-                    },
-                    {
-                      "name": "FUNCTIONS_WORKER_RUNTIME",
-                      "value": "node"
-                    },
                     {
                       "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
                       "value": "[reference(resourceId('Microsoft.Insights/components', variables('insightsName')), '2020-02-02').ConnectionString]"

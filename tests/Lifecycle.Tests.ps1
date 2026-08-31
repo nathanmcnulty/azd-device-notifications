@@ -342,6 +342,20 @@ Describe 'Lifecycle safety contracts' {
         }
     }
 
+    It 'configures the Flex Consumption worker only through functionAppConfig' {
+        $resources = Get-Content (Join-Path $repoRoot 'infra/resources.bicep') -Raw
+        $resources | Should -Match "runtime: \{ name: 'node', version: '22' \}"
+        foreach ($unsupportedSetting in @('FUNCTIONS_WORKER_RUNTIME', 'FUNCTIONS_EXTENSION_VERSION', 'ftpsState')) {
+            $resources | Should -Not -Match $unsupportedSetting
+        }
+
+        $compiled = Get-Content (Join-Path $repoRoot 'infra/main.json') -Raw
+        $compiled | Should -Match '"functionAppConfig"'
+        foreach ($unsupportedSetting in @('FUNCTIONS_WORKER_RUNTIME', 'FUNCTIONS_EXTENSION_VERSION', 'ftpsState')) {
+            $compiled | Should -Not -Match $unsupportedSetting
+        }
+    }
+
     It 'creates Bot Service only when personal Teams delivery is selected' {
         $infra = Get-Content (Join-Path $repoRoot 'infra/resources.bicep') -Raw
         $infra | Should -Match "resource bot .* = if \(teamsBotEnabled\)"
