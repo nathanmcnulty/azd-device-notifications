@@ -53,6 +53,8 @@ An unavailable route is different from a retryable failure. For example, a missi
 
 Teams personal messages use an Azure Bot with a user-assigned managed identity. The Teams app must be installed for the user; its installation activity supplies the supported conversation reference used for proactive messages. The service does not misuse Graph migration permissions or delegated user tokens.
 
+The Azure Bot `MsTeamsChannel` resource is the transport connection between Bot Service and Microsoft Teams. It is not a Teams team or channel. The app package intentionally declares only `personal` scope, so administrators publish it to the organization app catalog and install it for individual recipients rather than adding it to a Team or channel.
+
 Admin Teams delivery uses a Power Automate Workflows webhook bound to a configured channel or chat. Workflow ownership and its callback URL must be managed as credentials. The URL is present in the local azd environment and Function App configuration. Email uses Graph `sendMail` from one shared mailbox, authorized by Exchange Application RBAC rather than tenant-wide Entra `Mail.Send`.
 
 ## Destructive-action boundary

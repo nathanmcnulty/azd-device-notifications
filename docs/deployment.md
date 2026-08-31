@@ -76,11 +76,12 @@ Legacy Office 365 connectors are not used. The callback URL is held in the local
 
 Use these steps only when a `teamsDm` route is selected:
 
-1. In the Teams admin center, upload `teams-app/device-notifications.zip` as a custom app.
-2. Review and approve the app, then ensure custom apps are permitted for the intended test users.
-3. Install the app in personal scope for each intended test recipient, either directly or through an administrator-owned setup policy.
-4. Wait for policy/install propagation and confirm the installation activity reaches the bot. That activity supplies the conversation reference required for proactive delivery.
-5. Run the personal-message validation in [operations](operations.md#validate-every-selected-delivery-path) for every test recipient.
+1. In the Teams admin center, upload `teams-app/device-notifications.zip` to the organization app catalog from **Teams apps > Manage apps**.
+2. Review the app details and permissions. With app-centric management, set **Availability** to only the intended users or groups.
+3. From the app's **Users and groups > Installs** page, install the app for each intended test recipient. If the tenant has not migrated to app-centric management, use a narrowly assigned administrator-owned app setup policy instead.
+4. Do not use **Add to team**. This package declares only the `personal` bot scope so that device-owner notifications are delivered privately. The separate Azure Bot `MsTeamsChannel` resource is enabled automatically during provisioning and is not a Team or channel installation.
+5. Wait for availability/install propagation and confirm the installation activity reaches the bot. That activity supplies the conversation reference required for proactive delivery.
+6. Run the personal-message validation in [operations](operations.md#validate-every-selected-delivery-path) for every test recipient.
 
 Do not grant the workload broad Teams app-installation permission. Administrator-owned app setup policies can scale installation after the test group succeeds.
 

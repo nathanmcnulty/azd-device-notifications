@@ -8,7 +8,7 @@ This solution separates the deploying administrator from the runtime managed ide
 |---|---|---|---|
 | Azure deployment | Owner, or Contributor plus User Access Administrator | Creates resources and Azure role assignments | Only for later Azure changes or teardown |
 | Graph application-role assignment | Privileged Role Administrator | Assigns application permissions to the managed identity | Only when reconciling runtime permissions |
-| Teams custom app | Teams Administrator | Uploads/approves the app and manages permission or setup policy | For app lifecycle and wider rollout |
+| Teams custom app | Teams Administrator | Uploads the app to the organization catalog and manages app-centric availability and installation (or a setup policy on tenants not yet migrated) | For app lifecycle and wider rollout |
 | Teams Workflow | Workflow owner with destination access | Creates the callback, connection, co-ownership, and destination | Yes; the Workflow needs durable ownership |
 | Exchange setup | Exchange Administrator | Creates/adopts mailbox-scoped Application RBAC objects | For mail changes and teardown |
 | Test-device operation | Appropriate Intune/Entra administrator | Creates approved registration, enrollment, or compliance test conditions | Only for end-to-end drills |
