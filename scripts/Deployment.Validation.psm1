@@ -171,9 +171,9 @@ function Get-ProjectValidationDefinition {
         -Expected 'Running' `
         -Remediation 'Inspect the Function App deployment and runtime logs, then rerun validation.' `
         -Action {
-            $state = & az functionapp show --subscription $env:AZURE_SUBSCRIPTION_ID `
-                --resource-group $env:AZURE_RESOURCE_GROUP --name $env:AZURE_FUNCTION_APP_NAME `
-                --query state --only-show-errors --output tsv
+            $functionResourceId = "/subscriptions/$($env:AZURE_SUBSCRIPTION_ID)/resourceGroups/$($env:AZURE_RESOURCE_GROUP)/providers/Microsoft.Web/sites/$($env:AZURE_FUNCTION_APP_NAME)"
+            $state = & az resource show --ids $functionResourceId --api-version 2024-04-01 `
+                --query properties.state --only-show-errors --output tsv
             if ($LASTEXITCODE -ne 0) {
                 return (New-AzdCheckFailure -Code 'runtime.functionReadFailed' `
                     -Summary 'The Function App could not be read.' -Expected 'Running' `
@@ -344,9 +344,9 @@ function Get-ProjectValidationDefinition {
                     -Expected $expectedEndpoint `
                     -Remediation 'Rerun provisioning or correct the Azure Bot messaging endpoint.')
             }
-            $channelJson = & az resource show --subscription $env:AZURE_SUBSCRIPTION_ID `
-                --resource-group $env:AZURE_RESOURCE_GROUP --resource-type Microsoft.BotService/botServices/channels `
-                --name "$($env:TEAMS_BOT_NAME)/MsTeamsChannel" --api-version 2022-09-15 --only-show-errors --output json
+            $channelResourceId = "/subscriptions/$($env:AZURE_SUBSCRIPTION_ID)/resourceGroups/$($env:AZURE_RESOURCE_GROUP)/providers/Microsoft.BotService/botServices/$($env:TEAMS_BOT_NAME)/channels/MsTeamsChannel"
+            $channelJson = & az resource show --ids $channelResourceId --api-version 2022-09-15 `
+                --only-show-errors --output json
             if ($LASTEXITCODE -ne 0 -or -not $channelJson) {
                 return (New-AzdCheckFailure -Code 'configuration.teamsChannelReadFailed' `
                     -Summary 'The Microsoft Teams channel could not be read from the Azure Bot.' `
@@ -421,10 +421,8 @@ function Get-ProjectValidationDefinition {
         -Action {
             $verifiedPolicies = [System.Collections.Generic.List[string]]::new()
             foreach ($policyName in @('ftp', 'scm')) {
-                $allow = & az resource show --subscription $env:AZURE_SUBSCRIPTION_ID `
-                    --resource-group $env:AZURE_RESOURCE_GROUP `
-                    --resource-type Microsoft.Web/sites/basicPublishingCredentialsPolicies `
-                    --name "$($env:AZURE_FUNCTION_APP_NAME)/$policyName" --api-version 2024-04-01 `
+                $policyResourceId = "/subscriptions/$($env:AZURE_SUBSCRIPTION_ID)/resourceGroups/$($env:AZURE_RESOURCE_GROUP)/providers/Microsoft.Web/sites/$($env:AZURE_FUNCTION_APP_NAME)/basicPublishingCredentialsPolicies/$policyName"
+                $allow = & az resource show --ids $policyResourceId --api-version 2024-04-01 `
                     --query properties.allow --only-show-errors --output tsv
                 if ($LASTEXITCODE -ne 0 -or $allow -ne 'false') {
                     return (New-AzdCheckFailure -Code 'security.basicPublishingEnabled' `

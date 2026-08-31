@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { classifyDeliveryReservation } from "../src/repositories.js";
+import { buildQueueUrl, classifyDeliveryReservation } from "../src/repositories.js";
+
+describe("Azure Queue endpoint normalization", () => {
+  it("joins Azure endpoints with exactly one path separator", () => {
+    expect(buildQueueUrl("https://storage.queue.core.windows.net/", "device-notifications"))
+      .toBe("https://storage.queue.core.windows.net/device-notifications");
+    expect(buildQueueUrl("https://storage.queue.core.windows.net", "device-notifications"))
+      .toBe("https://storage.queue.core.windows.net/device-notifications");
+  });
+});
 
 describe("delivery reservation migration", () => {
   const now = Date.parse("2026-08-23T12:02:00.000Z");

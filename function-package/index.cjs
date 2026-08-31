@@ -148714,6 +148714,9 @@ function classifyDeliveryReservation(entity, now = Date.now()) {
   }
   return void 0;
 }
+function buildQueueUrl(queueEndpoint, queueName) {
+  return `${queueEndpoint.replace(/\/+$/, "")}/${queueName}`;
+}
 var AzureStateRepository = class {
   state;
   fingerprints;
@@ -148725,7 +148728,7 @@ var AzureStateRepository = class {
     this.state = new TableClient(options.tableEndpoint, "DeviceNotificationState", credential);
     this.fingerprints = new TableClient(options.tableEndpoint, "DeviceEventFingerprints", credential);
     this.history = new TableClient(options.tableEndpoint, "DeviceNotificationHistory", credential);
-    this.queue = new QueueClient(`${options.queueEndpoint}/${options.queueName}`, credential);
+    this.queue = new QueueClient(buildQueueUrl(options.queueEndpoint, options.queueName), credential);
     this.ready = Promise.all([
       this.state.createTable().catch((error) => {
         if (!isConflict(error)) throw error;

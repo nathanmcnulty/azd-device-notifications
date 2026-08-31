@@ -40,6 +40,10 @@ export function classifyDeliveryReservation(
   return undefined;
 }
 
+export function buildQueueUrl(queueEndpoint: string, queueName: string): string {
+  return `${queueEndpoint.replace(/\/+$/, "")}/${queueName}`;
+}
+
 export class AzureStateRepository implements WatermarkRepository, SnapshotRepository, OutboxRepository, NotificationHistoryRepository, ConversationRepository {
   private readonly state: TableClient;
   private readonly fingerprints: TableClient;
@@ -52,7 +56,7 @@ export class AzureStateRepository implements WatermarkRepository, SnapshotReposi
     this.state = new TableClient(options.tableEndpoint, "DeviceNotificationState", credential);
     this.fingerprints = new TableClient(options.tableEndpoint, "DeviceEventFingerprints", credential);
     this.history = new TableClient(options.tableEndpoint, "DeviceNotificationHistory", credential);
-    this.queue = new QueueClient(`${options.queueEndpoint}/${options.queueName}`, credential);
+    this.queue = new QueueClient(buildQueueUrl(options.queueEndpoint, options.queueName), credential);
     this.ready = Promise.all([
       this.state.createTable().catch((error) => { if (!isConflict(error)) throw error; }),
       this.fingerprints.createTable().catch((error) => { if (!isConflict(error)) throw error; }),

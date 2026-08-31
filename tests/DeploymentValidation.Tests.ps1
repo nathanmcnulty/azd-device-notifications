@@ -143,7 +143,7 @@ Describe 'Deployment validation adapter' {
                 $global:LASTEXITCODE = 0
                 if ($args -contains 'identity') {
                     "{`"userAssignedIdentities`":{`"$identityResourceId`":{`"clientId`":`"$env:AZURE_WORKLOAD_CLIENT_ID`",`"principalId`":`"$env:AZURE_WORKLOAD_PRINCIPAL_ID`"}}}"
-                } elseif ($args -contains 'Microsoft.BotService/botServices/channels') {
+                } elseif (($args -join ' ') -match '/channels/MsTeamsChannel') {
                     '{"properties":{"channelName":"MsTeamsChannel","properties":{"isEnabled":true}}}'
                 } else {
                     "{`"properties`":{`"msaAppId`":`"$env:AZURE_WORKLOAD_CLIENT_ID`",`"msaAppMSIResourceId`":`"$identityResourceId`",`"msaAppTenantId`":`"$env:AZURE_TENANT_ID`",`"msaAppType`":`"UserAssignedMSI`",`"endpoint`":`"$env:AZURE_FUNCTION_APP_URL/api/messages`"}}"
@@ -159,6 +159,16 @@ Describe 'Deployment validation adapter' {
             $result.status | Should -Be 'pass'
             Assert-MockCalled az -Times 3 -Exactly
         }
+    }
+
+    It 'reads nested resources by full ARM id and the Flex Function state property' {
+        $validation = Get-Content (Join-Path $repoRoot 'scripts/Deployment.Validation.psm1') -Raw
+        $validation | Should -Match 'az resource show --ids \$functionResourceId --api-version 2024-04-01'
+        $validation | Should -Match '--query properties.state'
+        $validation | Should -Match 'az resource show --ids \$channelResourceId --api-version 2022-09-15'
+        $validation | Should -Match 'az resource show --ids \$policyResourceId --api-version 2024-04-01'
+        $validation | Should -Not -Match '--resource-type Microsoft\.Web/sites/basicPublishingCredentialsPolicies'
+        $validation | Should -Not -Match '--resource-type Microsoft\.BotService/botServices/channels'
     }
 
     It 'keeps the default wrapper free of azd environment mutations' {
