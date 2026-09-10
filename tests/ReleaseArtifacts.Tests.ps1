@@ -60,6 +60,9 @@ Describe 'Release publication workflow' {
         $workflow | Should -Match '-f ref="refs/tags/\$VERSION"'
         $workflow | Should -Match 'HTTP 422'
         $workflow | Should -Match '--verify-tag'
+        $workflow | Should -Match 'release_args\+=\(--prerelease\)'
+        $workflow | Should -Match 'release_args\+=\(--latest\)'
+        $workflow | Should -Not -Match 'Only prerelease versions may be published'
         $workflow | Should -Not -Match '--target'
     }
 }
