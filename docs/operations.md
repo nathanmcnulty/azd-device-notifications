@@ -171,7 +171,7 @@ Wait for active Function executions and queues to settle. Preserve poison messag
 ### 2. Remove tenant-side configuration by ownership
 
 - **Exchange:** preview ownership-aware cleanup with `./scripts/Remove-TenantObjects.ps1 -WhatIf`, then run `./scripts/Remove-TenantObjects.ps1`. It removes and verifies absence of exact objects recorded as `created` or `create-pending`, including a partially completed setup where `DEVICE_NOTIFICATION_EXCHANGE_CONFIGURED` was never reached. It preserves `adopted` objects. Do not remove an adopted object without a separate administrator decision.
-- **Teams custom app:** remove setup-policy assignments and user installations created for this solution, then remove the uploaded custom app when it is not shared by another deployment.
+- **Teams custom app:** preview ownership-aware cleanup with `./scripts/Remove-TenantObjects.ps1 -WhatIf`, then run it normally. It removes exact personal installations and catalog apps recorded as `created` or `create-pending`, verifies their absence, and preserves `adopted` objects. Tenant app policies remain administrator-owned and are not rewritten by teardown.
 - **Teams Workflow:** an administrator-owned Workflow is never deleted automatically. Disable/delete it or transfer ownership, remove obsolete connections, and rotate/revoke its callback URL.
 
 Retain the azd environment until exact ownership records have been reviewed. Do not infer ownership from a display name alone.

@@ -25,6 +25,9 @@ foreach ($name in @('AZURE_SUBSCRIPTION_ID', 'AZURE_TENANT_ID', 'AZURE_ENV_NAME'
 Assert-AzdTenantContext
 $functionTarget = Get-AzdFunctionTarget -AllowMissing
 
+$teamsCleanup = Join-Path $PSScriptRoot 'Remove-TeamsPersonalApp.ps1'
+if ($WhatIfPreference) { & $teamsCleanup -WhatIf } else { & $teamsCleanup }
+
 if ($functionTarget) {
     if ($PSCmdlet.ShouldProcess($env:AZURE_FUNCTION_APP_NAME, 'Pause collection before tenant cleanup')) {
         & az functionapp config appsettings set --subscription $env:AZURE_SUBSCRIPTION_ID --resource-group $env:AZURE_RESOURCE_GROUP `

@@ -76,14 +76,22 @@ Legacy Office 365 connectors are not used. The callback URL is held in the local
 
 Use these steps only when a `teamsDm` route is selected:
 
-1. In the Teams admin center, upload `teams-app/device-notifications.zip` to the organization app catalog from **Teams apps > Manage apps**.
-2. Review the app details and permissions. With app-centric management, set **Availability** to only the intended users or groups.
-3. From the app's **Users and groups > Installs** page, install the app for each intended test recipient. If the tenant has not migrated to app-centric management, use a narrowly assigned administrator-owned app setup policy instead.
+1. Run the repository lifecycle helper for the intended proof recipient:
+
+   ```powershell
+   ./scripts/Install-TeamsPersonalApp.ps1 `
+       -AdminUpn teams-admin@contoso.com `
+       -UserId <entra-user-object-id>
+   ```
+
+   Use one proof recipient per azd environment; the ownership receipts intentionally bind cleanup to one exact installation. The helper validates the package against the deployed tenant, workload identity, Function host, and personal notification-only scope. It publishes or updates the organization catalog app and installs it for the exact recipient object ID using delegated `AppCatalog.ReadWrite.All` and `TeamsAppInstallation.ReadWriteForUser`. Normal broker/browser sign-in is used when the cached administrator session needs consent.
+2. If an exact matching catalog app or personal installation exists without this azd environment's creation receipt, the helper stops. Verify its provenance before explicitly rerunning with `-AdoptExisting`; adopted objects are preserved during teardown. A higher package version updates a solution-created catalog automatically. Updating an adopted catalog additionally requires `-UpdateExisting` so that shared tenant content is never changed implicitly.
+3. Review the resulting app and its availability in **Teams apps > Manage apps**. Availability is tenant-policy state: use app-centric user/group assignment where supported, or a narrowly assigned administrator-owned app permission/setup policy. The helper retries normal policy propagation but does not rewrite tenant-wide app policy.
 4. Do not use **Add to team**. This package declares only the `personal` bot scope so that device-owner notifications are delivered privately. The separate Azure Bot `MsTeamsChannel` resource is enabled automatically during provisioning and is not a Team or channel installation.
 5. Wait for availability/install propagation and confirm the installation activity reaches the bot. That activity supplies the conversation reference required for proactive delivery.
 6. Run the personal-message validation in [operations](operations.md#validate-every-selected-delivery-path) for every test recipient.
 
-Do not grant the workload broad Teams app-installation permission. Administrator-owned app setup policies can scale installation after the test group succeeds.
+Do not grant the workload broad Teams app-installation permission. Publication, availability, and installation are administrator deployment actions; the runtime managed identity retains only its device and audit-log read permissions. Administrator-owned groups or app setup policies can scale installation after the test group succeeds.
 
 ## 6. Configure shared-mailbox email
 
