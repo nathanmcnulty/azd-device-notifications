@@ -97,7 +97,7 @@ if ($configuration.UsesTeamsDm) {
     & (Join-Path $PSScriptRoot 'New-TeamsAppPackage.ps1')
     if ($LASTEXITCODE -ne 0) { throw 'Teams app package generation failed.' }
     Write-Host 'Complete exact-user Teams publication and personal installation with:'
-    Write-Host './scripts/Install-TeamsPersonalApp.ps1 -AdminUpn <teams-admin@contoso.com> -UserUpn <user@contoso.com> -UserId <entra-user-object-id>'
+    Write-Host './scripts/Install-TeamsPersonalApp.ps1 -AdminUpn <teams-admin@contoso.com> -UserId <entra-user-object-id>'
 }
 
 if ($env:DEVICE_NOTIFICATION_COLLECTION_ENABLED -ne 'true') {

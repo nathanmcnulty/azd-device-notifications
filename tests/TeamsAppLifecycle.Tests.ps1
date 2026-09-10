@@ -6,11 +6,13 @@ Describe 'Teams personal app lifecycle contracts' {
         $script:cleanup = Get-Content (Join-Path $repoRoot 'scripts/Remove-TeamsPersonalApp.ps1') -Raw
     }
 
-    It 'separates the administrator from the exact verified recipient before mutation' {
+    It 'separates the administrator from the exact recipient object ID before mutation' {
         $installer | Should -Match '\[string\] \$AdminUpn'
+        $installer | Should -Match '\[guid\] \$UserId'
         $installer | Should -Match 'context\.Account -ine \$AdminUpn'
-        $installer | Should -Match "'AppCatalog\.ReadWrite\.All', 'TeamsAppInstallation\.ReadWriteForUser', 'User\.ReadBasic\.All'"
-        $identityCheck = $installer.IndexOf('targetUser.id -ine [string]$UserId')
+        $installer | Should -Match "'AppCatalog\.ReadWrite\.All', 'TeamsAppInstallation\.ReadWriteForUser'"
+        $installer | Should -Not -Match 'User\.ReadBasic\.All|UserUpn|encodedUpn'
+        $identityCheck = $installer.IndexOf('DEVICE_NOTIFICATION_TEAMS_USER_ID = [string]$UserId')
         $firstMutation = $installer.IndexOf("Invoke-MgGraphRequest -Method POST -Uri '/v1.0/appCatalogs/teamsApps'")
         $identityCheck | Should -BeGreaterOrEqual 0
         $firstMutation | Should -BeGreaterThan $identityCheck
@@ -22,26 +24,36 @@ Describe 'Teams personal app lifecycle contracts' {
         $installer | Should -Match '/appDefinitions'
         $installer | Should -Match '\[switch\] \$UpdateExisting'
         $installer | Should -Match 'elseif \(\$catalogWasCreated\)'
+        $installer | Should -Match 'canonicalEntries'
+        $installer | Should -Match 'recordedPackageHashMatches'
+        $installer | Should -Match "recoverableCreate[\s\S]+recordedPackageHashMatches"
+        $installer | Should -Match "publishingState -ceq 'published'"
+        $installer | Should -Match '\[version\]\$_.version -gt \$packageVersion'
+        $installer | Should -Match 'teamsAppDefinition\.version -cne \$packageVersionText'
+        $installer | Should -Match "Properties\['@odata\.nextLink'\]"
+        ([regex]::Matches($installer, "Properties\['@odata\.nextLink'\]").Count) | Should -BeGreaterThan 1
+        $installer | Should -Match 'recordedAdopted'
+        $installer | Should -Match 'recordedAdoptedInstall'
         $installer | Should -Not -Match 'Update-M365TeamsApp|Connect-MicrosoftTeams'
     }
 
     It 'binds cleanup to the recorded administrator, tenant, workload, and target identity' {
         $cleanup | Should -Match 'DEVICE_NOTIFICATION_TEAMS_ADMIN_UPN'
         $cleanup | Should -Match 'context\.Account -ine \$env:DEVICE_NOTIFICATION_TEAMS_ADMIN_UPN'
-        $cleanup | Should -Match '/users/\$\{encodedUpn\}\?`\$select=id,userPrincipalName'
-        $cleanup | Should -Match 'targetUser\.id -ine \$env:DEVICE_NOTIFICATION_TEAMS_USER_ID'
-        $cleanup | Should -Match 'targetUser\.userPrincipalName -ine \$env:DEVICE_NOTIFICATION_TEAMS_USER_UPN'
-        $cleanup | Should -Match "'AppCatalog\.ReadWrite\.All', 'TeamsAppInstallation\.ReadWriteForUser', 'User\.ReadBasic\.All'"
+        $cleanup | Should -Match 'EscapeDataString\(\$env:DEVICE_NOTIFICATION_TEAMS_USER_ID\)'
+        $cleanup | Should -Not -Match 'encodedUpn|targetUser\.|User\.ReadBasic\.All'
+        $cleanup | Should -Match "'AppCatalog\.ReadWrite\.All', 'TeamsAppInstallation\.ReadWriteForUser'"
     }
 
     It 'recovers pending catalog and installation intents by exact workload identity' {
         $cleanup | Should -Match "catalogOwnership -eq 'create-pending'"
         $cleanup | Should -Match ([regex]::Escape('externalId eq ''$($env:AZURE_WORKLOAD_CLIENT_ID)'''))
         $cleanup | Should -Match "installOwnership -eq 'create-pending'"
-        $cleanup | Should -Match '/teamwork/installedApps\?`\$expand=teamsApp'
+        $cleanup | Should -Match 'teamsApp/externalId eq'
+        $cleanup | Should -Match "Properties\['@odata\.nextLink'\]"
         $cleanup | Should -Match 'catalogMatches\.Count -gt 1'
         $cleanup | Should -Match 'installationMatches\.Count -gt 1'
-        $cleanup | Should -Match 'teamsApp\.externalId -ieq \$env:AZURE_WORKLOAD_CLIENT_ID'
+        $cleanup | Should -Match 'installation\.teamsApp\.externalId -ine \$env:AZURE_WORKLOAD_CLIENT_ID'
     }
 
     It 'treats only an HTTP 404 as idempotent absence' {

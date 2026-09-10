@@ -107,7 +107,7 @@ azd init --template nathanmcnulty/azd-device-notifications --branch v1.0.0
 
 Complete only the destinations you selected:
 
-1. **Personal Teams messages:** use one proof recipient per azd environment and run `./scripts/Install-TeamsPersonalApp.ps1 -AdminUpn <teams-admin@contoso.com> -UserUpn <user@contoso.com> -UserId <entra-user-object-id>`. The guarded helper publishes or updates the generated package and installs it for that exact recipient in personal scope. Availability remains governed by the tenant's Teams app policy; review it in Teams admin center. Do not add the app to a Team or channel.
+1. **Personal Teams messages:** use one proof recipient per azd environment and run `./scripts/Install-TeamsPersonalApp.ps1 -AdminUpn <teams-admin@contoso.com> -UserId <entra-user-object-id>`. The guarded helper publishes or updates the generated package and installs it for that exact recipient in personal scope. Availability remains governed by the tenant's Teams app policy; review it in Teams admin center. Do not add the app to a Team or channel.
 2. **Teams Workflow:** confirm the Workflow has a durable co-owner, then verify both a successful run and the message in the intended channel or chat.
 3. **Email:** `azd up` configures mailbox-limited Exchange access. If the step was interrupted or the mailbox changes, follow [Deployment](docs/deployment.md#6-configure-shared-mailbox-email).
 

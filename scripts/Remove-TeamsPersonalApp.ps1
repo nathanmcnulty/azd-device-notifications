@@ -59,6 +59,7 @@ $stateNames = @(
     'DEVICE_NOTIFICATION_TEAMS_WORKLOAD_CLIENT_ID',
     'DEVICE_NOTIFICATION_TEAMS_PACKAGE_VERSION',
     'DEVICE_NOTIFICATION_TEAMS_PACKAGE_SHA256',
+    'DEVICE_NOTIFICATION_TEAMS_PACKAGE_HASH_FORMAT',
     'DEVICE_NOTIFICATION_TEAMS_CATALOG_APP_ID',
     'DEVICE_NOTIFICATION_TEAMS_CATALOG_OWNERSHIP',
     'DEVICE_NOTIFICATION_TEAMS_CATALOG_UPDATE_STATUS',
@@ -94,7 +95,6 @@ if (($env:DEVICE_NOTIFICATION_TEAMS_CATALOG_APP_ID -and -not $env:DEVICE_NOTIFIC
 foreach ($name in @(
         'DEVICE_NOTIFICATION_TEAMS_ADMIN_UPN',
         'DEVICE_NOTIFICATION_TEAMS_TENANT_ID',
-        'DEVICE_NOTIFICATION_TEAMS_USER_UPN',
         'DEVICE_NOTIFICATION_TEAMS_USER_ID',
         'DEVICE_NOTIFICATION_TEAMS_WORKLOAD_CLIENT_ID',
         'DEVICE_NOTIFICATION_TEAMS_CATALOG_OWNERSHIP'
@@ -112,7 +112,7 @@ if (-not (Get-Module Microsoft.Graph.Authentication -ListAvailable)) {
 }
 
 Import-Module Microsoft.Graph.Authentication
-$requiredScopes = @('AppCatalog.ReadWrite.All', 'TeamsAppInstallation.ReadWriteForUser', 'User.ReadBasic.All')
+$requiredScopes = @('AppCatalog.ReadWrite.All', 'TeamsAppInstallation.ReadWriteForUser')
 Connect-MgGraph -TenantId $env:AZURE_TENANT_ID -Scopes $requiredScopes -ContextScope Process -NoWelcome
 $context = Get-MgContext
 if (-not $context -or $context.TenantId -ine $env:AZURE_TENANT_ID -or
@@ -123,13 +123,20 @@ foreach ($scope in $requiredScopes) {
     if ($scope -notin @($context.Scopes)) { throw "Microsoft Graph scope '$scope' was not granted." }
 }
 
-$encodedUpn = [uri]::EscapeDataString($env:DEVICE_NOTIFICATION_TEAMS_USER_UPN)
-$targetUser = Invoke-GraphGetOrNull -Uri "/v1.0/users/${encodedUpn}?`$select=id,userPrincipalName"
-if (-not $targetUser -or [string]$targetUser.id -ine $env:DEVICE_NOTIFICATION_TEAMS_USER_ID -or
-    [string]$targetUser.userPrincipalName -ine $env:DEVICE_NOTIFICATION_TEAMS_USER_UPN) {
-    throw 'The recorded Teams target UPN and object ID do not resolve to the same user.'
+$targetUserId = [uri]::EscapeDataString($env:DEVICE_NOTIFICATION_TEAMS_USER_ID)
+
+function Get-MatchingInstallations {
+    $encodedFilter = [uri]::EscapeDataString("teamsApp/externalId eq '$($env:AZURE_WORKLOAD_CLIENT_ID)'")
+    $uri = "/v1.0/users/$targetUserId/teamwork/installedApps?`$filter=$encodedFilter&`$expand=teamsApp"
+    $matches = @()
+    do {
+        $response = Invoke-MgGraphRequest -Method GET -Uri $uri -OutputType PSObject
+        $matches += @($response.value)
+        $nextLinkProperty = $response.PSObject.Properties['@odata.nextLink']
+        $uri = if ($nextLinkProperty) { [string]$nextLinkProperty.Value } else { $null }
+    } while ($uri)
+    return @($matches)
 }
-$targetUserId = [uri]::EscapeDataString([string]$targetUser.id)
 
 $catalogOwnership = $env:DEVICE_NOTIFICATION_TEAMS_CATALOG_OWNERSHIP
 $catalogApp = $null
@@ -164,11 +171,7 @@ if ($installOwnership) {
         $installationUri = "/v1.0/users/$targetUserId/teamwork/installedApps/$($env:DEVICE_NOTIFICATION_TEAMS_INSTALLATION_ID)"
         $installation = Invoke-GraphGetOrNull -Uri "${installationUri}?`$expand=teamsApp"
     } elseif ($installOwnership -eq 'create-pending') {
-        $response = Invoke-MgGraphRequest -Method GET `
-            -Uri "/v1.0/users/$targetUserId/teamwork/installedApps?`$expand=teamsApp" -OutputType PSObject
-        $installationMatches = @($response.value | Where-Object {
-                [string]$_.teamsApp.externalId -ieq $env:AZURE_WORKLOAD_CLIENT_ID
-            })
+        $installationMatches = @(Get-MatchingInstallations)
         if ($installationMatches.Count -gt 1) { throw 'More than one personal installation matches the recorded workload identity.' }
         if ($installationMatches.Count -eq 1) {
             $installation = $installationMatches[0]
