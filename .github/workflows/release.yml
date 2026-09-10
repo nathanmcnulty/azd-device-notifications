@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Prerelease semantic version, such as v0.1.0-rc.1
+        description: Semantic version, such as v1.0.0 or v1.1.0-rc.1
         required: true
         type: string
       publish:
-        description: Create a GitHub prerelease after validation
+        description: Create a GitHub release after validation
         required: true
         default: false
         type: boolean
@@ -79,7 +79,7 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-  publish-prerelease:
+  publish-release:
     if: inputs.publish
     needs: build
     runs-on: ubuntu-latest
@@ -94,7 +94,7 @@ jobs:
           name: release-${{ inputs.version }}
           path: release
 
-      - name: Create prerelease
+      - name: Create release
         env:
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
           GH_TOKEN: ${{ github.token }}
@@ -111,10 +111,6 @@ jobs:
             exit 1
           fi
           version_without_build="${VERSION%%+*}"
-          if [[ "$version_without_build" != *-* ]]; then
-            echo 'Only prerelease versions may be published until stable-release evidence is approved.' >&2
-            exit 1
-          fi
           encoded_version="$(jq -nr --arg version "$VERSION" '$version | @uri')"
           error_file="$(mktemp)"
           trap 'rm -f "$error_file"' EXIT
@@ -194,9 +190,13 @@ jobs:
           release_args=(
             "$VERSION" release/*
             --repo "$GITHUB_REPOSITORY"
-            --prerelease
             --generate-notes
             --title "$VERSION"
             --verify-tag
           )
+          if [[ "$version_without_build" == *-* ]]; then
+            release_args+=(--prerelease)
+          else
+            release_args+=(--latest)
+          fi
           gh release create "${release_args[@]}"
