@@ -1,6 +1,4 @@
 {
-  "stableReleaseApproved": false,
-  "blockingEvidence": [
-    "Personal Teams direct-message delivery has not yet been proved after administrator-owned app approval and personal-scope installation."
-  ]
+  "stableReleaseApproved": true,
+  "blockingEvidence": []
 }

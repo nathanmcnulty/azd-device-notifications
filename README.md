@@ -47,6 +47,12 @@ If you use email, install the Exchange Online PowerShell module:
 Install-Module ExchangeOnlineManagement -Scope CurrentUser
 ```
 
+If you use personal Teams messages, install Microsoft Graph PowerShell authentication:
+
+```powershell
+Install-Module Microsoft.Graph.Authentication -Scope CurrentUser
+```
+
 ### Administrator access
 
 | Access | Why it is needed |
@@ -101,7 +107,7 @@ azd init --template nathanmcnulty/azd-device-notifications --branch v1.0.0
 
 Complete only the destinations you selected:
 
-1. **Personal Teams messages:** upload `teams-app/device-notifications.zip` to the organization app catalog in the Teams admin center, restrict availability to the intended users or groups, and install it in personal scope for each test user. Do not add it to a Team or channel.
+1. **Personal Teams messages:** use one proof recipient per azd environment and run `./scripts/Install-TeamsPersonalApp.ps1 -AdminUpn <teams-admin@contoso.com> -UserUpn <user@contoso.com> -UserId <entra-user-object-id>`. The guarded helper publishes or updates the generated package and installs it for that exact recipient in personal scope. Availability remains governed by the tenant's Teams app policy; review it in Teams admin center. Do not add the app to a Team or channel.
 2. **Teams Workflow:** confirm the Workflow has a durable co-owner, then verify both a successful run and the message in the intended channel or chat.
 3. **Email:** `azd up` configures mailbox-limited Exchange access. If the step was interrupted or the mailbox changes, follow [Deployment](docs/deployment.md#6-configure-shared-mailbox-email).
 
@@ -174,7 +180,7 @@ Export any history that must be retained, then run:
 azd down --purge --force
 ```
 
-Cleanup removes only Exchange objects recorded as created by this environment. It does not remove the Teams custom app, Teams app assignments, administrator-owned Workflows, or adopted Exchange objects. Follow the [teardown checklist](docs/operations.md#teardown).
+The predown hook removes and verifies absence of solution-created Teams catalog/install objects and Exchange objects recorded by this environment. It preserves adopted tenant objects and administrator-owned Workflows. Follow the [teardown checklist](docs/operations.md#teardown).
 
 ## For contributors
 
@@ -191,6 +197,6 @@ npm run bundle
 
 Continuous integration rebuilds `function-package/index.cjs` and rejects a change when the committed runtime does not exactly match the reviewed source. GitHub marks that reproducibly generated bundle as generated; Git whitespace checks are disabled only for this upstream-generated artifact and remain enforced for all handwritten files.
 
-Maintainers can use the manually dispatched **Build release artifacts** workflow to validate a prerelease and produce a deterministic Function ZIP, SHA-256 checksum manifest, SPDX 2.3 SBOM, and GitHub build-provenance attestations. Publishing additionally requires approval through the protected `release` environment. Stable versions remain blocked in `.release/readiness.json` until the personal Teams direct-message route has been proved after administrator-owned app approval and installation; the release workflow never grants app-installation permission or performs tenant setup.
+Maintainers can use the manually dispatched **Build release artifacts** workflow to validate a prerelease and produce a deterministic Function ZIP, SHA-256 checksum manifest, SPDX 2.3 SBOM, and GitHub build-provenance attestations. Publishing additionally requires approval through the protected `release` environment. `.release/readiness.json` records whether the required personal Teams installation and recipient-visible delivery proof has been completed; the release workflow never grants app-installation permission or performs tenant setup.
 
 Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md). Do not put Workflow callback URLs, tenant identifiers, user or device details, or notification content in public issues.

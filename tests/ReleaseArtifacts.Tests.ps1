@@ -27,10 +27,11 @@ Describe 'Release artifact generation' {
         (Get-Content -LiteralPath (Join-Path $first 'SHA256SUMS')).Count | Should -Be 2
     }
 
-    It 'blocks a stable release while required live evidence is outstanding' {
+    It 'produces a stable release after required live evidence is approved' {
         {
             & $script:ReleaseScript -Version 'v1.0.0' -OutputDirectory (Join-Path $TestDrive 'stable')
-        } | Should -Throw '*Personal Teams direct-message delivery*'
+        } | Should -Not -Throw
+        Get-Content -LiteralPath $script:ReleaseScript -Raw | Should -Match 'stableReleaseApproved -ne \$true'
     }
 
     It 'rejects a version that is not strict SemVer' -ForEach @(

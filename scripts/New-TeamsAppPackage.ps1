@@ -1,9 +1,19 @@
 [CmdletBinding()]
 param(
-    [string] $OutputPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'teams-app/device-notifications.zip')
+    [string] $OutputPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'teams-app/device-notifications.zip'),
+    [ValidatePattern('^\d+\.\d+\.\d+$')][string] $AppVersion
 )
 
 $ErrorActionPreference = 'Stop'
+$repositoryRoot = Split-Path $PSScriptRoot -Parent
+if (-not $AppVersion) {
+    $templateLine = Get-Content -LiteralPath (Join-Path $repositoryRoot 'azure.yaml') |
+        Where-Object { $_ -match '^\s*template:\s*[^@\s]+@(?<version>\d+\.\d+\.\d+)\s*$' } |
+        Select-Object -First 1
+    if (-not $templateLine) { throw 'Unable to derive the Teams app version from azure.yaml metadata.template.' }
+    [void]($templateLine -match '^\s*template:\s*[^@\s]+@(?<version>\d+\.\d+\.\d+)\s*$')
+    $AppVersion = $Matches.version
+}
 Import-Module (Join-Path $PSScriptRoot 'Tenant.Guards.psm1') -Force
 foreach ($name in @('AZURE_SUBSCRIPTION_ID', 'AZURE_TENANT_ID', 'AZURE_WORKLOAD_CLIENT_ID', 'AZURE_FUNCTION_APP_URL')) {
     [void](Get-AzdEnvironmentValue $name)
@@ -80,10 +90,9 @@ try {
     $manifest = @{
         '$schema' = 'https://developer.microsoft.com/json-schemas/teams/v1.17/MicrosoftTeams.schema.json'
         manifestVersion = '1.17'
-        version = '0.1.0'
+        version = $AppVersion
         id = $env:AZURE_WORKLOAD_CLIENT_ID
-        packageName = 'com.nathanmcnulty.devicenotifications'
-        developer = @{ name = 'Device Notifications'; websiteUrl = 'https://github.com/nathanmcnulty/azd-device-notifications'; privacyUrl = 'https://github.com/nathanmcnulty/azd-device-notifications/blob/main/docs/privacy.md'; termsOfUseUrl = 'https://github.com/nathanmcnulty/azd-device-notifications/blob/main/docs/privacy.md' }
+        developer = @{ name = 'Device Notifications'; websiteUrl = 'https://github.com/nathanmcnulty/azd-device-notifications'; privacyUrl = 'https://github.com/nathanmcnulty/azd-device-notifications/blob/main/docs/privacy.md'; termsOfUseUrl = 'https://github.com/nathanmcnulty/azd-device-notifications/blob/main/docs/terms.md' }
         name = @{ short = 'Device notifications'; full = 'Entra and Intune device lifecycle notifications' }
         description = @{ short = 'Device lifecycle and compliance notifications.'; full = 'Delivers registration, enrollment, and compliance notifications to device owners.' }
         icons = @{ outline = 'outline.png'; color = 'color.png' }
