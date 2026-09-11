@@ -95,7 +95,7 @@ Expected behavior:
 
 ### Setup or Graph assignment returns 403
 
-Azure Owner does not grant Microsoft Graph authority. Confirm the selected tenant, activate Privileged Role Administrator, authenticate again through the normal broker/browser flow if required, and rerun `azd up`. Allow for service-principal and app-role propagation before treating an immediate retry as a permanent failure.
+Azure Owner does not grant Microsoft Graph authority. Confirm the selected tenant, activate **Global Administrator or Privileged Role Administrator**, authenticate again through the normal broker/browser flow if required, and rerun `azd up`. Allow for service-principal and app-role propagation before treating an immediate retry as a permanent failure.
 
 ### Collection remains disabled
 

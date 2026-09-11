@@ -52,7 +52,7 @@ Install-Module ExchangeOnlineManagement -Scope CurrentUser
 | Access | Why it is needed |
 |---|---|
 | Azure Owner, or Contributor plus User Access Administrator | Create Azure resources and managed-identity assignments |
-| Privileged Role Administrator | Assign the exact Microsoft Graph application permissions |
+| Global Administrator or Privileged Role Administrator, if required | Assign the Microsoft Graph application permissions when they are not already consented and assigned |
 | Teams Administrator | Upload the custom Teams app to the organization catalog and control its availability and installation when personal messages are selected |
 | Teams Workflow owner | Own the administrator channel or chat Workflow |
 | Exchange Administrator | Limit email sending to one shared mailbox |
