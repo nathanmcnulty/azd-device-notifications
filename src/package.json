@@ -12,16 +12,16 @@
   },
   "dependencies": {
     "@azure/data-tables": "^13.3.0",
-    "@azure/functions": "^4.7.2",
-    "@azure/identity": "^4.13.2",
+    "@azure/functions": "^4.16.5",
+    "@azure/identity": "^4.13.3",
     "@azure/storage-queue": "^12.27.0",
     "botbuilder": "^4.23.3"
   },
   "devDependencies": {
-    "@types/node": "^22.15.30",
+    "@types/node": "^22.20.3",
     "esbuild": "^0.28.0",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.11"
+    "vitest": "^5.0.1"
   },
   "engines": {
     "node": ">=22"
