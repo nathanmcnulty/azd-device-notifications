@@ -35,8 +35,8 @@ axios/dist/node/axios.cjs:
   /*! @azure/msal-common v14.16.1 2025-08-05 */
 
 @azure/msal-node/lib/msal-node.cjs:
-  /*! @azure/msal-node v5.5.0 2026-08-04 */
-  /*! @azure/msal-common v16.12.0 2026-08-04 */
+  /*! @azure/msal-node v6.0.1 2026-09-15 */
+  /*! @azure/msal-common v16.14.1 2026-09-15 */
 
 @azure/msal-node/dist/cache/serializer/Serializer.mjs:
 @azure/msal-node/dist/cache/serializer/Deserializer.mjs:
@@ -88,7 +88,7 @@ axios/dist/node/axios.cjs:
 @azure/msal-node/dist/client/ManagedIdentityApplication.mjs:
 @azure/msal-node/dist/cache/distributed/DistributedCachePlugin.mjs:
 @azure/msal-node/dist/index.mjs:
-  /*! @azure/msal-node v5.5.0 2026-08-04 */
+  /*! @azure/msal-node v6.0.1 2026-09-15 */
 
 @azure/msal-common/dist/constants/AADServerParamKeys.mjs:
 @azure/msal-common/dist/utils/Constants.mjs:
@@ -123,6 +123,7 @@ axios/dist/node/axios.cjs:
 @azure/msal-common/dist/request/RequestParameterBuilder.mjs:
 @azure/msal-common/dist/utils/UrlUtils.mjs:
 @azure/msal-common/dist/crypto/ICrypto.mjs:
+@azure/msal-common/dist/crypto/ITokenBindingKeyManager.mjs:
 @azure/msal-common/dist/logger/Logger.mjs:
 @azure/msal-common/dist/packageMetadata.mjs:
 @azure/msal-common/dist/error/CacheErrorCodes.mjs:
@@ -132,7 +133,12 @@ axios/dist/node/axios.cjs:
 @azure/msal-common/dist/telemetry/performance/StubPerformanceClient.mjs:
 @azure/msal-common/dist/config/ClientConfiguration.mjs:
 @azure/msal-common/dist/cache/persistence/TokenCacheContext.mjs:
+@azure/msal-common/dist/error/JoseHeaderError.mjs:
+@azure/msal-common/dist/utils/ObjectUtils.mjs:
+@azure/msal-common/dist/error/JoseHeaderErrorCodes.mjs:
+@azure/msal-common/dist/crypto/JoseHeader.mjs:
 @azure/msal-common/dist/crypto/PopTokenGenerator.mjs:
+@azure/msal-common/dist/crypto/DpopProofGenerator.mjs:
 @azure/msal-common/dist/error/InteractionRequiredAuthErrorCodes.mjs:
 @azure/msal-common/dist/error/InteractionRequiredAuthError.mjs:
 @azure/msal-common/dist/error/ServerError.mjs:
@@ -151,4 +157,4 @@ axios/dist/node/axios.cjs:
 @azure/msal-common/dist/client/SilentFlowClient.mjs:
 @azure/msal-common/dist/request/BaseAuthRequest.mjs:
 @azure/msal-common/dist/index-node.mjs:
-  /*! @azure/msal-common v16.12.0 2026-08-04 */
+  /*! @azure/msal-common v16.14.1 2026-09-15 */
