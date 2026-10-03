@@ -664,7 +664,7 @@ SOFTWARE.
 AsyncKit is licensed under the MIT license.
 
 ================================================================================
-axios@1.19.0
+axios@1.20.0
 Declared license: MIT
 
 --- LICENSE ---

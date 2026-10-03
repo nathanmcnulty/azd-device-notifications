@@ -28,7 +28,7 @@ mime-types/index.js:
    */
 
 axios/dist/node/axios.cjs:
-  /*! Axios v1.19.0 Copyright (c) 2026 Matt Zabriskie and contributors */
+  /*! Axios v1.20.0 Copyright (c) 2026 Matt Zabriskie and contributors */
 
 @azure/msal-node/lib/msal-node.cjs:
   /*! @azure/msal-node v2.16.3 2025-08-05 */
