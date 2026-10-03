@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "1.0",
+  "solutionId": "azd-device-notifications",
+  "status": "implemented",
+  "coverage": "partial",
+  "reviewedOn": "2026-10-02",
+  "requirements": [
+    {
+      "resource": "https://graph.microsoft.com",
+      "kind": "application",
+      "permission": "AuditLog.Read.All",
+      "principal": "workload",
+      "phase": "runtime",
+      "feature": "core",
+      "defaultEnabled": true,
+      "scope": "tenant",
+      "rationale": "Required by the recorded project capability.",
+      "evidenceState": "documented",
+      "evidence": [
+        {
+          "path": "docs/identity-and-permissions.md",
+          "sha256": "7ba6eeff2e2391fb4cbd7739c7ac09f26719d3e5c11b3cdafda039564768456d"
+        }
+      ]
+    },
+    {
+      "resource": "https://graph.microsoft.com",
+      "kind": "application",
+      "permission": "DeviceManagementManagedDevices.Read.All",
+      "principal": "workload",
+      "phase": "runtime",
+      "feature": "core",
+      "defaultEnabled": true,
+      "scope": "tenant",
+      "rationale": "Required by the recorded project capability.",
+      "evidenceState": "documented",
+      "evidence": [
+        {
+          "path": "docs/identity-and-permissions.md",
+          "sha256": "7ba6eeff2e2391fb4cbd7739c7ac09f26719d3e5c11b3cdafda039564768456d"
+        }
+      ]
+    },
+    {
+      "resource": "https://graph.microsoft.com",
+      "kind": "application",
+      "permission": "User.ReadBasic.All",
+      "principal": "workload",
+      "phase": "runtime",
+      "feature": "monitored-groups",
+      "defaultEnabled": false,
+      "scope": "tenant",
+      "rationale": "Required by the recorded project capability.",
+      "evidenceState": "documented",
+      "evidence": [
+        {
+          "path": "docs/identity-and-permissions.md",
+          "sha256": "7ba6eeff2e2391fb4cbd7739c7ac09f26719d3e5c11b3cdafda039564768456d"
+        }
+      ]
+    },
+    {
+      "resource": "https://graph.microsoft.com",
+      "kind": "application",
+      "permission": "GroupMember.Read.All",
+      "principal": "workload",
+      "phase": "runtime",
+      "feature": "monitored-groups",
+      "defaultEnabled": false,
+      "scope": "tenant",
+      "rationale": "Required by the recorded project capability.",
+      "evidenceState": "documented",
+      "evidence": [
+        {
+          "path": "docs/identity-and-permissions.md",
+          "sha256": "7ba6eeff2e2391fb4cbd7739c7ac09f26719d3e5c11b3cdafda039564768456d"
+        }
+      ]
+    },
+    {
+      "resource": "exchange-online",
+      "kind": "exchange-rbac",
+      "permission": "Application Mail.Send",
+      "principal": "workload",
+      "phase": "runtime",
+      "feature": "email",
+      "defaultEnabled": false,
+      "scope": "configured-sender-mailbox",
+      "rationale": "Mailbox-scoped Exchange Application RBAC; no unscoped Entra Mail.Send role.",
+      "evidenceState": "documented",
+      "evidence": [
+        {
+          "path": "docs/identity-and-permissions.md",
+          "sha256": "7ba6eeff2e2391fb4cbd7739c7ac09f26719d3e5c11b3cdafda039564768456d"
+        }
+      ]
+    }
+  ],
+  "gaps": [
+    "Azure RBAC scopes, operator/consent roles, cleanup, and optional connector permissions still need a full review."
+  ]
+}
