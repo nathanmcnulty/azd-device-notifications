@@ -1,0 +1,178 @@
+{
+  "schemaVersion": "1.0.0",
+  "repository": "nathanmcnulty/azd-device-notifications",
+  "sourceRevision": "6d3bced459b42175bad98a35b3a8a579210f8165",
+  "capturedAt": "2026-10-03",
+  "items": [
+    {
+      "id": "DEVICE-001",
+      "title": "Reconcile this backlog with current source and active work",
+      "kind": "discovery",
+      "priority": "P1",
+      "status": "ready",
+      "wave": 0,
+      "problem": "Plans and implementation evidence are spread across files; the captured source can change while other tasks work.",
+      "scope": [
+        "docs/backlog.json",
+        "docs/backlog.md",
+        "Existing roadmap, execution status, open issues and pull requests (read-only)"
+      ],
+      "acceptance": [
+        "Classify each candidate as implemented, still open, superseded or awaiting evidence; retain source links and reasons.",
+        "Inspect dirty state, remotes, worktrees and local environment presence without reading secrets; avoid duplicate work with active owners.",
+        "Resolve the actual offline validation commands and record exact current default-branch/working-tree provenance; do not copy historical live passes to newer code."
+      ],
+      "validation": [
+        "git status --short",
+        "git remote -v",
+        "git worktree list --porcelain",
+        "Read the applicable instructions and validation workflow; read gh issue list and gh pr list for the named repository using nathanmcnulty. Do not create or modify issues/PRs."
+      ],
+      "dependencies": [],
+      "authorization": "local-only",
+      "components": [],
+      "sources": [
+        "README.md",
+        "https://github.com/nathanmcnulty/azd-device-notifications/pull/32",
+        "https://github.com/nathanmcnulty/azd-device-notifications/pull/31"
+      ],
+      "evidence": [],
+      "blocker": null
+    },
+    {
+      "id": "DEVICE-002",
+      "title": "Qualify each recipient route and Teams app lifecycle",
+      "kind": "verification",
+      "priority": "P1",
+      "status": "proposed",
+      "wave": 2,
+      "problem": "Published artifacts and synthetic checks do not prove personal delivery or removal safety.",
+      "scope": [
+        "docs/",
+        "tests/TeamsAppLifecycle.Tests.ps1"
+      ],
+      "acceptance": [
+        "Capture human-visible receipts for enabled personal Teams and webhook routes on a named pilot.",
+        "Reconcile release wording against actual release assets and current-source evidence.",
+        "Verify same-ID catalog propagation, tenant-bound conversation capture and exact owned installation removal."
+      ],
+      "validation": [
+        "From the solution root run ./scripts/Test-Repository.ps1",
+        "Run focused tests for changed behavior from tests/; fixtures do not prove live-service or endpoint behavior.",
+        "After separate authorization, retain redacted exact-target live evidence and cleanup results outside public Git. Do not execute live operations from this backlog alone."
+      ],
+      "dependencies": [],
+      "authorization": "external-delivery",
+      "components": [],
+      "sources": [
+        "README.md"
+      ],
+      "evidence": [],
+      "blocker": null
+    },
+    {
+      "id": "DEVICE-003",
+      "title": "Compare retry/ambiguity taxonomy with authentication notifications",
+      "kind": "discovery",
+      "priority": "P2",
+      "status": "proposed",
+      "wave": 1,
+      "problem": "Two personal bot consumers can converge on contracts while retaining route and event logic.",
+      "scope": [
+        "src/",
+        "tests/",
+        "docs/",
+        "azd-components.lock.json"
+      ],
+      "acceptance": [
+        "Compare accepted, received, retryable and ambiguous results with immutable per-recipient identities.",
+        "Fixtures cover propagation, duplicate events, foreign conversations and lost provider responses.",
+        "Record extraction prerequisites; no shared bot runtime until both consumers have real delivery/lifecycle proof."
+      ],
+      "validation": [
+        "From the solution root run ./scripts/Test-Repository.ps1",
+        "Run focused tests for changed behavior from tests/; fixtures do not prove live-service or endpoint behavior."
+      ],
+      "dependencies": [],
+      "authorization": "local-only",
+      "components": [
+        "notification-contracts",
+        "deployment-validation"
+      ],
+      "sources": [
+        "README.md"
+      ],
+      "evidence": [],
+      "blocker": null
+    },
+    {
+      "id": "DEVICE-004",
+      "title": "Adopt reviewed deployment-validation 1.1.1",
+      "kind": "maintenance",
+      "priority": "P1",
+      "status": "done",
+      "wave": 1,
+      "problem": "At initial capture the lock recorded deployment-validation 1.0.0; this packet adopts the compatible signed 1.1.1 release.",
+      "scope": [
+        "azd-components.lock.json",
+        "scripts/vendor/Azd.DeploymentValidation/",
+        "tests/",
+        "docs/"
+      ],
+      "acceptance": [
+        "Review the exact 1.0.0-to-1.1.1 diff and current consumer hashes before deciding to adopt.",
+        "Prepare only the compatible managed files and lock in one owned worktree; retain domain validation extensions.",
+        "Offline validation and commit-only rollback are required; live deployment and publication are separately authorized."
+      ],
+      "validation": [
+        "From the solution root run ./scripts/Test-Repository.ps1",
+        "Run focused tests for changed behavior from tests/; fixtures do not prove live-service or endpoint behavior.",
+        "After separate authorization, retain redacted exact-target live evidence and cleanup results outside public Git. Do not execute live operations from this backlog alone."
+      ],
+      "dependencies": [],
+      "authorization": "local-only",
+      "components": [
+        "deployment-validation"
+      ],
+      "sources": [
+        "azd-components.lock.json"
+      ],
+      "evidence": [
+        "Independent frozen-file review passed five source files at fresh-main base ccb4360f87bcfcdd3d05227acf976ef920054323; tracked diff SHA256 39c131105ef49fbd94abf40a1c3a23169985bc627f76441dc01de94cdee57ecd. Managed bytes match signed source revision 0c96cc89c554ffc3b3ca82ceda12da6591e816c1.",
+        "Full offline Test-Repository in the reviewed fresh-main worktree passed 104/104 Pester and 109/109 Vitest, typecheck, build, bundle, Bicep, metadata and docs checks; npm audit reported zero vulnerabilities. Focused deployment tests passed 10/10 and were independently rerun 10/10 with provider/delivery sentinels. All five managed component files were current and exact; PSScriptAnalyzer reported zero errors.",
+        "Notification contracts 1.0.0, domain adapter and unbound schema 1.0 plan output remain unchanged; one focused assertion makes schema compatibility explicit. Reviewed lock values and exact managed bytes were integrated after clean-path/base checks, preserving the canonical permission branch and unrelated package state. No Azure, authentication, delivery or permission operation was needed; release and optional evidence-binding adoption remain separate gates."
+      ],
+      "blocker": null,
+      "claim": null
+    },
+    {
+      "id": "DEVICE-005",
+      "title": "Preserve ambiguous provider-send outcomes rather than automatically duplicating delivery",
+      "kind": "discovery",
+      "priority": "P1",
+      "status": "proposed",
+      "wave": 0,
+      "problem": "Open report captured 2026-10-03 during execution reconciliation. Another code-quality task may own an active fix; inspect its PR and current source before dispatch.",
+      "scope": [
+        "Linked issue and current source (read-only)",
+        "Repository-local backlog evidence"
+      ],
+      "acceptance": [
+        "Read the linked issue and current default branch; classify the exact defect, current owner and evidence gap.",
+        "Record a current PR or verified resolution before selecting any implementation; preserve broader feature and live acceptance gates."
+      ],
+      "validation": [
+        "Read current issue and PR state using nathanmcnulty; do not modify or close issues during reconciliation.",
+        "Inspect dirty state and worktrees; resolve the exact current revision and relevant offline commands before implementation."
+      ],
+      "dependencies": [],
+      "authorization": "local-only",
+      "components": [],
+      "sources": [
+        "https://github.com/nathanmcnulty/azd-device-notifications/issues/33"
+      ],
+      "evidence": [],
+      "blocker": null
+    }
+  ]
+}

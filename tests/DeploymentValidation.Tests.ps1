@@ -29,6 +29,7 @@ Describe 'Deployment validation adapter' {
         $report = & (Join-Path $repoRoot 'scripts/Test-Deployment.ps1') -Plan -PassThru `
             -OutputPath 'reports/pester-plan.json'
 
+        $report.schemaVersion | Should -Be '1.0'
         $report.mode | Should -Be 'plan'
         $report.outcome | Should -Be 'planned'
         $report.summary.planned | Should -Be 10
