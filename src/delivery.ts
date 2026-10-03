@@ -40,7 +40,7 @@ export interface DeliverySummary {
   deliveredRoutes: number;
   alreadyDeliveredRoutes: number;
   unavailableRoutes: number;
-  routes: Array<{ audience: "user" | "admin"; transport: string; status: "delivered" | "alreadyDelivered" | "unavailable" | "pending" | "failed" }>;
+  routes: Array<{ audience: "user" | "admin"; transport: string; status: "delivered" | "alreadyDelivered" | "unavailable" | "pending" | "failed" | "reviewRequired" }>;
   suppressedReason?: string;
 }
 
@@ -241,6 +241,7 @@ export async function dispatchEvent(event: DeviceEvent, dependencies: DeliveryDe
       contractRoute.id
     );
     let reservationEtag: string | undefined;
+    let sendStarted = false;
     try {
       const reservation = await dependencies.history.reserveDelivery(key, legacyDeliveryKey(event, route));
       if (reservation.status === "delivered") {
@@ -261,9 +262,21 @@ export async function dispatchEvent(event: DeviceEvent, dependencies: DeliveryDe
         failures.push(new Error("Notification delivery is already pending"));
         continue;
       }
+      if (reservation.status === "reviewRequired") {
+        summary.unavailableRoutes++;
+        summary.routes.push({ audience: route.audience, transport: route.transport, status: "reviewRequired" });
+        recordNotificationDeliveryResult(dependencies.logger, newNotificationDeliveryResult(envelope, contractRoute, {
+          status: "failed", attempt: 0, recordedAt: dependencies.now ?? new Date(), durationMs: Date.now() - startedAt,
+          failure: { category: "unknown", retryable: false, code: "OperatorReviewRequired" }
+        }));
+        failures.push(new Error("Notification delivery outcome requires operator review"));
+        continue;
+      }
       reservationEtag = reservation.etag;
+      reservationEtag = await dependencies.history.markDeliveryStarted(key, reservation.etag);
+      sendStarted = true;
       if (await deliver(event, route, dependencies)) {
-        await dependencies.history.completeDelivery(key, reservation.etag, (dependencies.now ?? new Date()).toISOString());
+        await dependencies.history.completeDelivery(key, reservationEtag, (dependencies.now ?? new Date()).toISOString());
         reservationEtag = undefined;
         summary.deliveredRoutes++;
         summary.routes.push({ audience: route.audience, transport: route.transport, status: "delivered" });
@@ -272,8 +285,9 @@ export async function dispatchEvent(event: DeviceEvent, dependencies: DeliveryDe
         }));
         dependencies.logger.info("Notification delivered", { eventId: event.id, eventType: event.type, audience: route.audience, transport: route.transport });
       } else {
-        await dependencies.history.releaseDelivery(key, reservation.etag);
+        await dependencies.history.releaseDelivery(key, reservationEtag);
         reservationEtag = undefined;
+        sendStarted = false;
         summary.unavailableRoutes++;
         summary.routes.push({ audience: route.audience, transport: route.transport, status: "unavailable" });
         recordNotificationDeliveryResult(dependencies.logger, newNotificationDeliveryResult(envelope, contractRoute, {
@@ -284,14 +298,19 @@ export async function dispatchEvent(event: DeviceEvent, dependencies: DeliveryDe
       }
     } catch (error) {
       let reservationReleased = true;
-      if (reservationEtag) {
+      if (reservationEtag && !sendStarted) {
         try {
           await dependencies.history.releaseDelivery(key, reservationEtag);
         } catch {
           reservationReleased = false;
         }
       }
-      const classified = reservationReleased
+      const classified = sendStarted
+        ? {
+            failure: { category: "unknown" as const, retryable: false, code: "AmbiguousDeliveryOutcome" },
+            evidence: error instanceof ProviderRequestError ? classifyDeliveryFailure(error).evidence : {}
+          }
+        : reservationReleased
         ? classifyDeliveryFailure(error)
         : {
             failure: { category: "unknown" as const, retryable: true, code: "DeliveryStateReleaseFailed" },
@@ -302,6 +321,15 @@ export async function dispatchEvent(event: DeviceEvent, dependencies: DeliveryDe
         failure: classified.failure,
         evidence: classified.evidence
       }));
+      if (sendStarted) {
+        summary.unavailableRoutes++;
+        summary.routes.push({ audience: route.audience, transport: route.transport, status: "reviewRequired" });
+        failures.push(new Error("Notification delivery outcome requires operator review"));
+        dependencies.logger.error("Notification delivery outcome requires operator review", {
+          eventId: event.id, eventType: event.type, audience: route.audience, transport: route.transport
+        });
+        continue;
+      }
       if (!classified.failure.retryable) {
         summary.unavailableRoutes++;
         summary.routes.push({ audience: route.audience, transport: route.transport, status: "unavailable" });

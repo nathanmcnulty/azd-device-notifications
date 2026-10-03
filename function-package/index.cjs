@@ -112934,6 +112934,7 @@ async function dispatchEvent(event, dependencies) {
       contractRoute.id
     );
     let reservationEtag;
+    let sendStarted = false;
     try {
       const reservation = await dependencies.history.reserveDelivery(key, legacyDeliveryKey(event, route));
       if (reservation.status === "delivered") {
@@ -112960,9 +112961,24 @@ async function dispatchEvent(event, dependencies) {
         failures.push(new Error("Notification delivery is already pending"));
         continue;
       }
+      if (reservation.status === "reviewRequired") {
+        summary.unavailableRoutes++;
+        summary.routes.push({ audience: route.audience, transport: route.transport, status: "reviewRequired" });
+        recordNotificationDeliveryResult(dependencies.logger, newNotificationDeliveryResult(envelope, contractRoute, {
+          status: "failed",
+          attempt: 0,
+          recordedAt: dependencies.now ?? /* @__PURE__ */ new Date(),
+          durationMs: Date.now() - startedAt,
+          failure: { category: "unknown", retryable: false, code: "OperatorReviewRequired" }
+        }));
+        failures.push(new Error("Notification delivery outcome requires operator review"));
+        continue;
+      }
       reservationEtag = reservation.etag;
+      reservationEtag = await dependencies.history.markDeliveryStarted(key, reservation.etag);
+      sendStarted = true;
       if (await deliver(event, route, dependencies)) {
-        await dependencies.history.completeDelivery(key, reservation.etag, (dependencies.now ?? /* @__PURE__ */ new Date()).toISOString());
+        await dependencies.history.completeDelivery(key, reservationEtag, (dependencies.now ?? /* @__PURE__ */ new Date()).toISOString());
         reservationEtag = void 0;
         summary.deliveredRoutes++;
         summary.routes.push({ audience: route.audience, transport: route.transport, status: "delivered" });
@@ -112974,8 +112990,9 @@ async function dispatchEvent(event, dependencies) {
         }));
         dependencies.logger.info("Notification delivered", { eventId: event.id, eventType: event.type, audience: route.audience, transport: route.transport });
       } else {
-        await dependencies.history.releaseDelivery(key, reservation.etag);
+        await dependencies.history.releaseDelivery(key, reservationEtag);
         reservationEtag = void 0;
+        sendStarted = false;
         summary.unavailableRoutes++;
         summary.routes.push({ audience: route.audience, transport: route.transport, status: "unavailable" });
         recordNotificationDeliveryResult(dependencies.logger, newNotificationDeliveryResult(envelope, contractRoute, {
@@ -112989,14 +113006,17 @@ async function dispatchEvent(event, dependencies) {
       }
     } catch (error) {
       let reservationReleased = true;
-      if (reservationEtag) {
+      if (reservationEtag && !sendStarted) {
         try {
           await dependencies.history.releaseDelivery(key, reservationEtag);
         } catch {
           reservationReleased = false;
         }
       }
-      const classified = reservationReleased ? classifyDeliveryFailure(error) : {
+      const classified = sendStarted ? {
+        failure: { category: "unknown", retryable: false, code: "AmbiguousDeliveryOutcome" },
+        evidence: error instanceof ProviderRequestError ? classifyDeliveryFailure(error).evidence : {}
+      } : reservationReleased ? classifyDeliveryFailure(error) : {
         failure: { category: "unknown", retryable: true, code: "DeliveryStateReleaseFailed" },
         evidence: {}
       };
@@ -113008,6 +113028,18 @@ async function dispatchEvent(event, dependencies) {
         failure: classified.failure,
         evidence: classified.evidence
       }));
+      if (sendStarted) {
+        summary.unavailableRoutes++;
+        summary.routes.push({ audience: route.audience, transport: route.transport, status: "reviewRequired" });
+        failures.push(new Error("Notification delivery outcome requires operator review"));
+        dependencies.logger.error("Notification delivery outcome requires operator review", {
+          eventId: event.id,
+          eventType: event.type,
+          audience: route.audience,
+          transport: route.transport
+        });
+        continue;
+      }
       if (!classified.failure.retryable) {
         summary.unavailableRoutes++;
         summary.routes.push({ audience: route.audience, transport: route.transport, status: "unavailable" });
@@ -132451,9 +132483,10 @@ var GraphClient = class {
   fetcher;
   sleeper;
   now;
-  async request(url3, init) {
+  async request(url3, init, retrySafe = !init?.method || init.method === "GET") {
     const validatedUrl = validateGraphRequestUrl(url3);
-    for (let attempt = 0; attempt < 6; attempt++) {
+    const maxAttempts = retrySafe ? 6 : 1;
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
       let response;
       try {
         const token = await this.credential.getToken("https://graph.microsoft.com/.default");
@@ -132467,9 +132500,9 @@ var GraphClient = class {
           }
         });
       } catch (error) {
-        if (attempt === 5) {
+        if (attempt === maxAttempts - 1) {
           const errorName = error instanceof Error && /^[a-z0-9._-]{1,80}$/i.test(error.name) ? error.name : "UnknownError";
-          throw new Error(`Graph retry limit reached after ${errorName}`);
+          throw new Error(`Graph request failed after ${errorName}`);
         }
         await this.sleeper(Math.min(2 ** attempt * 1e3, 6e4));
         continue;
@@ -132481,7 +132514,7 @@ var GraphClient = class {
         await response.body?.cancel().catch(() => void 0);
         throw new ProviderRequestError("microsoftGraph", `GraphHttp${response.status}`, response.status, operationId);
       }
-      if (attempt === 5) {
+      if (attempt === maxAttempts - 1) {
         throw new ProviderRequestError("microsoftGraph", `GraphHttp${response.status}`, response.status, operationId);
       }
       await response.body?.cancel().catch(() => void 0);
@@ -132509,7 +132542,7 @@ var GraphClient = class {
       const response = await this.request(`https://graph.microsoft.com/v1.0/users/${encodeURIComponent(userId)}/checkMemberGroups`, {
         method: "POST",
         body: JSON.stringify({ groupIds: groupIds.slice(index, index + 20) })
-      });
+      }, true);
       const result = await response.json();
       matched.push(...result.value ?? []);
     }
@@ -150052,10 +150085,11 @@ var DELIVERY_STALE_MS = 2 * 6e4;
 function classifyDeliveryReservation(entity, now = Date.now()) {
   if (entity.status === "delivered" || !entity.status && entity.sentAt) return "delivered";
   const reservedAt = entity.reservedAt ? new Date(entity.reservedAt).valueOf() : Number.NaN;
-  if (entity.status === "pending" && Number.isFinite(reservedAt) && now - reservedAt <= DELIVERY_STALE_MS) {
-    return "pending";
+  if (entity.status === "reserved") {
+    return Number.isFinite(reservedAt) && now - reservedAt > DELIVERY_STALE_MS ? void 0 : "pending";
   }
-  return void 0;
+  if (entity.status === "pending" && Number.isFinite(reservedAt) && now - reservedAt <= DELIVERY_STALE_MS) return "pending";
+  return "reviewRequired";
 }
 function buildQueueUrl(queueEndpoint, queueName) {
   return `${queueEndpoint.replace(/\/+$/, "")}/${queueName}`;
@@ -150206,7 +150240,7 @@ var AzureStateRepository = class {
         partitionKey: "notification",
         rowKey: key,
         reservedAt: (/* @__PURE__ */ new Date()).toISOString(),
-        status: "pending"
+        status: "reserved"
       });
       const created = await this.history.getEntity("notification", key);
       if (!created.etag) throw new Error("Delivery reservation did not return an ETag");
@@ -150221,7 +150255,7 @@ var AzureStateRepository = class {
           partitionKey: "notification",
           rowKey: key,
           reservedAt: (/* @__PURE__ */ new Date()).toISOString(),
-          status: "pending",
+          status: "reserved",
           etag: existing.etag
         }, "Merge", { etag: existing.etag });
         const recovered = await this.history.getEntity("notification", key);
@@ -150230,15 +150264,25 @@ var AzureStateRepository = class {
       } catch (updateError) {
         if (!hasStatus(updateError, 412)) throw updateError;
         const current = await this.history.getEntity("notification", key);
-        return current.status === "delivered" || !current.status && current.sentAt ? { status: "delivered" } : { status: "pending" };
+        return { status: classifyDeliveryReservation(current) ?? "pending" };
       }
     }
   }
+  async markDeliveryStarted(key, etag) {
+    await this.ready;
+    await this.history.updateEntity({
+      partitionKey: "notification",
+      rowKey: key,
+      status: "sendStarted",
+      etag
+    }, "Merge", { etag });
+    const started = await this.history.getEntity("notification", key);
+    if (started.status !== "sendStarted" || !started.etag) throw new Error("Delivery start state could not be confirmed");
+    return started.etag;
+  }
   async releaseDelivery(key, etag) {
     await this.ready;
-    await this.history.deleteEntity("notification", key, { etag }).catch((error) => {
-      if (!hasStatus(error, 404) && !hasStatus(error, 412)) throw error;
-    });
+    await this.history.deleteEntity("notification", key, { etag });
   }
   async completeDelivery(key, etag, sentAt) {
     await this.ready;

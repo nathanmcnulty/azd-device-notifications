@@ -124,7 +124,7 @@ describe("Graph client", () => {
     expect(fetcher).toHaveBeenCalledOnce();
   });
 
-  it.each([408, 429, 500, 503])("returns safe structured metadata after exhausting HTTP %s retries", async (status) => {
+  it.each([408, 429, 500, 503])("does not resend a Graph POST after HTTP %s", async (status) => {
     const fetcher = vi.fn(async () => new Response("sensitive provider body", { status }));
     const sleeper = vi.fn(async (_milliseconds: number) => undefined);
     await expect(new GraphClient(credential, fetcher, sleeper).post("/items", {}))
@@ -132,16 +132,16 @@ describe("Graph client", () => {
         name: "ProviderRequestError", provider: "microsoftGraph", code: `GraphHttp${status}`,
         statusCode: status, message: `GraphHttp${status}`
       } satisfies Partial<ProviderRequestError>);
-    expect(fetcher).toHaveBeenCalledTimes(6);
-    expect(sleeper).toHaveBeenCalledTimes(5);
+    expect(fetcher).toHaveBeenCalledOnce();
+    expect(sleeper).not.toHaveBeenCalled();
   });
 
-  it("bounds repeated network retries and sanitizes an unclassified terminal error", async () => {
+  it("does not resend a Graph POST after an ambiguous network error", async () => {
     const fetcher = vi.fn(async () => { throw new TypeError("secret-url-and-token"); });
     const sleeper = vi.fn(async (_milliseconds: number) => undefined);
     await expect(new GraphClient(credential, fetcher, sleeper).post("/items", {}))
-      .rejects.toThrow("Graph retry limit reached after TypeError");
-    expect(fetcher).toHaveBeenCalledTimes(6);
-    expect(sleeper).toHaveBeenCalledTimes(5);
+      .rejects.toThrow("Graph request failed after TypeError");
+    expect(fetcher).toHaveBeenCalledOnce();
+    expect(sleeper).not.toHaveBeenCalled();
   });
 });

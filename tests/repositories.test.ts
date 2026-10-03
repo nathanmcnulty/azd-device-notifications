@@ -27,10 +27,15 @@ describe("delivery reservation migration", () => {
     }, now)).toBe("pending");
   });
 
-  it("allows recovery only after a pending reservation becomes stale", () => {
+  it("recovers only a stale reservation known to precede the provider send", () => {
     expect(classifyDeliveryReservation({
-      status: "pending", reservedAt: "2026-08-23T11:59:59.999Z"
+      status: "reserved", reservedAt: "2026-08-23T11:59:59.999Z"
     }, now)).toBeUndefined();
-    expect(classifyDeliveryReservation({ status: "pending", reservedAt: "invalid" }, now)).toBeUndefined();
+    expect(classifyDeliveryReservation({ status: "reserved", reservedAt: "invalid" }, now)).toBe("pending");
+    expect(classifyDeliveryReservation({ status: "pending", reservedAt: "2026-08-23T11:59:59.999Z" }, now))
+      .toBe("reviewRequired");
+    expect(classifyDeliveryReservation({ status: "sendStarted", reservedAt: "2026-08-23T11:59:59.999Z" }, now))
+      .toBe("reviewRequired");
+    expect(classifyDeliveryReservation({ status: "pending", reservedAt: "invalid" }, now)).toBe("reviewRequired");
   });
 });
