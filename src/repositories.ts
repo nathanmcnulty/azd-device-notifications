@@ -31,13 +31,15 @@ const DELIVERY_STALE_MS = 2 * 60_000;
 export function classifyDeliveryReservation(
   entity: Pick<ReservationEntity, "status" | "sentAt" | "reservedAt">,
   now = Date.now()
-): "delivered" | "pending" | undefined {
+): "delivered" | "pending" | "reviewRequired" | undefined {
   if (entity.status === "delivered" || (!entity.status && entity.sentAt)) return "delivered";
   const reservedAt = entity.reservedAt ? new Date(entity.reservedAt).valueOf() : Number.NaN;
-  if (entity.status === "pending" && Number.isFinite(reservedAt) && now - reservedAt <= DELIVERY_STALE_MS) {
-    return "pending";
+  if (entity.status === "reserved") {
+    return Number.isFinite(reservedAt) && now - reservedAt > DELIVERY_STALE_MS ? undefined : "pending";
   }
-  return undefined;
+  // Older "pending" rows may already have reached a provider. Never reclaim them.
+  if (entity.status === "pending" && Number.isFinite(reservedAt) && now - reservedAt <= DELIVERY_STALE_MS) return "pending";
+  return "reviewRequired";
 }
 
 export function buildQueueUrl(queueEndpoint: string, queueName: string): string {
@@ -180,10 +182,9 @@ export class AzureStateRepository implements WatermarkRepository, SnapshotReposi
       }
     }
     try {
-      await this.history.createEntity({
-        partitionKey: "notification", rowKey: key, reservedAt: new Date().toISOString(), status: "pending"
+      const created = await this.history.createEntity({
+        partitionKey: "notification", rowKey: key, reservedAt: new Date().toISOString(), status: "reserved"
       });
-      const created = await this.history.getEntity<ReservationEntity>("notification", key);
       if (!created.etag) throw new Error("Delivery reservation did not return an ETag");
       return { status: "reserved", etag: created.etag };
     } catch (error) {
@@ -192,27 +193,31 @@ export class AzureStateRepository implements WatermarkRepository, SnapshotReposi
       const existingState = classifyDeliveryReservation(existing);
       if (existingState) return { status: existingState };
       try {
-        await this.history.updateEntity({
-          partitionKey: "notification", rowKey: key, reservedAt: new Date().toISOString(), status: "pending", etag: existing.etag
+        const recovered = await this.history.updateEntity({
+          partitionKey: "notification", rowKey: key, reservedAt: new Date().toISOString(), status: "reserved", etag: existing.etag
         }, "Merge", { etag: existing.etag });
-        const recovered = await this.history.getEntity<ReservationEntity>("notification", key);
         if (!recovered.etag) throw new Error("Recovered delivery reservation did not return an ETag");
         return { status: "reserved", etag: recovered.etag };
       } catch (updateError) {
         if (!hasStatus(updateError, 412)) throw updateError;
         const current = await this.history.getEntity<ReservationEntity>("notification", key);
-        return current.status === "delivered" || (!current.status && current.sentAt)
-          ? { status: "delivered" }
-          : { status: "pending" };
+        return { status: classifyDeliveryReservation(current) ?? "pending" };
       }
     }
   }
 
+  async markDeliveryStarted(key: string, etag: string): Promise<string> {
+    await this.ready;
+    const started = await this.history.updateEntity({
+      partitionKey: "notification", rowKey: key, status: "sendStarted", etag
+    }, "Merge", { etag });
+    if (!started.etag) throw new Error("Delivery start state did not return an ETag");
+    return started.etag;
+  }
+
   async releaseDelivery(key: string, etag: string): Promise<void> {
     await this.ready;
-    await this.history.deleteEntity("notification", key, { etag }).catch((error) => {
-      if (!hasStatus(error, 404) && !hasStatus(error, 412)) throw error;
-    });
+    await this.history.deleteEntity("notification", key, { etag });
   }
 
   async completeDelivery(key: string, etag: string, sentAt: string): Promise<void> {

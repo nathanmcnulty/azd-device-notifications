@@ -69,9 +69,10 @@ export class GraphClient implements GraphClientLike {
     private readonly now: () => number = Date.now
   ) {}
 
-  private async request(url: string, init?: RequestInit): Promise<Response> {
+  private async request(url: string, init?: RequestInit, retrySafe = !init?.method || init.method === "GET"): Promise<Response> {
     const validatedUrl = validateGraphRequestUrl(url);
-    for (let attempt = 0; attempt < 6; attempt++) {
+    const maxAttempts = retrySafe ? 6 : 1;
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
       let response: Response;
       try {
         const token = await this.credential.getToken("https://graph.microsoft.com/.default");
@@ -85,9 +86,9 @@ export class GraphClient implements GraphClientLike {
           }
         });
       } catch (error) {
-        if (attempt === 5) {
+        if (attempt === maxAttempts - 1) {
           const errorName = error instanceof Error && /^[a-z0-9._-]{1,80}$/i.test(error.name) ? error.name : "UnknownError";
-          throw new Error(`Graph retry limit reached after ${errorName}`);
+          throw new Error(`Graph request failed after ${errorName}`);
         }
         await this.sleeper(Math.min(2 ** attempt * 1000, 60_000));
         continue;
@@ -99,7 +100,7 @@ export class GraphClient implements GraphClientLike {
         await response.body?.cancel().catch(() => undefined);
         throw new ProviderRequestError("microsoftGraph", `GraphHttp${response.status}`, response.status, operationId);
       }
-      if (attempt === 5) {
+      if (attempt === maxAttempts - 1) {
         throw new ProviderRequestError("microsoftGraph", `GraphHttp${response.status}`, response.status, operationId);
       }
       await response.body?.cancel().catch(() => undefined);
@@ -130,7 +131,7 @@ export class GraphClient implements GraphClientLike {
       const response = await this.request(`https://graph.microsoft.com/v1.0/users/${encodeURIComponent(userId)}/checkMemberGroups`, {
         method: "POST",
         body: JSON.stringify({ groupIds: groupIds.slice(index, index + 20) })
-      });
+      }, true);
       const result = await response.json() as { value?: string[] };
       matched.push(...(result.value ?? []));
     }

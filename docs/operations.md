@@ -137,6 +137,8 @@ Schedules use Azure Functions NCRONTAB semantics and normally run in UTC. The En
 
 Inspect the original event and each route's Function error before replay. Correct the destination or permission first. Preserve the poison message as evidence, then use an approved, documented replay procedure; arbitrary reinsertion can create duplicate external messages.
 
+If a delivery result has `AmbiguousDeliveryOutcome` or `OperatorReviewRequired`, inspect the exact `DeviceNotificationHistory` row under partition `notification` and the logged `idempotencyKey`. A `sendStarted` row, or a stale legacy `pending` row, means the provider may have accepted the message. Preserve the poison event and provider/recipient evidence; do not delete that row or replay the event until the exact route's outcome is reconciled. After confirming delivery, record the exact row as `delivered` with its sent time. Only after confirming the provider did not accept the send may an operator remove that exact row using its ETag and replay the saved event. If acceptance cannot be established, retain the row and resolve the message with the intended recipient manually.
+
 ## Routine maintenance
 
 - Test every selected route and one end-to-end event on an organizationally approved schedule.

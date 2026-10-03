@@ -12,15 +12,15 @@ import { loadRoutingConfig } from "../src/routing.js";
 import { noncompliantEvent } from "./fixtures.js";
 
 class MemoryHistory implements NotificationHistoryRepository {
-  private readonly states = new Map<string, { status: "pending" | "delivered"; etag: string }>();
+  private readonly states = new Map<string, { status: "pending" | "sendStarted" | "delivered"; etag: string }>();
   readonly reservations: Array<{ key: string; legacyDeliveredKey?: string }> = [];
   private sequence = 0;
   async reserveDelivery(key: string, legacyDeliveredKey?: string): Promise<DeliveryReservation> {
     this.reservations.push({ key, legacyDeliveredKey });
     const legacy = legacyDeliveredKey ? this.states.get(legacyDeliveredKey) : undefined;
-    if (legacy) return { status: legacy.status };
+    if (legacy) return { status: legacy.status === "sendStarted" ? "reviewRequired" : legacy.status };
     const existing = this.states.get(key);
-    if (existing) return { status: existing.status };
+    if (existing) return { status: existing.status === "sendStarted" ? "reviewRequired" : existing.status };
     const etag = String(++this.sequence);
     this.states.set(key, { status: "pending", etag });
     return { status: "reserved", etag };
@@ -28,12 +28,19 @@ class MemoryHistory implements NotificationHistoryRepository {
   async releaseDelivery(key: string, etag: string) {
     if (this.states.get(key)?.etag === etag) this.states.delete(key);
   }
+  async markDeliveryStarted(key: string, etag: string) {
+    if (this.states.get(key)?.etag !== etag) throw new Error("reservation changed");
+    const startedEtag = String(++this.sequence);
+    this.states.set(key, { status: "sendStarted", etag: startedEtag });
+    return startedEtag;
+  }
   async completeDelivery(key: string, etag: string) {
     if (this.states.get(key)?.etag !== etag) throw new Error("reservation changed");
     this.states.set(key, { status: "delivered", etag });
   }
   seedDelivered(key: string) { this.states.set(key, { status: "delivered", etag: "legacy" }); }
   seedPending(key: string) { this.states.set(key, { status: "pending", etag: "legacy" }); }
+  state(key: string) { return this.states.get(key)?.status; }
   hasState(key: string) { return this.states.has(key); }
 }
 
@@ -255,14 +262,14 @@ describe("delivery shaping", () => {
     await dispatchEvent(noncompliantEvent, dependencies);
     expect(sendToEntraUser).toHaveBeenCalledOnce();
     expect(contractResults(captured.entries).map(({ status }) => status)).toEqual([
-      "skipped", "succeeded", "alreadyDelivered"
+      "failed", "succeeded", "alreadyDelivered"
     ]);
     expect(contractResults(captured.entries)[0]).toMatchObject({
-      attempt: 0, skipReason: "concurrentDelivery"
+      attempt: 0, failure: { category: "unknown", retryable: false, code: "OperatorReviewRequired" }
     });
   });
 
-  it.each(httpFailureCases)("classifies Teams Workflow HTTP %s as %s with retryable=%s", async (status, category, retryable) => {
+  it.each(httpFailureCases)("retains Teams Workflow HTTP %s for operator review", async (status) => {
     const captured = captureLogger();
     const routing = loadRoutingConfig(JSON.stringify({
       events: { deviceNoncompliant: { user: [], admin: ["teamsWebhook"] } }
@@ -274,17 +281,16 @@ describe("delivery shaping", () => {
       routing, adminEmails: [], environment, webhookUrl: "https://private.example.test?sig=secret", fetcher
     });
 
-    if (retryable) await expect(dispatch).rejects.toThrow("1 notification route(s) failed");
-    else await expect(dispatch).resolves.toMatchObject({ routes: [{ status: "unavailable" }] });
+    await expect(dispatch).rejects.toMatchObject({ summary: { routes: [{ status: "reviewRequired" }] } });
     expect(contractResults(captured.entries)).toMatchObject([{
       status: "failed", attempt: 1,
       evidence: { httpStatusCode: status, providerCode: `TeamsHttp${status}` },
-      failure: { category, retryable, code: `TeamsHttp${status}` }
+      failure: { category: "unknown", retryable: false, code: "AmbiguousDeliveryOutcome" }
     }]);
     expect(JSON.stringify(captured.entries)).not.toMatch(/sensitive provider body|private\.example\.test|[?&]sig=/);
   });
 
-  it("maps an unstructured Teams transport exception to a safe unknown retry", async () => {
+  it("retains an unstructured Teams transport exception without retrying", async () => {
     const captured = captureLogger();
     const routing = loadRoutingConfig(JSON.stringify({
       events: { deviceNoncompliant: { user: [], admin: ["teamsWebhook"] } }
@@ -299,12 +305,12 @@ describe("delivery shaping", () => {
 
     expect(contractResults(captured.entries)).toMatchObject([{
       status: "failed", evidence: { providerCode: "TeamsTransportError" },
-      failure: { category: "unknown", retryable: true, code: "TeamsTransportError" }
+      failure: { category: "unknown", retryable: false, code: "AmbiguousDeliveryOutcome" }
     }]);
     expect(JSON.stringify(captured.entries)).not.toMatch(/sensitive provider|private\.example\.test|[?&]sig=/);
   });
 
-  it.each(httpFailureCases)("classifies Graph email HTTP %s as %s with retryable=%s", async (status, category, retryable) => {
+  it.each(httpFailureCases)("retains Graph email HTTP %s for operator review", async (status) => {
     const captured = captureLogger();
     const routing = loadRoutingConfig(JSON.stringify({
       events: { deviceNoncompliant: { user: [], admin: ["email"] } }
@@ -319,39 +325,41 @@ describe("delivery shaping", () => {
       environment
     });
 
-    if (retryable) await expect(dispatch).rejects.toThrow("1 notification route(s) failed");
-    else await expect(dispatch).resolves.toMatchObject({ routes: [{ status: "unavailable" }] });
+    await expect(dispatch).rejects.toMatchObject({ summary: { routes: [{ status: "reviewRequired" }] } });
     expect(contractResults(captured.entries)).toMatchObject([{
       status: "failed", attempt: 1,
       evidence: { httpStatusCode: status, providerCode: `GraphHttp${status}`, operationId: "safe-operation-id" },
-      failure: { category, retryable, code: `GraphHttp${status}` }
+      failure: { category: "unknown", retryable: false, code: "AmbiguousDeliveryOutcome" }
     }]);
     expect(JSON.stringify(captured.entries)).not.toMatch(/private-admin|private-sender|example\.test/);
   });
 
-  it("maps a permanent provider outcome to a non-retryable safe failure", async () => {
+  it("keeps a permanent bot outcome for review after send starts", async () => {
     const captured = captureLogger();
     const routing = loadRoutingConfig(JSON.stringify({
       events: { deviceNoncompliant: { user: ["teamsDm"], admin: [] } }
     }));
-    const summary = await dispatchEvent(noncompliantEvent, {
+    await expect(dispatchEvent(noncompliantEvent, {
       graph: { async *pages<T>() { yield [] as T[]; }, async post() {} },
       bot: { async sendToEntraUser() { throw new PermanentDeliveryError("private recipient detail"); } },
       history: new MemoryHistory(), logger: captured.logger, routing, adminEmails: [], environment
-    });
+    })).rejects.toMatchObject({ summary: { routes: [{ status: "reviewRequired" }] } });
 
-    expect(summary.routes).toMatchObject([{ status: "unavailable" }]);
     expect(contractResults(captured.entries)).toMatchObject([{
       status: "failed", attempt: 1,
-      failure: { category: "destinationUnavailable", retryable: false, code: "DestinationUnavailable" }
+      failure: { category: "unknown", retryable: false, code: "AmbiguousDeliveryOutcome" }
     }]);
     expect(JSON.stringify(captured.entries)).not.toContain("private recipient detail");
   });
 
-  it("releases a failed route so a queue retry can deliver it", async () => {
+  it("retains an accepted but unconfirmed bot send for operator review without a second send", async () => {
     const captured = captureLogger();
+    const acceptedCards: unknown[] = [];
     const sendToEntraUser = vi.fn()
-      .mockRejectedValueOnce(new Error("sensitive-token https://private.example.test?sig=secret"))
+      .mockImplementationOnce(async (_recipient: string, card: unknown) => {
+        acceptedCards.push(card);
+        throw new Error("sensitive-token https://private.example.test?sig=secret");
+      })
       .mockResolvedValueOnce(undefined);
     const dependencies = {
       graph: { async *pages<T>() { yield [] as T[]; }, async post() {} }, bot: { sendToEntraUser },
@@ -359,13 +367,63 @@ describe("delivery shaping", () => {
       routing: loadRoutingConfig(JSON.stringify({ events: { deviceNoncompliant: { user: ["teamsDm"], admin: [] } } }))
     };
     await expect(dispatchEvent(noncompliantEvent, dependencies)).rejects.toThrow("1 notification route(s) failed");
-    await dispatchEvent(noncompliantEvent, dependencies);
-    expect(sendToEntraUser).toHaveBeenCalledTimes(2);
+    await expect(dispatchEvent(noncompliantEvent, dependencies)).rejects.toMatchObject({
+      summary: { routes: [{ status: "reviewRequired" }] }
+    });
+    expect(sendToEntraUser).toHaveBeenCalledTimes(1);
+    expect(acceptedCards).toHaveLength(1);
     expect(contractResults(captured.entries)).toMatchObject([
-      { status: "failed", attempt: 1, failure: { category: "unknown", retryable: true, code: "UnknownDeliveryFailure" } },
-      { status: "succeeded", attempt: 1 }
+      { status: "failed", attempt: 1, failure: { category: "unknown", retryable: false, code: "AmbiguousDeliveryOutcome" } },
+      { status: "failed", attempt: 0, failure: { category: "unknown", retryable: false, code: "OperatorReviewRequired" } }
     ]);
     expect(JSON.stringify(captured.entries)).not.toMatch(/sensitive-token|private\.example\.test|[?&]sig=/);
+  });
+
+  it("does not resend after the provider accepts a message but the history completion write fails", async () => {
+    const captured = captureLogger();
+    class FailingCompletionHistory extends MemoryHistory {
+      override async completeDelivery() { throw new Error("storage write failed"); }
+    }
+    const history = new FailingCompletionHistory();
+    const sendToEntraUser = vi.fn(async () => undefined);
+    const dependencies = {
+      graph: { async *pages<T>() { yield [] as T[]; }, async post() {} }, bot: { sendToEntraUser },
+      history, logger: captured.logger, adminEmails: [], environment,
+      routing: loadRoutingConfig(JSON.stringify({ events: { deviceNoncompliant: { user: ["teamsDm"], admin: [] } } }))
+    };
+
+    await expect(dispatchEvent(noncompliantEvent, dependencies)).rejects.toMatchObject({
+      summary: { routes: [{ status: "reviewRequired" }] }
+    });
+    await expect(dispatchEvent(noncompliantEvent, dependencies)).rejects.toMatchObject({
+      summary: { routes: [{ status: "reviewRequired" }] }
+    });
+    expect(sendToEntraUser).toHaveBeenCalledOnce();
+    expect(contractResults(captured.entries)).toMatchObject([
+      { status: "failed", attempt: 1, failure: { code: "AmbiguousDeliveryOutcome", retryable: false } },
+      { status: "failed", attempt: 0, failure: { code: "OperatorReviewRequired", retryable: false } }
+    ]);
+  });
+
+  it("retries only after a confirmed pre-send state failure", async () => {
+    class FailingStartHistory extends MemoryHistory {
+      private failed = false;
+      override async markDeliveryStarted(key: string, etag: string) {
+        if (!this.failed) { this.failed = true; throw new Error("state unavailable before send"); }
+        return super.markDeliveryStarted(key, etag);
+      }
+    }
+    const sendToEntraUser = vi.fn(async () => undefined);
+    const dependencies = {
+      graph: { async *pages<T>() { yield [] as T[]; }, async post() {} }, bot: { sendToEntraUser },
+      history: new FailingStartHistory(), logger, adminEmails: [], environment,
+      routing: loadRoutingConfig(JSON.stringify({ events: { deviceNoncompliant: { user: ["teamsDm"], admin: [] } } }))
+    };
+
+    await expect(dispatchEvent(noncompliantEvent, dependencies)).rejects.toThrow("1 notification route(s) failed");
+    expect(sendToEntraUser).not.toHaveBeenCalled();
+    await dispatchEvent(noncompliantEvent, dependencies);
+    expect(sendToEntraUser).toHaveBeenCalledOnce();
   });
 
   it("rejects enabled routes whose required destinations are missing", () => {

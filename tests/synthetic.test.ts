@@ -6,6 +6,7 @@ import { runSyntheticDeliveryProof } from "../src/synthetic.js";
 class ProofHistory implements NotificationHistoryRepository {
   private sequence = 0;
   async reserveDelivery(): Promise<DeliveryReservation> { return { status: "reserved", etag: String(++this.sequence) }; }
+  async markDeliveryStarted(_key: string, etag: string) { return etag; }
   async releaseDelivery() {}
   async completeDelivery() {}
 }
@@ -76,9 +77,9 @@ describe("synthetic delivery proof", () => {
       history: new ProofHistory(), logger, routing, adminEmails: [], environment
     }, false);
     expect(response).toMatchObject({
-      status: 424,
+      status: 502,
       jsonBody: { success: false, eventType: "deviceEnrolled", summary: { unavailableRoutes: 1,
-        routes: [{ audience: "user", transport: "teamsDm", status: "unavailable" }] } }
+        routes: [{ audience: "user", transport: "teamsDm", status: "reviewRequired" }] } }
     });
   });
 

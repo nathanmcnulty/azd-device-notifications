@@ -100,10 +100,12 @@ export interface OutboxRepository {
 export type DeliveryReservation =
   | { status: "reserved"; etag: string }
   | { status: "delivered" }
-  | { status: "pending" };
+  | { status: "pending" }
+  | { status: "reviewRequired" };
 
 export interface NotificationHistoryRepository {
   reserveDelivery(key: string, legacyDeliveredKey?: string): Promise<DeliveryReservation>;
+  markDeliveryStarted(key: string, etag: string): Promise<string>;
   releaseDelivery(key: string, etag: string): Promise<void>;
   completeDelivery(key: string, etag: string, sentAt: string): Promise<void>;
 }
