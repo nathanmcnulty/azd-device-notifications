@@ -182,10 +182,9 @@ export class AzureStateRepository implements WatermarkRepository, SnapshotReposi
       }
     }
     try {
-      await this.history.createEntity({
+      const created = await this.history.createEntity({
         partitionKey: "notification", rowKey: key, reservedAt: new Date().toISOString(), status: "reserved"
       });
-      const created = await this.history.getEntity<ReservationEntity>("notification", key);
       if (!created.etag) throw new Error("Delivery reservation did not return an ETag");
       return { status: "reserved", etag: created.etag };
     } catch (error) {
@@ -194,10 +193,9 @@ export class AzureStateRepository implements WatermarkRepository, SnapshotReposi
       const existingState = classifyDeliveryReservation(existing);
       if (existingState) return { status: existingState };
       try {
-        await this.history.updateEntity({
+        const recovered = await this.history.updateEntity({
           partitionKey: "notification", rowKey: key, reservedAt: new Date().toISOString(), status: "reserved", etag: existing.etag
         }, "Merge", { etag: existing.etag });
-        const recovered = await this.history.getEntity<ReservationEntity>("notification", key);
         if (!recovered.etag) throw new Error("Recovered delivery reservation did not return an ETag");
         return { status: "reserved", etag: recovered.etag };
       } catch (updateError) {
@@ -210,11 +208,10 @@ export class AzureStateRepository implements WatermarkRepository, SnapshotReposi
 
   async markDeliveryStarted(key: string, etag: string): Promise<string> {
     await this.ready;
-    await this.history.updateEntity({
+    const started = await this.history.updateEntity({
       partitionKey: "notification", rowKey: key, status: "sendStarted", etag
     }, "Merge", { etag });
-    const started = await this.history.getEntity<ReservationEntity>("notification", key);
-    if (started.status !== "sendStarted" || !started.etag) throw new Error("Delivery start state could not be confirmed");
+    if (!started.etag) throw new Error("Delivery start state did not return an ETag");
     return started.etag;
   }
 
