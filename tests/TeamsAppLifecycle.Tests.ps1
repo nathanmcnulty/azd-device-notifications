@@ -6,6 +6,71 @@ Describe 'Teams personal app lifecycle contracts' {
         $script:cleanup = Get-Content (Join-Path $repoRoot 'scripts/Remove-TeamsPersonalApp.ps1') -Raw
     }
 
+    It 'waits through catalog propagation and returns only the exact published version' {
+        $tokens = $null
+        $parseErrors = $null
+        $installerAst = [System.Management.Automation.Language.Parser]::ParseInput(
+            $script:installer,
+            [ref] $tokens,
+            [ref] $parseErrors
+        )
+        $waitFunction = $installerAst.Find({
+                param($node)
+                $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and
+                $node.Name -eq 'Wait-CatalogDefinition'
+            }, $true) | Select-Object -First 1
+        $waitFunction | Should -Not -BeNullOrEmpty
+        . ([scriptblock]::Create($waitFunction.Extent.Text))
+
+        $script:catalogAttempts = 0
+        $script:sleepCalls = 0
+        function Get-CatalogDefinitions {
+            $script:catalogAttempts++
+            if ($script:catalogAttempts -eq 1) {
+                return @(@{ id = 'wrong'; version = '9.9.9'; publishingState = 'published' },
+                    @{ id = 'target'; version = '1.2.3'; publishingState = 'pending' })
+            }
+            return @(@{ id = 'target'; version = '1.2.3'; publishingState = 'published' })
+        }
+        function Start-Sleep { param([int] $Seconds) $script:sleepCalls += $Seconds }
+
+        $result = Wait-CatalogDefinition -CatalogAppId 'catalog-1' -Version '1.2.3'
+        $result.id | Should -Be 'target'
+        $result.version | Should -Be '1.2.3'
+        $result.publishingState | Should -Be 'published'
+        $script:catalogAttempts | Should -Be 2
+        $script:sleepCalls | Should -Be 5
+    }
+
+    It 'fails after the bounded propagation window when the exact version stays pending' {
+        $tokens = $null
+        $parseErrors = $null
+        $installerAst = [System.Management.Automation.Language.Parser]::ParseInput(
+            $script:installer,
+            [ref] $tokens,
+            [ref] $parseErrors
+        )
+        $waitFunction = $installerAst.Find({
+                param($node)
+                $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and
+                $node.Name -eq 'Wait-CatalogDefinition'
+            }, $true) | Select-Object -First 1
+        . ([scriptblock]::Create($waitFunction.Extent.Text))
+
+        $script:catalogAttempts = 0
+        $script:sleepCalls = 0
+        function Get-CatalogDefinitions {
+            $script:catalogAttempts++
+            return @(@{ id = 'target'; version = '1.2.3'; publishingState = 'pending' })
+        }
+        function Start-Sleep { param([int] $Seconds) $script:sleepCalls += $Seconds }
+
+        { Wait-CatalogDefinition -CatalogAppId 'catalog-1' -Version '1.2.3' } |
+            Should -Throw "*not visible as published*"
+        $script:catalogAttempts | Should -Be 18
+        $script:sleepCalls | Should -Be 90
+    }
+
     It 'separates the administrator from the exact recipient object ID before mutation' {
         $installer | Should -Match '\[string\] \$AdminUpn'
         $installer | Should -Match '\[guid\] \$UserId'

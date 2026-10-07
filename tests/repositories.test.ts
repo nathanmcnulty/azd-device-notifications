@@ -7,6 +7,12 @@ function repositoryWithHistory(history: object): AzureStateRepository {
   return repository;
 }
 
+function repositoryWithState(state: object): AzureStateRepository {
+  const repository = Object.create(AzureStateRepository.prototype) as AzureStateRepository;
+  Object.assign(repository, { ready: Promise.resolve(), state });
+  return repository;
+}
+
 describe("Azure Queue endpoint normalization", () => {
   it("joins Azure endpoints with exactly one path separator", () => {
     expect(buildQueueUrl("https://storage.queue.core.windows.net/", "device-notifications"))
@@ -90,5 +96,37 @@ describe("delivery reservation migration", () => {
     expect(classifyDeliveryReservation({ status: "sendStarted", reservedAt: "2026-08-23T11:59:59.999Z" }, now))
       .toBe("reviewRequired");
     expect(classifyDeliveryReservation({ status: "pending", reservedAt: "invalid" }, now)).toBe("reviewRequired");
+  });
+});
+
+describe("conversation identity boundaries", () => {
+  it("keeps a foreign owner's conversation from satisfying the target lookup", async () => {
+    const rows = new Map<string, string>();
+    const state = {
+      async getEntity(_partitionKey: string, rowKey: string) {
+        const value = rows.get(rowKey);
+        if (value === undefined) throw Object.assign(new Error("missing"), { statusCode: 404 });
+        return { value };
+      },
+      async upsertEntity(entity: { rowKey: string; value: string }) {
+        rows.set(entity.rowKey, entity.value);
+      },
+      async deleteEntity(_partitionKey: string, rowKey: string) {
+        if (!rows.delete(rowKey)) throw Object.assign(new Error("missing"), { statusCode: 404 });
+      }
+    };
+    const repository = repositoryWithState(state);
+    const owner = "dddddddd-dddd-4ddd-8ddd-dddddddddddd";
+    const foreignOwner = "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee";
+
+    await repository.putConversation(foreignOwner, { conversation: "foreign" });
+    expect(await repository.getConversation(owner)).toBeUndefined();
+    await repository.putConversation(owner, { conversation: "owner" });
+    expect(await repository.getConversation(owner)).toEqual({ conversation: "owner" });
+    expect(await repository.getConversation(foreignOwner)).toEqual({ conversation: "foreign" });
+
+    await repository.deleteConversation(owner);
+    expect(await repository.getConversation(owner)).toBeUndefined();
+    expect(await repository.getConversation(foreignOwner)).toEqual({ conversation: "foreign" });
   });
 });
