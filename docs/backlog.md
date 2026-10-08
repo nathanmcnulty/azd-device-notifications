@@ -182,7 +182,7 @@ Review DEVICE-004 against the current repository state. Its status or authorizat
 
 - **Kind:** discovery
 - **Priority:** P2
-- **Status:** proposed
+- **Status:** done
 - **Wave:** 1
 - **Authorization:** local-only
 - **Blocker:** _none_
@@ -222,10 +222,17 @@ Two personal bot consumers can converge on contracts while retaining route and e
 **Sources:**
 
 - README.md
+- docs/notification-taxonomy.md
+- https&colon;//github.com/nathanmcnulty/azd-auth-notifications/tree/016a9ded4b9777c95a975b271fb678a8d84ef615
+- https&colon;//github.com/nathanmcnulty/azd-reference/tree/8f8a41fcb3539bdc632b58cad84b668204628b79
 
 **Evidence:**
 
-- _none_
+- Compared device-notifications bbc8984d92ecbb11049645963f10fe3706461fe9 with auth-notifications 016a9ded4b9777c95a975b271fb678a8d84ef615 using exact source reads. The shared notification-contracts schemas are unchanged at azd-reference 8f8a41fcb3539bdc632b58cad84b668204628b79, so the existing bc2cf2aad4ff5ebadabe8fd0f0efcf71d94d0e0f component pin remains unchanged.
+- docs/notification-taxonomy.md compares Device delivery results with Auth accepted/review/suppressed state and converter semantics. It records provider acceptance versus recipient observation, Auth gaps in normalized duplicate/destination/retry/state-recovery classifications, and the difference between Auth per-recipient identity and Device route-scoped fan-out identity.
+- Device fixtures cover duplicate events, foreign-owner conversation lookup/deletion, lost provider responses, and production wait-function propagation with pending, wrong-version, exact-published and bounded-timeout responses. Auth duplicate/lost-response fixtures are identified at its exact revision; executable Auth app-propagation and conversation-isolation fixtures are missing and recorded as extraction gaps. Fixture and source inspection do not prove live delivery, tenant isolation, Teams propagation or recipient receipt.
+- Shared bot extraction remains gated on per-recipient privacy-preserving identity plus real delivery and personal-installation lifecycle proof in both consumers; DEVICE-002 and AUTH-002 remain the external-delivery gates.
+- Offline validation of the selected source passed 106 Pester tests, 114 Vitest tests, typecheck, build, bundle, production audit, pinned Bicep 0.46.1, metadata and documentation gates via ./scripts/Test-Repository.ps1. Propagation test doubles are local to their fixtures; Start-Sleep remains the system cmdlet afterward. No runtime or component lock changed, no messages or lab resources were created, and no live cleanup was needed.
 
 **Review and authorization note:**
 
