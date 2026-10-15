@@ -4,7 +4,7 @@ Deployment is intentionally phased. The first `azd up` creates and validates the
 
 ## 1. Prepare the administrator session
 
-Install Azure CLI, Azure Developer CLI 1.23 or later, and PowerShell 7. Email setup additionally requires the ExchangeOnlineManagement PowerShell module. Administrators do not install Node.js or npm: the repository contains the ready-to-run Function package, including its application dependencies, and deployment performs no local or remote npm restore or source build.
+Install Azure CLI, Azure Developer CLI 1.23 or later, and PowerShell 7.6 or later. Email setup additionally requires the ExchangeOnlineManagement PowerShell module. Administrators do not install Node.js or npm: the repository contains the ready-to-run Function package, including its application dependencies, and deployment performs no local or remote npm restore or source build.
 
 If an administrator Teams Workflow route will be selected, create **Post to a chat or channel when a webhook request is received** now, choose the intended destination, add a durable co-owner, and copy the callback URL. The first-run wizard requires and validates that credential before it enables the route.
 
