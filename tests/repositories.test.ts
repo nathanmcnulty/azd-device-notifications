@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
+import { createRequire } from "node:module";
+import { join } from "node:path";
 import { AzureStateRepository, buildQueueUrl, classifyDeliveryReservation } from "../src/repositories.js";
+import type { DeviceEvent } from "../src/domain.js";
+
+const requireFromSource = createRequire(join(__dirname, "../src/package.json"));
+const { AnonymousCredential, QueueClient } = requireFromSource("@azure/storage-queue");
 
 function repositoryWithHistory(history: object): AzureStateRepository {
   const repository = Object.create(AzureStateRepository.prototype) as AzureStateRepository;
@@ -19,6 +25,69 @@ describe("Azure Queue endpoint normalization", () => {
       .toBe("https://storage.queue.core.windows.net/device-notifications");
     expect(buildQueueUrl("https://storage.queue.core.windows.net", "device-notifications"))
       .toBe("https://storage.queue.core.windows.net/device-notifications");
+  });
+});
+
+describe("Azure Queue transport boundary", () => {
+  const event: DeviceEvent = {
+    id: "event-unicode-1",
+    type: "deviceRegistered",
+    occurredAt: "2026-10-15T18:00:00.000Z",
+    severity: "low",
+    device: { displayName: "R&D <'lab'> \"quoted\" / 東京 🚀" }
+  };
+
+  function repositoryWithQueue(httpClient: { sendRequest: (request: any) => Promise<any> }, updateEntity: () => Promise<void>) {
+    const repository = Object.create(AzureStateRepository.prototype) as AzureStateRepository;
+    const queue = new QueueClient(
+      "https://storage.queue.core.windows.net/device-events",
+      new AnonymousCredential(),
+      { httpClient, retryOptions: { maxTries: 1 } }
+    );
+    Object.assign(repository, {
+      ready: Promise.resolve(),
+      queue,
+      fingerprints: { updateEntity }
+    });
+    return repository;
+  }
+
+  it("sends escaped JSON through the SDK and marks published only after an accepted response", async () => {
+    let published = false;
+    let requestBody = "";
+    const repository = repositoryWithQueue({
+      async sendRequest(request) {
+        expect(published).toBe(false);
+        requestBody = String(request.body);
+        return { request, headers: request.headers.clone(), status: 201, bodyAsText: "" };
+      }
+    }, async () => { published = true; });
+
+    await repository.enqueue(event);
+
+    const encodedMessage = requestBody.match(/<MessageText>([^<]+)<\/MessageText>/)?.[1];
+    expect(encodedMessage).toBeDefined();
+    expect(requestBody).toContain("&lt;");
+    expect(requestBody).toContain("&amp;");
+    const decodedMessage = encodedMessage!.replaceAll("&quot;", '"').replaceAll("&apos;", "'")
+      .replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&amp;", "&");
+    expect(decodedMessage).toBe(JSON.stringify(event));
+    expect(JSON.parse(decodedMessage)).toEqual(event);
+    expect(decodedMessage).toContain("\\\"");
+    expect(decodedMessage).toContain("東京 🚀");
+    expect(published).toBe(true);
+  });
+
+  it("propagates a queue failure and does not mark the event published", async () => {
+    let published = false;
+    const repository = repositoryWithQueue({
+      async sendRequest(request) {
+        return { request, headers: request.headers.clone(), status: 503, bodyAsText: "temporarily unavailable" };
+      }
+    }, async () => { published = true; });
+
+    await expect(repository.enqueue(event)).rejects.toThrow();
+    expect(published).toBe(false);
   });
 });
 
