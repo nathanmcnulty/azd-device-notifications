@@ -105,9 +105,9 @@ Describe 'Exchange ownership and context safety' {
 
         Connect-AzdExchangeOnline -ExpectedTenantId $tenantId -ExpectedAdminUpn $adminUpn | Out-Null
 
-        Assert-MockCalled Get-AzureCliExchangeAccessToken -ModuleName Exchange.Management -Times 1 -Exactly `
+        Should -Invoke Get-AzureCliExchangeAccessToken -ModuleName Exchange.Management -Times 1 -Exactly `
             -ParameterFilter { $ExpectedTenantId -eq $tenantId }
-        Assert-MockCalled Invoke-ExchangeOnlineTokenConnection -ModuleName Exchange.Management -Times 1 -Exactly `
+        Should -Invoke Invoke-ExchangeOnlineTokenConnection -ModuleName Exchange.Management -Times 1 -Exactly `
             -ParameterFilter {
                 $AccessToken -eq 'opaque-test-token' -and $ExpectedTenantId -eq $tenantId -and $ExpectedAdminUpn -eq $adminUpn
             }
@@ -120,7 +120,7 @@ Describe 'Exchange ownership and context safety' {
         Mock Invoke-ExchangeOnlineTokenConnection -ModuleName Exchange.Management {}
         { Connect-AzdExchangeOnline -ExpectedTenantId $tenantId -ExpectedAdminUpn $adminUpn } |
             Should -Throw '*cached token unavailable*'
-        Assert-MockCalled Invoke-ExchangeOnlineTokenConnection -ModuleName Exchange.Management -Times 0 -Exactly
+        Should -Invoke Invoke-ExchangeOnlineTokenConnection -ModuleName Exchange.Management -Times 0 -Exactly
 
         Mock Get-AzureCliExchangeAccessToken -ModuleName Exchange.Management { 'opaque-test-token' }
         Mock Invoke-ExchangeOnlineTokenConnection -ModuleName Exchange.Management { throw 'Exchange token connection failed' }
