@@ -2261,7 +2261,7 @@ var require_azure_functions = __commonJS({
               __classPrivateFieldSet2(this, _HttpRequest_init, init, "f");
               let nativeReq = init.nativeRequest;
               if (!nativeReq) {
-                const url3 = (0, nonNull_1.nonNullProp)(init, "url");
+                const url2 = (0, nonNull_1.nonNullProp)(init, "url");
                 const method = (0, nonNull_1.nonNullProp)(init, "method");
                 let body;
                 const lowerMethod = method.toLowerCase();
@@ -2274,7 +2274,7 @@ var require_azure_functions = __commonJS({
                 } else if (((_e = (_d = init.body) === null || _d === void 0 ? void 0 : _d.bytes) === null || _e === void 0 ? void 0 : _e.length) || ((_f = init.body) === null || _f === void 0 ? void 0 : _f.string)) {
                   (0, workerSystemLog_1.workerSystemLog)("warning", `Discarding the body of the incoming ${method} request because GET and HEAD requests cannot have a body.`);
                 }
-                nativeReq = new Request(url3, {
+                nativeReq = new Request(url2, {
                   body,
                   method,
                   headers: (0, fromRpcNullable_1.fromNullableMapping)(init.nullableHeaders, init.headers)
@@ -2353,7 +2353,7 @@ var require_azure_functions = __commonJS({
             if (typeof host !== "string" || typeof proto !== "string") {
               throw new errors_1.AzFuncSystemError(`Expected headers "${hostHeaderName}" and "${protoHeaderName}" to be set.`);
             }
-            const url3 = `${proto}://${host}${(0, nonNull_1.nonNullProp)(proxyReq, "url")}`;
+            const url2 = `${proto}://${host}${(0, nonNull_1.nonNullProp)(proxyReq, "url")}`;
             let body;
             const lowerMethod = (_a = proxyReq.method) === null || _a === void 0 ? void 0 : _a.toLowerCase();
             if (lowerMethod !== "get" && lowerMethod !== "head") {
@@ -2365,7 +2365,7 @@ var require_azure_functions = __commonJS({
             if (typeof headersData === "object" && (0, nonNull_1.isDefined)(headersData)) {
               headers = headersData;
             }
-            const nativeReq = new Request(url3, {
+            const nativeReq = new Request(url2, {
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               body,
               duplex: "half",
@@ -3780,10 +3780,10 @@ var require_azure_functions = __commonJS({
             }
           }
           exports3.copyPropIfDefined = copyPropIfDefined;
-          function isDefined3(data) {
+          function isDefined4(data) {
             return data !== null && data !== void 0;
           }
-          exports3.isDefined = isDefined3;
+          exports3.isDefined = isDefined4;
         },
         /***/
         "./src/utils/toolProperties.ts"(__unused_webpack_module, exports3) {
@@ -3958,8 +3958,8 @@ var require_azure_functions = __commonJS({
             });
           }
           exports3.convertToolProperties = convertToolProperties;
-          function isToolProperties(properties2) {
-            return typeof properties2 === "object" && properties2 !== null && !Array.isArray(properties2) && Object.values(properties2).every((prop) => typeof prop === "object" && prop !== null && "propertyType" in prop && "description" in prop && "isRequired" in prop && "isArray" in prop);
+          function isToolProperties(properties) {
+            return typeof properties === "object" && properties !== null && !Array.isArray(properties) && Object.values(properties).every((prop) => typeof prop === "object" && prop !== null && "propertyType" in prop && "description" in prop && "isRequired" in prop && "isArray" in prop);
           }
           exports3.isToolProperties = isToolProperties;
           function validateToolProperty(property2, propertyName) {
@@ -3971,18 +3971,18 @@ var require_azure_functions = __commonJS({
               property2.description = "";
             }
           }
-          function normalizeToolProperties(properties2) {
-            if (!properties2) {
+          function normalizeToolProperties(properties) {
+            if (!properties) {
               return void 0;
             }
-            if (Array.isArray(properties2)) {
-              properties2.forEach((property2, index) => {
+            if (Array.isArray(properties)) {
+              properties.forEach((property2, index) => {
                 validateToolProperty(property2, property2.propertyName || `index ${index}`);
               });
-              return properties2;
+              return properties;
             }
-            if (isToolProperties(properties2)) {
-              const converted = convertToolProperties(properties2);
+            if (isToolProperties(properties)) {
+              const converted = convertToolProperties(properties);
               return converted;
             }
             throw new Error("Invalid tool properties format");
@@ -5061,11 +5061,11 @@ var require_types = __commonJS({
       regex = `${regex}(${opts.join("|")})`;
       return new RegExp(`^${regex}$`);
     }
-    function isValidIP(ip, version5) {
-      if ((version5 === "v4" || !version5) && ipv4Regex.test(ip)) {
+    function isValidIP(ip, version4) {
+      if ((version4 === "v4" || !version4) && ipv4Regex.test(ip)) {
         return true;
       }
-      if ((version5 === "v6" || !version5) && ipv6Regex.test(ip)) {
+      if ((version4 === "v6" || !version4) && ipv6Regex.test(ip)) {
         return true;
       }
       return false;
@@ -5092,11 +5092,11 @@ var require_types = __commonJS({
         return false;
       }
     }
-    function isValidCidr(ip, version5) {
-      if ((version5 === "v4" || !version5) && ipv4CidrRegex.test(ip)) {
+    function isValidCidr(ip, version4) {
+      if ((version4 === "v4" || !version4) && ipv4CidrRegex.test(ip)) {
         return true;
       }
-      if ((version5 === "v6" || !version5) && ipv6CidrRegex.test(ip)) {
+      if ((version4 === "v6" || !version4) && ipv6CidrRegex.test(ip)) {
         return true;
       }
       return false;
@@ -8530,7 +8530,7 @@ var require_v35 = __commonJS({
     exports2.stringToBytes = stringToBytes;
     exports2.DNS = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
     exports2.URL = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
-    function v35(version5, hash, value, namespace, buf, offset) {
+    function v35(version4, hash, value, namespace, buf, offset) {
       const valueBytes = typeof value === "string" ? stringToBytes(value) : value;
       const namespaceBytes = typeof namespace === "string" ? (0, parse_js_1.default)(namespace) : namespace;
       if (typeof namespace === "string") {
@@ -8543,7 +8543,7 @@ var require_v35 = __commonJS({
       bytes.set(namespaceBytes);
       bytes.set(valueBytes, namespaceBytes.length);
       bytes = hash(bytes);
-      bytes[6] = bytes[6] & 15 | version5;
+      bytes[6] = bytes[6] & 15 | version4;
       bytes[8] = bytes[8] & 63 | 128;
       if (buf) {
         offset = offset || 0;
@@ -8797,13 +8797,13 @@ var require_version = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     var validate_js_1 = require_validate();
-    function version5(uuid) {
+    function version4(uuid) {
       if (!(0, validate_js_1.default)(uuid)) {
         throw TypeError("Invalid UUID");
       }
       return parseInt(uuid.slice(14, 15), 16);
     }
-    exports2.default = version5;
+    exports2.default = version4;
   }
 });
 
@@ -10293,9 +10293,9 @@ var require_cardFactory = __commonJS({
        * @remarks
        * For channels that don't natively support sign-in cards, an alternative message is rendered.
        */
-      static signinCard(title2, url3, text) {
+      static signinCard(title2, url2, text) {
         const card = {
-          buttons: [{ type: botframework_schema_1.ActionTypes.Signin, title: title2, value: url3, channelData: void 0 }]
+          buttons: [{ type: botframework_schema_1.ActionTypes.Signin, title: title2, value: url2, channelData: void 0 }]
         };
         if (text) {
           card.text = text;
@@ -10426,7 +10426,7 @@ var require_cardFactory = __commonJS({
       thumbnailCard: "application/vnd.microsoft.card.thumbnail",
       videoCard: "application/vnd.microsoft.card.video"
     };
-    function mediaCard(contentType4, title2, media, buttons, other) {
+    function mediaCard(contentType3, title2, media, buttons, other) {
       const card = Object.assign({}, other);
       if (title2) {
         card.title = title2;
@@ -10435,7 +10435,7 @@ var require_cardFactory = __commonJS({
       if (buttons) {
         card.buttons = CardFactory.actions(buttons);
       }
-      return { contentType: contentType4, content: card };
+      return { contentType: contentType3, content: card };
     }
   }
 });
@@ -10590,8 +10590,8 @@ var require_messageFactory = __commonJS({
        * @param inputHint (Optional) input hint for the message.
        * @returns A message activity that will display a single image or video to a user.
        */
-      static contentUrl(url3, contentType4, name3, text, speak, inputHint) {
-        const a = { contentType: contentType4, contentUrl: url3 };
+      static contentUrl(url2, contentType3, name3, text, speak, inputHint) {
+        const a = { contentType: contentType3, contentUrl: url2 };
         if (name3) {
           a.name = name3;
         }
@@ -10893,9 +10893,9 @@ var require_activityFactory = __commonJS({
        * @private
        */
       static realProperty(property2, builtinProperties) {
-        const properties2 = builtinProperties.map((u) => u.toLowerCase());
-        if (properties2.includes(property2.toLowerCase())) {
-          return builtinProperties[properties2.indexOf(property2.toLowerCase())];
+        const properties = builtinProperties.map((u) => u.toLowerCase());
+        if (properties.includes(property2.toLowerCase())) {
+          return builtinProperties[properties.indexOf(property2.toLowerCase())];
         } else {
           return property2;
         }
@@ -13291,11 +13291,11 @@ var require_log = __commonJS({
       log: () => log2
     });
     module2.exports = __toCommonJS2(log_exports);
-    var import_node_os4 = require("node:os");
+    var import_node_os5 = require("node:os");
     var import_node_util8 = __toESM2(require("node:util"));
-    var import_node_process11 = __toESM2(require("node:process"));
+    var import_node_process12 = __toESM2(require("node:process"));
     function log2(message, ...args) {
-      import_node_process11.default.stderr.write(`${import_node_util8.default.format(message, ...args)}${import_node_os4.EOL}`);
+      import_node_process12.default.stderr.write(`${import_node_util8.default.format(message, ...args)}${import_node_os5.EOL}`);
     }
   }
 });
@@ -13343,17 +13343,17 @@ var require_env = __commonJS({
       isWebWorker: () => isWebWorker3
     });
     module2.exports = __toCommonJS2(env_exports);
-    var import_node_process11 = __toESM2(require("node:process"));
+    var import_node_process12 = __toESM2(require("node:process"));
     function getEnvironmentVariable2(name3) {
-      return import_node_process11.default.env[name3];
+      return import_node_process12.default.env[name3];
     }
     function emitNodeWarning2(warning) {
-      import_node_process11.default.emitWarning(warning);
+      import_node_process12.default.emitWarning(warning);
     }
     var isBrowser3 = false;
     var isWebWorker3 = false;
-    var isDeno3 = typeof import_node_process11.default.versions.deno === "string" && import_node_process11.default.versions.deno.length > 0;
-    var isBun3 = typeof import_node_process11.default.versions.bun === "string" && import_node_process11.default.versions.bun.length > 0;
+    var isDeno3 = typeof import_node_process12.default.versions.deno === "string" && import_node_process12.default.versions.deno.length > 0;
+    var isBun3 = typeof import_node_process12.default.versions.bun === "string" && import_node_process12.default.versions.bun.length > 0;
     var isNodeLike4 = true;
     var isNodeRuntime3 = !isBun3 && !isDeno3;
     var isReactNative3 = false;
@@ -13621,9 +13621,9 @@ var require_logger = __commonJS({
         }
         logLevel = level;
         const enabledNamespaces2 = [];
-        for (const logger32 of registeredLoggers) {
-          if (shouldEnable(logger32)) {
-            enabledNamespaces2.push(logger32.namespace);
+        for (const logger33 of registeredLoggers) {
+          if (shouldEnable(logger33)) {
+            enabledNamespaces2.push(logger33.namespace);
           }
         }
         import_debug2.default.enable(enabledNamespaces2.join(","));
@@ -13639,20 +13639,20 @@ var require_logger = __commonJS({
           );
         }
       }
-      function shouldEnable(logger32) {
-        return Boolean(logLevel && levelMap2[logger32.level] <= levelMap2[logLevel]);
+      function shouldEnable(logger33) {
+        return Boolean(logLevel && levelMap2[logger33.level] <= levelMap2[logLevel]);
       }
       function createLogger(parent, level) {
-        const logger32 = Object.assign(parent.extend(level), {
+        const logger33 = Object.assign(parent.extend(level), {
           level
         });
-        patchLogMethod2(parent, logger32);
-        if (shouldEnable(logger32)) {
+        patchLogMethod2(parent, logger33);
+        if (shouldEnable(logger33)) {
           const enabledNamespaces2 = import_debug2.default.disable();
-          import_debug2.default.enable(enabledNamespaces2 + "," + logger32.namespace);
+          import_debug2.default.enable(enabledNamespaces2 + "," + logger33.namespace);
         }
-        registeredLoggers.add(logger32);
-        return logger32;
+        registeredLoggers.add(logger33);
+        return logger33;
       }
       function contextGetLogLevel() {
         return logLevel;
@@ -14347,16 +14347,16 @@ var require_sanitizer = __commonJS({
         if (typeof value !== "string" || value === null || value === "") {
           return value;
         }
-        const url3 = new URL(value);
-        if (!url3.search) {
+        const url2 = new URL(value);
+        if (!url2.search) {
           return value;
         }
-        for (const [key] of url3.searchParams) {
+        for (const [key] of url2.searchParams) {
           if (!this.allowedQueryParameters.has(key.toLowerCase())) {
-            url3.searchParams.set(key, RedactedString2);
+            url2.searchParams.set(key, RedactedString2);
           }
         }
-        return url3.toString();
+        return url2.toString();
       }
       sanitizeHeaders(obj) {
         const sanitized = {};
@@ -14542,11 +14542,11 @@ var require_log2 = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var log_exports = {};
     __export2(log_exports, {
-      logger: () => logger32
+      logger: () => logger33
     });
     module2.exports = __toCommonJS2(log_exports);
-    var import_logger17 = require_logger();
-    var logger32 = (0, import_logger17.createClientLogger)("ts-http-runtime");
+    var import_logger19 = require_logger();
+    var logger33 = (0, import_logger19.createClientLogger)("ts-http-runtime");
   }
 });
 
@@ -14592,7 +14592,7 @@ var require_nodeHttpClient = __commonJS({
     var import_node_stream2 = require("node:stream");
     var import_AbortError6 = require_AbortError();
     var import_httpHeaders9 = require_httpHeaders();
-    var import_restError11 = require_restError();
+    var import_restError12 = require_restError();
     var import_log18 = require_log2();
     var import_sanitizer5 = require_sanitizer();
     var DEFAULT_TLS_SETTINGS2 = {};
@@ -14745,17 +14745,17 @@ var require_nodeHttpClient = __commonJS({
         }
       }
       makeRequest(request, abortController, body) {
-        const url3 = new URL(request.url);
-        const isInsecure = url3.protocol !== "https:";
+        const url2 = new URL(request.url);
+        const isInsecure = url2.protocol !== "https:";
         if (isInsecure && !request.allowInsecureConnection) {
           throw new Error(`Cannot connect to ${request.url} while allowInsecureConnection is false.`);
         }
         const agent = request.agent ?? this.getOrCreateAgent(request, isInsecure);
         const options = {
           agent,
-          hostname: url3.hostname,
-          path: `${url3.pathname}${url3.search}`,
-          port: url3.port,
+          hostname: url2.hostname,
+          path: `${url2.pathname}${url2.search}`,
+          port: url2.port,
           method: request.method,
           headers: request.headers.toJSON({ preserveCase: true }),
           ...request.requestOverrides
@@ -14764,7 +14764,7 @@ var require_nodeHttpClient = __commonJS({
           const req = isInsecure ? import_node_http2.default.request(options, resolve) : import_node_https2.default.request(options, resolve);
           req.once("error", (err) => {
             reject(
-              new import_restError11.RestError(err.message, { code: err.code ?? import_restError11.RestError.REQUEST_SEND_ERROR, request })
+              new import_restError12.RestError(err.message, { code: err.code ?? import_restError12.RestError.REQUEST_SEND_ERROR, request })
             );
           });
           abortController.signal.addEventListener("abort", () => {
@@ -14785,7 +14785,7 @@ var require_nodeHttpClient = __commonJS({
               );
             } else {
               import_log18.logger.error("Unrecognized body type", body);
-              reject(new import_restError11.RestError("Unrecognized body type"));
+              reject(new import_restError12.RestError("Unrecognized body type"));
             }
           } else {
             req.end();
@@ -14868,8 +14868,8 @@ var require_nodeHttpClient = __commonJS({
             reject(e);
           } else {
             reject(
-              new import_restError11.RestError(`Error reading response as text: ${e.message}`, {
-                code: import_restError11.RestError.PARSE_ERROR
+              new import_restError12.RestError(`Error reading response as text: ${e.message}`, {
+                code: import_restError12.RestError.PARSE_ERROR
               })
             );
           }
@@ -14959,7 +14959,7 @@ var require_logPolicy = __commonJS({
     var import_sanitizer5 = require_sanitizer();
     var logPolicyName4 = "logPolicy";
     function logPolicy4(options = {}) {
-      const logger32 = options.logger ?? import_log18.logger.info;
+      const logger33 = options.logger ?? import_log18.logger.info;
       const sanitizer = new import_sanitizer5.Sanitizer({
         additionalAllowedHeaderNames: options.additionalAllowedHeaderNames,
         additionalAllowedQueryParameters: options.additionalAllowedQueryParameters
@@ -14967,13 +14967,13 @@ var require_logPolicy = __commonJS({
       return {
         name: logPolicyName4,
         async sendRequest(request, next) {
-          if (!logger32.enabled) {
+          if (!logger33.enabled) {
             return next(request);
           }
-          logger32(`Request: ${sanitizer.sanitize(request)}`);
+          logger33(`Request: ${sanitizer.sanitize(request)}`);
           const response = await next(request);
-          logger32(`Response status code: ${response.status}`);
-          logger32(`Headers: ${sanitizer.sanitize({ headers: response.headers })}`);
+          logger33(`Response status code: ${response.status}`);
+          logger33(`Headers: ${sanitizer.sanitize({ headers: response.headers })}`);
           return response;
         }
       };
@@ -15017,20 +15017,20 @@ var require_userAgentPlatform = __commonJS({
       setPlatformSpecificData: () => setPlatformSpecificData4
     });
     module2.exports = __toCommonJS2(userAgentPlatform_exports);
-    var import_node_os4 = __toESM2(require("node:os"));
-    var import_node_process11 = __toESM2(require("node:process"));
+    var import_node_os5 = __toESM2(require("node:os"));
+    var import_node_process12 = __toESM2(require("node:process"));
     function getHeaderName3() {
       return "User-Agent";
     }
     async function setPlatformSpecificData4(map) {
-      if (import_node_process11.default && import_node_process11.default.versions) {
-        const osInfo = `${import_node_os4.default.type()} ${import_node_os4.default.release()}; ${import_node_os4.default.arch()}`;
-        if (import_node_process11.default.versions.bun) {
-          map.set("Bun", `${import_node_process11.default.versions.bun} (${osInfo})`);
-        } else if (import_node_process11.default.versions.deno) {
-          map.set("Deno", `${import_node_process11.default.versions.deno} (${osInfo})`);
-        } else if (import_node_process11.default.versions.node) {
-          map.set("Node", `${import_node_process11.default.versions.node} (${osInfo})`);
+      if (import_node_process12.default && import_node_process12.default.versions) {
+        const osInfo = `${import_node_os5.default.type()} ${import_node_os5.default.release()}; ${import_node_os5.default.arch()}`;
+        if (import_node_process12.default.versions.bun) {
+          map.set("Bun", `${import_node_process12.default.versions.bun} (${osInfo})`);
+        } else if (import_node_process12.default.versions.deno) {
+          map.set("Deno", `${import_node_process12.default.versions.deno} (${osInfo})`);
+        } else if (import_node_process12.default.versions.node) {
+          map.set("Node", `${import_node_process12.default.versions.node} (${osInfo})`);
         }
       }
     }
@@ -15097,7 +15097,7 @@ var require_userAgent = __commonJS({
     module2.exports = __toCommonJS2(userAgent_exports);
     var import_userAgent4 = require_userAgentPlatform();
     var import_constants37 = require_constants();
-    function getUserAgentString2(telemetryInfo) {
+    function getUserAgentString3(telemetryInfo) {
       const parts = [];
       for (const [key, value] of telemetryInfo) {
         const token = value ? `${key}/${value}` : key;
@@ -15108,12 +15108,12 @@ var require_userAgent = __commonJS({
     function getUserAgentHeaderName3() {
       return (0, import_userAgent4.getHeaderName)();
     }
-    async function getUserAgentValue3(prefix2) {
+    async function getUserAgentValue3(prefix) {
       const runtimeInfo = /* @__PURE__ */ new Map();
       runtimeInfo.set("ts-http-runtime", import_constants37.SDK_VERSION);
       await (0, import_userAgent4.setPlatformSpecificData)(runtimeInfo);
-      const defaultAgent = getUserAgentString2(runtimeInfo);
-      const userAgentValue = prefix2 ? `${prefix2} ${defaultAgent}` : defaultAgent;
+      const defaultAgent = getUserAgentString3(runtimeInfo);
+      const userAgentValue = prefix ? `${prefix} ${defaultAgent}` : defaultAgent;
       return userAgentValue;
     }
   }
@@ -15466,14 +15466,14 @@ var require_retryPolicy = __commonJS({
     });
     module2.exports = __toCommonJS2(retryPolicy_exports);
     var import_helpers3 = require_helpers();
-    var import_restError11 = require_restError();
+    var import_restError12 = require_restError();
     var import_AbortError6 = require_AbortError();
-    var import_logger17 = require_logger();
+    var import_logger19 = require_logger();
     var import_constants37 = require_constants();
-    var retryPolicyLogger3 = (0, import_logger17.createClientLogger)("ts-http-runtime retryPolicy");
+    var retryPolicyLogger3 = (0, import_logger19.createClientLogger)("ts-http-runtime retryPolicy");
     var retryPolicyName2 = "retryPolicy";
     function retryPolicy4(strategies, options = { maxRetries: import_constants37.DEFAULT_RETRY_POLICY_COUNT }) {
-      const logger32 = options.logger || retryPolicyLogger3;
+      const logger33 = options.logger || retryPolicyLogger3;
       return {
         name: retryPolicyName2,
         async sendRequest(request, next) {
@@ -15485,24 +15485,24 @@ var require_retryPolicy = __commonJS({
             response = void 0;
             responseError = void 0;
             try {
-              logger32.info(`Retry ${retryCount}: Attempting to send request`, request.requestId);
+              logger33.info(`Retry ${retryCount}: Attempting to send request`, request.requestId);
               response = await next(request);
-              logger32.info(`Retry ${retryCount}: Received a response from request`, request.requestId);
+              logger33.info(`Retry ${retryCount}: Received a response from request`, request.requestId);
             } catch (e) {
-              logger32.error(`Retry ${retryCount}: Received an error from request`, request.requestId);
-              if (!(0, import_restError11.isRestError)(e)) {
+              logger33.error(`Retry ${retryCount}: Received an error from request`, request.requestId);
+              if (!(0, import_restError12.isRestError)(e)) {
                 throw e;
               }
               responseError = e;
               response = e.response;
             }
             if (request.abortSignal?.aborted) {
-              logger32.error(`Retry ${retryCount}: Request aborted.`);
+              logger33.error(`Retry ${retryCount}: Request aborted.`);
               const abortError = new import_AbortError6.AbortError();
               throw abortError;
             }
             if (retryCount >= (options.maxRetries ?? import_constants37.DEFAULT_RETRY_POLICY_COUNT)) {
-              logger32.info(
+              logger33.info(
                 `Retry ${retryCount}: Maximum retries reached. Returning the last received response, or throwing the last received error.`
               );
               if (responseError) {
@@ -15513,9 +15513,9 @@ var require_retryPolicy = __commonJS({
                 throw new Error("Maximum retries reached with no response or error to throw");
               }
             }
-            logger32.info(`Retry ${retryCount}: Processing ${strategies.length} retry strategies.`);
+            logger33.info(`Retry ${retryCount}: Processing ${strategies.length} retry strategies.`);
             strategiesLoop: for (const strategy of strategies) {
-              const strategyLogger = strategy.logger || logger32;
+              const strategyLogger = strategy.logger || logger33;
               strategyLogger.info(`Retry ${retryCount}: Processing retry strategy ${strategy.name}.`);
               const modifiers = strategy.retry({
                 retryCount,
@@ -15550,13 +15550,13 @@ var require_retryPolicy = __commonJS({
               }
             }
             if (responseError) {
-              logger32.info(
+              logger33.info(
                 `None of the retry strategies could work with the received error. Throwing it.`
               );
               throw responseError;
             }
             if (response) {
-              logger32.info(
+              logger33.info(
                 `None of the retry strategies could work with the received response. Returning it.`
               );
               return response;
@@ -15693,8 +15693,8 @@ var require_formDataPolicy = __commonJS({
             request.body = void 0;
           }
           if (request.formData) {
-            const contentType4 = request.headers.get("Content-Type");
-            if (contentType4 && contentType4.indexOf("application/x-www-form-urlencoded") !== -1) {
+            const contentType3 = request.headers.get("Content-Type");
+            if (contentType3 && contentType3.indexOf("application/x-www-form-urlencoded") !== -1) {
               request.body = wwwFormUrlEncode2(request.formData);
             } else {
               await prepareFormData2(request.formData, request);
@@ -15719,11 +15719,11 @@ var require_formDataPolicy = __commonJS({
       return urlSearchParams.toString();
     }
     async function prepareFormData2(formData, request) {
-      const contentType4 = request.headers.get("Content-Type");
-      if (contentType4 && !contentType4.startsWith("multipart/form-data")) {
+      const contentType3 = request.headers.get("Content-Type");
+      if (contentType3 && !contentType3.startsWith("multipart/form-data")) {
         return;
       }
-      request.headers.set("Content-Type", contentType4 ?? "multipart/form-data");
+      request.headers.set("Content-Type", contentType3 ?? "multipart/form-data");
       const parts = [];
       for (const [fieldName, values] of Object.entries(formData)) {
         for (const value of Array.isArray(values) ? values : [values]) {
@@ -16431,8 +16431,8 @@ var require_node = __commonJS({
       if (useColors2) {
         const c = this.color;
         const colorCode = "\x1B[3" + (c < 8 ? c : "8;5;" + c);
-        const prefix2 = `  ${colorCode};1m${name3} \x1B[0m`;
-        args[0] = prefix2 + args[0].split("\n").join("\n" + prefix2);
+        const prefix = `  ${colorCode};1m${name3} \x1B[0m`;
+        args[0] = prefix + args[0].split("\n").join("\n" + prefix);
         args.push(colorCode + "m+" + module2.exports.humanize(this.diff) + "\x1B[0m");
       } else {
         args[0] = getDate() + name3 + " " + args[0];
@@ -16545,9 +16545,9 @@ var require_helpers2 = __commonJS({
       }
     }
     exports2.json = json;
-    function req(url3, opts = {}) {
-      const href = typeof url3 === "string" ? url3 : url3.href;
-      const req2 = (href.startsWith("https:") ? https2 : http3).request(url3, opts);
+    function req(url2, opts = {}) {
+      const href = typeof url2 === "string" ? url2 : url2.href;
+      const req2 = (href.startsWith("https:") ? https2 : http3).request(url2, opts);
       const promise = new Promise((resolve, reject) => {
         req2.once("response", resolve).once("error", reject).end();
       });
@@ -17027,11 +17027,11 @@ var require_dist3 = __commonJS({
         const protocol = opts.secureEndpoint ? "https:" : "http:";
         const hostname = req.getHeader("host") || "localhost";
         const base2 = `${protocol}//${hostname}`;
-        const url3 = new url_1.URL(req.path, base2);
+        const url2 = new url_1.URL(req.path, base2);
         if (opts.port !== 80) {
-          url3.port = String(opts.port);
+          url2.port = String(opts.port);
         }
-        req.path = String(url3);
+        req.path = String(url2);
         const headers = typeof this.proxyHeaders === "function" ? this.proxyHeaders() : { ...this.proxyHeaders };
         if (proxy.username || proxy.password) {
           const auth = `${decodeURIComponent(proxy.username)}:${decodeURIComponent(proxy.password)}`;
@@ -17224,8 +17224,8 @@ var require_proxyPolicy = __commonJS({
       if (request.agent) {
         return;
       }
-      const url3 = new URL(request.url);
-      const isInsecure = url3.protocol !== "https:";
+      const url2 = new URL(request.url);
+      const isInsecure = url2.protocol !== "https:";
       if (request.tlsSettings) {
         import_log18.logger.warning(
           "TLS settings are not supported in combination with custom Proxy, certificates provided to the client will be ignored."
@@ -17356,17 +17356,17 @@ var require_redirectPolicy = __commonJS({
       const { request, status, headers } = response;
       const locationHeader = headers.get("location");
       if (locationHeader && (status === 300 || status === 301 && allowedRedirect2.includes(request.method) || status === 302 && allowedRedirect2.includes(request.method) || status === 303 && request.method === "POST" || status === 307) && currentRetries < maxRetries) {
-        const url3 = new URL(locationHeader, request.url);
+        const url2 = new URL(locationHeader, request.url);
         if (!allowCrossOriginRedirects) {
           const originalUrl = new URL(request.url);
-          if (url3.origin !== originalUrl.origin) {
+          if (url2.origin !== originalUrl.origin) {
             import_log18.logger.verbose(
-              `Skipping cross-origin redirect from ${originalUrl.origin} to ${url3.origin}.`
+              `Skipping cross-origin redirect from ${originalUrl.origin} to ${url2.origin}.`
             );
             return response;
           }
         }
-        request.url = url3.toString();
+        request.url = url2.toString();
         if (status === 303) {
           request.method = "GET";
           request.headers.delete("Content-Length");
@@ -17451,9 +17451,9 @@ var require_typeGuards_node = __commonJS({
       isWebReadableStream: () => isWebReadableStream3
     });
     module2.exports = __toCommonJS2(typeGuards_node_exports);
-    var import_stream2 = require("stream");
+    var import_stream3 = require("stream");
     function isNodeReadableStream3(x) {
-      return x instanceof import_stream2.Readable;
+      return x instanceof import_stream3.Readable;
     }
     function isWebReadableStream3(x) {
       return x instanceof ReadableStream;
@@ -17528,7 +17528,7 @@ var require_concat = __commonJS({
       concat: () => concat2
     });
     module2.exports = __toCommonJS2(concat_exports);
-    var import_stream2 = require("stream");
+    var import_stream3 = require("stream");
     var import_typeGuards6 = require_typeGuards();
     async function* streamAsyncIterator2() {
       const reader = this.getReader();
@@ -17555,14 +17555,14 @@ var require_concat = __commonJS({
     function ensureNodeStream2(stream) {
       if (stream instanceof ReadableStream) {
         makeAsyncIterable2(stream);
-        return import_stream2.Readable.fromWeb(stream);
+        return import_stream3.Readable.fromWeb(stream);
       } else {
         return stream;
       }
     }
     function toStream2(source) {
       if (source instanceof Uint8Array) {
-        return import_stream2.Readable.from(Buffer.from(source));
+        return import_stream3.Readable.from(Buffer.from(source));
       } else if ((0, import_typeGuards6.isBlob)(source)) {
         return ensureNodeStream2(source.stream());
       } else {
@@ -17572,7 +17572,7 @@ var require_concat = __commonJS({
     async function concat2(sources) {
       return function() {
         const streams = sources.map((x) => typeof x === "function" ? x() : x).map(toStream2);
-        return import_stream2.Readable.from(
+        return import_stream3.Readable.from(
           (async function* () {
             for (const stream of streams) {
               for await (const chunk of stream) {
@@ -17698,7 +17698,7 @@ var require_multipartPolicy = __commonJS({
               `Got multipart request body, but content-type header was not multipart: ${contentTypeHeader}`
             );
           }
-          const [, contentType4, parsedBoundary] = parsedHeader;
+          const [, contentType3, parsedBoundary] = parsedHeader;
           if (parsedBoundary && boundary && parsedBoundary !== boundary) {
             throw new Error(
               `Multipart boundary was specified as ${parsedBoundary} in the header, but got ${boundary} in the request body`
@@ -17710,7 +17710,7 @@ var require_multipartPolicy = __commonJS({
           } else {
             boundary = generateBoundary2();
           }
-          request.headers.set("Content-Type", `${contentType4}; boundary=${boundary}`);
+          request.headers.set("Content-Type", `${contentType3}; boundary=${boundary}`);
           await buildRequestBody2(request, request.multipartBody.parts, boundary);
           request.multipartBody = void 0;
           return next(request);
@@ -17787,18 +17787,18 @@ var require_apiVersionPolicy = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var apiVersionPolicy_exports = {};
     __export2(apiVersionPolicy_exports, {
-      apiVersionPolicy: () => apiVersionPolicy3,
-      apiVersionPolicyName: () => apiVersionPolicyName2
+      apiVersionPolicy: () => apiVersionPolicy4,
+      apiVersionPolicyName: () => apiVersionPolicyName4
     });
     module2.exports = __toCommonJS2(apiVersionPolicy_exports);
-    var apiVersionPolicyName2 = "ApiVersionPolicy";
-    function apiVersionPolicy3(options) {
+    var apiVersionPolicyName4 = "ApiVersionPolicy";
+    function apiVersionPolicy4(options) {
       return {
-        name: apiVersionPolicyName2,
+        name: apiVersionPolicyName4,
         sendRequest: (req, next) => {
-          const url3 = new URL(req.url);
-          if (!url3.searchParams.get("api-version") && options.apiVersion) {
-            req.url = `${req.url}${Array.from(url3.searchParams.keys()).length > 0 ? "&" : "?"}api-version=${options.apiVersion}`;
+          const url2 = new URL(req.url);
+          if (!url2.searchParams.get("api-version") && options.apiVersion) {
+            req.url = `${req.url}${Array.from(url2.searchParams.keys()).length > 0 ? "&" : "?"}api-version=${options.apiVersion}`;
           }
           return next(req);
         }
@@ -17877,28 +17877,28 @@ var require_checkInsecureConnection = __commonJS({
     module2.exports = __toCommonJS2(checkInsecureConnection_exports);
     var import_log18 = require_log2();
     var import_env6 = require_env();
-    var insecureConnectionWarningEmmitted = false;
-    function allowInsecureConnection(request, options) {
+    var insecureConnectionWarningEmmitted2 = false;
+    function allowInsecureConnection2(request, options) {
       if (options.allowInsecureConnection && request.allowInsecureConnection) {
-        const url3 = new URL(request.url);
-        if (url3.hostname === "localhost" || url3.hostname === "127.0.0.1") {
+        const url2 = new URL(request.url);
+        if (url2.hostname === "localhost" || url2.hostname === "127.0.0.1") {
           return true;
         }
       }
       return false;
     }
-    function emitInsecureConnectionWarning() {
+    function emitInsecureConnectionWarning2() {
       const warning = "Sending token over insecure transport. Assume any token issued is compromised.";
       import_log18.logger.warning(warning);
-      if (!insecureConnectionWarningEmmitted) {
-        insecureConnectionWarningEmmitted = true;
+      if (!insecureConnectionWarningEmmitted2) {
+        insecureConnectionWarningEmmitted2 = true;
         (0, import_env6.emitNodeWarning)(warning);
       }
     }
     function ensureSecureConnection2(request, options) {
       if (!request.url.toLowerCase().startsWith("https://")) {
-        if (allowInsecureConnection(request, options)) {
-          emitInsecureConnectionWarning();
+        if (allowInsecureConnection2(request, options)) {
+          emitInsecureConnectionWarning2();
         } else {
           throw new Error(
             "Authentication is not permitted for non-TLS protected (non-https) URLs when allowInsecureConnection is false."
@@ -17932,14 +17932,14 @@ var require_apiKeyAuthenticationPolicy = __commonJS({
     var apiKeyAuthenticationPolicy_exports = {};
     __export2(apiKeyAuthenticationPolicy_exports, {
       apiKeyAuthenticationPolicy: () => apiKeyAuthenticationPolicy2,
-      apiKeyAuthenticationPolicyName: () => apiKeyAuthenticationPolicyName
+      apiKeyAuthenticationPolicyName: () => apiKeyAuthenticationPolicyName2
     });
     module2.exports = __toCommonJS2(apiKeyAuthenticationPolicy_exports);
     var import_checkInsecureConnection5 = require_checkInsecureConnection();
-    var apiKeyAuthenticationPolicyName = "apiKeyAuthenticationPolicy";
+    var apiKeyAuthenticationPolicyName2 = "apiKeyAuthenticationPolicy";
     function apiKeyAuthenticationPolicy2(options) {
       return {
-        name: apiKeyAuthenticationPolicyName,
+        name: apiKeyAuthenticationPolicyName2,
         async sendRequest(request, next) {
           (0, import_checkInsecureConnection5.ensureSecureConnection)(request, options);
           const scheme = (request.authSchemes ?? options.authSchemes)?.find((x) => x.kind === "apiKey");
@@ -17980,15 +17980,15 @@ var require_basicAuthenticationPolicy = __commonJS({
     var basicAuthenticationPolicy_exports = {};
     __export2(basicAuthenticationPolicy_exports, {
       basicAuthenticationPolicy: () => basicAuthenticationPolicy2,
-      basicAuthenticationPolicyName: () => basicAuthenticationPolicyName
+      basicAuthenticationPolicyName: () => basicAuthenticationPolicyName2
     });
     module2.exports = __toCommonJS2(basicAuthenticationPolicy_exports);
     var import_bytesEncoding7 = require_bytesEncoding();
     var import_checkInsecureConnection5 = require_checkInsecureConnection();
-    var basicAuthenticationPolicyName = "bearerAuthenticationPolicy";
+    var basicAuthenticationPolicyName2 = "bearerAuthenticationPolicy";
     function basicAuthenticationPolicy2(options) {
       return {
-        name: basicAuthenticationPolicyName,
+        name: basicAuthenticationPolicyName2,
         async sendRequest(request, next) {
           (0, import_checkInsecureConnection5.ensureSecureConnection)(request, options);
           const scheme = (request.authSchemes ?? options.authSchemes)?.find(
@@ -18033,14 +18033,14 @@ var require_bearerAuthenticationPolicy = __commonJS({
     var bearerAuthenticationPolicy_exports = {};
     __export2(bearerAuthenticationPolicy_exports, {
       bearerAuthenticationPolicy: () => bearerAuthenticationPolicy2,
-      bearerAuthenticationPolicyName: () => bearerAuthenticationPolicyName
+      bearerAuthenticationPolicyName: () => bearerAuthenticationPolicyName2
     });
     module2.exports = __toCommonJS2(bearerAuthenticationPolicy_exports);
     var import_checkInsecureConnection5 = require_checkInsecureConnection();
-    var bearerAuthenticationPolicyName = "bearerAuthenticationPolicy";
+    var bearerAuthenticationPolicyName2 = "bearerAuthenticationPolicy";
     function bearerAuthenticationPolicy2(options) {
       return {
-        name: bearerAuthenticationPolicyName,
+        name: bearerAuthenticationPolicyName2,
         async sendRequest(request, next) {
           (0, import_checkInsecureConnection5.ensureSecureConnection)(request, options);
           const scheme = (request.authSchemes ?? options.authSchemes)?.find(
@@ -18083,14 +18083,14 @@ var require_oauth2AuthenticationPolicy = __commonJS({
     var oauth2AuthenticationPolicy_exports = {};
     __export2(oauth2AuthenticationPolicy_exports, {
       oauth2AuthenticationPolicy: () => oauth2AuthenticationPolicy2,
-      oauth2AuthenticationPolicyName: () => oauth2AuthenticationPolicyName
+      oauth2AuthenticationPolicyName: () => oauth2AuthenticationPolicyName2
     });
     module2.exports = __toCommonJS2(oauth2AuthenticationPolicy_exports);
     var import_checkInsecureConnection5 = require_checkInsecureConnection();
-    var oauth2AuthenticationPolicyName = "oauth2AuthenticationPolicy";
+    var oauth2AuthenticationPolicyName2 = "oauth2AuthenticationPolicy";
     function oauth2AuthenticationPolicy2(options) {
       return {
-        name: oauth2AuthenticationPolicyName,
+        name: oauth2AuthenticationPolicyName2,
         async sendRequest(request, next) {
           (0, import_checkInsecureConnection5.ensureSecureConnection)(request, options);
           const scheme = (request.authSchemes ?? options.authSchemes)?.find((x) => x.kind === "oauth2");
@@ -18130,49 +18130,49 @@ var require_clientHelpers = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var clientHelpers_exports = {};
     __export2(clientHelpers_exports, {
-      createDefaultPipeline: () => createDefaultPipeline3,
+      createDefaultPipeline: () => createDefaultPipeline4,
       getCachedDefaultHttpsClient: () => getCachedDefaultHttpsClient2
     });
     module2.exports = __toCommonJS2(clientHelpers_exports);
     var import_httpClient = require_defaultHttpClient();
     var import_createPipelineFromOptions3 = require_createPipelineFromOptions();
-    var import_apiVersionPolicy4 = require_apiVersionPolicy();
+    var import_apiVersionPolicy5 = require_apiVersionPolicy();
     var import_credentials2 = require_credentials();
     var import_apiKeyAuthenticationPolicy2 = require_apiKeyAuthenticationPolicy();
     var import_basicAuthenticationPolicy2 = require_basicAuthenticationPolicy();
     var import_bearerAuthenticationPolicy2 = require_bearerAuthenticationPolicy();
     var import_oauth2AuthenticationPolicy2 = require_oauth2AuthenticationPolicy();
-    var cachedHttpClient2;
-    function createDefaultPipeline3(options = {}) {
+    var cachedHttpClient3;
+    function createDefaultPipeline4(options = {}) {
       const pipeline = (0, import_createPipelineFromOptions3.createPipelineFromOptions)(options);
-      pipeline.addPolicy((0, import_apiVersionPolicy4.apiVersionPolicy)(options));
-      const { credential, authSchemes, allowInsecureConnection } = options;
+      pipeline.addPolicy((0, import_apiVersionPolicy5.apiVersionPolicy)(options));
+      const { credential, authSchemes, allowInsecureConnection: allowInsecureConnection2 } = options;
       if (credential) {
         if ((0, import_credentials2.isApiKeyCredential)(credential)) {
           pipeline.addPolicy(
-            (0, import_apiKeyAuthenticationPolicy2.apiKeyAuthenticationPolicy)({ authSchemes, credential, allowInsecureConnection })
+            (0, import_apiKeyAuthenticationPolicy2.apiKeyAuthenticationPolicy)({ authSchemes, credential, allowInsecureConnection: allowInsecureConnection2 })
           );
         } else if ((0, import_credentials2.isBasicCredential)(credential)) {
           pipeline.addPolicy(
-            (0, import_basicAuthenticationPolicy2.basicAuthenticationPolicy)({ authSchemes, credential, allowInsecureConnection })
+            (0, import_basicAuthenticationPolicy2.basicAuthenticationPolicy)({ authSchemes, credential, allowInsecureConnection: allowInsecureConnection2 })
           );
         } else if ((0, import_credentials2.isBearerTokenCredential)(credential)) {
           pipeline.addPolicy(
-            (0, import_bearerAuthenticationPolicy2.bearerAuthenticationPolicy)({ authSchemes, credential, allowInsecureConnection })
+            (0, import_bearerAuthenticationPolicy2.bearerAuthenticationPolicy)({ authSchemes, credential, allowInsecureConnection: allowInsecureConnection2 })
           );
         } else if ((0, import_credentials2.isOAuth2TokenCredential)(credential)) {
           pipeline.addPolicy(
-            (0, import_oauth2AuthenticationPolicy2.oauth2AuthenticationPolicy)({ authSchemes, credential, allowInsecureConnection })
+            (0, import_oauth2AuthenticationPolicy2.oauth2AuthenticationPolicy)({ authSchemes, credential, allowInsecureConnection: allowInsecureConnection2 })
           );
         }
       }
       return pipeline;
     }
     function getCachedDefaultHttpsClient2() {
-      if (!cachedHttpClient2) {
-        cachedHttpClient2 = (0, import_httpClient.createDefaultHttpClient)();
+      if (!cachedHttpClient3) {
+        cachedHttpClient3 = (0, import_httpClient.createDefaultHttpClient)();
       }
-      return cachedHttpClient2;
+      return cachedHttpClient3;
     }
   }
 });
@@ -18199,15 +18199,15 @@ var require_multipart = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var multipart_exports = {};
     __export2(multipart_exports, {
-      buildBodyPart: () => buildBodyPart,
+      buildBodyPart: () => buildBodyPart2,
       buildMultipartBody: () => buildMultipartBody2
     });
     module2.exports = __toCommonJS2(multipart_exports);
-    var import_restError11 = require_restError();
+    var import_restError12 = require_restError();
     var import_httpHeaders9 = require_httpHeaders();
     var import_bytesEncoding7 = require_bytesEncoding();
     var import_typeGuards6 = require_typeGuards();
-    function getHeaderValue(descriptor, headerName) {
+    function getHeaderValue2(descriptor, headerName) {
       if (descriptor.headers) {
         const actualHeaderName = Object.keys(descriptor.headers).find(
           (x) => x.toLowerCase() === headerName.toLowerCase()
@@ -18218,8 +18218,8 @@ var require_multipart = __commonJS({
       }
       return void 0;
     }
-    function getPartContentType(descriptor) {
-      const contentTypeHeader = getHeaderValue(descriptor, "content-type");
+    function getPartContentType2(descriptor) {
+      const contentTypeHeader = getHeaderValue2(descriptor, "content-type");
       if (contentTypeHeader) {
         return contentTypeHeader;
       }
@@ -18244,11 +18244,11 @@ var require_multipart = __commonJS({
       }
       return "application/json";
     }
-    function escapeDispositionField(value) {
+    function escapeDispositionField2(value) {
       return JSON.stringify(value);
     }
-    function getContentDisposition(descriptor) {
-      const contentDispositionHeader = getHeaderValue(descriptor, "content-disposition");
+    function getContentDisposition2(descriptor) {
+      const contentDispositionHeader = getHeaderValue2(descriptor, "content-disposition");
       if (contentDispositionHeader) {
         return contentDispositionHeader;
       }
@@ -18258,7 +18258,7 @@ var require_multipart = __commonJS({
       const dispositionType = descriptor.dispositionType ?? "form-data";
       let disposition = dispositionType;
       if (descriptor.name) {
-        disposition += `; name=${escapeDispositionField(descriptor.name)}`;
+        disposition += `; name=${escapeDispositionField2(descriptor.name)}`;
       }
       let filename = void 0;
       if (descriptor.filename) {
@@ -18270,11 +18270,11 @@ var require_multipart = __commonJS({
         }
       }
       if (filename) {
-        disposition += `; filename=${escapeDispositionField(filename)}`;
+        disposition += `; filename=${escapeDispositionField2(filename)}`;
       }
       return disposition;
     }
-    function normalizeBody(body, contentType4) {
+    function normalizeBody2(body, contentType3) {
       if (body === void 0) {
         return new Uint8Array([]);
       }
@@ -18284,29 +18284,29 @@ var require_multipart = __commonJS({
       if (typeof body === "string" || typeof body === "number" || typeof body === "boolean") {
         return (0, import_bytesEncoding7.stringToUint8Array)(String(body), "utf-8");
       }
-      if (contentType4 && /application\/(.+\+)?json(;.+)?/i.test(String(contentType4))) {
+      if (contentType3 && /application\/(.+\+)?json(;.+)?/i.test(String(contentType3))) {
         return (0, import_bytesEncoding7.stringToUint8Array)(JSON.stringify(body), "utf-8");
       }
-      throw new import_restError11.RestError(`Unsupported body/content-type combination: ${body}, ${contentType4}`);
+      throw new import_restError12.RestError(`Unsupported body/content-type combination: ${body}, ${contentType3}`);
     }
-    function buildBodyPart(descriptor) {
-      const contentType4 = getPartContentType(descriptor);
-      const contentDisposition = getContentDisposition(descriptor);
+    function buildBodyPart2(descriptor) {
+      const contentType3 = getPartContentType2(descriptor);
+      const contentDisposition = getContentDisposition2(descriptor);
       const headers = (0, import_httpHeaders9.createHttpHeaders)(descriptor.headers ?? {});
-      if (contentType4) {
-        headers.set("content-type", contentType4);
+      if (contentType3) {
+        headers.set("content-type", contentType3);
       }
       if (contentDisposition) {
         headers.set("content-disposition", contentDisposition);
       }
-      const body = normalizeBody(descriptor.body, contentType4);
+      const body = normalizeBody2(descriptor.body, contentType3);
       return {
         headers,
         body
       };
     }
     function buildMultipartBody2(parts) {
-      return { parts: parts.map(buildBodyPart) };
+      return { parts: parts.map(buildBodyPart2) };
     }
   }
 });
@@ -18333,24 +18333,24 @@ var require_sendRequest = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var sendRequest_exports = {};
     __export2(sendRequest_exports, {
-      getRequestBody: () => getRequestBody,
+      getRequestBody: () => getRequestBody2,
       sendRequest: () => sendRequest2
     });
     module2.exports = __toCommonJS2(sendRequest_exports);
-    var import_restError11 = require_restError();
+    var import_restError12 = require_restError();
     var import_httpHeaders9 = require_httpHeaders();
     var import_pipelineRequest4 = require_pipelineRequest();
-    var import_clientHelpers3 = require_clientHelpers();
+    var import_clientHelpers5 = require_clientHelpers();
     var import_typeGuards6 = require_typeGuards();
     var import_multipart2 = require_multipart();
-    async function sendRequest2(method, url3, pipeline, options = {}, customHttpClient) {
-      const httpClient = customHttpClient ?? (0, import_clientHelpers3.getCachedDefaultHttpsClient)();
-      const request = buildPipelineRequest(method, url3, options);
+    async function sendRequest2(method, url2, pipeline, options = {}, customHttpClient) {
+      const httpClient = customHttpClient ?? (0, import_clientHelpers5.getCachedDefaultHttpsClient)();
+      const request = buildPipelineRequest2(method, url2, options);
       try {
         const response = await pipeline.sendRequest(httpClient, request);
         const headers = response.headers.toJSON();
         const stream = response.readableStreamBody ?? response.browserStreamBody;
-        const parsedBody = options.responseAsStream || stream !== void 0 ? void 0 : getResponseBody(response);
+        const parsedBody = options.responseAsStream || stream !== void 0 ? void 0 : getResponseBody2(response);
         const body = stream ?? parsedBody;
         if (options?.onResponse) {
           options.onResponse({ ...response, request, rawHeaders: headers, parsedBody });
@@ -18362,7 +18362,7 @@ var require_sendRequest = __commonJS({
           body
         };
       } catch (e) {
-        if ((0, import_restError11.isRestError)(e) && e.response && options.onResponse) {
+        if ((0, import_restError12.isRestError)(e) && e.response && options.onResponse) {
           const { response } = e;
           const rawHeaders = response.headers.toJSON();
           options?.onResponse({ ...response, request, rawHeaders }, e);
@@ -18370,7 +18370,7 @@ var require_sendRequest = __commonJS({
         throw e;
       }
     }
-    function getRequestContentType(options = {}) {
+    function getRequestContentType2(options = {}) {
       if (options.contentType) {
         return options.contentType;
       }
@@ -18378,9 +18378,9 @@ var require_sendRequest = __commonJS({
       if (typeof headerContentType === "string") {
         return headerContentType;
       }
-      return getContentType(options.body);
+      return getContentType2(options.body);
     }
-    function getContentType(body) {
+    function getContentType2(body) {
       if (body === void 0) {
         return void 0;
       }
@@ -18400,19 +18400,19 @@ var require_sendRequest = __commonJS({
       }
       return "application/json";
     }
-    function buildPipelineRequest(method, url3, options = {}) {
-      const requestContentType = getRequestContentType(options);
-      const { body, multipartBody } = getRequestBody(options.body, requestContentType);
-      const accept5 = options.accept ?? options.headers?.accept ?? (options.noDefaultAcceptHeader ? void 0 : "application/json");
+    function buildPipelineRequest2(method, url2, options = {}) {
+      const requestContentType = getRequestContentType2(options);
+      const { body, multipartBody } = getRequestBody2(options.body, requestContentType);
+      const accept4 = options.accept ?? options.headers?.accept ?? (options.noDefaultAcceptHeader ? void 0 : "application/json");
       const headers = (0, import_httpHeaders9.createHttpHeaders)({
         ...options.headers ? options.headers : {},
-        ...accept5 !== void 0 && { accept: accept5 },
+        ...accept4 !== void 0 && { accept: accept4 },
         ...requestContentType && {
           "content-type": requestContentType
         }
       });
       const {
-        allowInsecureConnection,
+        allowInsecureConnection: allowInsecureConnection2,
         abortSignal,
         onUploadProgress,
         onDownloadProgress,
@@ -18427,12 +18427,12 @@ var require_sendRequest = __commonJS({
         ...rest
       } = options;
       const request = (0, import_pipelineRequest4.createPipelineRequest)({
-        url: url3,
+        url: url2,
         method,
         body,
         multipartBody,
         headers,
-        allowInsecureConnection,
+        allowInsecureConnection: allowInsecureConnection2,
         abortSignal,
         onUploadProgress,
         onDownloadProgress,
@@ -18443,7 +18443,7 @@ var require_sendRequest = __commonJS({
       Object.assign(request, rest);
       return request;
     }
-    function getRequestBody(body, contentType4 = "") {
+    function getRequestBody2(body, contentType3 = "") {
       if (body === void 0) {
         return { body: void 0 };
       }
@@ -18464,7 +18464,7 @@ var require_sendRequest = __commonJS({
           body: body instanceof Uint8Array ? body : JSON.stringify(body)
         };
       }
-      const firstType = contentType4.split(";")[0];
+      const firstType = contentType3.split(";")[0];
       switch (firstType) {
         case "application/json":
           return { body: JSON.stringify(body) };
@@ -18482,9 +18482,9 @@ var require_sendRequest = __commonJS({
           return { body: JSON.stringify(body) };
       }
     }
-    function getResponseBody(response) {
-      const contentType4 = response.headers.get("content-type") ?? "";
-      const firstType = contentType4.split(";")[0];
+    function getResponseBody2(response) {
+      const contentType3 = response.headers.get("content-type") ?? "";
+      const firstType = contentType3.split(";")[0];
       const bodyToParse = response.bodyAsText ?? "";
       if (firstType === "text/plain") {
         return String(bodyToParse);
@@ -18493,15 +18493,15 @@ var require_sendRequest = __commonJS({
         return bodyToParse ? JSON.parse(bodyToParse) : void 0;
       } catch (error) {
         if (firstType === "application/json") {
-          throw createParseError(response, error);
+          throw createParseError2(response, error);
         }
         return String(bodyToParse);
       }
     }
-    function createParseError(response, err) {
+    function createParseError2(response, err) {
       const msg = `Error "${err}" occurred while parsing the response body - ${response.bodyAsText}.`;
-      const errCode = err.code ?? import_restError11.RestError.PARSE_ERROR;
-      return new import_restError11.RestError(msg, {
+      const errCode = err.code ?? import_restError12.RestError.PARSE_ERROR;
+      return new import_restError12.RestError(msg, {
         code: errCode,
         statusCode: response.status,
         request: response.request,
@@ -18533,13 +18533,13 @@ var require_urlHelpers = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var urlHelpers_exports = {};
     __export2(urlHelpers_exports, {
-      appendQueryParams: () => appendQueryParams2,
-      buildBaseUrl: () => buildBaseUrl,
+      appendQueryParams: () => appendQueryParams3,
+      buildBaseUrl: () => buildBaseUrl2,
       buildRequestUrl: () => buildRequestUrl2,
-      replaceAll: () => replaceAll2
+      replaceAll: () => replaceAll3
     });
     module2.exports = __toCommonJS2(urlHelpers_exports);
-    function isQueryParameterWithOptions(x) {
+    function isQueryParameterWithOptions2(x) {
       if (typeof x !== "object" || x === null || !Object.hasOwn(x, "value")) {
         return false;
       }
@@ -18550,13 +18550,13 @@ var require_urlHelpers = __commonJS({
       if (routePath.startsWith("https://") || routePath.startsWith("http://")) {
         return routePath;
       }
-      endpoint = buildBaseUrl(endpoint, options);
-      const updatedRoutePath = buildRoutePath(routePath, pathParameters, options);
-      const requestUrl = appendQueryParams2(appendPath2(endpoint, updatedRoutePath), options);
-      const url3 = new URL(requestUrl);
-      return url3.toString();
+      endpoint = buildBaseUrl2(endpoint, options);
+      const updatedRoutePath = buildRoutePath2(routePath, pathParameters, options);
+      const requestUrl = appendQueryParams3(appendPath3(endpoint, updatedRoutePath), options);
+      const url2 = new URL(requestUrl);
+      return url2.toString();
     }
-    function appendPath2(endpoint, pathToAppend) {
+    function appendPath3(endpoint, pathToAppend) {
       const endpointSearchStart = endpoint.indexOf("?");
       const pathSearchStart = pathToAppend.indexOf("?");
       const endpointParts = endpointSearchStart !== -1 ? [endpoint.substring(0, endpointSearchStart), endpoint.substring(endpointSearchStart + 1)] : [endpoint, ""];
@@ -18577,7 +18577,7 @@ var require_urlHelpers = __commonJS({
       }
       return combinedUrl;
     }
-    function getQueryParamValue(key, allowReserved, style, param) {
+    function getQueryParamValue2(key, allowReserved, style, param) {
       let separator;
       if (style === "pipeDelimited") {
         separator = "|";
@@ -18606,7 +18606,7 @@ var require_urlHelpers = __commonJS({
       }).join(separator);
       return `${allowReserved ? key : encodeURIComponent(key)}=${value}`;
     }
-    function simpleParseQueryParams2(queryString) {
+    function simpleParseQueryParams3(queryString) {
       const result = /* @__PURE__ */ new Map();
       if (!queryString || queryString[0] !== "?") {
         return result;
@@ -18630,20 +18630,20 @@ var require_urlHelpers = __commonJS({
       }
       return result;
     }
-    function appendQueryParams2(url3, options = {}) {
+    function appendQueryParams3(url2, options = {}) {
       if (!options.queryParameters) {
-        return url3;
+        return url2;
       }
-      const parsedUrl = new URL(url3);
+      const parsedUrl = new URL(url2);
       const queryParams = options.queryParameters;
-      const existingParams = simpleParseQueryParams2(parsedUrl.search);
+      const existingParams = simpleParseQueryParams3(parsedUrl.search);
       const newParamStrings = [];
       for (const key of Object.keys(queryParams)) {
         const param = queryParams[key];
         if (param === void 0 || param === null) {
           continue;
         }
-        const hasMetadata = isQueryParameterWithOptions(param);
+        const hasMetadata = isQueryParameterWithOptions2(param);
         const rawValue = hasMetadata ? param.value : param;
         const explode = hasMetadata ? param.explode ?? false : false;
         const style = hasMetadata && param.style ? param.style : "form";
@@ -18651,13 +18651,13 @@ var require_urlHelpers = __commonJS({
           if (Array.isArray(rawValue)) {
             for (const item of rawValue) {
               newParamStrings.push(
-                getQueryParamValue(key, options.skipUrlEncoding ?? false, style, item)
+                getQueryParamValue2(key, options.skipUrlEncoding ?? false, style, item)
               );
             }
           } else if (rawValue !== null && typeof rawValue === "object") {
             for (const [actualKey, value] of Object.entries(rawValue)) {
               newParamStrings.push(
-                getQueryParamValue(actualKey, options.skipUrlEncoding ?? false, style, value)
+                getQueryParamValue2(actualKey, options.skipUrlEncoding ?? false, style, value)
               );
             }
           } else {
@@ -18665,7 +18665,7 @@ var require_urlHelpers = __commonJS({
           }
         } else {
           newParamStrings.push(
-            getQueryParamValue(key, options.skipUrlEncoding ?? false, style, rawValue)
+            getQueryParamValue2(key, options.skipUrlEncoding ?? false, style, rawValue)
           );
         }
       }
@@ -18699,7 +18699,7 @@ var require_urlHelpers = __commonJS({
       parsedUrl.search = searchPieces.length ? `?${searchPieces.join("&")}` : "";
       return parsedUrl.toString();
     }
-    function buildBaseUrl(endpoint, options) {
+    function buildBaseUrl2(endpoint, options) {
       if (!options.pathParameters) {
         return endpoint;
       }
@@ -18715,11 +18715,11 @@ var require_urlHelpers = __commonJS({
         if (!options.skipUrlEncoding) {
           value = encodeURIComponent(param);
         }
-        endpoint = replaceAll2(endpoint, `{${key}}`, value) ?? "";
+        endpoint = replaceAll3(endpoint, `{${key}}`, value) ?? "";
       }
       return endpoint;
     }
-    function buildRoutePath(routePath, pathParameters, options = {}) {
+    function buildRoutePath2(routePath, pathParameters, options = {}) {
       for (const pathParam of pathParameters) {
         const allowReserved = typeof pathParam === "object" && (pathParam.allowReserved ?? false);
         let value = typeof pathParam === "object" ? pathParam.value : pathParam;
@@ -18730,7 +18730,7 @@ var require_urlHelpers = __commonJS({
       }
       return routePath;
     }
-    function replaceAll2(value, searchValue, replaceValue) {
+    function replaceAll3(value, searchValue, replaceValue) {
       return !value || !searchValue ? value : value.split(searchValue).join(replaceValue || "");
     }
   }
@@ -18758,15 +18758,15 @@ var require_getClient = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var getClient_exports = {};
     __export2(getClient_exports, {
-      getClient: () => getClient3
+      getClient: () => getClient4
     });
     module2.exports = __toCommonJS2(getClient_exports);
-    var import_clientHelpers3 = require_clientHelpers();
+    var import_clientHelpers5 = require_clientHelpers();
     var import_sendRequest2 = require_sendRequest();
     var import_urlHelpers3 = require_urlHelpers();
     var import_env6 = require_env();
-    function getClient3(endpoint, clientOptions = {}) {
-      const pipeline = clientOptions.pipeline ?? (0, import_clientHelpers3.createDefaultPipeline)(clientOptions);
+    function getClient4(endpoint, clientOptions = {}) {
+      const pipeline = clientOptions.pipeline ?? (0, import_clientHelpers5.createDefaultPipeline)(clientOptions);
       if (clientOptions.additionalPolicies?.length) {
         for (const { policy, position } of clientOptions.additionalPolicies) {
           const afterPhase = position === "perRetry" ? "Sign" : void 0;
@@ -18776,95 +18776,95 @@ var require_getClient = __commonJS({
         }
       }
       const noDefaultAcceptHeader = clientOptions.internal?.noDefaultAcceptHeader ?? false;
-      const { allowInsecureConnection, httpClient } = clientOptions;
+      const { allowInsecureConnection: allowInsecureConnection2, httpClient } = clientOptions;
       const endpointUrl = clientOptions.endpoint ?? endpoint;
       const client = (path5, ...args) => {
-        const getUrl = (requestOptions) => (0, import_urlHelpers3.buildRequestUrl)(endpointUrl, path5, args, { allowInsecureConnection, ...requestOptions });
+        const getUrl = (requestOptions) => (0, import_urlHelpers3.buildRequestUrl)(endpointUrl, path5, args, { allowInsecureConnection: allowInsecureConnection2, ...requestOptions });
         return {
           get: (requestOptions = {}) => {
-            return buildOperation(
+            return buildOperation2(
               "GET",
               getUrl(requestOptions),
               pipeline,
               requestOptions,
-              allowInsecureConnection,
+              allowInsecureConnection2,
               httpClient,
               noDefaultAcceptHeader
             );
           },
           post: (requestOptions = {}) => {
-            return buildOperation(
+            return buildOperation2(
               "POST",
               getUrl(requestOptions),
               pipeline,
               requestOptions,
-              allowInsecureConnection,
+              allowInsecureConnection2,
               httpClient,
               noDefaultAcceptHeader
             );
           },
           put: (requestOptions = {}) => {
-            return buildOperation(
+            return buildOperation2(
               "PUT",
               getUrl(requestOptions),
               pipeline,
               requestOptions,
-              allowInsecureConnection,
+              allowInsecureConnection2,
               httpClient,
               noDefaultAcceptHeader
             );
           },
           patch: (requestOptions = {}) => {
-            return buildOperation(
+            return buildOperation2(
               "PATCH",
               getUrl(requestOptions),
               pipeline,
               requestOptions,
-              allowInsecureConnection,
+              allowInsecureConnection2,
               httpClient,
               noDefaultAcceptHeader
             );
           },
           delete: (requestOptions = {}) => {
-            return buildOperation(
+            return buildOperation2(
               "DELETE",
               getUrl(requestOptions),
               pipeline,
               requestOptions,
-              allowInsecureConnection,
+              allowInsecureConnection2,
               httpClient,
               noDefaultAcceptHeader
             );
           },
           head: (requestOptions = {}) => {
-            return buildOperation(
+            return buildOperation2(
               "HEAD",
               getUrl(requestOptions),
               pipeline,
               requestOptions,
-              allowInsecureConnection,
+              allowInsecureConnection2,
               httpClient,
               noDefaultAcceptHeader
             );
           },
           options: (requestOptions = {}) => {
-            return buildOperation(
+            return buildOperation2(
               "OPTIONS",
               getUrl(requestOptions),
               pipeline,
               requestOptions,
-              allowInsecureConnection,
+              allowInsecureConnection2,
               httpClient,
               noDefaultAcceptHeader
             );
           },
           trace: (requestOptions = {}) => {
-            return buildOperation(
+            return buildOperation2(
               "TRACE",
               getUrl(requestOptions),
               pipeline,
               requestOptions,
-              allowInsecureConnection,
+              allowInsecureConnection2,
               httpClient,
               noDefaultAcceptHeader
             );
@@ -18877,15 +18877,15 @@ var require_getClient = __commonJS({
         pipeline
       };
     }
-    function buildOperation(method, url3, pipeline, options, allowInsecureConnection, httpClient, noDefaultAcceptHeader = false) {
-      allowInsecureConnection = options.allowInsecureConnection ?? allowInsecureConnection;
+    function buildOperation2(method, url2, pipeline, options, allowInsecureConnection2, httpClient, noDefaultAcceptHeader = false) {
+      allowInsecureConnection2 = options.allowInsecureConnection ?? allowInsecureConnection2;
       return {
         then: function(onFulfilled, onrejected) {
           return (0, import_sendRequest2.sendRequest)(
             method,
-            url3,
+            url2,
             pipeline,
-            { ...options, allowInsecureConnection, noDefaultAcceptHeader },
+            { ...options, allowInsecureConnection: allowInsecureConnection2, noDefaultAcceptHeader },
             httpClient
           ).then(onFulfilled, onrejected);
         },
@@ -18897,9 +18897,9 @@ var require_getClient = __commonJS({
           } else {
             return (0, import_sendRequest2.sendRequest)(
               method,
-              url3,
+              url2,
               pipeline,
-              { ...options, allowInsecureConnection, noDefaultAcceptHeader, responseAsStream: true },
+              { ...options, allowInsecureConnection: allowInsecureConnection2, noDefaultAcceptHeader, responseAsStream: true },
               httpClient
             );
           }
@@ -18908,9 +18908,9 @@ var require_getClient = __commonJS({
           if (import_env6.isNodeLike) {
             return (0, import_sendRequest2.sendRequest)(
               method,
-              url3,
+              url2,
               pipeline,
-              { ...options, allowInsecureConnection, noDefaultAcceptHeader, responseAsStream: true },
+              { ...options, allowInsecureConnection: allowInsecureConnection2, noDefaultAcceptHeader, responseAsStream: true },
               httpClient
             );
           } else {
@@ -18946,10 +18946,10 @@ var require_operationOptionHelpers = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var operationOptionHelpers_exports = {};
     __export2(operationOptionHelpers_exports, {
-      operationOptionsToRequestParameters: () => operationOptionsToRequestParameters3
+      operationOptionsToRequestParameters: () => operationOptionsToRequestParameters4
     });
     module2.exports = __toCommonJS2(operationOptionHelpers_exports);
-    function operationOptionsToRequestParameters3(options) {
+    function operationOptionsToRequestParameters4(options) {
       return {
         allowInsecureConnection: options.requestOptions?.allowInsecureConnection,
         timeout: options.requestOptions?.timeout,
@@ -18986,31 +18986,31 @@ var require_restError2 = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var restError_exports = {};
     __export2(restError_exports, {
-      createRestError: () => createRestError3
+      createRestError: () => createRestError4
     });
     module2.exports = __toCommonJS2(restError_exports);
-    var import_restError11 = require_restError();
+    var import_restError12 = require_restError();
     var import_httpHeaders9 = require_httpHeaders();
-    function createRestError3(messageOrResponse, response) {
+    function createRestError4(messageOrResponse, response) {
       const resp = typeof messageOrResponse === "string" ? response : messageOrResponse;
       const internalError = resp.body?.error ?? resp.body;
       const message = typeof messageOrResponse === "string" ? messageOrResponse : internalError?.message ?? `Unexpected status code: ${resp.status}`;
-      return new import_restError11.RestError(message, {
-        statusCode: statusCodeToNumber(resp.status),
+      return new import_restError12.RestError(message, {
+        statusCode: statusCodeToNumber2(resp.status),
         code: internalError?.code,
         request: resp.request,
-        response: toPipelineResponse2(resp)
+        response: toPipelineResponse3(resp)
       });
     }
-    function toPipelineResponse2(errorResponse) {
+    function toPipelineResponse3(errorResponse) {
       return {
         headers: (0, import_httpHeaders9.createHttpHeaders)(errorResponse.headers),
         request: errorResponse.request,
-        status: statusCodeToNumber(errorResponse.status) ?? -1,
+        status: statusCodeToNumber2(errorResponse.status) ?? -1,
         ...typeof errorResponse.body === "string" ? { bodyAsText: errorResponse.body } : {}
       };
     }
-    function statusCodeToNumber(statusCode) {
+    function statusCodeToNumber2(statusCode) {
       const status = Number.parseInt(statusCode);
       return Number.isNaN(status) ? void 0 : status;
     }
@@ -19040,33 +19040,33 @@ var require_commonjs = __commonJS({
     var src_exports = {};
     __export2(src_exports, {
       AbortError: () => import_AbortError6.AbortError,
-      RestError: () => import_restError11.RestError,
-      TypeSpecRuntimeLogger: () => import_logger17.TypeSpecRuntimeLogger,
-      createClientLogger: () => import_logger17.createClientLogger,
+      RestError: () => import_restError12.RestError,
+      TypeSpecRuntimeLogger: () => import_logger19.TypeSpecRuntimeLogger,
+      createClientLogger: () => import_logger19.createClientLogger,
       createDefaultHttpClient: () => import_httpClient.createDefaultHttpClient,
       createEmptyPipeline: () => import_pipeline7.createEmptyPipeline,
       createHttpHeaders: () => import_httpHeaders9.createHttpHeaders,
       createPipelineRequest: () => import_pipelineRequest4.createPipelineRequest,
       createRestError: () => import_restError22.createRestError,
       getClient: () => import_getClient2.getClient,
-      getLogLevel: () => import_logger17.getLogLevel,
-      isRestError: () => import_restError11.isRestError,
-      operationOptionsToRequestParameters: () => import_operationOptionHelpers2.operationOptionsToRequestParameters,
-      setLogLevel: () => import_logger17.setLogLevel,
+      getLogLevel: () => import_logger19.getLogLevel,
+      isRestError: () => import_restError12.isRestError,
+      operationOptionsToRequestParameters: () => import_operationOptionHelpers3.operationOptionsToRequestParameters,
+      setLogLevel: () => import_logger19.setLogLevel,
       stringToUint8Array: () => import_bytesEncoding7.stringToUint8Array,
       uint8ArrayToString: () => import_bytesEncoding7.uint8ArrayToString
     });
     module2.exports = __toCommonJS2(src_exports);
     var import_AbortError6 = require_AbortError();
-    var import_logger17 = require_logger();
+    var import_logger19 = require_logger();
     var import_httpHeaders9 = require_httpHeaders();
     var import_pipelineRequest4 = require_pipelineRequest();
     var import_pipeline7 = require_pipeline();
-    var import_restError11 = require_restError();
+    var import_restError12 = require_restError();
     var import_bytesEncoding7 = require_bytesEncoding();
     var import_httpClient = require_defaultHttpClient();
     var import_getClient2 = require_getClient();
-    var import_operationOptionHelpers2 = require_operationOptionHelpers();
+    var import_operationOptionHelpers3 = require_operationOptionHelpers();
     var import_restError22 = require_restError2();
   }
 });
@@ -19096,9 +19096,9 @@ var require_pipeline2 = __commonJS({
       createEmptyPipeline: () => createEmptyPipeline4
     });
     module2.exports = __toCommonJS2(pipeline_exports);
-    var import_ts_http_runtime6 = require_commonjs();
+    var import_ts_http_runtime9 = require_commonjs();
     function createEmptyPipeline4() {
-      return (0, import_ts_http_runtime6.createEmptyPipeline)();
+      return (0, import_ts_http_runtime9.createEmptyPipeline)();
     }
   }
 });
@@ -19125,10 +19125,10 @@ var require_internal2 = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var internal_exports2 = {};
     __export2(internal_exports2, {
-      createLoggerContext: () => import_logger17.createLoggerContext
+      createLoggerContext: () => import_logger19.createLoggerContext
     });
     module2.exports = __toCommonJS2(internal_exports2);
-    var import_logger17 = require_logger();
+    var import_logger19 = require_logger();
   }
 });
 
@@ -19160,8 +19160,8 @@ var require_commonjs2 = __commonJS({
       setLogLevel: () => setLogLevel3
     });
     module2.exports = __toCommonJS2(src_exports);
-    var import_logger17 = require_internal2();
-    var context3 = (0, import_logger17.createLoggerContext)({
+    var import_logger19 = require_internal2();
+    var context3 = (0, import_logger19.createLoggerContext)({
       logLevelEnvVarName: "AZURE_LOG_LEVEL",
       namespace: "azure"
     });
@@ -19200,11 +19200,11 @@ var require_log3 = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var log_exports = {};
     __export2(log_exports, {
-      logger: () => logger32
+      logger: () => logger33
     });
     module2.exports = __toCommonJS2(log_exports);
-    var import_logger17 = require_commonjs2();
-    var logger32 = (0, import_logger17.createClientLogger)("core-rest-pipeline");
+    var import_logger19 = require_commonjs2();
+    var logger33 = (0, import_logger19.createClientLogger)("core-rest-pipeline");
   }
 });
 
@@ -19521,20 +19521,20 @@ var require_userAgentPlatform2 = __commonJS({
       setPlatformSpecificData: () => setPlatformSpecificData4
     });
     module2.exports = __toCommonJS2(userAgentPlatform_exports);
-    var import_node_os4 = __toESM2(require("node:os"));
-    var import_node_process11 = __toESM2(require("node:process"));
+    var import_node_os5 = __toESM2(require("node:os"));
+    var import_node_process12 = __toESM2(require("node:process"));
     function getHeaderName3() {
       return "User-Agent";
     }
     async function setPlatformSpecificData4(map) {
-      if (import_node_process11.default && import_node_process11.default.versions) {
-        const osInfo = `${import_node_os4.default.type()} ${import_node_os4.default.release()}; ${import_node_os4.default.arch()}`;
-        if (import_node_process11.default.versions.bun) {
-          map.set("Bun", `${import_node_process11.default.versions.bun} (${osInfo})`);
-        } else if (import_node_process11.default.versions.deno) {
-          map.set("Deno", `${import_node_process11.default.versions.deno} (${osInfo})`);
-        } else if (import_node_process11.default.versions.node) {
-          map.set("Node", `${import_node_process11.default.versions.node} (${osInfo})`);
+      if (import_node_process12.default && import_node_process12.default.versions) {
+        const osInfo = `${import_node_os5.default.type()} ${import_node_os5.default.release()}; ${import_node_os5.default.arch()}`;
+        if (import_node_process12.default.versions.bun) {
+          map.set("Bun", `${import_node_process12.default.versions.bun} (${osInfo})`);
+        } else if (import_node_process12.default.versions.deno) {
+          map.set("Deno", `${import_node_process12.default.versions.deno} (${osInfo})`);
+        } else if (import_node_process12.default.versions.node) {
+          map.set("Node", `${import_node_process12.default.versions.node} (${osInfo})`);
         }
       }
     }
@@ -19600,7 +19600,7 @@ var require_userAgent2 = __commonJS({
     module2.exports = __toCommonJS2(userAgent_exports);
     var import_userAgent4 = require_userAgentPlatform2();
     var import_constants37 = require_constants2();
-    function getUserAgentString2(telemetryInfo) {
+    function getUserAgentString3(telemetryInfo) {
       const parts = [];
       for (const [key, value] of telemetryInfo) {
         const token = value ? `${key}/${value}` : key;
@@ -19611,12 +19611,12 @@ var require_userAgent2 = __commonJS({
     function getUserAgentHeaderName3() {
       return (0, import_userAgent4.getHeaderName)();
     }
-    async function getUserAgentValue3(prefix2) {
+    async function getUserAgentValue3(prefix) {
       const runtimeInfo = /* @__PURE__ */ new Map();
       runtimeInfo.set("core-rest-pipeline", import_constants37.SDK_VERSION);
       await (0, import_userAgent4.setPlatformSpecificData)(runtimeInfo);
-      const defaultAgent = getUserAgentString2(runtimeInfo);
-      const userAgentValue = prefix2 ? `${prefix2} ${defaultAgent}` : defaultAgent;
+      const defaultAgent = getUserAgentString3(runtimeInfo);
+      const userAgentValue = prefix ? `${prefix} ${defaultAgent}` : defaultAgent;
       return userAgentValue;
     }
   }
@@ -20325,19 +20325,19 @@ var require_typeGuards2 = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var typeGuards_exports = {};
     __export2(typeGuards_exports, {
-      isDefined: () => isDefined3,
+      isDefined: () => isDefined4,
       isObjectWithProperties: () => isObjectWithProperties3,
       objectHasProperty: () => objectHasProperty3
     });
     module2.exports = __toCommonJS2(typeGuards_exports);
-    function isDefined3(thing) {
+    function isDefined4(thing) {
       return typeof thing !== "undefined" && thing !== null;
     }
-    function isObjectWithProperties3(thing, properties2) {
-      if (!isDefined3(thing) || typeof thing !== "object") {
+    function isObjectWithProperties3(thing, properties) {
+      if (!isDefined4(thing) || typeof thing !== "object") {
         return false;
       }
-      for (const property2 of properties2) {
+      for (const property2 of properties) {
         if (!objectHasProperty3(thing, property2)) {
           return false;
         }
@@ -20345,7 +20345,7 @@ var require_typeGuards2 = __commonJS({
       return true;
     }
     function objectHasProperty3(thing, property2) {
-      return isDefined3(thing) && typeof thing === "object" && property2 in thing;
+      return isDefined4(thing) && typeof thing === "object" && property2 in thing;
     }
   }
 });
@@ -20819,10 +20819,10 @@ var require_restError3 = __commonJS({
       isRestError: () => isRestError5
     });
     module2.exports = __toCommonJS2(restError_exports);
-    var import_ts_http_runtime6 = require_commonjs();
-    var RestError4 = import_ts_http_runtime6.RestError;
+    var import_ts_http_runtime9 = require_commonjs();
+    var RestError4 = import_ts_http_runtime9.RestError;
     function isRestError5(e) {
-      return (0, import_ts_http_runtime6.isRestError)(e);
+      return (0, import_ts_http_runtime9.isRestError)(e);
     }
   }
 });
@@ -20857,8 +20857,8 @@ var require_tracingPolicy = __commonJS({
     var import_constants37 = require_constants2();
     var import_userAgent4 = require_userAgent2();
     var import_log18 = require_log3();
-    var import_core_util17 = require_commonjs4();
-    var import_restError11 = require_restError3();
+    var import_core_util18 = require_commonjs4();
+    var import_restError12 = require_restError3();
     var import_util12 = require_internal4();
     var tracingPolicyName3 = "tracingPolicy";
     function tracingPolicy3(options = {}) {
@@ -20906,7 +20906,7 @@ var require_tracingPolicy = __commonJS({
           packageVersion: import_constants37.SDK_VERSION
         });
       } catch (e) {
-        import_log18.logger.warning(`Error when creating the TracingClient: ${(0, import_core_util17.getErrorMessage)(e)}`);
+        import_log18.logger.warning(`Error when creating the TracingClient: ${(0, import_core_util18.getErrorMessage)(e)}`);
         return void 0;
       }
     }
@@ -20932,7 +20932,7 @@ var require_tracingPolicy = __commonJS({
         }
         return { span, tracingContext: updatedOptions.tracingOptions.tracingContext };
       } catch (e) {
-        import_log18.logger.warning(`Skipping creating a tracing span due to an error: ${(0, import_core_util17.getErrorMessage)(e)}`);
+        import_log18.logger.warning(`Skipping creating a tracing span due to an error: ${(0, import_core_util18.getErrorMessage)(e)}`);
         return void 0;
       }
     }
@@ -20940,14 +20940,14 @@ var require_tracingPolicy = __commonJS({
       try {
         span.setStatus({
           status: "error",
-          error: (0, import_core_util17.isError)(error) ? error : void 0
+          error: (0, import_core_util18.isError)(error) ? error : void 0
         });
-        if ((0, import_restError11.isRestError)(error) && error.statusCode) {
+        if ((0, import_restError12.isRestError)(error) && error.statusCode) {
           span.setAttribute("http.status_code", error.statusCode);
         }
         span.end();
       } catch (e) {
-        import_log18.logger.warning(`Skipping tracing span processing due to an error: ${(0, import_core_util17.getErrorMessage)(e)}`);
+        import_log18.logger.warning(`Skipping tracing span processing due to an error: ${(0, import_core_util18.getErrorMessage)(e)}`);
       }
     }
     function tryProcessResponse2(span, response) {
@@ -20964,7 +20964,7 @@ var require_tracingPolicy = __commonJS({
         }
         span.end();
       } catch (e) {
-        import_log18.logger.warning(`Skipping tracing span processing due to an error: ${(0, import_core_util17.getErrorMessage)(e)}`);
+        import_log18.logger.warning(`Skipping tracing span processing due to an error: ${(0, import_core_util18.getErrorMessage)(e)}`);
       }
     }
   }
@@ -21105,7 +21105,7 @@ var require_createPipelineFromOptions2 = __commonJS({
     var import_decompressResponsePolicy5 = require_decompressResponsePolicy2();
     var import_defaultRetryPolicy5 = require_defaultRetryPolicy2();
     var import_formDataPolicy5 = require_formDataPolicy2();
-    var import_core_util17 = require_commonjs4();
+    var import_core_util18 = require_commonjs4();
     var import_proxyPolicy5 = require_proxyPolicy2();
     var import_setClientRequestIdPolicy3 = require_setClientRequestIdPolicy();
     var import_agentPolicy5 = require_agentPolicy2();
@@ -21114,7 +21114,7 @@ var require_createPipelineFromOptions2 = __commonJS({
     var import_wrapAbortSignalLikePolicy2 = require_wrapAbortSignalLikePolicy();
     function createPipelineFromOptions4(options) {
       const pipeline = (0, import_pipeline7.createEmptyPipeline)();
-      if (import_core_util17.isNodeLike) {
+      if (import_core_util18.isNodeLike) {
         if (options.agent) {
           pipeline.addPolicy((0, import_agentPolicy5.agentPolicy)(options.agent));
         }
@@ -21133,7 +21133,7 @@ var require_createPipelineFromOptions2 = __commonJS({
       pipeline.addPolicy((0, import_tracingPolicy3.tracingPolicy)({ ...options.userAgentOptions, ...options.loggingOptions }), {
         afterPhase: "Retry"
       });
-      if (import_core_util17.isNodeLike) {
+      if (import_core_util18.isNodeLike) {
         pipeline.addPolicy((0, import_redirectPolicy5.redirectPolicy)(options.redirectOptions), { afterPhase: "Retry" });
       }
       pipeline.addPolicy((0, import_logPolicy5.logPolicy)(options.loggingOptions), { afterPhase: "Sign" });
@@ -21167,10 +21167,10 @@ var require_defaultHttpClient2 = __commonJS({
       createDefaultHttpClient: () => createDefaultHttpClient4
     });
     module2.exports = __toCommonJS2(defaultHttpClient_exports);
-    var import_ts_http_runtime6 = require_commonjs();
+    var import_ts_http_runtime9 = require_commonjs();
     var import_wrapAbortSignal3 = require_wrapAbortSignal();
     function createDefaultHttpClient4() {
-      const client = (0, import_ts_http_runtime6.createDefaultHttpClient)();
+      const client = (0, import_ts_http_runtime9.createDefaultHttpClient)();
       return {
         async sendRequest(request) {
           const { abortSignal, cleanup } = request.abortSignal ? (0, import_wrapAbortSignal3.wrapAbortSignalLike)(request.abortSignal) : {};
@@ -21211,9 +21211,9 @@ var require_httpHeaders2 = __commonJS({
       createHttpHeaders: () => createHttpHeaders4
     });
     module2.exports = __toCommonJS2(httpHeaders_exports);
-    var import_ts_http_runtime6 = require_commonjs();
+    var import_ts_http_runtime9 = require_commonjs();
     function createHttpHeaders4(rawHeaders) {
-      return (0, import_ts_http_runtime6.createHttpHeaders)(rawHeaders);
+      return (0, import_ts_http_runtime9.createHttpHeaders)(rawHeaders);
     }
   }
 });
@@ -21243,9 +21243,9 @@ var require_pipelineRequest2 = __commonJS({
       createPipelineRequest: () => createPipelineRequest4
     });
     module2.exports = __toCommonJS2(pipelineRequest_exports);
-    var import_ts_http_runtime6 = require_commonjs();
+    var import_ts_http_runtime9 = require_commonjs();
     function createPipelineRequest4(options) {
-      return (0, import_ts_http_runtime6.createPipelineRequest)(options);
+      return (0, import_ts_http_runtime9.createPipelineRequest)(options);
     }
   }
 });
@@ -21377,10 +21377,10 @@ var require_retryPolicy2 = __commonJS({
       retryPolicy: () => retryPolicy4
     });
     module2.exports = __toCommonJS2(retryPolicy_exports);
-    var import_logger17 = require_commonjs2();
+    var import_logger19 = require_commonjs2();
     var import_constants37 = require_constants2();
     var import_policies14 = require_internal3();
-    var retryPolicyLogger3 = (0, import_logger17.createClientLogger)("core-rest-pipeline retryPolicy");
+    var retryPolicyLogger3 = (0, import_logger19.createClientLogger)("core-rest-pipeline retryPolicy");
     function retryPolicy4(strategies, options = { maxRetries: import_constants37.DEFAULT_RETRY_POLICY_COUNT }) {
       return (0, import_policies14.retryPolicy)(strategies, {
         logger: retryPolicyLogger3,
@@ -21416,7 +21416,7 @@ var require_tokenCycler = __commonJS({
       createTokenCycler: () => createTokenCycler2
     });
     module2.exports = __toCommonJS2(tokenCycler_exports);
-    var import_core_util17 = require_commonjs4();
+    var import_core_util18 = require_commonjs4();
     var DEFAULT_CYCLER_OPTIONS2 = {
       forcedRefreshWindowInMs: 1e3,
       // Force waiting for a refresh 1s before the token expires
@@ -21443,7 +21443,7 @@ var require_tokenCycler = __commonJS({
       }
       let token = await tryGetAccessToken();
       while (token === null) {
-        await (0, import_core_util17.delay)(retryIntervalInMs);
+        await (0, import_core_util18.delay)(retryIntervalInMs);
         token = await tryGetAccessToken();
       }
       return token;
@@ -21557,13 +21557,13 @@ var require_bearerTokenAuthenticationPolicy = __commonJS({
     module2.exports = __toCommonJS2(bearerTokenAuthenticationPolicy_exports);
     var import_tokenCycler3 = require_tokenCycler();
     var import_log18 = require_log3();
-    var import_restError11 = require_restError3();
+    var import_restError12 = require_restError3();
     var bearerTokenAuthenticationPolicyName3 = "bearerTokenAuthenticationPolicy";
     async function trySendRequest2(request, next) {
       try {
         return [await next(request), void 0];
       } catch (e) {
-        if ((0, import_restError11.isRestError)(e) && e.response) {
+        if ((0, import_restError12.isRestError)(e) && e.response) {
           return [e.response, e];
         } else {
           throw e;
@@ -21602,7 +21602,7 @@ var require_bearerTokenAuthenticationPolicy = __commonJS({
     }
     function bearerTokenAuthenticationPolicy3(options) {
       const { credential, scopes, challengeCallbacks } = options;
-      const logger32 = options.logger || import_log18.logger;
+      const logger33 = options.logger || import_log18.logger;
       const callbacks = {
         authorizeRequest: challengeCallbacks?.authorizeRequest?.bind(challengeCallbacks) ?? defaultAuthorizeRequest2,
         authorizeRequestOnChallenge: challengeCallbacks?.authorizeRequestOnChallenge?.bind(challengeCallbacks)
@@ -21636,7 +21636,7 @@ var require_bearerTokenAuthenticationPolicy = __commonJS({
             scopes: Array.isArray(scopes) ? scopes : [scopes],
             request,
             getAccessToken,
-            logger: logger32
+            logger: logger33
           });
           let response;
           let error;
@@ -21649,7 +21649,7 @@ var require_bearerTokenAuthenticationPolicy = __commonJS({
               try {
                 parsedClaim = atob(claims);
               } catch (e) {
-                logger32.warning(
+                logger33.warning(
                   `The WWW-Authenticate header contains "claims" that cannot be parsed. Unable to perform the Continuous Access Evaluation authentication flow. Unparsable claims: ${claims}`
                 );
                 return response;
@@ -21660,7 +21660,7 @@ var require_bearerTokenAuthenticationPolicy = __commonJS({
                   response,
                   request,
                   getAccessToken,
-                  logger: logger32
+                  logger: logger33
                 },
                 parsedClaim
               );
@@ -21673,7 +21673,7 @@ var require_bearerTokenAuthenticationPolicy = __commonJS({
                 request,
                 response,
                 getAccessToken,
-                logger: logger32
+                logger: logger33
               });
               if (shouldSendRequest) {
                 [response, error] = await trySendRequest2(request, next);
@@ -21685,7 +21685,7 @@ var require_bearerTokenAuthenticationPolicy = __commonJS({
                   try {
                     parsedClaim = atob(claims);
                   } catch (e) {
-                    logger32.warning(
+                    logger33.warning(
                       `The WWW-Authenticate header contains "claims" that cannot be parsed. Unable to perform the Continuous Access Evaluation authentication flow. Unparsable claims: ${claims}`
                     );
                     return response;
@@ -21696,7 +21696,7 @@ var require_bearerTokenAuthenticationPolicy = __commonJS({
                       response,
                       request,
                       getAccessToken,
-                      logger: logger32
+                      logger: logger33
                     },
                     parsedClaim
                   );
@@ -21826,7 +21826,7 @@ var require_auxiliaryAuthenticationHeaderPolicy = __commonJS({
     }
     function auxiliaryAuthenticationHeaderPolicy3(options) {
       const { credentials, scopes } = options;
-      const logger32 = options.logger || import_log18.logger;
+      const logger33 = options.logger || import_log18.logger;
       const tokenCyclerMap = /* @__PURE__ */ new WeakMap();
       return {
         name: auxiliaryAuthenticationHeaderPolicyName3,
@@ -21837,7 +21837,7 @@ var require_auxiliaryAuthenticationHeaderPolicy = __commonJS({
             );
           }
           if (!credentials || credentials.length === 0) {
-            logger32.info(
+            logger33.info(
               `${auxiliaryAuthenticationHeaderPolicyName3} header will not be set due to empty credentials.`
             );
             return next(request);
@@ -21854,13 +21854,13 @@ var require_auxiliaryAuthenticationHeaderPolicy = __commonJS({
                 scopes: Array.isArray(scopes) ? scopes : [scopes],
                 request,
                 getAccessToken,
-                logger: logger32
+                logger: logger33
               })
             );
           }
           const auxiliaryTokens = (await Promise.all(tokenPromises)).filter((token) => Boolean(token));
           if (auxiliaryTokens.length === 0) {
-            logger32.warning(
+            logger33.warning(
               `None of the auxiliary tokens are valid. ${AUTHORIZATION_AUXILIARY_HEADER} header will not be set.`
             );
             return next(request);
@@ -21898,7 +21898,7 @@ var require_commonjs6 = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var src_exports = {};
     __export2(src_exports, {
-      RestError: () => import_restError11.RestError,
+      RestError: () => import_restError12.RestError,
       agentPolicy: () => import_agentPolicy5.agentPolicy,
       agentPolicyName: () => import_agentPolicy5.agentPolicyName,
       auxiliaryAuthenticationHeaderPolicy: () => import_auxiliaryAuthenticationHeaderPolicy2.auxiliaryAuthenticationHeaderPolicy,
@@ -21920,7 +21920,7 @@ var require_commonjs6 = __commonJS({
       formDataPolicy: () => import_formDataPolicy5.formDataPolicy,
       formDataPolicyName: () => import_formDataPolicy5.formDataPolicyName,
       getDefaultProxySettings: () => import_proxyPolicy5.getDefaultProxySettings,
-      isRestError: () => import_restError11.isRestError,
+      isRestError: () => import_restError12.isRestError,
       logPolicy: () => import_logPolicy5.logPolicy,
       logPolicyName: () => import_logPolicy5.logPolicyName,
       multipartPolicy: () => import_multipartPolicy5.multipartPolicy,
@@ -21951,7 +21951,7 @@ var require_commonjs6 = __commonJS({
     var import_defaultHttpClient4 = require_defaultHttpClient2();
     var import_httpHeaders9 = require_httpHeaders2();
     var import_pipelineRequest4 = require_pipelineRequest2();
-    var import_restError11 = require_restError3();
+    var import_restError12 = require_restError3();
     var import_decompressResponsePolicy5 = require_decompressResponsePolicy2();
     var import_exponentialRetryPolicy3 = require_exponentialRetryPolicy2();
     var import_setClientRequestIdPolicy3 = require_setClientRequestIdPolicy();
@@ -22299,12 +22299,12 @@ var require_keyCredential = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var keyCredential_exports = {};
     __export2(keyCredential_exports, {
-      isKeyCredential: () => isKeyCredential3
+      isKeyCredential: () => isKeyCredential4
     });
     module2.exports = __toCommonJS2(keyCredential_exports);
-    var import_core_util17 = require_commonjs4();
-    function isKeyCredential3(credential) {
-      return (0, import_core_util17.isObjectWithProperties)(credential, ["key"]) && typeof credential.key === "string";
+    var import_core_util18 = require_commonjs4();
+    function isKeyCredential4(credential) {
+      return (0, import_core_util18.isObjectWithProperties)(credential, ["key"]) && typeof credential.key === "string";
     }
   }
 });
@@ -22335,7 +22335,7 @@ var require_azureNamedKeyCredential = __commonJS({
       isNamedKeyCredential: () => isNamedKeyCredential3
     });
     module2.exports = __toCommonJS2(azureNamedKeyCredential_exports);
-    var import_core_util17 = require_commonjs4();
+    var import_core_util18 = require_commonjs4();
     var AzureNamedKeyCredential3 = class {
       _key;
       _name;
@@ -22383,7 +22383,7 @@ var require_azureNamedKeyCredential = __commonJS({
       }
     };
     function isNamedKeyCredential3(credential) {
-      return (0, import_core_util17.isObjectWithProperties)(credential, ["name", "key"]) && typeof credential.key === "string" && typeof credential.name === "string";
+      return (0, import_core_util18.isObjectWithProperties)(credential, ["name", "key"]) && typeof credential.key === "string" && typeof credential.name === "string";
     }
   }
 });
@@ -22414,7 +22414,7 @@ var require_azureSASCredential = __commonJS({
       isSASCredential: () => isSASCredential3
     });
     module2.exports = __toCommonJS2(azureSASCredential_exports);
-    var import_core_util17 = require_commonjs4();
+    var import_core_util18 = require_commonjs4();
     var AzureSASCredential3 = class {
       _signature;
       /**
@@ -22451,7 +22451,7 @@ var require_azureSASCredential = __commonJS({
       }
     };
     function isSASCredential3(credential) {
-      return (0, import_core_util17.isObjectWithProperties)(credential, ["signature"]) && typeof credential.signature === "string";
+      return (0, import_core_util18.isObjectWithProperties)(credential, ["signature"]) && typeof credential.signature === "string";
     }
   }
 });
@@ -22596,7 +22596,7 @@ function __param(paramIndex, decorator) {
   };
 }
 function __esDecorate(ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
-  function accept5(f) {
+  function accept4(f) {
     if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected");
     return f;
   }
@@ -22610,16 +22610,16 @@ function __esDecorate(ctor, descriptorIn, decorators, contextIn, initializers, e
     for (var p in contextIn.access) context3.access[p] = contextIn.access[p];
     context3.addInitializer = function(f) {
       if (done) throw new TypeError("Cannot add initializers after decoration has completed");
-      extraInitializers.push(accept5(f || null));
+      extraInitializers.push(accept4(f || null));
     };
     var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context3);
     if (kind === "accessor") {
       if (result === void 0) continue;
       if (result === null || typeof result !== "object") throw new TypeError("Object expected");
-      if (_ = accept5(result.get)) descriptor.get = _;
-      if (_ = accept5(result.set)) descriptor.set = _;
-      if (_ = accept5(result.init)) initializers.unshift(_);
-    } else if (_ = accept5(result)) {
+      if (_ = accept4(result.get)) descriptor.get = _;
+      if (_ = accept4(result.set)) descriptor.set = _;
+      if (_ = accept4(result.init)) initializers.unshift(_);
+    } else if (_ = accept4(result)) {
       if (kind === "field") initializers.unshift(_);
       else descriptor[key] = _;
     }
@@ -22637,9 +22637,9 @@ function __runInitializers(thisArg, initializers, value) {
 function __propKey(x) {
   return typeof x === "symbol" ? x : "".concat(x);
 }
-function __setFunctionName(f, name3, prefix2) {
+function __setFunctionName(f, name3, prefix) {
   if (typeof name3 === "symbol") name3 = name3.description ? "[".concat(name3.description, "]") : "";
-  return Object.defineProperty(f, "name", { configurable: true, value: prefix2 ? "".concat(prefix2, " ", name3) : name3 });
+  return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name3) : name3 });
 }
 function __metadata(metadataKey, metadataValue) {
   if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
@@ -24207,8 +24207,8 @@ var require_deserializationPolicy = __commonJS({
     async function parse2(jsonContentTypes, xmlContentTypes, operationResponse, opts, parseXML2) {
       if (!operationResponse.request.streamResponseStatusCodes?.has(operationResponse.status) && operationResponse.bodyAsText) {
         const text = operationResponse.bodyAsText;
-        const contentType4 = operationResponse.headers.get("Content-Type") || "";
-        const contentComponents = !contentType4 ? [] : contentType4.split(";").map((component) => component.toLowerCase());
+        const contentType3 = operationResponse.headers.get("Content-Type") || "";
+        const contentComponents = !contentType3 ? [] : contentType3.split(";").map((component) => component.toLowerCase());
         try {
           if (contentComponents.length === 0 || contentComponents.some((component) => jsonContentTypes.indexOf(component) !== -1)) {
             operationResponse.parsedBody = JSON.parse(text);
@@ -24433,12 +24433,12 @@ var require_httpClientCache = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getCachedDefaultHttpClient = getCachedDefaultHttpClient3;
     var core_rest_pipeline_1 = require_commonjs6();
-    var cachedHttpClient2;
+    var cachedHttpClient3;
     function getCachedDefaultHttpClient3() {
-      if (!cachedHttpClient2) {
-        cachedHttpClient2 = (0, core_rest_pipeline_1.createDefaultHttpClient)();
+      if (!cachedHttpClient3) {
+        cachedHttpClient3 = (0, core_rest_pipeline_1.createDefaultHttpClient)();
       }
-      return cachedHttpClient2;
+      return cachedHttpClient3;
     }
   }
 });
@@ -24449,7 +24449,7 @@ var require_urlHelpers2 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRequestUrl = getRequestUrl2;
-    exports2.appendQueryParams = appendQueryParams2;
+    exports2.appendQueryParams = appendQueryParams3;
     var operationHelpers_js_1 = require_operationHelpers();
     var interfaceHelpers_js_1 = require_interfaceHelpers();
     var CollectionFormatToDelimiterMap2 = {
@@ -24462,9 +24462,9 @@ var require_urlHelpers2 = __commonJS({
     function getRequestUrl2(baseUri, operationSpec, operationArguments, fallbackObject) {
       const urlReplacements = calculateUrlReplacements2(operationSpec, operationArguments, fallbackObject);
       let isAbsolutePath = false;
-      let requestUrl = replaceAll2(baseUri, urlReplacements);
+      let requestUrl = replaceAll3(baseUri, urlReplacements);
       if (operationSpec.path) {
-        let path5 = replaceAll2(operationSpec.path, urlReplacements);
+        let path5 = replaceAll3(operationSpec.path, urlReplacements);
         if (operationSpec.path === "/{nextLink}" && path5.startsWith("/")) {
           path5 = path5.substring(1);
         }
@@ -24472,14 +24472,14 @@ var require_urlHelpers2 = __commonJS({
           requestUrl = path5;
           isAbsolutePath = true;
         } else {
-          requestUrl = appendPath2(requestUrl, path5);
+          requestUrl = appendPath3(requestUrl, path5);
         }
       }
       const { queryParams, sequenceParams } = calculateQueryParameters2(operationSpec, operationArguments, fallbackObject);
-      requestUrl = appendQueryParams2(requestUrl, queryParams, sequenceParams, isAbsolutePath);
+      requestUrl = appendQueryParams3(requestUrl, queryParams, sequenceParams, isAbsolutePath);
       return requestUrl;
     }
-    function replaceAll2(input, replacements) {
+    function replaceAll3(input, replacements) {
       let result = input;
       for (const [searchValue, replaceValue] of replacements) {
         result = result.split(searchValue).join(replaceValue);
@@ -24501,14 +24501,14 @@ var require_urlHelpers2 = __commonJS({
       }
       return result;
     }
-    function isAbsoluteUrl2(url3) {
-      return url3.includes("://");
+    function isAbsoluteUrl2(url2) {
+      return url2.includes("://");
     }
-    function appendPath2(url3, pathToAppend) {
+    function appendPath3(url2, pathToAppend) {
       if (!pathToAppend) {
-        return url3;
+        return url2;
       }
-      const parsedUrl = new URL(url3);
+      const parsedUrl = new URL(url2);
       let newPath = parsedUrl.pathname;
       if (!newPath.endsWith("/")) {
         newPath = `${newPath}/`;
@@ -24576,7 +24576,7 @@ var require_urlHelpers2 = __commonJS({
         sequenceParams
       };
     }
-    function simpleParseQueryParams2(queryString) {
+    function simpleParseQueryParams3(queryString) {
       const result = /* @__PURE__ */ new Map();
       if (!queryString || queryString[0] !== "?") {
         return result;
@@ -24598,12 +24598,12 @@ var require_urlHelpers2 = __commonJS({
       }
       return result;
     }
-    function appendQueryParams2(url3, queryParams, sequenceParams, noOverwrite = false) {
+    function appendQueryParams3(url2, queryParams, sequenceParams, noOverwrite = false) {
       if (queryParams.size === 0) {
-        return url3;
+        return url2;
       }
-      const parsedUrl = new URL(url3);
-      const combinedParams = simpleParseQueryParams2(parsedUrl.search);
+      const parsedUrl = new URL(url2);
+      const combinedParams = simpleParseQueryParams3(parsedUrl.search);
       for (const [name3, value] of queryParams) {
         const existingValue = combinedParams.get(name3);
         if (Array.isArray(existingValue)) {
@@ -24705,7 +24705,7 @@ var require_serviceClient = __commonJS({
         }
         this._allowInsecureConnection = options.allowInsecureConnection;
         this._httpClient = options.httpClient || (0, httpClientCache_js_1.getCachedDefaultHttpClient)();
-        this.pipeline = options.pipeline || createDefaultPipeline3(options);
+        this.pipeline = options.pipeline || createDefaultPipeline4(options);
         if (options.additionalPolicies?.length) {
           for (const { policy, position } of options.additionalPolicies) {
             const afterPhase = position === "perRetry" ? "Sign" : void 0;
@@ -24732,17 +24732,17 @@ var require_serviceClient = __commonJS({
         if (!endpoint) {
           throw new Error("If operationSpec.baseUrl is not specified, then the ServiceClient must have a endpoint string property that contains the base URL to use.");
         }
-        const url3 = (0, urlHelpers_js_1.getRequestUrl)(endpoint, operationSpec, operationArguments, this);
+        const url2 = (0, urlHelpers_js_1.getRequestUrl)(endpoint, operationSpec, operationArguments, this);
         const request = (0, core_rest_pipeline_1.createPipelineRequest)({
-          url: url3
+          url: url2
         });
         request.method = operationSpec.httpMethod;
         const operationInfo = (0, operationHelpers_js_1.getOperationRequestInfo)(request);
         operationInfo.operationSpec = operationSpec;
         operationInfo.operationArguments = operationArguments;
-        const contentType4 = operationSpec.contentType || this._requestContentType;
-        if (contentType4 && operationSpec.requestBody) {
-          request.headers.set("Content-Type", contentType4);
+        const contentType3 = operationSpec.contentType || this._requestContentType;
+        if (contentType3 && operationSpec.requestBody) {
+          request.headers.set("Content-Type", contentType3);
         }
         const options = operationArguments.options;
         if (options) {
@@ -24798,7 +24798,7 @@ var require_serviceClient = __commonJS({
       }
     };
     exports2.ServiceClient = ServiceClient2;
-    function createDefaultPipeline3(options) {
+    function createDefaultPipeline4(options) {
       const credentialScopes = getCredentialScopes2(options);
       const credentialOptions = options.credential && credentialScopes ? { credentialScopes, credential: options.credential } : void 0;
       return (0, pipeline_js_1.createClientPipeline)({
@@ -24843,16 +24843,16 @@ var require_authorizeRequestOnClaimChallenge = __commonJS({
     }
     async function authorizeRequestOnClaimChallenge2(onChallengeOptions) {
       const { scopes, response } = onChallengeOptions;
-      const logger32 = onChallengeOptions.logger || log_js_1.logger;
+      const logger33 = onChallengeOptions.logger || log_js_1.logger;
       const challenge = response.headers.get("WWW-Authenticate");
       if (!challenge) {
-        logger32.info(`The WWW-Authenticate header was missing. Failed to perform the Continuous Access Evaluation authentication flow.`);
+        logger33.info(`The WWW-Authenticate header was missing. Failed to perform the Continuous Access Evaluation authentication flow.`);
         return false;
       }
       const challenges = parseCAEChallenge(challenge) || [];
       const parsedChallenge = challenges.find((x) => x.claims);
       if (!parsedChallenge) {
-        logger32.info(`The WWW-Authenticate header was missing the necessary "claims" to perform the Continuous Access Evaluation authentication flow.`);
+        logger33.info(`The WWW-Authenticate header was missing the necessary "claims" to perform the Continuous Access Evaluation authentication flow.`);
         return false;
       }
       const accessToken = await onChallengeOptions.getAccessToken(parsedChallenge.scope ? [parsedChallenge.scope] : scopes, {
@@ -25135,7 +25135,7 @@ var require_util3 = __commonJS({
       toWebResourceLike: () => toWebResourceLike2
     });
     module2.exports = __toCommonJS2(util_exports);
-    var import_core_rest_pipeline25 = require_commonjs6();
+    var import_core_rest_pipeline27 = require_commonjs6();
     var originalRequestSymbol3 = /* @__PURE__ */ Symbol("Original PipelineRequest");
     var originalClientRequestSymbol2 = /* @__PURE__ */ Symbol.for("@azure/core-client original request");
     var passThroughProps2 = /* @__PURE__ */ new Set([
@@ -25157,12 +25157,12 @@ var require_util3 = __commonJS({
     function toPipelineRequest2(webResource, options = {}) {
       const compatWebResource = webResource;
       const request = compatWebResource[originalRequestSymbol3];
-      const headers = (0, import_core_rest_pipeline25.createHttpHeaders)(webResource.headers.toJson({ preserveCase: true }));
+      const headers = (0, import_core_rest_pipeline27.createHttpHeaders)(webResource.headers.toJson({ preserveCase: true }));
       if (request) {
         request.headers = headers;
         return request;
       } else {
-        const newRequest = (0, import_core_rest_pipeline25.createPipelineRequest)({
+        const newRequest = (0, import_core_rest_pipeline27.createPipelineRequest)({
           url: webResource.url,
           method: webResource.method,
           headers,
@@ -25396,10 +25396,10 @@ var require_response = __commonJS({
     var response_exports = {};
     __export2(response_exports, {
       toCompatResponse: () => toCompatResponse3,
-      toPipelineResponse: () => toPipelineResponse2
+      toPipelineResponse: () => toPipelineResponse3
     });
     module2.exports = __toCommonJS2(response_exports);
-    var import_core_rest_pipeline25 = require_commonjs6();
+    var import_core_rest_pipeline27 = require_commonjs6();
     var import_util12 = require_util3();
     var originalResponse2 = /* @__PURE__ */ Symbol("Original FullOperationResponse");
     function toCompatResponse3(response, options) {
@@ -25434,10 +25434,10 @@ var require_response = __commonJS({
         };
       }
     }
-    function toPipelineResponse2(compatResponse) {
+    function toPipelineResponse3(compatResponse) {
       const extendedCompatResponse = compatResponse;
       const response = extendedCompatResponse[originalResponse2];
-      const headers = (0, import_core_rest_pipeline25.createHttpHeaders)(compatResponse.headers.toJson({ preserveCase: true }));
+      const headers = (0, import_core_rest_pipeline27.createHttpHeaders)(compatResponse.headers.toJson({ preserveCase: true }));
       if (response) {
         response.headers = headers;
         return response;
@@ -25478,10 +25478,10 @@ var require_extendedClient = __commonJS({
     });
     module2.exports = __toCommonJS2(extendedClient_exports);
     var import_disableKeepAlivePolicy3 = require_disableKeepAlivePolicy();
-    var import_core_rest_pipeline25 = require_commonjs6();
-    var import_core_client6 = require_commonjs8();
+    var import_core_rest_pipeline27 = require_commonjs6();
+    var import_core_client9 = require_commonjs8();
     var import_response5 = require_response();
-    var ExtendedServiceClient3 = class extends import_core_client6.ServiceClient {
+    var ExtendedServiceClient3 = class extends import_core_client9.ServiceClient {
       constructor(options) {
         super(options);
         if (options.keepAliveOptions?.enable === false && !(0, import_disableKeepAlivePolicy3.pipelineContainsDisableKeepAlivePolicy)(this.pipeline)) {
@@ -25489,7 +25489,7 @@ var require_extendedClient = __commonJS({
         }
         if (options.redirectOptions?.handleRedirects === false) {
           this.pipeline.removePolicy({
-            name: import_core_rest_pipeline25.redirectPolicyName
+            name: import_core_rest_pipeline27.redirectPolicyName
           });
         }
       }
@@ -25714,7 +25714,7 @@ var require_response2 = __commonJS({
       }
     }
     exports2.toCompatResponse = toCompatResponse3;
-    function toPipelineResponse2(compatResponse) {
+    function toPipelineResponse3(compatResponse) {
       const extendedCompatResponse = compatResponse;
       const response = extendedCompatResponse[originalResponse2];
       const headers = (0, core_rest_pipeline_1.createHttpHeaders)(compatResponse.headers.toJson({ preserveCase: true }));
@@ -25725,7 +25725,7 @@ var require_response2 = __commonJS({
         return Object.assign(Object.assign({}, compatResponse), { headers, request: (0, util_js_1.toPipelineRequest)(compatResponse.request) });
       }
     }
-    exports2.toPipelineResponse = toPipelineResponse2;
+    exports2.toPipelineResponse = toPipelineResponse3;
   }
 });
 
@@ -26431,12 +26431,12 @@ var require_botTelemetryClient = __commonJS({
       }
     };
     exports2.NullTelemetryClient = NullTelemetryClient;
-    function telemetryTrackDialogView(telemetryClient, dialogName, properties2, metrics) {
+    function telemetryTrackDialogView(telemetryClient, dialogName, properties, metrics) {
       if (!clientSupportsTrackDialogView(telemetryClient)) {
         throw new TypeError('"telemetryClient" parameter does not have methods trackPageView() or trackTrace()');
       }
       if (instanceOfBotPageViewTelemetryClient(telemetryClient)) {
-        telemetryClient.trackPageView({ name: dialogName, properties: properties2, metrics });
+        telemetryClient.trackPageView({ name: dialogName, properties, metrics });
       } else {
         telemetryClient.trackTrace({ message: "Dialog View: " + dialogName, severityLevel: Severity.Information });
       }
@@ -27792,31 +27792,31 @@ var require_semver = __commonJS({
       return true;
     };
     var SemVer = class _SemVer {
-      constructor(version5, options) {
+      constructor(version4, options) {
         options = parseOptions(options);
-        if (version5 instanceof _SemVer) {
-          if (version5.loose === !!options.loose && version5.includePrerelease === !!options.includePrerelease) {
-            return version5;
+        if (version4 instanceof _SemVer) {
+          if (version4.loose === !!options.loose && version4.includePrerelease === !!options.includePrerelease) {
+            return version4;
           } else {
-            version5 = version5.version;
+            version4 = version4.version;
           }
-        } else if (typeof version5 !== "string") {
-          throw new TypeError(`Invalid version. Must be a string. Got type "${typeof version5}".`);
+        } else if (typeof version4 !== "string") {
+          throw new TypeError(`Invalid version. Must be a string. Got type "${typeof version4}".`);
         }
-        if (version5.length > MAX_LENGTH) {
+        if (version4.length > MAX_LENGTH) {
           throw new TypeError(
             `version is longer than ${MAX_LENGTH} characters`
           );
         }
-        debug("SemVer", version5, options);
+        debug("SemVer", version4, options);
         this.options = options;
         this.loose = !!options.loose;
         this.includePrerelease = !!options.includePrerelease;
-        const m = version5.trim().match(options.loose ? re[t.LOOSE] : re[t.FULL]);
+        const m = version4.trim().match(options.loose ? re[t.LOOSE] : re[t.FULL]);
         if (!m) {
-          throw new TypeError(`Invalid Version: ${version5}`);
+          throw new TypeError(`Invalid Version: ${version4}`);
         }
-        this.raw = version5;
+        this.raw = version4;
         this.major = +m[1];
         this.minor = +m[2];
         this.patch = +m[3];
@@ -28067,12 +28067,12 @@ var require_parse2 = __commonJS({
   "node_modules/semver/functions/parse.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
-    var parse2 = (version5, options, throwErrors = false) => {
-      if (version5 instanceof SemVer) {
-        return version5;
+    var parse2 = (version4, options, throwErrors = false) => {
+      if (version4 instanceof SemVer) {
+        return version4;
       }
       try {
-        return new SemVer(version5, options);
+        return new SemVer(version4, options);
       } catch (er) {
         if (!throwErrors) {
           return null;
@@ -28089,8 +28089,8 @@ var require_valid = __commonJS({
   "node_modules/semver/functions/valid.js"(exports2, module2) {
     "use strict";
     var parse2 = require_parse2();
-    var valid = (version5, options) => {
-      const v = parse2(version5, options);
+    var valid = (version4, options) => {
+      const v = parse2(version4, options);
       return v ? v.version : null;
     };
     module2.exports = valid;
@@ -28102,8 +28102,8 @@ var require_clean = __commonJS({
   "node_modules/semver/functions/clean.js"(exports2, module2) {
     "use strict";
     var parse2 = require_parse2();
-    var clean = (version5, options) => {
-      const s = parse2(version5.trim().replace(/^[=v]+/, ""), options);
+    var clean = (version4, options) => {
+      const s = parse2(version4.trim().replace(/^[=v]+/, ""), options);
       return s ? s.version : null;
     };
     module2.exports = clean;
@@ -28115,7 +28115,7 @@ var require_inc = __commonJS({
   "node_modules/semver/functions/inc.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
-    var inc = (version5, release, options, identifier, identifierBase) => {
+    var inc = (version4, release, options, identifier, identifierBase) => {
       if (typeof options === "string") {
         identifierBase = identifier;
         identifier = options;
@@ -28123,7 +28123,7 @@ var require_inc = __commonJS({
       }
       try {
         return new SemVer(
-          version5 instanceof SemVer ? version5.version : version5,
+          version4 instanceof SemVer ? version4.version : version4,
           options
         ).inc(release, identifier, identifierBase).version;
       } catch (er) {
@@ -28162,15 +28162,15 @@ var require_diff = __commonJS({
           return "patch";
         }
       }
-      const prefix2 = highHasPre ? "pre" : "";
+      const prefix = highHasPre ? "pre" : "";
       if (v1.major !== v2.major) {
-        return prefix2 + "major";
+        return prefix + "major";
       }
       if (v1.minor !== v2.minor) {
-        return prefix2 + "minor";
+        return prefix + "minor";
       }
       if (v1.patch !== v2.patch) {
-        return prefix2 + "patch";
+        return prefix + "patch";
       }
       return "prerelease";
     };
@@ -28213,8 +28213,8 @@ var require_prerelease = __commonJS({
   "node_modules/semver/functions/prerelease.js"(exports2, module2) {
     "use strict";
     var parse2 = require_parse2();
-    var prerelease = (version5, options) => {
-      const parsed = parse2(version5, options);
+    var prerelease = (version4, options) => {
+      const parsed = parse2(version4, options);
       return parsed && parsed.prerelease.length ? parsed.prerelease : null;
     };
     module2.exports = prerelease;
@@ -28402,24 +28402,24 @@ var require_coerce = __commonJS({
     var SemVer = require_semver();
     var parse2 = require_parse2();
     var { safeRe: re, t } = require_re();
-    var coerce = (version5, options) => {
-      if (version5 instanceof SemVer) {
-        return version5;
+    var coerce = (version4, options) => {
+      if (version4 instanceof SemVer) {
+        return version4;
       }
-      if (typeof version5 === "number") {
-        version5 = String(version5);
+      if (typeof version4 === "number") {
+        version4 = String(version4);
       }
-      if (typeof version5 !== "string") {
+      if (typeof version4 !== "string") {
         return null;
       }
       options = options || {};
       let match = null;
       if (!options.rtl) {
-        match = version5.match(options.includePrerelease ? re[t.COERCEFULL] : re[t.COERCE]);
+        match = version4.match(options.includePrerelease ? re[t.COERCEFULL] : re[t.COERCE]);
       } else {
         const coerceRtlRegex = options.includePrerelease ? re[t.COERCERTLFULL] : re[t.COERCERTL];
         let next;
-        while ((next = coerceRtlRegex.exec(version5)) && (!match || match.index + match[0].length !== version5.length)) {
+        while ((next = coerceRtlRegex.exec(version4)) && (!match || match.index + match[0].length !== version4.length)) {
           if (!match || next.index + next[0].length !== match.index + match[0].length) {
             match = next;
           }
@@ -28448,32 +28448,32 @@ var require_truncate = __commonJS({
     var parse2 = require_parse2();
     var constants3 = require_constants3();
     var SemVer = require_semver();
-    var truncate = (version5, truncation, options) => {
+    var truncate = (version4, truncation, options) => {
       if (!constants3.RELEASE_TYPES.includes(truncation)) {
         return null;
       }
-      const clonedVersion = cloneInputVersion(version5, options);
+      const clonedVersion = cloneInputVersion(version4, options);
       return clonedVersion && doTruncation(clonedVersion, truncation);
     };
-    var cloneInputVersion = (version5, options) => {
-      const versionStringToParse = version5 instanceof SemVer ? version5.version : version5;
+    var cloneInputVersion = (version4, options) => {
+      const versionStringToParse = version4 instanceof SemVer ? version4.version : version4;
       return parse2(versionStringToParse, options);
     };
-    var doTruncation = (version5, truncation) => {
+    var doTruncation = (version4, truncation) => {
       if (isPrerelease(truncation)) {
-        return version5.version;
+        return version4.version;
       }
-      version5.prerelease = [];
+      version4.prerelease = [];
       switch (truncation) {
         case "major":
-          version5.minor = 0;
-          version5.patch = 0;
+          version4.minor = 0;
+          version4.patch = 0;
           break;
         case "minor":
-          version5.patch = 0;
+          version4.patch = 0;
           break;
       }
-      return version5.format();
+      return version4.format();
     };
     var isPrerelease = (type) => {
       return type.startsWith("pre");
@@ -28607,21 +28607,21 @@ var require_range = __commonJS({
         debug("tilde trim", range);
         range = range.replace(re[t.CARETTRIM], caretTrimReplace);
         debug("caret trim", range);
-        let rangeList = range.split(" ").map((comp6) => parseComparator(comp6, this.options)).join(" ").split(/\s+/).map((comp6) => replaceGTE0(comp6, this.options));
+        let rangeList = range.split(" ").map((comp3) => parseComparator(comp3, this.options)).join(" ").split(/\s+/).map((comp3) => replaceGTE0(comp3, this.options));
         if (loose) {
-          rangeList = rangeList.filter((comp6) => {
-            debug("loose invalid filter", comp6, this.options);
-            return !!comp6.match(re[t.COMPARATORLOOSE]);
+          rangeList = rangeList.filter((comp3) => {
+            debug("loose invalid filter", comp3, this.options);
+            return !!comp3.match(re[t.COMPARATORLOOSE]);
           });
         }
         debug("range list", rangeList);
         const rangeMap = /* @__PURE__ */ new Map();
-        const comparators = rangeList.map((comp6) => new Comparator(comp6, this.options));
-        for (const comp6 of comparators) {
-          if (isNullSet(comp6)) {
-            return [comp6];
+        const comparators = rangeList.map((comp3) => new Comparator(comp3, this.options));
+        for (const comp3 of comparators) {
+          if (isNullSet(comp3)) {
+            return [comp3];
           }
-          rangeMap.set(comp6.value, comp6);
+          rangeMap.set(comp3.value, comp3);
         }
         if (rangeMap.size > 1 && rangeMap.has("")) {
           rangeMap.delete("");
@@ -28645,19 +28645,19 @@ var require_range = __commonJS({
         });
       }
       // if ANY of the sets match ALL of its comparators, then pass
-      test(version5) {
-        if (!version5) {
+      test(version4) {
+        if (!version4) {
           return false;
         }
-        if (typeof version5 === "string") {
+        if (typeof version4 === "string") {
           try {
-            version5 = new SemVer(version5, this.options);
+            version4 = new SemVer(version4, this.options);
           } catch (er) {
             return false;
           }
         }
         for (let i = 0; i < this.set.length; i++) {
-          if (testSet(this.set[i], version5, this.options)) {
+          if (testSet(this.set[i], version4, this.options)) {
             return true;
           }
         }
@@ -28695,29 +28695,29 @@ var require_range = __commonJS({
       }
       return result;
     };
-    var parseComparator = (comp6, options) => {
-      comp6 = comp6.replace(re[t.BUILD], "");
-      debug("comp", comp6, options);
-      comp6 = replaceCarets(comp6, options);
-      debug("caret", comp6);
-      comp6 = replaceTildes(comp6, options);
-      debug("tildes", comp6);
-      comp6 = replaceXRanges(comp6, options);
-      debug("xrange", comp6);
-      comp6 = replaceStars(comp6, options);
-      debug("stars", comp6);
-      return comp6;
+    var parseComparator = (comp3, options) => {
+      comp3 = comp3.replace(re[t.BUILD], "");
+      debug("comp", comp3, options);
+      comp3 = replaceCarets(comp3, options);
+      debug("caret", comp3);
+      comp3 = replaceTildes(comp3, options);
+      debug("tildes", comp3);
+      comp3 = replaceXRanges(comp3, options);
+      debug("xrange", comp3);
+      comp3 = replaceStars(comp3, options);
+      debug("stars", comp3);
+      return comp3;
     };
     var isX = (id) => !id || id.toLowerCase() === "x" || id === "*";
     var invalidXRangeOrder = (M, m, p) => isX(M) && !isX(m) || isX(m) && p && !isX(p);
-    var replaceTildes = (comp6, options) => {
-      return comp6.trim().split(/\s+/).map((c) => replaceTilde(c, options)).join(" ");
+    var replaceTildes = (comp3, options) => {
+      return comp3.trim().split(/\s+/).map((c) => replaceTilde(c, options)).join(" ");
     };
-    var replaceTilde = (comp6, options) => {
+    var replaceTilde = (comp3, options) => {
       const r = options.loose ? re[t.TILDELOOSE] : re[t.TILDE];
       const z = options.includePrerelease ? "-0" : "";
-      return comp6.replace(r, (_, M, m, p, pr) => {
-        debug("tilde", comp6, _, M, m, p, pr);
+      return comp3.replace(r, (_, M, m, p, pr) => {
+        debug("tilde", comp3, _, M, m, p, pr);
         let ret;
         if (isX(M)) {
           ret = "";
@@ -28735,15 +28735,15 @@ var require_range = __commonJS({
         return ret;
       });
     };
-    var replaceCarets = (comp6, options) => {
-      return comp6.trim().split(/\s+/).map((c) => replaceCaret(c, options)).join(" ");
+    var replaceCarets = (comp3, options) => {
+      return comp3.trim().split(/\s+/).map((c) => replaceCaret(c, options)).join(" ");
     };
-    var replaceCaret = (comp6, options) => {
-      debug("caret", comp6, options);
+    var replaceCaret = (comp3, options) => {
+      debug("caret", comp3, options);
       const r = options.loose ? re[t.CARETLOOSE] : re[t.CARET];
       const z = options.includePrerelease ? "-0" : "";
-      return comp6.replace(r, (_, M, m, p, pr) => {
-        debug("caret", comp6, _, M, m, p, pr);
+      return comp3.replace(r, (_, M, m, p, pr) => {
+        debug("caret", comp3, _, M, m, p, pr);
         let ret;
         if (isX(M)) {
           ret = "";
@@ -28782,17 +28782,17 @@ var require_range = __commonJS({
         return ret;
       });
     };
-    var replaceXRanges = (comp6, options) => {
-      debug("replaceXRanges", comp6, options);
-      return comp6.split(/\s+/).map((c) => replaceXRange(c, options)).join(" ");
+    var replaceXRanges = (comp3, options) => {
+      debug("replaceXRanges", comp3, options);
+      return comp3.split(/\s+/).map((c) => replaceXRange(c, options)).join(" ");
     };
-    var replaceXRange = (comp6, options) => {
-      comp6 = comp6.trim();
+    var replaceXRange = (comp3, options) => {
+      comp3 = comp3.trim();
       const r = options.loose ? re[t.XRANGELOOSE] : re[t.XRANGE];
-      return comp6.replace(r, (ret, gtlt, M, m, p, pr) => {
-        debug("xRange", comp6, ret, gtlt, M, m, p, pr);
+      return comp3.replace(r, (ret, gtlt, M, m, p, pr) => {
+        debug("xRange", comp3, ret, gtlt, M, m, p, pr);
         if (invalidXRangeOrder(M, m, p)) {
-          return comp6;
+          return comp3;
         }
         const xM = isX(M);
         const xm = xM || isX(m);
@@ -28844,13 +28844,13 @@ var require_range = __commonJS({
         return ret;
       });
     };
-    var replaceStars = (comp6, options) => {
-      debug("replaceStars", comp6, options);
-      return comp6.trim().replace(re[t.STAR], "");
+    var replaceStars = (comp3, options) => {
+      debug("replaceStars", comp3, options);
+      return comp3.trim().replace(re[t.STAR], "");
     };
-    var replaceGTE0 = (comp6, options) => {
-      debug("replaceGTE0", comp6, options);
-      return comp6.trim().replace(re[options.includePrerelease ? t.GTE0PRE : t.GTE0], "");
+    var replaceGTE0 = (comp3, options) => {
+      debug("replaceGTE0", comp3, options);
+      return comp3.trim().replace(re[options.includePrerelease ? t.GTE0PRE : t.GTE0], "");
     };
     var hyphenReplace = (incPr) => ($0, from, fM, fm, fp, fpr, fb, to, tM, tm, tp, tpr) => {
       if (isX(fM)) {
@@ -28879,13 +28879,13 @@ var require_range = __commonJS({
       }
       return `${from} ${to}`.trim();
     };
-    var testSet = (set, version5, options) => {
+    var testSet = (set, version4, options) => {
       for (let i = 0; i < set.length; i++) {
-        if (!set[i].test(version5)) {
+        if (!set[i].test(version4)) {
           return false;
         }
       }
-      if (version5.prerelease.length && !options.includePrerelease) {
+      if (version4.prerelease.length && !options.includePrerelease) {
         for (let i = 0; i < set.length; i++) {
           debug(set[i].semver);
           if (set[i].semver === Comparator.ANY) {
@@ -28893,7 +28893,7 @@ var require_range = __commonJS({
           }
           if (set[i].semver.prerelease.length > 0) {
             const allowed = set[i].semver;
-            if (allowed.major === version5.major && allowed.minor === version5.minor && allowed.patch === version5.patch) {
+            if (allowed.major === version4.major && allowed.minor === version4.minor && allowed.patch === version4.patch) {
               return true;
             }
           }
@@ -28914,20 +28914,20 @@ var require_comparator = __commonJS({
       static get ANY() {
         return ANY;
       }
-      constructor(comp6, options) {
+      constructor(comp3, options) {
         options = parseOptions(options);
-        if (comp6 instanceof _Comparator) {
-          if (comp6.loose === !!options.loose) {
-            return comp6;
+        if (comp3 instanceof _Comparator) {
+          if (comp3.loose === !!options.loose) {
+            return comp3;
           } else {
-            comp6 = comp6.value;
+            comp3 = comp3.value;
           }
         }
-        comp6 = comp6.trim().split(/\s+/).join(" ");
-        debug("comparator", comp6, options);
+        comp3 = comp3.trim().split(/\s+/).join(" ");
+        debug("comparator", comp3, options);
         this.options = options;
         this.loose = !!options.loose;
-        this.parse(comp6);
+        this.parse(comp3);
         if (this.semver === ANY) {
           this.value = "";
         } else {
@@ -28935,11 +28935,11 @@ var require_comparator = __commonJS({
         }
         debug("comp", this);
       }
-      parse(comp6) {
+      parse(comp3) {
         const r = this.options.loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR];
-        const m = comp6.match(r);
+        const m = comp3.match(r);
         if (!m) {
-          throw new TypeError(`Invalid comparator: ${comp6}`);
+          throw new TypeError(`Invalid comparator: ${comp3}`);
         }
         this.operator = m[1] !== void 0 ? m[1] : "";
         if (this.operator === "=") {
@@ -28954,55 +28954,55 @@ var require_comparator = __commonJS({
       toString() {
         return this.value;
       }
-      test(version5) {
-        debug("Comparator.test", version5, this.options.loose);
-        if (this.semver === ANY || version5 === ANY) {
+      test(version4) {
+        debug("Comparator.test", version4, this.options.loose);
+        if (this.semver === ANY || version4 === ANY) {
           return true;
         }
-        if (typeof version5 === "string") {
+        if (typeof version4 === "string") {
           try {
-            version5 = new SemVer(version5, this.options);
+            version4 = new SemVer(version4, this.options);
           } catch (er) {
             return false;
           }
         }
-        return cmp(version5, this.operator, this.semver, this.options);
+        return cmp(version4, this.operator, this.semver, this.options);
       }
-      intersects(comp6, options) {
-        if (!(comp6 instanceof _Comparator)) {
+      intersects(comp3, options) {
+        if (!(comp3 instanceof _Comparator)) {
           throw new TypeError("a Comparator is required");
         }
         if (this.operator === "") {
           if (this.value === "") {
             return true;
           }
-          return new Range(comp6.value, options).test(this.value);
-        } else if (comp6.operator === "") {
-          if (comp6.value === "") {
+          return new Range(comp3.value, options).test(this.value);
+        } else if (comp3.operator === "") {
+          if (comp3.value === "") {
             return true;
           }
-          return new Range(this.value, options).test(comp6.semver);
+          return new Range(this.value, options).test(comp3.semver);
         }
         options = parseOptions(options);
-        if (options.includePrerelease && (this.value === "<0.0.0-0" || comp6.value === "<0.0.0-0")) {
+        if (options.includePrerelease && (this.value === "<0.0.0-0" || comp3.value === "<0.0.0-0")) {
           return false;
         }
-        if (!options.includePrerelease && (this.value.startsWith("<0.0.0") || comp6.value.startsWith("<0.0.0"))) {
+        if (!options.includePrerelease && (this.value.startsWith("<0.0.0") || comp3.value.startsWith("<0.0.0"))) {
           return false;
         }
-        if (this.operator.startsWith(">") && comp6.operator.startsWith(">")) {
+        if (this.operator.startsWith(">") && comp3.operator.startsWith(">")) {
           return true;
         }
-        if (this.operator.startsWith("<") && comp6.operator.startsWith("<")) {
+        if (this.operator.startsWith("<") && comp3.operator.startsWith("<")) {
           return true;
         }
-        if (this.semver.version === comp6.semver.version && this.operator.includes("=") && comp6.operator.includes("=")) {
+        if (this.semver.version === comp3.semver.version && this.operator.includes("=") && comp3.operator.includes("=")) {
           return true;
         }
-        if (cmp(this.semver, "<", comp6.semver, options) && this.operator.startsWith(">") && comp6.operator.startsWith("<")) {
+        if (cmp(this.semver, "<", comp3.semver, options) && this.operator.startsWith(">") && comp3.operator.startsWith("<")) {
           return true;
         }
-        if (cmp(this.semver, ">", comp6.semver, options) && this.operator.startsWith("<") && comp6.operator.startsWith(">")) {
+        if (cmp(this.semver, ">", comp3.semver, options) && this.operator.startsWith("<") && comp3.operator.startsWith(">")) {
           return true;
         }
         return false;
@@ -29023,13 +29023,13 @@ var require_satisfies = __commonJS({
   "node_modules/semver/functions/satisfies.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
-    var satisfies = (version5, range, options) => {
+    var satisfies = (version4, range, options) => {
       try {
         range = new Range(range, options);
       } catch (er) {
         return false;
       }
-      return range.test(version5);
+      return range.test(version4);
     };
     module2.exports = satisfies;
   }
@@ -29040,7 +29040,7 @@ var require_to_comparators = __commonJS({
   "node_modules/semver/ranges/to-comparators.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
-    var toComparators = (range, options) => new Range(range, options).set.map((comp6) => comp6.map((c) => c.value).join(" ").trim().split(" "));
+    var toComparators = (range, options) => new Range(range, options).set.map((comp3) => comp3.map((c) => c.value).join(" ").trim().split(" "));
     module2.exports = toComparators;
   }
 });
@@ -29191,29 +29191,29 @@ var require_outside = __commonJS({
     var lt = require_lt();
     var lte = require_lte();
     var gte = require_gte();
-    var outside = (version5, range, hilo, options) => {
-      version5 = new SemVer(version5, options);
+    var outside = (version4, range, hilo, options) => {
+      version4 = new SemVer(version4, options);
       range = new Range(range, options);
-      let gtfn, ltefn, ltfn, comp6, ecomp;
+      let gtfn, ltefn, ltfn, comp3, ecomp;
       switch (hilo) {
         case ">":
           gtfn = gt;
           ltefn = lte;
           ltfn = lt;
-          comp6 = ">";
+          comp3 = ">";
           ecomp = ">=";
           break;
         case "<":
           gtfn = lt;
           ltefn = gte;
           ltfn = gt;
-          comp6 = "<";
+          comp3 = "<";
           ecomp = "<=";
           break;
         default:
           throw new TypeError('Must provide a hilo val of "<" or ">"');
       }
-      if (satisfies(version5, range, options)) {
+      if (satisfies(version4, range, options)) {
         return false;
       }
       for (let i = 0; i < range.set.length; ++i) {
@@ -29232,12 +29232,12 @@ var require_outside = __commonJS({
             low = comparator;
           }
         });
-        if (high.operator === comp6 || high.operator === ecomp) {
+        if (high.operator === comp3 || high.operator === ecomp) {
           return false;
         }
-        if ((!low.operator || low.operator === comp6) && ltefn(version5, low.semver)) {
+        if ((!low.operator || low.operator === comp3) && ltefn(version4, low.semver)) {
           return false;
-        } else if (low.operator === ecomp && ltfn(version5, low.semver)) {
+        } else if (low.operator === ecomp && ltfn(version4, low.semver)) {
           return false;
         }
       }
@@ -29252,7 +29252,7 @@ var require_gtr = __commonJS({
   "node_modules/semver/ranges/gtr.js"(exports2, module2) {
     "use strict";
     var outside = require_outside();
-    var gtr = (version5, range, options) => outside(version5, range, ">", options);
+    var gtr = (version4, range, options) => outside(version4, range, ">", options);
     module2.exports = gtr;
   }
 });
@@ -29262,7 +29262,7 @@ var require_ltr = __commonJS({
   "node_modules/semver/ranges/ltr.js"(exports2, module2) {
     "use strict";
     var outside = require_outside();
-    var ltr = (version5, range, options) => outside(version5, range, "<", options);
+    var ltr = (version4, range, options) => outside(version4, range, "<", options);
     module2.exports = ltr;
   }
 });
@@ -29292,12 +29292,12 @@ var require_simplify = __commonJS({
       let first = null;
       let prev = null;
       const v = versions.sort((a, b) => compare(a, b, options));
-      for (const version5 of v) {
-        const included = satisfies(version5, range, options);
+      for (const version4 of v) {
+        const included = satisfies(version4, range, options);
         if (included) {
-          prev = version5;
+          prev = version4;
           if (!first) {
-            first = version5;
+            first = version4;
           }
         } else {
           if (prev) {
@@ -29479,15 +29479,15 @@ var require_subset = __commonJS({
       if (!a) {
         return b;
       }
-      const comp6 = compare(a.semver, b.semver, options);
-      return comp6 > 0 ? a : comp6 < 0 ? b : b.operator === ">" && a.operator === ">=" ? b : a;
+      const comp3 = compare(a.semver, b.semver, options);
+      return comp3 > 0 ? a : comp3 < 0 ? b : b.operator === ">" && a.operator === ">=" ? b : a;
     };
     var lowerLT = (a, b, options) => {
       if (!a) {
         return b;
       }
-      const comp6 = compare(a.semver, b.semver, options);
-      return comp6 < 0 ? a : comp6 > 0 ? b : b.operator === "<" && a.operator === "<=" ? b : a;
+      const comp3 = compare(a.semver, b.semver, options);
+      return comp3 < 0 ? a : comp3 > 0 ? b : b.operator === "<" && a.operator === "<=" ? b : a;
     };
     module2.exports = subset;
   }
@@ -31144,8 +31144,8 @@ var require_url_state_machine = __commonJS({
     function isSpecialScheme(scheme) {
       return specialSchemes[scheme] !== void 0;
     }
-    function isSpecial(url3) {
-      return isSpecialScheme(url3.scheme);
+    function isSpecial(url2) {
+      return isSpecialScheme(url2.scheme);
     }
     function defaultPort(scheme) {
       return specialSchemes[scheme];
@@ -31467,38 +31467,38 @@ var require_url_state_machine = __commonJS({
       }
       return host;
     }
-    function trimControlChars(url3) {
-      return url3.replace(/^[\u0000-\u001F\u0020]+|[\u0000-\u001F\u0020]+$/g, "");
+    function trimControlChars(url2) {
+      return url2.replace(/^[\u0000-\u001F\u0020]+|[\u0000-\u001F\u0020]+$/g, "");
     }
-    function trimTabAndNewline(url3) {
-      return url3.replace(/\u0009|\u000A|\u000D/g, "");
+    function trimTabAndNewline(url2) {
+      return url2.replace(/\u0009|\u000A|\u000D/g, "");
     }
-    function shortenPath(url3) {
-      const path5 = url3.path;
+    function shortenPath(url2) {
+      const path5 = url2.path;
       if (path5.length === 0) {
         return;
       }
-      if (url3.scheme === "file" && path5.length === 1 && isNormalizedWindowsDriveLetter(path5[0])) {
+      if (url2.scheme === "file" && path5.length === 1 && isNormalizedWindowsDriveLetter(path5[0])) {
         return;
       }
       path5.pop();
     }
-    function includesCredentials(url3) {
-      return url3.username !== "" || url3.password !== "";
+    function includesCredentials(url2) {
+      return url2.username !== "" || url2.password !== "";
     }
-    function cannotHaveAUsernamePasswordPort(url3) {
-      return url3.host === null || url3.host === "" || url3.cannotBeABaseURL || url3.scheme === "file";
+    function cannotHaveAUsernamePasswordPort(url2) {
+      return url2.host === null || url2.host === "" || url2.cannotBeABaseURL || url2.scheme === "file";
     }
     function isNormalizedWindowsDriveLetter(string) {
       return /^[A-Za-z]:$/.test(string);
     }
-    function URLStateMachine(input, base2, encodingOverride, url3, stateOverride) {
+    function URLStateMachine(input, base2, encodingOverride, url2, stateOverride) {
       this.pointer = 0;
       this.input = input;
       this.base = base2 || null;
       this.encodingOverride = encodingOverride || "utf-8";
       this.stateOverride = stateOverride;
-      this.url = url3;
+      this.url = url2;
       this.failure = false;
       this.parseError = false;
       if (!this.url) {
@@ -32051,36 +32051,36 @@ var require_url_state_machine = __commonJS({
       }
       return true;
     };
-    function serializeURL(url3, excludeFragment) {
-      let output = url3.scheme + ":";
-      if (url3.host !== null) {
+    function serializeURL(url2, excludeFragment) {
+      let output = url2.scheme + ":";
+      if (url2.host !== null) {
         output += "//";
-        if (url3.username !== "" || url3.password !== "") {
-          output += url3.username;
-          if (url3.password !== "") {
-            output += ":" + url3.password;
+        if (url2.username !== "" || url2.password !== "") {
+          output += url2.username;
+          if (url2.password !== "") {
+            output += ":" + url2.password;
           }
           output += "@";
         }
-        output += serializeHost(url3.host);
-        if (url3.port !== null) {
-          output += ":" + url3.port;
+        output += serializeHost(url2.host);
+        if (url2.port !== null) {
+          output += ":" + url2.port;
         }
-      } else if (url3.host === null && url3.scheme === "file") {
+      } else if (url2.host === null && url2.scheme === "file") {
         output += "//";
       }
-      if (url3.cannotBeABaseURL) {
-        output += url3.path[0];
+      if (url2.cannotBeABaseURL) {
+        output += url2.path[0];
       } else {
-        for (const string of url3.path) {
+        for (const string of url2.path) {
           output += "/" + string;
         }
       }
-      if (url3.query !== null) {
-        output += "?" + url3.query;
+      if (url2.query !== null) {
+        output += "?" + url2.query;
       }
-      if (!excludeFragment && url3.fragment !== null) {
-        output += "#" + url3.fragment;
+      if (!excludeFragment && url2.fragment !== null) {
+        output += "#" + url2.fragment;
       }
       return output;
     }
@@ -32093,11 +32093,11 @@ var require_url_state_machine = __commonJS({
       return result;
     }
     module2.exports.serializeURL = serializeURL;
-    module2.exports.serializeURLOrigin = function(url3) {
-      switch (url3.scheme) {
+    module2.exports.serializeURLOrigin = function(url2) {
+      switch (url2.scheme) {
         case "blob":
           try {
-            return module2.exports.serializeURLOrigin(module2.exports.parseURL(url3.path[0]));
+            return module2.exports.serializeURLOrigin(module2.exports.parseURL(url2.path[0]));
           } catch (e) {
             return "null";
           }
@@ -32108,9 +32108,9 @@ var require_url_state_machine = __commonJS({
         case "ws":
         case "wss":
           return serializeOrigin({
-            scheme: url3.scheme,
-            host: url3.host,
-            port: url3.port
+            scheme: url2.scheme,
+            host: url2.host,
+            port: url2.port
           });
         case "file":
           return "file://";
@@ -32128,18 +32128,18 @@ var require_url_state_machine = __commonJS({
       }
       return usm.url;
     };
-    module2.exports.setTheUsername = function(url3, username) {
-      url3.username = "";
+    module2.exports.setTheUsername = function(url2, username) {
+      url2.username = "";
       const decoded = punycode.ucs2.decode(username);
       for (let i = 0; i < decoded.length; ++i) {
-        url3.username += percentEncodeChar(decoded[i], isUserinfoPercentEncode);
+        url2.username += percentEncodeChar(decoded[i], isUserinfoPercentEncode);
       }
     };
-    module2.exports.setThePassword = function(url3, password) {
-      url3.password = "";
+    module2.exports.setThePassword = function(url2, password) {
+      url2.password = "";
       const decoded = punycode.ucs2.decode(password);
       for (let i = 0; i < decoded.length; ++i) {
-        url3.password += percentEncodeChar(decoded[i], isUserinfoPercentEncode);
+        url2.password += percentEncodeChar(decoded[i], isUserinfoPercentEncode);
       }
     };
     module2.exports.serializeHost = serializeHost;
@@ -32163,7 +32163,7 @@ var require_URL_impl = __commonJS({
     var usm = require_url_state_machine();
     exports2.implementation = class URLImpl {
       constructor(constructorArgs) {
-        const url3 = constructorArgs[0];
+        const url2 = constructorArgs[0];
         const base2 = constructorArgs[1];
         let parsedBase = null;
         if (base2 !== void 0) {
@@ -32172,7 +32172,7 @@ var require_URL_impl = __commonJS({
             throw new TypeError("Invalid base URL");
           }
         }
-        const parsedURL = usm.basicURLParse(url3, { baseURL: parsedBase });
+        const parsedURL = usm.basicURLParse(url2, { baseURL: parsedBase });
         if (parsedURL === "failure") {
           throw new TypeError("Invalid URL");
         }
@@ -32216,14 +32216,14 @@ var require_URL_impl = __commonJS({
         usm.setThePassword(this._url, v);
       }
       get host() {
-        const url3 = this._url;
-        if (url3.host === null) {
+        const url2 = this._url;
+        if (url2.host === null) {
           return "";
         }
-        if (url3.port === null) {
-          return usm.serializeHost(url3.host);
+        if (url2.port === null) {
+          return usm.serializeHost(url2.host);
         }
-        return usm.serializeHost(url3.host) + ":" + usm.serializeInteger(url3.port);
+        return usm.serializeHost(url2.host) + ":" + usm.serializeInteger(url2.port);
       }
       set host(v) {
         if (this._url.cannotBeABaseURL) {
@@ -32282,14 +32282,14 @@ var require_URL_impl = __commonJS({
         return "?" + this._url.query;
       }
       set search(v) {
-        const url3 = this._url;
+        const url2 = this._url;
         if (v === "") {
-          url3.query = null;
+          url2.query = null;
           return;
         }
         const input = v[0] === "?" ? v.substring(1) : v;
-        url3.query = "";
-        usm.basicURLParse(input, { url: url3, stateOverride: "query" });
+        url2.query = "";
+        usm.basicURLParse(input, { url: url2, stateOverride: "query" });
       }
       get hash() {
         if (this._url.fragment === null || this._url.fragment === "") {
@@ -32321,7 +32321,7 @@ var require_URL = __commonJS({
     var utils = require_utils2();
     var Impl = require_URL_impl();
     var impl = utils.implSymbol;
-    function URL2(url3) {
+    function URL2(url2) {
       if (!this || this[impl] || !(this instanceof URL2)) {
         throw new TypeError("Failed to construct 'URL': Please use the 'new' operator, this DOM object constructor cannot be called as a function.");
       }
@@ -32525,7 +32525,7 @@ var require_lib4 = __commonJS({
     var whatwgUrl = _interopDefault(require_public_api());
     var https2 = _interopDefault(require("https"));
     var zlib2 = _interopDefault(require("zlib"));
-    var Readable2 = Stream.Readable;
+    var Readable3 = Stream.Readable;
     var BUFFER = /* @__PURE__ */ Symbol("buffer");
     var TYPE = /* @__PURE__ */ Symbol("type");
     var Blob2 = class _Blob {
@@ -32577,7 +32577,7 @@ var require_lib4 = __commonJS({
         return Promise.resolve(ab);
       }
       stream() {
-        const readable = new Readable2();
+        const readable = new Readable3();
         readable._read = function() {
         };
         readable.push(this[BUFFER]);
@@ -33269,9 +33269,9 @@ var require_lib4 = __commonJS({
         const status = opts.status || 200;
         const headers = new Headers2(opts.headers);
         if (body != null && !headers.has("Content-Type")) {
-          const contentType4 = extractContentType(body);
-          if (contentType4) {
-            headers.append("Content-Type", contentType4);
+          const contentType3 = extractContentType(body);
+          if (contentType3) {
+            headers.append("Content-Type", contentType3);
           }
         }
         this[INTERNALS$1] = {
@@ -33379,9 +33379,9 @@ var require_lib4 = __commonJS({
         });
         const headers = new Headers2(init.headers || input.headers || {});
         if (inputBody != null && !headers.has("Content-Type")) {
-          const contentType4 = extractContentType(inputBody);
-          if (contentType4) {
-            headers.append("Content-Type", contentType4);
+          const contentType3 = extractContentType(inputBody);
+          if (contentType3) {
+            headers.append("Content-Type", contentType3);
           }
         }
         let signal = isRequest(input) ? input.signal : null;
@@ -33505,13 +33505,13 @@ var require_lib4 = __commonJS({
       const dest = new URL$1(destination).protocol;
       return orig === dest;
     };
-    function fetch2(url3, opts) {
+    function fetch2(url2, opts) {
       if (!fetch2.Promise) {
         throw new Error("native promise missing, set fetch.Promise to your favorite alternative");
       }
       Body.Promise = fetch2.Promise;
       return new fetch2.Promise(function(resolve, reject) {
-        const request = new Request2(url3, opts);
+        const request = new Request2(url2, opts);
         const options = getNodeRequestOptions(request);
         const send = (options.protocol === "https:" ? https2 : http3).request;
         const signal = request.signal;
@@ -33800,8 +33800,8 @@ var require_openIdMetadata = __commonJS({
        * @param proxySettings The proxy settings for the request.
        * @param tokenRefreshInterval The token refresh interval in hours. The default value is 24 hours.
        */
-      constructor(url3, proxySettings, tokenRefreshInterval = 24) {
-        this.url = url3;
+      constructor(url2, proxySettings, tokenRefreshInterval = 24) {
+        this.url = url2;
         this.proxySettings = proxySettings;
         this.tokenRefreshInterval = tokenRefreshInterval;
         this.lastUpdated = 0;
@@ -33935,12 +33935,12 @@ var require_jwtTokenExtractor = __commonJS({
         this.openIdMetadata = _JwtTokenExtractor.getOrAddOpenIdMetadata(metadataUrl, proxySettings, tokenRefreshInterval);
       }
       static getOrAddOpenIdMetadata(metadataUrl, proxySettings, tokenRefreshInterval) {
-        let metadata2 = this.openIdMetadataCache.get(metadataUrl);
-        if (!metadata2) {
-          metadata2 = new openIdMetadata_1.OpenIdMetadata(metadataUrl, proxySettings, tokenRefreshInterval);
-          this.openIdMetadataCache.set(metadataUrl, metadata2);
+        let metadata = this.openIdMetadataCache.get(metadataUrl);
+        if (!metadata) {
+          metadata = new openIdMetadata_1.OpenIdMetadata(metadataUrl, proxySettings, tokenRefreshInterval);
+          this.openIdMetadataCache.set(metadataUrl, metadata);
         }
-        return metadata2;
+        return metadata;
       }
       /**
        * Gets the claims identity associated with a request.
@@ -34012,17 +34012,17 @@ var require_jwtTokenExtractor = __commonJS({
             header = decodedToken.header;
           }
           const keyId = header.kid;
-          const metadata2 = yield this.openIdMetadata.getKey(keyId);
-          if (!metadata2) {
+          const metadata = yield this.openIdMetadata.getKey(keyId);
+          if (!metadata) {
             throw new authenticationError_1.AuthenticationError("Signing Key could not be retrieved.", botframework_schema_1.StatusCodes.UNAUTHORIZED);
           }
           try {
             let decodedPayload = {};
-            const verifyResults = (0, jsonwebtoken_1.verify)(jwtToken, metadata2.key, this.tokenValidationParameters);
+            const verifyResults = (0, jsonwebtoken_1.verify)(jwtToken, metadata.key, this.tokenValidationParameters);
             if (verifyResults && typeof verifyResults === "object") {
               decodedPayload = verifyResults;
             }
-            const endorsements = metadata2.endorsements;
+            const endorsements = metadata.endorsements;
             if (Array.isArray(endorsements) && endorsements.length !== 0) {
               const isEndorsed = endorsementsValidator_1.EndorsementsValidator.validate(channelId, endorsements);
               if (!isEndorsed) {
@@ -34045,7 +34045,7 @@ var require_jwtTokenExtractor = __commonJS({
               console.error(err);
               throw new authenticationError_1.AuthenticationError("The token has expired", botframework_schema_1.StatusCodes.UNAUTHORIZED);
             }
-            console.error(`Error finding key for token. Available keys: ${metadata2.key}`);
+            console.error(`Error finding key for token. Available keys: ${metadata.key}`);
             throw err;
           }
         });
@@ -47895,7 +47895,7 @@ var require_mime_types = __commonJS({
     var TEXT_TYPE_REGEXP = /^text\//i;
     exports2.charset = charset;
     exports2.charsets = { lookup: charset };
-    exports2.contentType = contentType4;
+    exports2.contentType = contentType3;
     exports2.extension = extension;
     exports2.extensions = /* @__PURE__ */ Object.create(null);
     exports2.lookup = lookup;
@@ -47915,7 +47915,7 @@ var require_mime_types = __commonJS({
       }
       return false;
     }
-    function contentType4(str) {
+    function contentType3(str) {
       if (!str || typeof str !== "string") {
         return false;
       }
@@ -49149,13 +49149,13 @@ var require_form_data = __commonJS({
         return options.header;
       }
       var contentDisposition = this._getContentDisposition(value, options);
-      var contentType4 = this._getContentType(value, options);
+      var contentType3 = this._getContentType(value, options);
       var contents = "";
       var headers = {
         // add custom disposition as third element or keep it two elements if not
         "Content-Disposition": ["form-data", 'name="' + escapeHeaderParam(field) + '"'].concat(contentDisposition || []),
         // if no content type. allow it to be empty array
-        "Content-Type": [].concat(contentType4 || [])
+        "Content-Type": [].concat(contentType3 || [])
       };
       if (typeof options.header === "object") {
         populate(headers, options.header);
@@ -49191,23 +49191,23 @@ var require_form_data = __commonJS({
       }
     };
     FormData2.prototype._getContentType = function(value, options) {
-      var contentType4 = options.contentType;
-      if (!contentType4 && value && value.name) {
-        contentType4 = mime.lookup(value.name);
+      var contentType3 = options.contentType;
+      if (!contentType3 && value && value.name) {
+        contentType3 = mime.lookup(value.name);
       }
-      if (!contentType4 && value && value.path) {
-        contentType4 = mime.lookup(value.path);
+      if (!contentType3 && value && value.path) {
+        contentType3 = mime.lookup(value.path);
       }
-      if (!contentType4 && value && value.readable && hasOwn(value, "httpVersion")) {
-        contentType4 = value.headers["content-type"];
+      if (!contentType3 && value && value.readable && hasOwn(value, "httpVersion")) {
+        contentType3 = value.headers["content-type"];
       }
-      if (!contentType4 && (options.filepath || options.filename)) {
-        contentType4 = mime.lookup(options.filepath || options.filename);
+      if (!contentType3 && (options.filepath || options.filename)) {
+        contentType3 = mime.lookup(options.filepath || options.filename);
       }
-      if (!contentType4 && value && typeof value === "object") {
-        contentType4 = FormData2.DEFAULT_CONTENT_TYPE;
+      if (!contentType3 && value && typeof value === "object") {
+        contentType3 = FormData2.DEFAULT_CONTENT_TYPE;
       }
-      return contentType4;
+      return contentType3;
     };
     FormData2.prototype._multiPartFooter = function() {
       return function(next) {
@@ -49838,8 +49838,8 @@ var require_debug3 = __commonJS({
 // node_modules/follow-redirects/index.js
 var require_follow_redirects = __commonJS({
   "node_modules/follow-redirects/index.js"(exports2, module2) {
-    var url3 = require("url");
-    var URL2 = url3.URL;
+    var url2 = require("url");
+    var URL2 = url2.URL;
     var http3 = require("http");
     var https2 = require("https");
     var Writable = require("stream").Writable;
@@ -50100,7 +50100,7 @@ var require_follow_redirects = __commonJS({
       for (var event of events) {
         request.on(event, eventHandlers[event]);
       }
-      this._currentUrl = /^\//.test(this._options.path) ? url3.format(this._options) : (
+      this._currentUrl = /^\//.test(this._options.path) ? url2.format(this._options) : (
         // When making a request to a proxy, […]
         // a client MUST send the target URI in absolute-form […].
         this._options.path
@@ -50168,7 +50168,7 @@ var require_follow_redirects = __commonJS({
       var currentHostHeader = removeMatchingHeaders(/^host$/i, this._options.headers);
       var currentUrlParts = parseUrl(this._currentUrl);
       var currentHost = currentHostHeader || currentUrlParts.host;
-      var currentUrl = /^\w+:/.test(location) ? this._currentUrl : url3.format(Object.assign(currentUrlParts, { host: currentHost }));
+      var currentUrl = /^\w+:/.test(location) ? this._currentUrl : url2.format(Object.assign(currentUrlParts, { host: currentHost }));
       var redirectUrl = resolveUrl(location, currentUrl);
       debug("redirecting to", redirectUrl.href);
       this._isRedirect = true;
@@ -50246,7 +50246,7 @@ var require_follow_redirects = __commonJS({
       if (useNativeURL) {
         parsed = new URL2(input);
       } else {
-        parsed = validateUrl2(url3.parse(input));
+        parsed = validateUrl2(url2.parse(input));
         if (!isString(parsed.protocol)) {
           throw new InvalidUrlError({ input });
         }
@@ -50254,7 +50254,7 @@ var require_follow_redirects = __commonJS({
       return parsed;
     }
     function resolveUrl(relative, base2) {
-      return useNativeURL ? new URL2(relative, base2) : parseUrl(url3.resolve(base2, relative));
+      return useNativeURL ? new URL2(relative, base2) : parseUrl(url2.resolve(base2, relative));
     }
     function validateUrl2(input) {
       if (/^\[/.test(input.hostname) && !/^\[[:0-9a-f]+\]$/i.test(input.hostname)) {
@@ -50290,11 +50290,11 @@ var require_follow_redirects = __commonJS({
       return lastValue === null || typeof lastValue === "undefined" ? void 0 : String(lastValue).trim();
     }
     function createErrorType(code, message, baseClass) {
-      function CustomError(properties2) {
+      function CustomError(properties) {
         if (isFunction(Error.captureStackTrace)) {
           Error.captureStackTrace(this, this.constructor);
         }
-        Object.assign(this, properties2 || {});
+        Object.assign(this, properties || {});
         this.code = code;
         this.message = this.cause ? message + ": " + this.cause.message : message;
       }
@@ -50352,7 +50352,7 @@ var require_axios = __commonJS({
     "use strict";
     var FormData$1 = require_form_data();
     var crypto3 = require("crypto");
-    var url3 = require("url");
+    var url2 = require("url");
     var HttpsProxyAgent2 = require_dist4();
     var http3 = require("http");
     var https2 = require("https");
@@ -51648,11 +51648,11 @@ var require_axios = __commonJS({
     function encode(val) {
       return encodeURIComponent(val).replace(/%3A/gi, ":").replace(/%24/g, "$").replace(/%2C/gi, ",").replace(/%20/g, "+");
     }
-    function buildURL(url4, params, options) {
+    function buildURL(url3, params, options) {
       if (!params) {
-        return url4;
+        return url3;
       }
-      url4 = url4 || "";
+      url3 = url3 || "";
       const _options = utils$1.isFunction(options) ? {
         serialize: options
       } : options;
@@ -51665,13 +51665,13 @@ var require_axios = __commonJS({
         serializedParams = utils$1.isURLSearchParams(params) ? params.toString() : new AxiosURLSearchParams(params, _options).toString(_encode);
       }
       if (serializedParams) {
-        const hashmarkIndex = url4.indexOf("#");
+        const hashmarkIndex = url3.indexOf("#");
         if (hashmarkIndex !== -1) {
-          url4 = url4.slice(0, hashmarkIndex);
+          url3 = url3.slice(0, hashmarkIndex);
         }
-        url4 += (url4.indexOf("?") === -1 ? "?" : "&") + serializedParams;
+        url3 += (url3.indexOf("?") === -1 ? "?" : "&") + serializedParams;
       }
-      return url4;
+      return url3;
     }
     var $internals = /* @__PURE__ */ Symbol("internals");
     function countHandlers(handlers) {
@@ -51816,7 +51816,7 @@ var require_axios = __commonJS({
       advertiseZstdAcceptEncoding: false,
       validateStatusUndefinedResolves: true
     };
-    var URLSearchParams2 = url3.URLSearchParams;
+    var URLSearchParams2 = url2.URLSearchParams;
     var ALPHA = "abcdefghijklmnopqrstuvwxyz";
     var DIGIT = "0123456789";
     var ALPHABET = {
@@ -51960,8 +51960,8 @@ var require_axios = __commonJS({
       transitional: transitionalDefaults,
       adapter: ["xhr", "http", "fetch"],
       transformRequest: [function transformRequest(data, headers) {
-        const contentType4 = headers.getContentType() || "";
-        const hasJSONContentType = contentType4.indexOf("application/json") > -1;
+        const contentType3 = headers.getContentType() || "";
+        const hasJSONContentType = contentType3.indexOf("application/json") > -1;
         const isObjectPayload = utils$1.isObject(data);
         if (isObjectPayload && utils$1.isHTMLForm(data)) {
           data = new FormData(data);
@@ -51983,10 +51983,10 @@ var require_axios = __commonJS({
         let isFileList2;
         if (isObjectPayload) {
           const formSerializer = own(this, "formSerializer");
-          if (contentType4.indexOf("application/x-www-form-urlencoded") > -1) {
+          if (contentType3.indexOf("application/x-www-form-urlencoded") > -1) {
             return toURLEncodedForm(data, formSerializer).toString();
           }
-          if ((isFileList2 = utils$1.isFileList(data)) || contentType4.indexOf("multipart/form-data") > -1) {
+          if ((isFileList2 = utils$1.isFileList(data)) || contentType3.indexOf("multipart/form-data") > -1) {
             const env = own(this, "env");
             const _FormData = env && env.FormData;
             return toFormData(isFileList2 ? {
@@ -52088,11 +52088,11 @@ var require_axios = __commonJS({
         reject(new AxiosError("Request failed with status code " + response.status, response.status >= 400 && response.status < 500 ? AxiosError.ERR_BAD_REQUEST : AxiosError.ERR_BAD_RESPONSE, response.config, response.request, response));
       }
     }
-    function isAbsoluteURL(url4) {
-      if (typeof url4 !== "string") {
+    function isAbsoluteURL(url3) {
+      if (typeof url3 !== "string") {
         return false;
       }
-      return /^([a-z][a-z\d+\-.]*:)?\/\//i.test(url4);
+      return /^([a-z][a-z\d+\-.]*:)?\/\//i.test(url3);
     }
     function combineURLs(baseURL, relativeURL) {
       if (!relativeURL) {
@@ -52105,15 +52105,15 @@ var require_axios = __commonJS({
       return baseURL.slice(0, end) + "/" + relativeURL.replace(/^\/+/, "");
     }
     var urlParserControlCharacters = /[\t\n\r]/g;
-    function normalizeURLForProtocolCheck(url4) {
-      if (typeof url4 !== "string") {
-        return url4;
+    function normalizeURLForProtocolCheck(url3) {
+      if (typeof url3 !== "string") {
+        return url3;
       }
       let start = 0;
-      while (start < url4.length && url4.charCodeAt(start) <= 32) {
+      while (start < url3.length && url3.charCodeAt(start) <= 32) {
         start++;
       }
-      return url4.slice(start).replace(urlParserControlCharacters, "");
+      return url3.slice(start).replace(urlParserControlCharacters, "");
     }
     var malformedHttpProtocol = /^https?:(?!\/\/)/i;
     function redactFragment(fragment) {
@@ -52124,8 +52124,8 @@ var require_axios = __commonJS({
         return `${separator}${parameterName}${REDACTED}`;
       });
     }
-    function redactSensitiveURLParts(url4) {
-      const redactedURL = url4.replace(/^(https?:\/{0,2})[^/?#]*@/i, `$1${REDACTED}@`);
+    function redactSensitiveURLParts(url3) {
+      const redactedURL = url3.replace(/^(https?:\/{0,2})[^/?#]*@/i, `$1${REDACTED}@`);
       const fragmentIndex = redactedURL.indexOf("#");
       const urlWithoutFragment = fragmentIndex === -1 ? redactedURL : redactedURL.slice(0, fragmentIndex);
       const redactedURLWithoutFragment = urlWithoutFragment.replace(/([?&][^=&#]*=)[^&#]*/g, `$1${REDACTED}`);
@@ -52134,9 +52134,9 @@ var require_axios = __commonJS({
       }
       return `${redactedURLWithoutFragment}#${redactFragment(redactedURL.slice(fragmentIndex + 1))}`;
     }
-    function assertValidHttpProtocolURL(url4, config) {
-      if (typeof url4 === "string") {
-        const normalizedURL = normalizeURLForProtocolCheck(url4);
+    function assertValidHttpProtocolURL(url3, config) {
+      if (typeof url3 === "string") {
+        const normalizedURL = normalizeURLForProtocolCheck(url3);
         if (malformedHttpProtocol.test(normalizedURL)) {
           throw new AxiosError(`Invalid URL ${JSON.stringify(redactSensitiveURLParts(normalizedURL))}: missing "//" after protocol`, AxiosError.ERR_INVALID_URL, config);
         }
@@ -52166,8 +52166,8 @@ var require_axios = __commonJS({
         return null;
       }
     }
-    function getProxyForUrl(url4) {
-      var parsedUrl = (typeof url4 === "string" ? parseUrl(url4) : url4) || {};
+    function getProxyForUrl(url3) {
+      var parsedUrl = (typeof url3 === "string" ? parseUrl(url3) : url3) || {};
       var proto = parsedUrl.protocol;
       var hostname = parsedUrl.host;
       var port = parsedUrl.port;
@@ -52217,8 +52217,8 @@ var require_axios = __commonJS({
       return process.env[key.toLowerCase()] || process.env[key.toUpperCase()] || "";
     }
     var VERSION = "1.20.0";
-    function parseProtocol(url4) {
-      const match = /^([-+\w]{1,25}):(?:\/\/)?/.exec(url4);
+    function parseProtocol(url3) {
+      const match = /^([-+\w]{1,25}):(?:\/\/)?/.exec(url3);
       return match && match[1] || "";
     }
     var DATA_URL_PATTERN = /^([^,;/]+\/[^,;/]+)?((?:;[^,;=]+=[^,;]+)*)(;base64)?,([\s\S]*)$/;
@@ -52827,7 +52827,7 @@ var require_axios = __commonJS({
       if (!match) {
         return null;
       }
-      let prefix2 = Number(match[2]);
+      let prefix = Number(match[2]);
       const parsedBase = normalizeCidrBase(match[1]);
       if (!parsedBase) {
         return null;
@@ -52837,28 +52837,28 @@ var require_axios = __commonJS({
         wasIPv6
       } = parsedBase;
       if (wasIPv6 && normalized.indexOf(":") === -1) {
-        if (prefix2 < 96) {
+        if (prefix < 96) {
           return null;
         }
-        prefix2 -= 96;
+        prefix -= 96;
       }
       const bytes = ipToBytes(normalized);
-      if (!bytes || prefix2 > bytes.length * 8) {
+      if (!bytes || prefix > bytes.length * 8) {
         return null;
       }
       return {
         bytes,
-        prefix: prefix2
+        prefix
       };
     };
-    var isInSubnet = (addressBytes, networkBytes, prefix2) => {
-      const fullBytes = prefix2 >> 3;
+    var isInSubnet = (addressBytes, networkBytes, prefix) => {
+      const fullBytes = prefix >> 3;
       for (let i = 0; i < fullBytes; i++) {
         if (addressBytes[i] !== networkBytes[i]) {
           return false;
         }
       }
-      const remainingBits = prefix2 & 7;
+      const remainingBits = prefix & 7;
       if (remainingBits) {
         const mask = 255 << 8 - remainingBits & 255;
         if ((addressBytes[fullBytes] & mask) !== (networkBytes[fullBytes] & mask)) {
@@ -53070,13 +53070,13 @@ var require_axios = __commonJS({
       }
       return base64Bytes(significant);
     };
-    var estimateDataURLBytes = (url4, estimateBase64) => {
-      if (!url4 || typeof url4 !== "string") return 0;
-      if (!url4.startsWith("data:")) return 0;
-      const comma = url4.indexOf(",");
+    var estimateDataURLBytes = (url3, estimateBase64) => {
+      if (!url3 || typeof url3 !== "string") return 0;
+      if (!url3.startsWith("data:")) return 0;
+      const comma = url3.indexOf(",");
       if (comma < 0) return 0;
-      const meta = url4.slice(5, comma);
-      const body = url4.slice(comma + 1);
+      const meta = url3.slice(5, comma);
+      const body = url3.slice(comma + 1);
       const isBase64 = /;base64/i.test(meta);
       if (isBase64) {
         return estimateBase64(body);
@@ -53105,12 +53105,12 @@ var require_axios = __commonJS({
       }
       return bytes;
     };
-    function estimateDataURLDecodedBytes(url4) {
-      const fragmentIndex = typeof url4 === "string" ? url4.indexOf("#") : -1;
-      return estimateDataURLBytes(fragmentIndex === -1 ? url4 : url4.slice(0, fragmentIndex), estimatePercentDecodedBase64Bytes);
+    function estimateDataURLDecodedBytes(url3) {
+      const fragmentIndex = typeof url3 === "string" ? url3.indexOf("#") : -1;
+      return estimateDataURLBytes(fragmentIndex === -1 ? url3 : url3.slice(0, fragmentIndex), estimatePercentDecodedBase64Bytes);
     }
-    function estimateDataURLBufferAllocation(url4) {
-      return estimateDataURLBytes(url4, estimateBase64BufferAllocation);
+    function estimateDataURLBufferAllocation(url3) {
+      return estimateDataURLBytes(url3, estimateBase64BufferAllocation);
     }
     var zlibOptions = {
       flush: zlib2.constants.Z_SYNC_FLUSH,
@@ -54008,9 +54008,9 @@ var require_axios = __commonJS({
         }
       });
     };
-    var isURLSameOrigin = platform2.hasStandardBrowserEnv ? /* @__PURE__ */ ((origin2, isMSIE) => (url4) => {
-      url4 = new URL(url4, platform2.origin);
-      return origin2.protocol === url4.protocol && origin2.host === url4.host && (isMSIE || origin2.port === url4.port);
+    var isURLSameOrigin = platform2.hasStandardBrowserEnv ? /* @__PURE__ */ ((origin2, isMSIE) => (url3) => {
+      url3 = new URL(url3, platform2.origin);
+      return origin2.protocol === url3.protocol && origin2.host === url3.host && (isMSIE || origin2.port === url3.port);
     })(new URL(platform2.origin), platform2.navigator && /(msie|trident)/i.test(platform2.navigator.userAgent)) : () => true;
     var cookies = platform2.hasStandardBrowserEnv ? (
       // Standard browser envs support document.cookie
@@ -54208,9 +54208,9 @@ var require_axios = __commonJS({
       const auth = own2("auth");
       const baseURL = own2("baseURL");
       const allowAbsoluteUrls = own2("allowAbsoluteUrls");
-      const url4 = own2("url");
+      const url3 = own2("url");
       newConfig.headers = headers = AxiosHeaders.from(headers);
-      newConfig.url = buildURL(buildFullPath(baseURL, url4, allowAbsoluteUrls, newConfig), own2("params"), own2("paramsSerializer"));
+      newConfig.url = buildURL(buildFullPath(baseURL, url3, allowAbsoluteUrls, newConfig), own2("params"), own2("paramsSerializer"));
       if (auth) {
         const username = utils$1.getSafeProp(auth, "username") || "";
         const password = utils$1.getSafeProp(auth, "password") || "";
@@ -54554,9 +54554,9 @@ var require_axios = __commonJS({
         return false;
       }
     };
-    var maybeWithAuthCredentials = (url4) => {
-      const protocolIndex = url4.indexOf("://");
-      let urlToCheck = url4;
+    var maybeWithAuthCredentials = (url3) => {
+      const protocolIndex = url3.indexOf("://");
+      let urlToCheck = url3;
       if (protocolIndex !== -1) {
         urlToCheck = urlToCheck.slice(protocolIndex + 3);
       }
@@ -54648,7 +54648,7 @@ var require_axios = __commonJS({
       };
       return async (config) => {
         let {
-          url: url4,
+          url: url3,
           method,
           data,
           signal,
@@ -54688,8 +54688,8 @@ var require_axios = __commonJS({
               password
             };
           }
-          if (maybeWithAuthCredentials(url4)) {
-            const parsedURL = new URL(url4, platform2.origin);
+          if (maybeWithAuthCredentials(url3)) {
+            const parsedURL = new URL(url3, platform2.origin);
             if (!auth && (parsedURL.username || parsedURL.password)) {
               const urlUsername = decodeURIComponentSafe(parsedURL.username);
               const urlPassword = decodeURIComponentSafe(parsedURL.password);
@@ -54701,15 +54701,15 @@ var require_axios = __commonJS({
             if (parsedURL.username || parsedURL.password) {
               parsedURL.username = "";
               parsedURL.password = "";
-              url4 = parsedURL.href;
+              url3 = parsedURL.href;
             }
           }
           if (auth) {
             headers.delete("authorization");
             headers.set("Authorization", "Basic " + btoa(encodeUTF8((auth.username || "") + ":" + (auth.password || ""))));
           }
-          if (hasMaxContentLength && typeof url4 === "string" && url4.startsWith("data:")) {
-            const estimated = estimateDataURLDecodedBytes(url4);
+          if (hasMaxContentLength && typeof url3 === "string" && url3.startsWith("data:")) {
+            const estimated = estimateDataURLDecodedBytes(url3);
             if (estimated > maxContentLength) {
               throw new AxiosError("maxContentLength size of " + maxContentLength + " exceeded", AxiosError.ERR_BAD_RESPONSE, config, request);
             }
@@ -54733,7 +54733,7 @@ var require_axios = __commonJS({
           if (supportsRequestStream && method !== "get" && method !== "head" && (onUploadProgress || mustEnforceStreamBody)) {
             requestContentLength = requestContentLength == null ? await resolveBodyLength(headers, data) : requestContentLength;
             if (requestContentLength !== 0 || mustEnforceStreamBody) {
-              let _request = new Request2(url4, {
+              let _request = new Request2(url3, {
                 method: "POST",
                 body: data,
                 duplex: "half"
@@ -54757,8 +54757,8 @@ var require_axios = __commonJS({
           }
           const isCredentialsSupported = isRequestSupported && "credentials" in Request2.prototype;
           if (utils$1.isFormData(data)) {
-            const contentType4 = headers.getContentType();
-            if (contentType4 && /^multipart\/form-data/i.test(contentType4) && !/boundary=/i.test(contentType4)) {
+            const contentType3 = headers.getContentType();
+            if (contentType3 && /^multipart\/form-data/i.test(contentType3) && !/boundary=/i.test(contentType3)) {
               headers.delete("content-type");
             }
           }
@@ -54799,8 +54799,8 @@ var require_axios = __commonJS({
               safeFetchOptions.redirect = "manual";
             }
           }
-          request = isRequestSupported && new Request2(url4, resolvedOptions);
-          let response = await (isRequestSupported ? _fetch(request, safeFetchOptions) : _fetch(url4, resolvedOptions));
+          request = isRequestSupported && new Request2(url3, resolvedOptions);
+          let response = await (isRequestSupported ? _fetch(request, safeFetchOptions) : _fetch(url3, resolvedOptions));
           const responseHeaders = AxiosHeaders.from(response.headers);
           if (hasMaxContentLength) {
             const declaredLength = utils$1.toFiniteNumber(responseHeaders.getContentLength());
@@ -55034,17 +55034,17 @@ var require_axios = __commonJS({
       };
     });
     var deprecatedWarnings = {};
-    validators$1.transitional = function transitional(validator2, version5, message) {
+    validators$1.transitional = function transitional(validator2, version4, message) {
       function formatMessage(opt, desc) {
         return "[Axios v" + VERSION + "] Transitional option '" + opt + "'" + desc + (message ? ". " + message : "");
       }
       return (value, opt, opts) => {
         if (validator2 === false) {
-          throw new AxiosError(formatMessage(opt, " has been removed" + (version5 ? " in " + version5 : "")), AxiosError.ERR_DEPRECATED);
+          throw new AxiosError(formatMessage(opt, " has been removed" + (version4 ? " in " + version4 : "")), AxiosError.ERR_DEPRECATED);
         }
-        if (version5 && !deprecatedWarnings[opt]) {
+        if (version4 && !deprecatedWarnings[opt]) {
           deprecatedWarnings[opt] = true;
-          console.warn(formatMessage(opt, " has been deprecated since v" + version5 + " and will be removed in the near future"));
+          console.warn(formatMessage(opt, " has been deprecated since v" + version4 + " and will be removed in the near future"));
         }
         return validator2 ? validator2(value, opt, opts) : true;
       };
@@ -55256,23 +55256,23 @@ var require_axios = __commonJS({
       }
     };
     utils$1.forEach(["delete", "get", "head", "options"], function forEachMethodNoData(method) {
-      Axios.prototype[method] = function(url4, config) {
+      Axios.prototype[method] = function(url3, config) {
         return this.request(mergeConfig(config || {}, {
           method,
-          url: url4,
+          url: url3,
           data: config && utils$1.hasOwnProp(config, "data") ? config.data : void 0
         }));
       };
     });
     utils$1.forEach(["post", "put", "patch", "query"], function forEachMethodWithData(method) {
       function generateHTTPMethod(isForm) {
-        return function httpMethod(url4, data, config) {
+        return function httpMethod(url3, data, config) {
           return this.request(mergeConfig(config || {}, {
             method,
             headers: isForm ? {
               "Content-Type": "multipart/form-data"
             } : {},
-            url: url4,
+            url: url3,
             data
           }));
         };
@@ -55479,7 +55479,7 @@ var require_axios = __commonJS({
       utils$1.extend(instance, context3, null, {
         allOwnKeys: true
       });
-      instance.create = function create(instanceConfig) {
+      instance.create = function create2(instanceConfig) {
         return createInstance(mergeConfig(defaultConfig, instanceConfig));
       };
       return instance;
@@ -55602,9 +55602,9 @@ var require_botFrameworkClientImpl = __commonJS({
         validateStatus: () => true
       });
       return (input, init) => __awaiter2(void 0, void 0, void 0, function* () {
-        const url3 = z.string().parse(input);
+        const url2 = z.string().parse(input);
         const { body, headers } = z.object({ body: z.string(), headers: z.record(z.string()).optional() }).parse(init);
-        const response = yield axiosInstance.post(url3, body, {
+        const response = yield axiosInstance.post(url2, body, {
           headers
         });
         return {
@@ -58391,8 +58391,8 @@ var require_msal_node = __commonJS({
       authorityMetadata.preferred_network = updatedValues.preferred_network;
       authorityMetadata.aliasesFromNetwork = fromNetwork;
     }
-    function isAuthorityMetadataExpired2(metadata2) {
-      return metadata2.expiresAt <= nowSeconds2();
+    function isAuthorityMetadataExpired2(metadata) {
+      return metadata.expiresAt <= nowSeconds2();
     }
     var redirectUriEmpty2 = "redirect_uri_empty";
     var claimsRequestParsingError2 = "claims_request_parsing_error";
@@ -59020,7 +59020,7 @@ var require_msal_node = __commonJS({
        * @param serverClientInfo
        * @param authType
        */
-      static generateHomeAccountId(serverClientInfo, authType, logger32, cryptoObj, idTokenClaims) {
+      static generateHomeAccountId(serverClientInfo, authType, logger33, cryptoObj, idTokenClaims) {
         if (!(authType === AuthorityType2.Adfs || authType === AuthorityType2.Dsts)) {
           if (serverClientInfo) {
             try {
@@ -59031,7 +59031,7 @@ var require_msal_node = __commonJS({
             } catch (e) {
             }
           }
-          logger32.warning("No client info in response");
+          logger33.warning("No client info in response");
         }
         return idTokenClaims?.sub || "";
       }
@@ -59091,22 +59091,22 @@ var require_msal_node = __commonJS({
       get urlString() {
         return this._urlString;
       }
-      constructor(url3) {
-        this._urlString = url3;
+      constructor(url2) {
+        this._urlString = url2;
         if (!this._urlString) {
           throw createClientConfigurationError2(urlEmptyError2);
         }
-        if (!url3.includes("#")) {
-          this._urlString = _UrlString.canonicalizeUri(url3);
+        if (!url2.includes("#")) {
+          this._urlString = _UrlString.canonicalizeUri(url2);
         }
       }
       /**
        * Ensure urls are lower case and end with a / character.
        * @param url
        */
-      static canonicalizeUri(url3) {
-        if (url3) {
-          let lowerCaseUrl = url3.toLowerCase();
+      static canonicalizeUri(url2) {
+        if (url2) {
+          let lowerCaseUrl = url2.toLowerCase();
           if (StringUtils2.endsWith(lowerCaseUrl, "?")) {
             lowerCaseUrl = lowerCaseUrl.slice(0, -1);
           } else if (StringUtils2.endsWith(lowerCaseUrl, "?/")) {
@@ -59117,7 +59117,7 @@ var require_msal_node = __commonJS({
           }
           return lowerCaseUrl;
         }
-        return url3;
+        return url2;
       }
       /**
        * Throws if urlString passed is not a valid authority URI string.
@@ -59141,18 +59141,18 @@ var require_msal_node = __commonJS({
        * @param url
        * @param queryString
        */
-      static appendQueryString(url3, queryString) {
+      static appendQueryString(url2, queryString) {
         if (!queryString) {
-          return url3;
+          return url2;
         }
-        return url3.indexOf("?") < 0 ? `${url3}?${queryString}` : `${url3}&${queryString}`;
+        return url2.indexOf("?") < 0 ? `${url2}?${queryString}` : `${url2}&${queryString}`;
       }
       /**
        * Returns a url with the hash removed
        * @param url
        */
-      static removeHashFromUrl(url3) {
-        return _UrlString.canonicalizeUri(url3.split("#")[0]);
+      static removeHashFromUrl(url2) {
+        return _UrlString.canonicalizeUri(url2.split("#")[0]);
       }
       /**
        * Given a url like https://a:b/common/d?e=f#g, and a tenantId, returns https://a:b/tenantId/d
@@ -59191,9 +59191,9 @@ var require_msal_node = __commonJS({
         }
         return urlComponents;
       }
-      static getDomainFromUrl(url3) {
+      static getDomainFromUrl(url2) {
         const regEx = RegExp("^([^:/?#]+://)?([^/?#]*)");
-        const match = url3.match(regEx);
+        const match = url2.match(regEx);
         if (!match) {
           throw createClientConfigurationError2(urlParseError2);
         }
@@ -59201,8 +59201,8 @@ var require_msal_node = __commonJS({
       }
       static getAbsoluteUrl(relativeUrl, baseUrl) {
         if (relativeUrl[0] === Constants$1.FORWARD_SLASH) {
-          const url3 = new _UrlString(baseUrl);
-          const baseComponents = url3.getUrlComponents();
+          const url2 = new _UrlString(baseUrl);
+          const baseComponents = url2.getUrlComponents();
           return baseComponents.Protocol + "//" + baseComponents.HostNameAndPort + relativeUrl;
         }
         return relativeUrl;
@@ -59291,37 +59291,37 @@ var require_msal_node = __commonJS({
         InstanceDiscoveryMetadataAliases2.add(alias);
       });
     });
-    function getAliasesFromStaticSources2(staticAuthorityOptions, logger32) {
+    function getAliasesFromStaticSources2(staticAuthorityOptions, logger33) {
       let staticAliases;
       const canonicalAuthority = staticAuthorityOptions.canonicalAuthority;
       if (canonicalAuthority) {
         const authorityHost = new UrlString2(canonicalAuthority).getUrlComponents().HostNameAndPort;
-        staticAliases = getAliasesFromMetadata2(authorityHost, staticAuthorityOptions.cloudDiscoveryMetadata?.metadata, AuthorityMetadataSource2.CONFIG, logger32) || getAliasesFromMetadata2(authorityHost, InstanceDiscoveryMetadata2.metadata, AuthorityMetadataSource2.HARDCODED_VALUES, logger32) || staticAuthorityOptions.knownAuthorities;
+        staticAliases = getAliasesFromMetadata2(authorityHost, staticAuthorityOptions.cloudDiscoveryMetadata?.metadata, AuthorityMetadataSource2.CONFIG, logger33) || getAliasesFromMetadata2(authorityHost, InstanceDiscoveryMetadata2.metadata, AuthorityMetadataSource2.HARDCODED_VALUES, logger33) || staticAuthorityOptions.knownAuthorities;
       }
       return staticAliases || [];
     }
-    function getAliasesFromMetadata2(authorityHost, cloudDiscoveryMetadata, source, logger32) {
-      logger32?.trace(`getAliasesFromMetadata called with source: ${source}`);
+    function getAliasesFromMetadata2(authorityHost, cloudDiscoveryMetadata, source, logger33) {
+      logger33?.trace(`getAliasesFromMetadata called with source: ${source}`);
       if (authorityHost && cloudDiscoveryMetadata) {
-        const metadata2 = getCloudDiscoveryMetadataFromNetworkResponse2(cloudDiscoveryMetadata, authorityHost);
-        if (metadata2) {
-          logger32?.trace(`getAliasesFromMetadata: found cloud discovery metadata in ${source}, returning aliases`);
-          return metadata2.aliases;
+        const metadata = getCloudDiscoveryMetadataFromNetworkResponse2(cloudDiscoveryMetadata, authorityHost);
+        if (metadata) {
+          logger33?.trace(`getAliasesFromMetadata: found cloud discovery metadata in ${source}, returning aliases`);
+          return metadata.aliases;
         } else {
-          logger32?.trace(`getAliasesFromMetadata: did not find cloud discovery metadata in ${source}`);
+          logger33?.trace(`getAliasesFromMetadata: did not find cloud discovery metadata in ${source}`);
         }
       }
       return null;
     }
     function getCloudDiscoveryMetadataFromHardcodedValues2(authorityHost) {
-      const metadata2 = getCloudDiscoveryMetadataFromNetworkResponse2(InstanceDiscoveryMetadata2.metadata, authorityHost);
-      return metadata2;
+      const metadata = getCloudDiscoveryMetadataFromNetworkResponse2(InstanceDiscoveryMetadata2.metadata, authorityHost);
+      return metadata;
     }
     function getCloudDiscoveryMetadataFromNetworkResponse2(response, authorityHost) {
       for (let i = 0; i < response.length; i++) {
-        const metadata2 = response[i];
-        if (metadata2.aliases.includes(authorityHost)) {
-          return metadata2;
+        const metadata = response[i];
+        if (metadata.aliases.includes(authorityHost)) {
+          return metadata;
         }
       }
       return null;
@@ -59353,10 +59353,10 @@ var require_msal_node = __commonJS({
       }
     }
     var CacheManager2 = class _CacheManager {
-      constructor(clientId, cryptoImpl, logger32, staticAuthorityOptions) {
+      constructor(clientId, cryptoImpl, logger33, staticAuthorityOptions) {
         this.clientId = clientId;
         this.cryptoImpl = cryptoImpl;
-        this.commonLogger = logger32.clone(name$1, version$1);
+        this.commonLogger = logger33.clone(name$1, version$1);
         this.staticAuthorityOptions = staticAuthorityOptions;
       }
       /**
@@ -59790,7 +59790,7 @@ var require_msal_node = __commonJS({
        * @param logger
        * @returns
        */
-      updateOutdatedCachedAccount(accountKey, accountEntity, correlationId, logger32) {
+      updateOutdatedCachedAccount(accountKey, accountEntity, correlationId, logger33) {
         if (accountEntity && accountEntity.isSingleTenant()) {
           this.commonLogger?.verbose("updateOutdatedCachedAccount: Found a single-tenant (outdated) account entity in the cache, migrating to multi-tenant account entity");
           const matchingAccountKeys = this.getAccountKeys().filter((key) => {
@@ -59824,7 +59824,7 @@ var require_msal_node = __commonJS({
             }
           });
           this.setAccount(updatedAccount, correlationId);
-          logger32?.verbose("Updated an outdated account entity in the cache");
+          logger33?.verbose("Updated an outdated account entity in the cache");
           return updatedAccount;
         }
         return accountEntity;
@@ -61240,9 +61240,9 @@ var require_msal_node = __commonJS({
       Sha256Digest: "sha256Digest",
       GetRandomValues: "getRandomValues"
     };
-    var invoke2 = (callback, eventName, logger32, telemetryClient, correlationId) => {
+    var invoke2 = (callback, eventName, logger33, telemetryClient, correlationId) => {
       return (...args) => {
-        logger32.trace(`Executing function ${eventName}`);
+        logger33.trace(`Executing function ${eventName}`);
         const inProgressEvent = telemetryClient?.startMeasurement(eventName, correlationId);
         if (correlationId) {
           const eventCount = eventName + "CallCount";
@@ -61253,14 +61253,14 @@ var require_msal_node = __commonJS({
           inProgressEvent?.end({
             success: true
           });
-          logger32.trace(`Returning result from ${eventName}`);
+          logger33.trace(`Returning result from ${eventName}`);
           return result;
         } catch (e) {
-          logger32.trace(`Error occurred in ${eventName}`);
+          logger33.trace(`Error occurred in ${eventName}`);
           try {
-            logger32.trace(JSON.stringify(e));
+            logger33.trace(JSON.stringify(e));
           } catch (e2) {
-            logger32.trace("Unable to print error message.");
+            logger33.trace("Unable to print error message.");
           }
           inProgressEvent?.end({
             success: false
@@ -61269,9 +61269,9 @@ var require_msal_node = __commonJS({
         }
       };
     };
-    var invokeAsync2 = (callback, eventName, logger32, telemetryClient, correlationId) => {
+    var invokeAsync2 = (callback, eventName, logger33, telemetryClient, correlationId) => {
       return (...args) => {
-        logger32.trace(`Executing function ${eventName}`);
+        logger33.trace(`Executing function ${eventName}`);
         const inProgressEvent = telemetryClient?.startMeasurement(eventName, correlationId);
         if (correlationId) {
           const eventCount = eventName + "CallCount";
@@ -61279,17 +61279,17 @@ var require_msal_node = __commonJS({
         }
         telemetryClient?.setPreQueueTime(eventName, correlationId);
         return callback(...args).then((response) => {
-          logger32.trace(`Returning result from ${eventName}`);
+          logger33.trace(`Returning result from ${eventName}`);
           inProgressEvent?.end({
             success: true
           });
           return response;
         }).catch((e) => {
-          logger32.trace(`Error occurred in ${eventName}`);
+          logger33.trace(`Error occurred in ${eventName}`);
           try {
-            logger32.trace(JSON.stringify(e));
+            logger33.trace(JSON.stringify(e));
           } catch (e2) {
-            logger32.trace("Unable to print error message.");
+            logger33.trace("Unable to print error message.");
           }
           inProgressEvent?.end({
             success: false
@@ -61299,9 +61299,9 @@ var require_msal_node = __commonJS({
       };
     };
     var RegionDiscovery2 = class _RegionDiscovery {
-      constructor(networkInterface, logger32, performanceClient, correlationId) {
+      constructor(networkInterface, logger33, performanceClient, correlationId) {
         this.networkInterface = networkInterface;
-        this.logger = logger32;
+        this.logger = logger33;
         this.performanceClient = performanceClient;
         this.correlationId = correlationId;
       }
@@ -61351,9 +61351,9 @@ var require_msal_node = __commonJS({
        * @param imdsEndpointUrl
        * @returns Promise<NetworkResponse<string>>
        */
-      async getRegionFromIMDS(version6, options) {
+      async getRegionFromIMDS(version5, options) {
         this.performanceClient?.addQueueMeasurement(PerformanceEvents.RegionDiscoveryGetRegionFromIMDS, this.correlationId);
-        return this.networkInterface.sendGetRequestAsync(`${Constants$1.IMDS_ENDPOINT}?api-version=${version6}&format=text`, options, Constants$1.IMDS_TIMEOUT);
+        return this.networkInterface.sendGetRequestAsync(`${Constants$1.IMDS_ENDPOINT}?api-version=${version5}&format=text`, options, Constants$1.IMDS_TIMEOUT);
       }
       /**
        * Get the most recent version of the IMDS endpoint available
@@ -61379,7 +61379,7 @@ var require_msal_node = __commonJS({
       }
     };
     var Authority2 = class _Authority {
-      constructor(authority, networkInterface, cacheManager, authorityOptions, logger32, correlationId, performanceClient, managedIdentity) {
+      constructor(authority, networkInterface, cacheManager, authorityOptions, logger33, correlationId, performanceClient, managedIdentity) {
         this.canonicalAuthority = authority;
         this._canonicalAuthority.validateAsUri();
         this.networkInterface = networkInterface;
@@ -61390,7 +61390,7 @@ var require_msal_node = __commonJS({
           region_source: void 0,
           region_outcome: void 0
         };
-        this.logger = logger32;
+        this.logger = logger33;
         this.performanceClient = performanceClient;
         this.correlationId = correlationId;
         this.managedIdentity = managedIdentity || false;
@@ -61441,8 +61441,8 @@ var require_msal_node = __commonJS({
       /**
        * Sets canonical authority.
        */
-      set canonicalAuthority(url3) {
-        this._canonicalAuthority = new UrlString2(url3);
+      set canonicalAuthority(url2) {
+        this._canonicalAuthority = new UrlString2(url2);
         this._canonicalAuthority.validateAsUri();
         this._canonicalAuthorityUrlComponents = null;
       }
@@ -61661,12 +61661,12 @@ var require_msal_node = __commonJS({
           }
           return localMetadata.source;
         }
-        let metadata2 = await invokeAsync2(this.getEndpointMetadataFromNetwork.bind(this), PerformanceEvents.AuthorityGetEndpointMetadataFromNetwork, this.logger, this.performanceClient, this.correlationId)();
-        if (metadata2) {
+        let metadata = await invokeAsync2(this.getEndpointMetadataFromNetwork.bind(this), PerformanceEvents.AuthorityGetEndpointMetadataFromNetwork, this.logger, this.performanceClient, this.correlationId)();
+        if (metadata) {
           if (this.authorityOptions.azureRegionConfiguration?.azureRegion) {
-            metadata2 = await invokeAsync2(this.updateMetadataWithRegionalInformation.bind(this), PerformanceEvents.AuthorityUpdateMetadataWithRegionalInformation, this.logger, this.performanceClient, this.correlationId)(metadata2);
+            metadata = await invokeAsync2(this.updateMetadataWithRegionalInformation.bind(this), PerformanceEvents.AuthorityUpdateMetadataWithRegionalInformation, this.logger, this.performanceClient, this.correlationId)(metadata);
           }
-          updateAuthorityEndpointMetadata2(metadataEntity, metadata2, true);
+          updateAuthorityEndpointMetadata2(metadataEntity, metadata, true);
           return AuthorityMetadataSource2.NETWORK;
         } else {
           throw createClientAuthError2(openIdConfigError2, this.defaultOpenIdConfigurationEndpoint);
@@ -61773,24 +61773,24 @@ var require_msal_node = __commonJS({
        * Update the retrieved metadata with regional information.
        * User selected Azure region will be used if configured.
        */
-      async updateMetadataWithRegionalInformation(metadata2) {
+      async updateMetadataWithRegionalInformation(metadata) {
         this.performanceClient?.addQueueMeasurement(PerformanceEvents.AuthorityUpdateMetadataWithRegionalInformation, this.correlationId);
         const userConfiguredAzureRegion = this.authorityOptions.azureRegionConfiguration?.azureRegion;
         if (userConfiguredAzureRegion) {
           if (userConfiguredAzureRegion !== Constants$1.AZURE_REGION_AUTO_DISCOVER_FLAG) {
             this.regionDiscoveryMetadata.region_outcome = RegionDiscoveryOutcomes2.CONFIGURED_NO_AUTO_DETECTION;
             this.regionDiscoveryMetadata.region_used = userConfiguredAzureRegion;
-            return _Authority.replaceWithRegionalInformation(metadata2, userConfiguredAzureRegion);
+            return _Authority.replaceWithRegionalInformation(metadata, userConfiguredAzureRegion);
           }
           const autodetectedRegionName = await invokeAsync2(this.regionDiscovery.detectRegion.bind(this.regionDiscovery), PerformanceEvents.RegionDiscoveryDetectRegion, this.logger, this.performanceClient, this.correlationId)(this.authorityOptions.azureRegionConfiguration?.environmentRegion, this.regionDiscoveryMetadata);
           if (autodetectedRegionName) {
             this.regionDiscoveryMetadata.region_outcome = RegionDiscoveryOutcomes2.AUTO_DETECTION_REQUESTED_SUCCESSFUL;
             this.regionDiscoveryMetadata.region_used = autodetectedRegionName;
-            return _Authority.replaceWithRegionalInformation(metadata2, autodetectedRegionName);
+            return _Authority.replaceWithRegionalInformation(metadata, autodetectedRegionName);
           }
           this.regionDiscoveryMetadata.region_outcome = RegionDiscoveryOutcomes2.AUTO_DETECTION_REQUESTED_FAILED;
         }
-        return metadata2;
+        return metadata;
       }
       /**
        * Updates the AuthorityMetadataEntity with new aliases, preferred_network and preferred_cache
@@ -61804,9 +61804,9 @@ var require_msal_node = __commonJS({
         if (localMetadataSource) {
           return localMetadataSource;
         }
-        const metadata2 = await invokeAsync2(this.getCloudDiscoveryMetadataFromNetwork.bind(this), PerformanceEvents.AuthorityGetCloudDiscoveryMetadataFromNetwork, this.logger, this.performanceClient, this.correlationId)();
-        if (metadata2) {
-          updateCloudDiscoveryMetadata2(metadataEntity, metadata2, true);
+        const metadata = await invokeAsync2(this.getCloudDiscoveryMetadataFromNetwork.bind(this), PerformanceEvents.AuthorityGetCloudDiscoveryMetadataFromNetwork, this.logger, this.performanceClient, this.correlationId)();
+        if (metadata) {
+          updateCloudDiscoveryMetadata2(metadataEntity, metadata, true);
           return AuthorityMetadataSource2.NETWORK;
         }
         throw createClientConfigurationError2(untrustedAuthority2);
@@ -61816,10 +61816,10 @@ var require_msal_node = __commonJS({
         this.logger.verbosePii(`Known Authorities: ${this.authorityOptions.knownAuthorities || Constants$1.NOT_APPLICABLE}`);
         this.logger.verbosePii(`Authority Metadata: ${this.authorityOptions.authorityMetadata || Constants$1.NOT_APPLICABLE}`);
         this.logger.verbosePii(`Canonical Authority: ${metadataEntity.canonical_authority || Constants$1.NOT_APPLICABLE}`);
-        const metadata2 = this.getCloudDiscoveryMetadataFromConfig();
-        if (metadata2) {
+        const metadata = this.getCloudDiscoveryMetadataFromConfig();
+        if (metadata) {
           this.logger.verbose("Found cloud discovery metadata in authority configuration");
-          updateCloudDiscoveryMetadata2(metadataEntity, metadata2, false);
+          updateCloudDiscoveryMetadata2(metadataEntity, metadata, false);
           return AuthorityMetadataSource2.CONFIG;
         }
         this.logger.verbose("Did not find cloud discovery metadata in the config... Attempting to get cloud discovery metadata from the hardcoded values.");
@@ -61856,11 +61856,11 @@ var require_msal_node = __commonJS({
           try {
             this.logger.verbose("Attempting to parse the cloud discovery metadata.");
             const parsedResponse = JSON.parse(this.authorityOptions.cloudDiscoveryMetadata);
-            const metadata2 = getCloudDiscoveryMetadataFromNetworkResponse2(parsedResponse.metadata, this.hostnameAndPort);
+            const metadata = getCloudDiscoveryMetadataFromNetworkResponse2(parsedResponse.metadata, this.hostnameAndPort);
             this.logger.verbose("Parsed the cloud discovery metadata.");
-            if (metadata2) {
+            if (metadata) {
               this.logger.verbose("There is returnable metadata attached to the parsed cloud discovery metadata.");
-              return metadata2;
+              return metadata;
             } else {
               this.logger.verbose("There is no metadata attached to the parsed cloud discovery metadata.");
             }
@@ -61888,10 +61888,10 @@ var require_msal_node = __commonJS({
         try {
           const response = await this.networkInterface.sendGetRequestAsync(instanceDiscoveryEndpoint, options);
           let typedResponseBody;
-          let metadata2;
+          let metadata;
           if (isCloudInstanceDiscoveryResponse2(response.body)) {
             typedResponseBody = response.body;
-            metadata2 = typedResponseBody.metadata;
+            metadata = typedResponseBody.metadata;
             this.logger.verbosePii(`tenant_discovery_endpoint is: ${typedResponseBody.tenant_discovery_endpoint}`);
           } else if (isCloudInstanceDiscoveryErrorResponse2(response.body)) {
             this.logger.warning(`A CloudInstanceDiscoveryErrorResponse was returned. The cloud instance discovery network request's status code is: ${response.status}`);
@@ -61903,13 +61903,13 @@ var require_msal_node = __commonJS({
             this.logger.warning(`The CloudInstanceDiscoveryErrorResponse error is ${typedResponseBody.error}`);
             this.logger.warning(`The CloudInstanceDiscoveryErrorResponse error description is ${typedResponseBody.error_description}`);
             this.logger.warning("Setting the value of the CloudInstanceDiscoveryMetadata (returned from the network) to []");
-            metadata2 = [];
+            metadata = [];
           } else {
             this.logger.error("AAD did not return a CloudInstanceDiscoveryResponse or CloudInstanceDiscoveryErrorResponse");
             return null;
           }
           this.logger.verbose("Attempting to find a match between the developer's authority and the CloudInstanceDiscoveryMetadata returned from the network request.");
-          match = getCloudDiscoveryMetadataFromNetworkResponse2(metadata2, this.hostnameAndPort);
+          match = getCloudDiscoveryMetadataFromNetworkResponse2(metadata, this.hostnameAndPort);
         } catch (error) {
           if (error instanceof AuthError2) {
             this.logger.error(`There was a network error while attempting to get the cloud discovery instance metadata.
@@ -62012,13 +62012,13 @@ Error Description: ${typedError.message}`);
         if (this.isPublicCloudAuthority(authorityUrlParts.HostNameAndPort)) {
           hostNameAndPort = `${region}.${Constants$1.REGIONAL_AUTH_PUBLIC_CLOUD_SUFFIX}`;
         }
-        const url3 = UrlString2.constructAuthorityUriFromObject({
+        const url2 = UrlString2.constructAuthorityUriFromObject({
           ...authorityUrlInstance.getUrlComponents(),
           HostNameAndPort: hostNameAndPort
         }).urlString;
         if (queryString)
-          return `${url3}?${queryString}`;
-        return url3;
+          return `${url2}?${queryString}`;
+        return url2;
       }
       /**
        * Replace the endpoints in the metadata object with their regional equivalents.
@@ -62026,8 +62026,8 @@ Error Description: ${typedError.message}`);
        * @param metadata OpenIdConfigResponse
        * @param azureRegion string
        */
-      static replaceWithRegionalInformation(metadata2, azureRegion) {
-        const regionalMetadata = { ...metadata2 };
+      static replaceWithRegionalInformation(metadata, azureRegion) {
+        const regionalMetadata = { ...metadata };
         regionalMetadata.authorization_endpoint = _Authority.buildRegionalAuthorityString(regionalMetadata.authorization_endpoint, azureRegion);
         regionalMetadata.token_endpoint = _Authority.buildRegionalAuthorityString(regionalMetadata.token_endpoint, azureRegion);
         if (regionalMetadata.end_session_endpoint) {
@@ -62094,12 +62094,12 @@ Error Description: ${typedError.message}`);
         cloudDiscoveryMetadata
       };
     }
-    async function createDiscoveredInstance2(authorityUri, networkClient, cacheManager, authorityOptions, logger32, correlationId, performanceClient) {
+    async function createDiscoveredInstance2(authorityUri, networkClient, cacheManager, authorityOptions, logger33, correlationId, performanceClient) {
       performanceClient?.addQueueMeasurement(PerformanceEvents.AuthorityFactoryCreateDiscoveredInstance, correlationId);
       const authorityUriFinal = Authority2.transformCIAMAuthority(formatAuthorityUri2(authorityUri));
-      const acquireTokenAuthority = new Authority2(authorityUriFinal, networkClient, cacheManager, authorityOptions, logger32, correlationId, performanceClient);
+      const acquireTokenAuthority = new Authority2(authorityUriFinal, networkClient, cacheManager, authorityOptions, logger33, correlationId, performanceClient);
       try {
-        await invokeAsync2(acquireTokenAuthority.resolveEndpointsAsync.bind(acquireTokenAuthority), PerformanceEvents.AuthorityResolveEndpointsAsync, logger32, performanceClient, correlationId)();
+        await invokeAsync2(acquireTokenAuthority.resolveEndpointsAsync.bind(acquireTokenAuthority), PerformanceEvents.AuthorityResolveEndpointsAsync, logger33, performanceClient, correlationId)();
         return acquireTokenAuthority;
       } catch (e) {
         throw createClientAuthError2(endpointResolutionError2);
@@ -62473,9 +62473,9 @@ Error Description: ${typedError.message}`);
        * @param request
        * @returns
        */
-      async generateCnf(request, logger32) {
+      async generateCnf(request, logger33) {
         this.performanceClient?.addQueueMeasurement(PerformanceEvents.PopTokenGenerateCnf, request.correlationId);
-        const reqCnf = await invokeAsync2(this.generateKid.bind(this), PerformanceEvents.PopTokenGenerateCnf, logger32, this.performanceClient, request.correlationId)(request);
+        const reqCnf = await invokeAsync2(this.generateKid.bind(this), PerformanceEvents.PopTokenGenerateCnf, logger33, this.performanceClient, request.correlationId)(request);
         const reqCnfString = this.cryptoUtils.base64UrlEncode(JSON.stringify(reqCnf));
         return {
           kid: reqCnf.kid,
@@ -62553,11 +62553,11 @@ Error Description: ${typedError.message}`);
       return errorCodePrefixIndex && errorCodePrefixIndex >= 0 ? serverResponse.error_uri?.substring(errorCodePrefixIndex + errorCodePrefix.length) : void 0;
     }
     var ResponseHandler2 = class _ResponseHandler {
-      constructor(clientId, cacheStorage, cryptoObj, logger32, serializableCache, persistencePlugin, performanceClient) {
+      constructor(clientId, cacheStorage, cryptoObj, logger33, serializableCache, persistencePlugin, performanceClient) {
         this.clientId = clientId;
         this.cacheStorage = cacheStorage;
         this.cryptoObj = cryptoObj;
-        this.logger = logger32;
+        this.logger = logger33;
         this.serializableCache = serializableCache;
         this.persistencePlugin = persistencePlugin;
         this.performanceClient = performanceClient;
@@ -62752,7 +62752,7 @@ ${serverError}`);
        * @param fromTokenCache
        * @param stateString
        */
-      static async generateAuthenticationResult(cryptoObj, authority, cacheRecord, fromTokenCache, request, idTokenClaims, requestState, serverTokenResponse, requestId3) {
+      static async generateAuthenticationResult(cryptoObj, authority, cacheRecord, fromTokenCache, request, idTokenClaims, requestState, serverTokenResponse, requestId2) {
         let accessToken = Constants$1.EMPTY_STRING;
         let responseScopes = [];
         let expiresOn = null;
@@ -62806,7 +62806,7 @@ ${serverError}`);
           extExpiresOn,
           refreshOn,
           correlationId: request.correlationId,
-          requestId: requestId3 || Constants$1.EMPTY_STRING,
+          requestId: requestId2 || Constants$1.EMPTY_STRING,
           familyId,
           tokenType: cacheRecord.accessToken?.tokenType || Constants$1.EMPTY_STRING,
           state: requestState ? requestState.userRequestState : Constants$1.EMPTY_STRING,
@@ -62817,15 +62817,15 @@ ${serverError}`);
         };
       }
     };
-    function buildAccountToCache2(cacheStorage, authority, homeAccountId, base64Decode2, correlationId, idTokenClaims, clientInfo, environment, claimsTenantId, authCodePayload, nativeAccountId, logger32) {
-      logger32?.verbose("setCachedAccount called");
+    function buildAccountToCache2(cacheStorage, authority, homeAccountId, base64Decode2, correlationId, idTokenClaims, clientInfo, environment, claimsTenantId, authCodePayload, nativeAccountId, logger33) {
+      logger33?.verbose("setCachedAccount called");
       const accountKeys = cacheStorage.getAccountKeys();
       const baseAccountKey = accountKeys.find((accountKey) => {
         return accountKey.startsWith(homeAccountId);
       });
       let cachedAccount = null;
       if (baseAccountKey) {
-        cachedAccount = cacheStorage.getAccount(baseAccountKey, correlationId, logger32);
+        cachedAccount = cacheStorage.getAccount(baseAccountKey, correlationId, logger33);
       }
       const baseAccount = cachedAccount || AccountEntity.createAccount({
         homeAccountId,
@@ -62891,10 +62891,10 @@ ${serverError}`);
         }
         const reqTimestamp = nowSeconds2();
         const response = await invokeAsync2(this.executeTokenRequest.bind(this), PerformanceEvents.AuthClientExecuteTokenRequest, this.logger, this.performanceClient, request.correlationId)(this.authority, request);
-        const requestId3 = response.headers?.[HeaderNames2.X_MS_REQUEST_ID];
+        const requestId2 = response.headers?.[HeaderNames2.X_MS_REQUEST_ID];
         const responseHandler = new ResponseHandler2(this.config.authOptions.clientId, this.cacheManager, this.cryptoUtils, this.logger, this.config.serializableCache, this.config.persistencePlugin, this.performanceClient);
         responseHandler.validateTokenResponse(response.body);
-        return invokeAsync2(responseHandler.handleServerTokenResponse.bind(responseHandler), PerformanceEvents.HandleServerTokenResponse, this.logger, this.performanceClient, request.correlationId)(response.body, this.authority, reqTimestamp, request, authCodePayload, void 0, void 0, void 0, requestId3);
+        return invokeAsync2(responseHandler.handleServerTokenResponse.bind(responseHandler), PerformanceEvents.HandleServerTokenResponse, this.logger, this.performanceClient, request.correlationId)(response.body, this.authority, reqTimestamp, request, authCodePayload, void 0, void 0, void 0, requestId2);
       }
       /**
        * Handles the hash fragment response from public client code request. Returns a code response used by
@@ -63225,10 +63225,10 @@ ${serverError}`);
         this.performanceClient?.addQueueMeasurement(PerformanceEvents.RefreshTokenClientAcquireToken, request.correlationId);
         const reqTimestamp = nowSeconds2();
         const response = await invokeAsync2(this.executeTokenRequest.bind(this), PerformanceEvents.RefreshTokenClientExecuteTokenRequest, this.logger, this.performanceClient, request.correlationId)(request, this.authority);
-        const requestId3 = response.headers?.[HeaderNames2.X_MS_REQUEST_ID];
+        const requestId2 = response.headers?.[HeaderNames2.X_MS_REQUEST_ID];
         const responseHandler = new ResponseHandler2(this.config.authOptions.clientId, this.cacheManager, this.cryptoUtils, this.logger, this.config.serializableCache, this.config.persistencePlugin);
         responseHandler.validateTokenResponse(response.body);
-        return invokeAsync2(responseHandler.handleServerTokenResponse.bind(responseHandler), PerformanceEvents.HandleServerTokenResponse, this.logger, this.performanceClient, request.correlationId)(response.body, this.authority, reqTimestamp, request, void 0, void 0, true, request.forceCache, requestId3);
+        return invokeAsync2(responseHandler.handleServerTokenResponse.bind(responseHandler), PerformanceEvents.HandleServerTokenResponse, this.logger, this.performanceClient, request.correlationId)(response.body, this.authority, reqTimestamp, request, void 0, void 0, true, request.forceCache, requestId2);
       }
       /**
        * Gets cached refresh token and attaches to request, then calls acquireToken API
@@ -63979,21 +63979,21 @@ ${serverError}`);
        * http.request and https.request APIs.
        * https://github.com/nodejs/node/blob/main/lib/internal/url.js#L1090
        */
-      static urlToHttpOptions(url3) {
+      static urlToHttpOptions(url2) {
         const options = {
-          protocol: url3.protocol,
-          hostname: url3.hostname && url3.hostname.startsWith("[") ? url3.hostname.slice(1, -1) : url3.hostname,
-          hash: url3.hash,
-          search: url3.search,
-          pathname: url3.pathname,
-          path: `${url3.pathname || ""}${url3.search || ""}`,
-          href: url3.href
+          protocol: url2.protocol,
+          hostname: url2.hostname && url2.hostname.startsWith("[") ? url2.hostname.slice(1, -1) : url2.hostname,
+          hash: url2.hash,
+          search: url2.search,
+          pathname: url2.pathname,
+          path: `${url2.pathname || ""}${url2.search || ""}`,
+          href: url2.href
         };
-        if (url3.port !== "") {
-          options.port = Number(url3.port);
+        if (url2.port !== "") {
+          options.port = Number(url2.port);
         }
-        if (url3.username || url3.password) {
-          options.auth = `${decodeURIComponent(url3.username)}:${decodeURIComponent(url3.password)}`;
+        if (url2.username || url2.password) {
+          options.auth = `${decodeURIComponent(url2.username)}:${decodeURIComponent(url2.password)}`;
         }
         return options;
       }
@@ -64008,11 +64008,11 @@ ${serverError}`);
        * @param url
        * @param options
        */
-      async sendGetRequestAsync(url3, options, timeout2) {
+      async sendGetRequestAsync(url2, options, timeout2) {
         if (this.proxyUrl) {
-          return networkRequestViaProxy(url3, this.proxyUrl, HttpMethod3.GET, options, this.customAgentOptions, timeout2);
+          return networkRequestViaProxy(url2, this.proxyUrl, HttpMethod3.GET, options, this.customAgentOptions, timeout2);
         } else {
-          return networkRequestViaHttps(url3, HttpMethod3.GET, options, this.customAgentOptions, timeout2);
+          return networkRequestViaHttps(url2, HttpMethod3.GET, options, this.customAgentOptions, timeout2);
         }
       }
       /**
@@ -64020,11 +64020,11 @@ ${serverError}`);
        * @param url
        * @param options
        */
-      async sendPostRequestAsync(url3, options) {
+      async sendPostRequestAsync(url2, options) {
         if (this.proxyUrl) {
-          return networkRequestViaProxy(url3, this.proxyUrl, HttpMethod3.POST, options, this.customAgentOptions);
+          return networkRequestViaProxy(url2, this.proxyUrl, HttpMethod3.POST, options, this.customAgentOptions);
         } else {
-          return networkRequestViaHttps(url3, HttpMethod3.POST, options, this.customAgentOptions);
+          return networkRequestViaHttps(url2, HttpMethod3.POST, options, this.customAgentOptions);
         }
       }
     };
@@ -64124,12 +64124,12 @@ Connection: close\r
     var networkRequestViaHttps = (urlString, httpMethod, options, agentOptions, timeout2) => {
       const isPostRequest = httpMethod === HttpMethod3.POST;
       const body = options?.body || "";
-      const url3 = new URL(urlString);
+      const url2 = new URL(urlString);
       const headers = options?.headers || {};
       const customOptions = {
         method: httpMethod,
         headers,
-        ...NetworkUtils.urlToHttpOptions(url3)
+        ...NetworkUtils.urlToHttpOptions(url2)
       };
       if (agentOptions && Object.keys(agentOptions).length) {
         customOptions.agent = new https2.Agent(agentOptions);
@@ -64340,27 +64340,27 @@ Headers: ${JSON.stringify(headers)}`
         this.httpClientNoRetries = httpClientNoRetries;
         this.retryPolicy = retryPolicy4;
       }
-      async sendNetworkRequestAsyncHelper(httpMethod, url3, options) {
+      async sendNetworkRequestAsyncHelper(httpMethod, url2, options) {
         if (httpMethod === HttpMethod3.GET) {
-          return this.httpClientNoRetries.sendGetRequestAsync(url3, options);
+          return this.httpClientNoRetries.sendGetRequestAsync(url2, options);
         } else {
-          return this.httpClientNoRetries.sendPostRequestAsync(url3, options);
+          return this.httpClientNoRetries.sendPostRequestAsync(url2, options);
         }
       }
-      async sendNetworkRequestAsync(httpMethod, url3, options) {
-        let response = await this.sendNetworkRequestAsyncHelper(httpMethod, url3, options);
+      async sendNetworkRequestAsync(httpMethod, url2, options) {
+        let response = await this.sendNetworkRequestAsyncHelper(httpMethod, url2, options);
         let currentRetry = 0;
         while (await this.retryPolicy.pauseForRetry(response.status, currentRetry, response.headers[HeaderNames2.RETRY_AFTER])) {
-          response = await this.sendNetworkRequestAsyncHelper(httpMethod, url3, options);
+          response = await this.sendNetworkRequestAsyncHelper(httpMethod, url2, options);
           currentRetry++;
         }
         return response;
       }
-      async sendGetRequestAsync(url3, options) {
-        return this.sendNetworkRequestAsync(HttpMethod3.GET, url3, options);
+      async sendGetRequestAsync(url2, options) {
+        return this.sendNetworkRequestAsync(HttpMethod3.GET, url2, options);
       }
-      async sendPostRequestAsync(url3, options) {
-        return this.sendNetworkRequestAsync(HttpMethod3.POST, url3, options);
+      async sendPostRequestAsync(url2, options) {
+        return this.sendNetworkRequestAsync(HttpMethod3.POST, url2, options);
       }
     };
     var NodeAuthErrorMessage2 = {
@@ -64716,11 +64716,11 @@ Headers: ${JSON.stringify(headers)}`
       }
     };
     var NodeStorage2 = class extends CacheManager2 {
-      constructor(logger32, clientId, cryptoImpl, staticAuthorityOptions) {
-        super(clientId, cryptoImpl, logger32, staticAuthorityOptions);
+      constructor(logger33, clientId, cryptoImpl, staticAuthorityOptions) {
+        super(clientId, cryptoImpl, logger33, staticAuthorityOptions);
         this.cache = {};
         this.changeEmitters = [];
-        this.logger = logger32;
+        this.logger = logger33;
       }
       /**
        * Queue up callbacks
@@ -64999,8 +64999,8 @@ Headers: ${JSON.stringify(headers)}`
        * @param key - lookup key to fetch cache type AuthorityMetadataEntity
        * @param metadata - cache value to be set of type AuthorityMetadataEntity
        */
-      setAuthorityMetadata(key, metadata2) {
-        this.setItem(key, metadata2);
+      setAuthorityMetadata(key, metadata) {
+        this.setItem(key, metadata);
       }
       /**
        * fetch throttling entity from the platform cache
@@ -65114,14 +65114,14 @@ Headers: ${JSON.stringify(headers)}`
       AppMetadata: {}
     };
     var TokenCache2 = class {
-      constructor(storage, logger32, cachePlugin) {
+      constructor(storage, logger33, cachePlugin) {
         this.cacheHasChanged = false;
         this.storage = storage;
         this.storage.registerChangeEmitter(this.handleChangeEvent.bind(this));
         if (cachePlugin) {
           this.persistence = cachePlugin;
         }
-        this.logger = logger32;
+        this.logger = logger33;
       }
       /**
        * Set to true if cache state has changed since last time serialize or writeToPersistence was called
@@ -65452,7 +65452,7 @@ Headers: ${JSON.stringify(headers)}`
       }
     };
     var name3 = "@azure/msal-node";
-    var version5 = "2.16.3";
+    var version4 = "2.16.3";
     var UsernamePasswordClient2 = class extends BaseClient2 {
       constructor(configuration) {
         super(configuration);
@@ -65542,7 +65542,7 @@ Headers: ${JSON.stringify(headers)}`
       constructor(configuration) {
         this.config = buildAppConfiguration2(configuration);
         this.cryptoProvider = new CryptoProvider2();
-        this.logger = new Logger2(this.config.system.loggerOptions, name3, version5);
+        this.logger = new Logger2(this.config.system.loggerOptions, name3, version4);
         this.storage = new NodeStorage2(this.logger, this.config.auth.clientId, this.cryptoProvider, buildStaticAuthorityOptions2(this.config.auth));
         this.tokenCache = new TokenCache2(this.storage, this.logger, this.config.cache.cachePlugin);
       }
@@ -65722,8 +65722,8 @@ Headers: ${JSON.stringify(headers)}`
        * Replaces the default logger set in configurations with new Logger with new configurations
        * @param logger - Logger instance
        */
-      setLogger(logger32) {
-        this.logger = logger32;
+      setLogger(logger33) {
+        this.logger = logger33;
       }
       /**
        * Builds the common configuration to be passed to the common component based on the platform configurarion
@@ -65762,7 +65762,7 @@ Headers: ${JSON.stringify(headers)}`
           },
           libraryInfo: {
             sku: Constants3.MSAL_SKU,
-            version: version5,
+            version: version4,
             cpu: process.arch || Constants$1.EMPTY_STRING,
             os: process.platform || Constants$1.EMPTY_STRING
           },
@@ -65858,17 +65858,17 @@ Headers: ${JSON.stringify(headers)}`
         }
         return new Promise((resolve, reject) => {
           this.server = http3.createServer((req, res) => {
-            const url3 = req.url;
-            if (!url3) {
+            const url2 = req.url;
+            if (!url2) {
               res.end(errorTemplate || "Error occurred loading redirectUrl");
               reject(NodeAuthError2.createUnableToLoadRedirectUrlError());
               return;
-            } else if (url3 === Constants$1.FORWARD_SLASH) {
+            } else if (url2 === Constants$1.FORWARD_SLASH) {
               res.end(successTemplate || "Auth code was successfully acquired. You can close this window now.");
               return;
             }
             const redirectUri = this.getRedirectUri();
-            const parsedUrl = new URL(url3, redirectUri);
+            const parsedUrl = new URL(url2, redirectUri);
             const authCodeResponse = getDeserializedResponse2(parsedUrl.search) || {};
             if (authCodeResponse.code) {
               res.writeHead(HttpStatus.REDIRECT, {
@@ -66123,7 +66123,7 @@ Headers: ${JSON.stringify(headers)}`
         }
         this.skus = ServerTelemetryManager2.makeExtraSkuString({
           libraryName: Constants3.MSAL_SKU,
-          libraryVersion: version5
+          libraryVersion: version4
         });
       }
       /**
@@ -66800,8 +66800,8 @@ Headers: ${JSON.stringify(headers)}`
       MANAGED_IDENTITY_RESOURCE_ID: "mi_res_id"
     };
     var BaseManagedIdentitySource2 = class {
-      constructor(logger32, nodeStorage, networkClient, cryptoProvider) {
-        this.logger = logger32;
+      constructor(logger33, nodeStorage, networkClient, cryptoProvider) {
+        this.logger = logger33;
         this.nodeStorage = nodeStorage;
         this.networkClient = networkClient;
         this.cryptoProvider = cryptoProvider;
@@ -66879,11 +66879,11 @@ Headers: ${JSON.stringify(headers)}`
         }
       }
     };
-    BaseManagedIdentitySource2.getValidatedEnvVariableUrlString = (envVariableStringName, envVariable, sourceName, logger32) => {
+    BaseManagedIdentitySource2.getValidatedEnvVariableUrlString = (envVariableStringName, envVariable, sourceName, logger33) => {
       try {
         return new UrlString2(envVariable).urlString;
       } catch (error) {
-        logger32.info(`[Managed Identity] ${sourceName} managed identity is unavailable because the '${envVariableStringName}' environment variable is malformed.`);
+        logger33.info(`[Managed Identity] ${sourceName} managed identity is unavailable because the '${envVariableStringName}' environment variable is malformed.`);
         throw createManagedIdentityError2(MsiEnvironmentVariableUrlMalformedErrorCodes2[envVariableStringName]);
       }
     };
@@ -66913,8 +66913,8 @@ Headers: ${JSON.stringify(headers)}`
     };
     var APP_SERVICE_MSI_API_VERSION2 = "2019-08-01";
     var AppService2 = class _AppService extends BaseManagedIdentitySource2 {
-      constructor(logger32, nodeStorage, networkClient, cryptoProvider, identityEndpoint, identityHeader) {
-        super(logger32, nodeStorage, networkClient, cryptoProvider);
+      constructor(logger33, nodeStorage, networkClient, cryptoProvider, identityEndpoint, identityHeader) {
+        super(logger33, nodeStorage, networkClient, cryptoProvider);
         this.identityEndpoint = identityEndpoint;
         this.identityHeader = identityHeader;
       }
@@ -66923,15 +66923,15 @@ Headers: ${JSON.stringify(headers)}`
         const identityHeader = process.env[ManagedIdentityEnvironmentVariableNames2.IDENTITY_HEADER];
         return [identityEndpoint, identityHeader];
       }
-      static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider) {
+      static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider) {
         const [identityEndpoint, identityHeader] = _AppService.getEnvironmentVariables();
         if (!identityEndpoint || !identityHeader) {
-          logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames2.APP_SERVICE} managed identity is unavailable because one or both of the '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_HEADER}' and '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT}' environment variables are not defined.`);
+          logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames2.APP_SERVICE} managed identity is unavailable because one or both of the '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_HEADER}' and '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT}' environment variables are not defined.`);
           return null;
         }
-        const validatedIdentityEndpoint = _AppService.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames2.APP_SERVICE, logger32);
-        logger32.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames2.APP_SERVICE} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames2.APP_SERVICE} managed identity.`);
-        return new _AppService(logger32, nodeStorage, networkClient, cryptoProvider, identityEndpoint, identityHeader);
+        const validatedIdentityEndpoint = _AppService.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames2.APP_SERVICE, logger33);
+        logger33.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames2.APP_SERVICE} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames2.APP_SERVICE} managed identity.`);
+        return new _AppService(logger33, nodeStorage, networkClient, cryptoProvider, identityEndpoint, identityHeader);
       }
       createRequest(resource, managedIdentityId) {
         const request = new ManagedIdentityRequestParameters2(HttpMethod3.GET, this.identityEndpoint);
@@ -66956,8 +66956,8 @@ Headers: ${JSON.stringify(headers)}`
       linux: "/opt/azcmagent/bin/himds"
     };
     var AzureArc2 = class _AzureArc extends BaseManagedIdentitySource2 {
-      constructor(logger32, nodeStorage, networkClient, cryptoProvider, identityEndpoint) {
-        super(logger32, nodeStorage, networkClient, cryptoProvider);
+      constructor(logger33, nodeStorage, networkClient, cryptoProvider, identityEndpoint) {
+        super(logger33, nodeStorage, networkClient, cryptoProvider);
         this.identityEndpoint = identityEndpoint;
       }
       static getEnvironmentVariables() {
@@ -66974,24 +66974,24 @@ Headers: ${JSON.stringify(headers)}`
         }
         return [identityEndpoint, imdsEndpoint];
       }
-      static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, managedIdentityId) {
+      static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, managedIdentityId) {
         const [identityEndpoint, imdsEndpoint] = _AzureArc.getEnvironmentVariables();
         if (!identityEndpoint || !imdsEndpoint) {
-          logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity is unavailable through environment variables because one or both of '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT}' and '${ManagedIdentityEnvironmentVariableNames2.IMDS_ENDPOINT}' are not defined. ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity is also unavailable through file detection.`);
+          logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity is unavailable through environment variables because one or both of '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT}' and '${ManagedIdentityEnvironmentVariableNames2.IMDS_ENDPOINT}' are not defined. ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity is also unavailable through file detection.`);
           return null;
         }
         if (imdsEndpoint === HIMDS_EXECUTABLE_HELPER_STRING2) {
-          logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity is available through file detection. Defaulting to known ${ManagedIdentitySourceNames2.AZURE_ARC} endpoint: ${DEFAULT_AZURE_ARC_IDENTITY_ENDPOINT2}. Creating ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity.`);
+          logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity is available through file detection. Defaulting to known ${ManagedIdentitySourceNames2.AZURE_ARC} endpoint: ${DEFAULT_AZURE_ARC_IDENTITY_ENDPOINT2}. Creating ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity.`);
         } else {
-          const validatedIdentityEndpoint = _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames2.AZURE_ARC, logger32);
+          const validatedIdentityEndpoint = _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames2.AZURE_ARC, logger33);
           validatedIdentityEndpoint.endsWith("/") ? validatedIdentityEndpoint.slice(0, -1) : validatedIdentityEndpoint;
-          _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IMDS_ENDPOINT, imdsEndpoint, ManagedIdentitySourceNames2.AZURE_ARC, logger32);
-          logger32.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity.`);
+          _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IMDS_ENDPOINT, imdsEndpoint, ManagedIdentitySourceNames2.AZURE_ARC, logger33);
+          logger33.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity.`);
         }
         if (managedIdentityId.idType !== ManagedIdentityIdType2.SYSTEM_ASSIGNED) {
           throw createManagedIdentityError2(unableToCreateAzureArc2);
         }
-        return new _AzureArc(logger32, nodeStorage, networkClient, cryptoProvider, identityEndpoint);
+        return new _AzureArc(logger33, nodeStorage, networkClient, cryptoProvider, identityEndpoint);
       }
       createRequest(resource) {
         const request = new ManagedIdentityRequestParameters2(HttpMethod3.GET, this.identityEndpoint.replace("localhost", "127.0.0.1"));
@@ -67054,26 +67054,26 @@ Headers: ${JSON.stringify(headers)}`
       }
     };
     var CloudShell2 = class _CloudShell extends BaseManagedIdentitySource2 {
-      constructor(logger32, nodeStorage, networkClient, cryptoProvider, msiEndpoint) {
-        super(logger32, nodeStorage, networkClient, cryptoProvider);
+      constructor(logger33, nodeStorage, networkClient, cryptoProvider, msiEndpoint) {
+        super(logger33, nodeStorage, networkClient, cryptoProvider);
         this.msiEndpoint = msiEndpoint;
       }
       static getEnvironmentVariables() {
         const msiEndpoint = process.env[ManagedIdentityEnvironmentVariableNames2.MSI_ENDPOINT];
         return [msiEndpoint];
       }
-      static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, managedIdentityId) {
+      static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, managedIdentityId) {
         const [msiEndpoint] = _CloudShell.getEnvironmentVariables();
         if (!msiEndpoint) {
-          logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames2.CLOUD_SHELL} managed identity is unavailable because the '${ManagedIdentityEnvironmentVariableNames2.MSI_ENDPOINT} environment variable is not defined.`);
+          logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames2.CLOUD_SHELL} managed identity is unavailable because the '${ManagedIdentityEnvironmentVariableNames2.MSI_ENDPOINT} environment variable is not defined.`);
           return null;
         }
-        const validatedMsiEndpoint = _CloudShell.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.MSI_ENDPOINT, msiEndpoint, ManagedIdentitySourceNames2.CLOUD_SHELL, logger32);
-        logger32.info(`[Managed Identity] Environment variable validation passed for ${ManagedIdentitySourceNames2.CLOUD_SHELL} managed identity. Endpoint URI: ${validatedMsiEndpoint}. Creating ${ManagedIdentitySourceNames2.CLOUD_SHELL} managed identity.`);
+        const validatedMsiEndpoint = _CloudShell.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.MSI_ENDPOINT, msiEndpoint, ManagedIdentitySourceNames2.CLOUD_SHELL, logger33);
+        logger33.info(`[Managed Identity] Environment variable validation passed for ${ManagedIdentitySourceNames2.CLOUD_SHELL} managed identity. Endpoint URI: ${validatedMsiEndpoint}. Creating ${ManagedIdentitySourceNames2.CLOUD_SHELL} managed identity.`);
         if (managedIdentityId.idType !== ManagedIdentityIdType2.SYSTEM_ASSIGNED) {
           throw createManagedIdentityError2(unableToCreateCloudShell2);
         }
-        return new _CloudShell(logger32, nodeStorage, networkClient, cryptoProvider, msiEndpoint);
+        return new _CloudShell(logger33, nodeStorage, networkClient, cryptoProvider, msiEndpoint);
       }
       createRequest(resource) {
         const request = new ManagedIdentityRequestParameters2(HttpMethod3.POST, this.msiEndpoint);
@@ -67086,20 +67086,20 @@ Headers: ${JSON.stringify(headers)}`
     var DEFAULT_IMDS_ENDPOINT2 = `http://169.254.169.254${IMDS_TOKEN_PATH2}`;
     var IMDS_API_VERSION2 = "2018-02-01";
     var Imds2 = class _Imds extends BaseManagedIdentitySource2 {
-      constructor(logger32, nodeStorage, networkClient, cryptoProvider, identityEndpoint) {
-        super(logger32, nodeStorage, networkClient, cryptoProvider);
+      constructor(logger33, nodeStorage, networkClient, cryptoProvider, identityEndpoint) {
+        super(logger33, nodeStorage, networkClient, cryptoProvider);
         this.identityEndpoint = identityEndpoint;
       }
-      static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider) {
+      static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider) {
         let validatedIdentityEndpoint;
         if (process.env[ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST]) {
-          logger32.info(`[Managed Identity] Environment variable ${ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST} for ${ManagedIdentitySourceNames2.IMDS} returned endpoint: ${process.env[ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST]}`);
-          validatedIdentityEndpoint = _Imds.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST, `${process.env[ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST]}${IMDS_TOKEN_PATH2}`, ManagedIdentitySourceNames2.IMDS, logger32);
+          logger33.info(`[Managed Identity] Environment variable ${ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST} for ${ManagedIdentitySourceNames2.IMDS} returned endpoint: ${process.env[ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST]}`);
+          validatedIdentityEndpoint = _Imds.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST, `${process.env[ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST]}${IMDS_TOKEN_PATH2}`, ManagedIdentitySourceNames2.IMDS, logger33);
         } else {
-          logger32.info(`[Managed Identity] Unable to find ${ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST} environment variable for ${ManagedIdentitySourceNames2.IMDS}, using the default endpoint.`);
+          logger33.info(`[Managed Identity] Unable to find ${ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST} environment variable for ${ManagedIdentitySourceNames2.IMDS}, using the default endpoint.`);
           validatedIdentityEndpoint = DEFAULT_IMDS_ENDPOINT2;
         }
-        return new _Imds(logger32, nodeStorage, networkClient, cryptoProvider, validatedIdentityEndpoint);
+        return new _Imds(logger33, nodeStorage, networkClient, cryptoProvider, validatedIdentityEndpoint);
       }
       createRequest(resource, managedIdentityId) {
         const request = new ManagedIdentityRequestParameters2(HttpMethod3.GET, this.identityEndpoint);
@@ -67114,8 +67114,8 @@ Headers: ${JSON.stringify(headers)}`
     };
     var SERVICE_FABRIC_MSI_API_VERSION2 = "2019-07-01-preview";
     var ServiceFabric2 = class _ServiceFabric extends BaseManagedIdentitySource2 {
-      constructor(logger32, nodeStorage, networkClient, cryptoProvider, identityEndpoint, identityHeader) {
-        super(logger32, nodeStorage, networkClient, cryptoProvider);
+      constructor(logger33, nodeStorage, networkClient, cryptoProvider, identityEndpoint, identityHeader) {
+        super(logger33, nodeStorage, networkClient, cryptoProvider);
         this.identityEndpoint = identityEndpoint;
         this.identityHeader = identityHeader;
       }
@@ -67125,18 +67125,18 @@ Headers: ${JSON.stringify(headers)}`
         const identityServerThumbprint = process.env[ManagedIdentityEnvironmentVariableNames2.IDENTITY_SERVER_THUMBPRINT];
         return [identityEndpoint, identityHeader, identityServerThumbprint];
       }
-      static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, managedIdentityId) {
+      static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, managedIdentityId) {
         const [identityEndpoint, identityHeader, identityServerThumbprint] = _ServiceFabric.getEnvironmentVariables();
         if (!identityEndpoint || !identityHeader || !identityServerThumbprint) {
-          logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames2.SERVICE_FABRIC} managed identity is unavailable because one or all of the '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_HEADER}', '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT}' or '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_SERVER_THUMBPRINT}' environment variables are not defined.`);
+          logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames2.SERVICE_FABRIC} managed identity is unavailable because one or all of the '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_HEADER}', '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT}' or '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_SERVER_THUMBPRINT}' environment variables are not defined.`);
           return null;
         }
-        const validatedIdentityEndpoint = _ServiceFabric.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames2.SERVICE_FABRIC, logger32);
-        logger32.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames2.SERVICE_FABRIC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames2.SERVICE_FABRIC} managed identity.`);
+        const validatedIdentityEndpoint = _ServiceFabric.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames2.SERVICE_FABRIC, logger33);
+        logger33.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames2.SERVICE_FABRIC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames2.SERVICE_FABRIC} managed identity.`);
         if (managedIdentityId.idType !== ManagedIdentityIdType2.SYSTEM_ASSIGNED) {
-          logger32.warning(`[Managed Identity] ${ManagedIdentitySourceNames2.SERVICE_FABRIC} user assigned managed identity is configured in the cluster, not during runtime. See also: https://learn.microsoft.com/en-us/azure/service-fabric/configure-existing-cluster-enable-managed-identity-token-service.`);
+          logger33.warning(`[Managed Identity] ${ManagedIdentitySourceNames2.SERVICE_FABRIC} user assigned managed identity is configured in the cluster, not during runtime. See also: https://learn.microsoft.com/en-us/azure/service-fabric/configure-existing-cluster-enable-managed-identity-token-service.`);
         }
-        return new _ServiceFabric(logger32, nodeStorage, networkClient, cryptoProvider, identityEndpoint, identityHeader);
+        return new _ServiceFabric(logger33, nodeStorage, networkClient, cryptoProvider, identityEndpoint, identityHeader);
       }
       createRequest(resource, managedIdentityId) {
         const request = new ManagedIdentityRequestParameters2(HttpMethod3.GET, this.identityEndpoint);
@@ -67150,8 +67150,8 @@ Headers: ${JSON.stringify(headers)}`
       }
     };
     var ManagedIdentityClient2 = class _ManagedIdentityClient {
-      constructor(logger32, nodeStorage, networkClient, cryptoProvider) {
-        this.logger = logger32;
+      constructor(logger33, nodeStorage, networkClient, cryptoProvider) {
+        this.logger = logger33;
         this.nodeStorage = nodeStorage;
         this.networkClient = networkClient;
         this.cryptoProvider = cryptoProvider;
@@ -67179,8 +67179,8 @@ Headers: ${JSON.stringify(headers)}`
        * Tries to create a managed identity source for all sources
        * @returns the managed identity Source
        */
-      selectManagedIdentitySource(logger32, nodeStorage, networkClient, cryptoProvider, managedIdentityId) {
-        const source = ServiceFabric2.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, managedIdentityId) || AppService2.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider) || CloudShell2.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, managedIdentityId) || AzureArc2.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, managedIdentityId) || Imds2.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider);
+      selectManagedIdentitySource(logger33, nodeStorage, networkClient, cryptoProvider, managedIdentityId) {
+        const source = ServiceFabric2.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, managedIdentityId) || AppService2.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider) || CloudShell2.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, managedIdentityId) || AzureArc2.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, managedIdentityId) || Imds2.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider);
         if (!source) {
           throw createManagedIdentityError2(unableToCreateSource2);
         }
@@ -67190,7 +67190,7 @@ Headers: ${JSON.stringify(headers)}`
     var ManagedIdentityApplication2 = class _ManagedIdentityApplication {
       constructor(configuration) {
         this.config = buildManagedIdentityConfiguration2(configuration || {});
-        this.logger = new Logger2(this.config.system.loggerOptions, name3, version5);
+        this.logger = new Logger2(this.config.system.loggerOptions, name3, version4);
         const fakeStatusAuthorityOptions = {
           canonicalAuthority: Constants$1.DEFAULT_AUTHORITY
         };
@@ -67332,7 +67332,7 @@ Headers: ${JSON.stringify(headers)}`
     exports2.TokenCacheContext = TokenCacheContext2;
     exports2.UsernamePasswordClient = UsernamePasswordClient2;
     exports2.internals = internals;
-    exports2.version = version5;
+    exports2.version = version4;
   }
 });
 
@@ -68335,12 +68335,12 @@ var require_logging = __commonJS({
       formatError: () => formatError2,
       formatSuccess: () => formatSuccess2,
       logEnvVars: () => logEnvVars,
-      logger: () => logger32,
+      logger: () => logger33,
       processEnvVars: () => processEnvVars2
     });
     module2.exports = __toCommonJS2(logging_exports);
-    var import_logger17 = require_commonjs2();
-    var logger32 = (0, import_logger17.createClientLogger)("identity");
+    var import_logger19 = require_commonjs2();
+    var logger33 = (0, import_logger19.createClientLogger)("identity");
     function processEnvVars2(supportedEnvVars) {
       return supportedEnvVars.reduce(
         (acc, envVariable) => {
@@ -68356,7 +68356,7 @@ var require_logging = __commonJS({
     }
     function logEnvVars(credentialName6, supportedEnvVars) {
       const { assigned } = processEnvVars2(supportedEnvVars);
-      logger32.info(
+      logger33.info(
         `${credentialName6} => Found the following environment variables: ${assigned.join(", ")}`
       );
     }
@@ -68370,7 +68370,7 @@ var require_logging = __commonJS({
       }
       return `${message} Error message: ${typeof error === "string" ? error : error.message}.`;
     }
-    function credentialLoggerInstance2(title2, parent, log2 = logger32) {
+    function credentialLoggerInstance2(title2, parent, log2 = logger33) {
       const fullTitle = parent ? `${parent.fullTitle} ${title2}` : title2;
       function info(message) {
         log2.info(`${fullTitle} =>`, message);
@@ -68393,7 +68393,7 @@ var require_logging = __commonJS({
         error
       };
     }
-    function credentialLogger2(title2, log2 = logger32) {
+    function credentialLogger2(title2, log2 = logger33) {
       const credLogger = credentialLoggerInstance2(title2, void 0, log2);
       return {
         ...credLogger,
@@ -68462,13 +68462,13 @@ var require_chainedTokenCredential = __commonJS({
     var chainedTokenCredential_exports = {};
     __export2(chainedTokenCredential_exports, {
       ChainedTokenCredential: () => ChainedTokenCredential3,
-      logger: () => logger32
+      logger: () => logger33
     });
     module2.exports = __toCommonJS2(chainedTokenCredential_exports);
     var import_errors24 = require_errors2();
     var import_logging29 = require_logging();
     var import_tracing23 = require_tracing();
-    var logger32 = (0, import_logging29.credentialLogger)("ChainedTokenCredential");
+    var logger33 = (0, import_logging29.credentialLogger)("ChainedTokenCredential");
     var ChainedTokenCredential3 = class {
       _sources = [];
       /**
@@ -68528,7 +68528,7 @@ var require_chainedTokenCredential = __commonJS({
                 if (err.name === "CredentialUnavailableError" || err.name === "AuthenticationRequiredError") {
                   errors.push(err);
                 } else {
-                  logger32.getToken.info((0, import_logging29.formatError)(scopes, err));
+                  logger33.getToken.info((0, import_logging29.formatError)(scopes, err));
                   throw err;
                 }
               }
@@ -68538,10 +68538,10 @@ var require_chainedTokenCredential = __commonJS({
                 errors,
                 "ChainedTokenCredential authentication failed."
               );
-              logger32.getToken.info((0, import_logging29.formatError)(scopes, err));
+              logger33.getToken.info((0, import_logging29.formatError)(scopes, err));
               throw err;
             }
-            logger32.getToken.info(
+            logger33.getToken.info(
               `Result for ${successfulCredential.constructor.name}: ${(0, import_logging29.formatSuccess)(scopes)}`
             );
             if (token === null) {
@@ -69241,7 +69241,7 @@ var require_msal_node2 = __commonJS({
         dataBoundary
       };
     }
-    function generateHomeAccountId2(serverClientInfo, authType, logger32, cryptoObj, correlationId, idTokenClaims) {
+    function generateHomeAccountId2(serverClientInfo, authType, logger33, cryptoObj, correlationId, idTokenClaims) {
       if (authType !== AuthorityType2.Adfs) {
         if (serverClientInfo) {
           try {
@@ -69252,7 +69252,7 @@ var require_msal_node2 = __commonJS({
           } catch (e) {
           }
         }
-        logger32.warning("No client info in response", correlationId);
+        logger33.warning("No client info in response", correlationId);
       }
       return idTokenClaims?.sub || "";
     }
@@ -69418,23 +69418,23 @@ var require_msal_node2 = __commonJS({
       get urlString() {
         return this._urlString;
       }
-      constructor(url3, correlationId) {
-        this._urlString = url3;
+      constructor(url2, correlationId) {
+        this._urlString = url2;
         this.correlationId = correlationId;
         if (!this._urlString) {
           throw createClientConfigurationError2(urlEmptyError2, correlationId);
         }
-        if (!url3.includes("#")) {
-          this._urlString = _UrlString.canonicalizeUri(url3);
+        if (!url2.includes("#")) {
+          this._urlString = _UrlString.canonicalizeUri(url2);
         }
       }
       /**
        * Ensure urls are lower case and end with a / character.
        * @param url
        */
-      static canonicalizeUri(url3) {
-        if (url3) {
-          let lowerCaseUrl = url3.toLowerCase();
+      static canonicalizeUri(url2) {
+        if (url2) {
+          let lowerCaseUrl = url2.toLowerCase();
           if (StringUtils2.endsWith(lowerCaseUrl, "?")) {
             lowerCaseUrl = lowerCaseUrl.slice(0, -1);
           } else if (StringUtils2.endsWith(lowerCaseUrl, "?/")) {
@@ -69445,7 +69445,7 @@ var require_msal_node2 = __commonJS({
           }
           return lowerCaseUrl;
         }
-        return url3;
+        return url2;
       }
       /**
        * Throws if urlString passed is not a valid authority URI string.
@@ -69469,18 +69469,18 @@ var require_msal_node2 = __commonJS({
        * @param url
        * @param queryString
        */
-      static appendQueryString(url3, queryString) {
+      static appendQueryString(url2, queryString) {
         if (!queryString) {
-          return url3;
+          return url2;
         }
-        return url3.indexOf("?") < 0 ? `${url3}?${queryString}` : `${url3}&${queryString}`;
+        return url2.indexOf("?") < 0 ? `${url2}?${queryString}` : `${url2}&${queryString}`;
       }
       /**
        * Returns a url with the hash removed
        * @param url
        */
-      static removeHashFromUrl(url3) {
-        return _UrlString.canonicalizeUri(url3.split("#")[0]);
+      static removeHashFromUrl(url2) {
+        return _UrlString.canonicalizeUri(url2.split("#")[0]);
       }
       /**
        * Given a url like https://a:b/common/d?e=f#g, and a tenantId, returns https://a:b/tenantId/d
@@ -69519,9 +69519,9 @@ var require_msal_node2 = __commonJS({
         }
         return urlComponents;
       }
-      static getDomainFromUrl(url3, correlationId) {
+      static getDomainFromUrl(url2, correlationId) {
         const regEx = RegExp("^([^:/?#]+://)?([^/?#]*)");
-        const match = url3.match(regEx);
+        const match = url2.match(regEx);
         if (!match) {
           throw createClientConfigurationError2(urlParseError2, correlationId);
         }
@@ -69529,8 +69529,8 @@ var require_msal_node2 = __commonJS({
       }
       static getAbsoluteUrl(relativeUrl, baseUrl, correlationId) {
         if (relativeUrl[0] === FORWARD_SLASH2) {
-          const url3 = new _UrlString(baseUrl, correlationId);
-          const baseComponents = url3.getUrlComponents();
+          const url2 = new _UrlString(baseUrl, correlationId);
+          const baseComponents = url2.getUrlComponents();
           return baseComponents.Protocol + "//" + baseComponents.HostNameAndPort + relativeUrl;
         }
         return relativeUrl;
@@ -69626,37 +69626,37 @@ var require_msal_node2 = __commonJS({
         InstanceDiscoveryMetadataAliases2.add(alias);
       });
     });
-    function getAliasesFromStaticSources2(staticAuthorityOptions, logger32, correlationId) {
+    function getAliasesFromStaticSources2(staticAuthorityOptions, logger33, correlationId) {
       let staticAliases;
       const canonicalAuthority = staticAuthorityOptions.canonicalAuthority;
       if (canonicalAuthority) {
         const authorityHost = new UrlString2(canonicalAuthority, correlationId).getUrlComponents().HostNameAndPort;
-        staticAliases = getAliasesFromMetadata2(logger32, correlationId, authorityHost, staticAuthorityOptions.cloudDiscoveryMetadata?.metadata, AuthorityMetadataSource2.CONFIG) || getAliasesFromMetadata2(logger32, correlationId, authorityHost, InstanceDiscoveryMetadata2.metadata, AuthorityMetadataSource2.HARDCODED_VALUES) || staticAuthorityOptions.knownAuthorities;
+        staticAliases = getAliasesFromMetadata2(logger33, correlationId, authorityHost, staticAuthorityOptions.cloudDiscoveryMetadata?.metadata, AuthorityMetadataSource2.CONFIG) || getAliasesFromMetadata2(logger33, correlationId, authorityHost, InstanceDiscoveryMetadata2.metadata, AuthorityMetadataSource2.HARDCODED_VALUES) || staticAuthorityOptions.knownAuthorities;
       }
       return staticAliases || [];
     }
-    function getAliasesFromMetadata2(logger32, correlationId, authorityHost, cloudDiscoveryMetadata, source) {
-      logger32.trace(`getAliasesFromMetadata called with source: '${source}'`, correlationId);
+    function getAliasesFromMetadata2(logger33, correlationId, authorityHost, cloudDiscoveryMetadata, source) {
+      logger33.trace(`getAliasesFromMetadata called with source: '${source}'`, correlationId);
       if (authorityHost && cloudDiscoveryMetadata) {
-        const metadata2 = getCloudDiscoveryMetadataFromNetworkResponse2(cloudDiscoveryMetadata, authorityHost);
-        if (metadata2) {
-          logger32.trace(`getAliasesFromMetadata: found cloud discovery metadata in '${source}', returning aliases`, correlationId);
-          return metadata2.aliases;
+        const metadata = getCloudDiscoveryMetadataFromNetworkResponse2(cloudDiscoveryMetadata, authorityHost);
+        if (metadata) {
+          logger33.trace(`getAliasesFromMetadata: found cloud discovery metadata in '${source}', returning aliases`, correlationId);
+          return metadata.aliases;
         } else {
-          logger32.trace(`getAliasesFromMetadata: did not find cloud discovery metadata in '${source}'`, correlationId);
+          logger33.trace(`getAliasesFromMetadata: did not find cloud discovery metadata in '${source}'`, correlationId);
         }
       }
       return null;
     }
     function getCloudDiscoveryMetadataFromHardcodedValues2(authorityHost) {
-      const metadata2 = getCloudDiscoveryMetadataFromNetworkResponse2(InstanceDiscoveryMetadata2.metadata, authorityHost);
-      return metadata2;
+      const metadata = getCloudDiscoveryMetadataFromNetworkResponse2(InstanceDiscoveryMetadata2.metadata, authorityHost);
+      return metadata;
     }
     function getCloudDiscoveryMetadataFromNetworkResponse2(response, authorityHost) {
       for (let i = 0; i < response.length; i++) {
-        const metadata2 = response[i];
-        if (metadata2.aliases.includes(authorityHost)) {
-          return metadata2;
+        const metadata = response[i];
+        if (metadata.aliases.includes(authorityHost)) {
+          return metadata;
         }
       }
       return null;
@@ -69702,9 +69702,9 @@ var require_msal_node2 = __commonJS({
     var RegionDiscoveryGetRegionFromIMDS2 = "regionDiscoveryGetRegionFromIMDS";
     var RegionDiscoveryGetCurrentVersion2 = "regionDiscoveryGetCurrentVersion";
     var CacheManagerGetRefreshToken2 = "cacheManagerGetRefreshToken";
-    var invoke2 = (callback, eventName, logger32, telemetryClient, correlationId) => {
+    var invoke2 = (callback, eventName, logger33, telemetryClient, correlationId) => {
       return (...args) => {
-        logger32.trace(`Executing function '${eventName}'`, correlationId);
+        logger33.trace(`Executing function '${eventName}'`, correlationId);
         const inProgressEvent = telemetryClient.startMeasurement(eventName, correlationId);
         if (correlationId) {
           telemetryClient.incrementFields({ [`ext.${eventName}CallCount`]: 1 }, correlationId);
@@ -69714,14 +69714,14 @@ var require_msal_node2 = __commonJS({
           inProgressEvent.end({
             success: true
           });
-          logger32.trace(`Returning result from '${eventName}'`, correlationId);
+          logger33.trace(`Returning result from '${eventName}'`, correlationId);
           return result;
         } catch (e) {
-          logger32.trace(`Error occurred in '${eventName}'`, correlationId);
+          logger33.trace(`Error occurred in '${eventName}'`, correlationId);
           try {
-            logger32.trace(JSON.stringify(e), correlationId);
+            logger33.trace(JSON.stringify(e), correlationId);
           } catch (e2) {
-            logger32.trace("Unable to print error message.", correlationId);
+            logger33.trace("Unable to print error message.", correlationId);
           }
           inProgressEvent.end({
             success: false
@@ -69730,25 +69730,25 @@ var require_msal_node2 = __commonJS({
         }
       };
     };
-    var invokeAsync2 = (callback, eventName, logger32, telemetryClient, correlationId) => {
+    var invokeAsync2 = (callback, eventName, logger33, telemetryClient, correlationId) => {
       return (...args) => {
-        logger32.trace(`Executing function '${eventName}'`, correlationId);
+        logger33.trace(`Executing function '${eventName}'`, correlationId);
         const inProgressEvent = telemetryClient.startMeasurement(eventName, correlationId);
         if (correlationId) {
           telemetryClient.incrementFields({ [`ext.${eventName}CallCount`]: 1 }, correlationId);
         }
         return callback(...args).then((response) => {
-          logger32.trace(`Returning result from '${eventName}'`, correlationId);
+          logger33.trace(`Returning result from '${eventName}'`, correlationId);
           inProgressEvent.end({
             success: true
           });
           return response;
         }).catch((e) => {
-          logger32.trace(`Error occurred in '${eventName}'`, correlationId);
+          logger33.trace(`Error occurred in '${eventName}'`, correlationId);
           try {
-            logger32.trace(JSON.stringify(e), correlationId);
+            logger33.trace(JSON.stringify(e), correlationId);
           } catch (e2) {
-            logger32.trace("Unable to print error message.", correlationId);
+            logger33.trace("Unable to print error message.", correlationId);
           }
           inProgressEvent.end({
             success: false
@@ -69758,9 +69758,9 @@ var require_msal_node2 = __commonJS({
       };
     };
     var RegionDiscovery2 = class _RegionDiscovery {
-      constructor(networkInterface, logger32, performanceClient, correlationId) {
+      constructor(networkInterface, logger33, performanceClient, correlationId) {
         this.networkInterface = networkInterface;
-        this.logger = logger32;
+        this.logger = logger33;
         this.performanceClient = performanceClient;
         this.correlationId = correlationId;
       }
@@ -69814,8 +69814,8 @@ var require_msal_node2 = __commonJS({
        * @param options
        * @returns Promise<NetworkResponse<ImdsComputeResponse>>
        */
-      async getRegionFromIMDS(version6, options) {
-        return this.networkInterface.sendGetRequestAsync(`${IMDS_ENDPOINT2}?api-version=${version6}`, options, IMDS_TIMEOUT2);
+      async getRegionFromIMDS(version5, options) {
+        return this.networkInterface.sendGetRequestAsync(`${IMDS_ENDPOINT2}?api-version=${version5}`, options, IMDS_TIMEOUT2);
       }
       /**
        * Get the most recent version of the IMDS endpoint available
@@ -70018,8 +70018,8 @@ var require_msal_node2 = __commonJS({
       authorityMetadata.preferred_network = updatedValues.preferred_network;
       authorityMetadata.aliasesFromNetwork = fromNetwork;
     }
-    function isAuthorityMetadataExpired2(metadata2) {
-      return metadata2.expiresAt <= nowSeconds2();
+    function isAuthorityMetadataExpired2(metadata) {
+      return metadata.expiresAt <= nowSeconds2();
     }
     function serializeAttributeTokens2(attributeTokens) {
       if (!attributeTokens || attributeTokens.length === 0) {
@@ -70028,7 +70028,7 @@ var require_msal_node2 = __commonJS({
       return [...attributeTokens].sort().join(" ");
     }
     var Authority2 = class _Authority {
-      constructor(authority, networkInterface, cacheManager, authorityOptions, logger32, correlationId, performanceClient, managedIdentity) {
+      constructor(authority, networkInterface, cacheManager, authorityOptions, logger33, correlationId, performanceClient, managedIdentity) {
         this.canonicalAuthority = authority;
         this._canonicalAuthority.validateAsUri();
         this.networkInterface = networkInterface;
@@ -70039,7 +70039,7 @@ var require_msal_node2 = __commonJS({
           region_source: void 0,
           region_outcome: void 0
         };
-        this.logger = logger32;
+        this.logger = logger33;
         this.performanceClient = performanceClient;
         this.correlationId = correlationId;
         this.managedIdentity = managedIdentity || false;
@@ -70088,8 +70088,8 @@ var require_msal_node2 = __commonJS({
       /**
        * Sets canonical authority.
        */
-      set canonicalAuthority(url3) {
-        this._canonicalAuthority = new UrlString2(url3, this.correlationId);
+      set canonicalAuthority(url2) {
+        this._canonicalAuthority = new UrlString2(url2, this.correlationId);
         this._canonicalAuthority.validateAsUri();
         this._canonicalAuthorityUrlComponents = null;
       }
@@ -70306,13 +70306,13 @@ var require_msal_node2 = __commonJS({
           }
           return localMetadata.source;
         }
-        let metadata2 = await invokeAsync2(this.getEndpointMetadataFromNetwork.bind(this), AuthorityGetEndpointMetadataFromNetwork2, this.logger, this.performanceClient, this.correlationId)();
-        if (metadata2) {
-          this.validateIssuer(metadata2.issuer);
+        let metadata = await invokeAsync2(this.getEndpointMetadataFromNetwork.bind(this), AuthorityGetEndpointMetadataFromNetwork2, this.logger, this.performanceClient, this.correlationId)();
+        if (metadata) {
+          this.validateIssuer(metadata.issuer);
           if (this.authorityOptions.azureRegionConfiguration?.azureRegion) {
-            metadata2 = await invokeAsync2(this.updateMetadataWithRegionalInformation.bind(this), AuthorityUpdateMetadataWithRegionalInformation2, this.logger, this.performanceClient, this.correlationId)(metadata2);
+            metadata = await invokeAsync2(this.updateMetadataWithRegionalInformation.bind(this), AuthorityUpdateMetadataWithRegionalInformation2, this.logger, this.performanceClient, this.correlationId)(metadata);
           }
-          updateAuthorityEndpointMetadata2(metadataEntity, metadata2, true);
+          updateAuthorityEndpointMetadata2(metadataEntity, metadata, true);
           return AuthorityMetadataSource2.NETWORK;
         } else {
           throw createClientAuthError2(openIdConfigError2, this.defaultOpenIdConfigurationEndpoint, this.correlationId);
@@ -70414,23 +70414,23 @@ var require_msal_node2 = __commonJS({
        * Update the retrieved metadata with regional information.
        * User selected Azure region will be used if configured.
        */
-      async updateMetadataWithRegionalInformation(metadata2) {
+      async updateMetadataWithRegionalInformation(metadata) {
         const userConfiguredAzureRegion = this.authorityOptions.azureRegionConfiguration?.azureRegion;
         if (userConfiguredAzureRegion) {
           if (userConfiguredAzureRegion !== AZURE_REGION_AUTO_DISCOVER_FLAG2) {
             this.regionDiscoveryMetadata.region_outcome = RegionDiscoveryOutcomes2.CONFIGURED_NO_AUTO_DETECTION;
             this.regionDiscoveryMetadata.region_used = userConfiguredAzureRegion;
-            return _Authority.replaceWithRegionalInformation(metadata2, userConfiguredAzureRegion, this.correlationId);
+            return _Authority.replaceWithRegionalInformation(metadata, userConfiguredAzureRegion, this.correlationId);
           }
           const autodetectedRegionName = await invokeAsync2(this.regionDiscovery.detectRegion.bind(this.regionDiscovery), RegionDiscoveryDetectRegion2, this.logger, this.performanceClient, this.correlationId)(this.authorityOptions.azureRegionConfiguration?.environmentRegion, this.regionDiscoveryMetadata);
           if (autodetectedRegionName) {
             this.regionDiscoveryMetadata.region_outcome = RegionDiscoveryOutcomes2.AUTO_DETECTION_REQUESTED_SUCCESSFUL;
             this.regionDiscoveryMetadata.region_used = autodetectedRegionName;
-            return _Authority.replaceWithRegionalInformation(metadata2, autodetectedRegionName, this.correlationId);
+            return _Authority.replaceWithRegionalInformation(metadata, autodetectedRegionName, this.correlationId);
           }
           this.regionDiscoveryMetadata.region_outcome = RegionDiscoveryOutcomes2.AUTO_DETECTION_REQUESTED_FAILED;
         }
-        return metadata2;
+        return metadata;
       }
       /**
        * Updates the AuthorityMetadataEntity with new aliases, preferred_network and preferred_cache
@@ -70443,9 +70443,9 @@ var require_msal_node2 = __commonJS({
         if (localMetadataSource) {
           return localMetadataSource;
         }
-        const metadata2 = await invokeAsync2(this.getCloudDiscoveryMetadataFromNetwork.bind(this), AuthorityGetCloudDiscoveryMetadataFromNetwork2, this.logger, this.performanceClient, this.correlationId)();
-        if (metadata2) {
-          updateCloudDiscoveryMetadata2(metadataEntity, metadata2, true);
+        const metadata = await invokeAsync2(this.getCloudDiscoveryMetadataFromNetwork.bind(this), AuthorityGetCloudDiscoveryMetadataFromNetwork2, this.logger, this.performanceClient, this.correlationId)();
+        if (metadata) {
+          updateCloudDiscoveryMetadata2(metadataEntity, metadata, true);
           return AuthorityMetadataSource2.NETWORK;
         }
         throw createClientConfigurationError2(untrustedAuthority2, this.correlationId);
@@ -70455,10 +70455,10 @@ var require_msal_node2 = __commonJS({
         this.logger.verbosePii(`Known Authorities: '${this.authorityOptions.knownAuthorities || NOT_APPLICABLE2}'`, this.correlationId);
         this.logger.verbosePii(`Authority Metadata: '${this.authorityOptions.authorityMetadata || NOT_APPLICABLE2}'`, this.correlationId);
         this.logger.verbosePii(`Canonical Authority: '${metadataEntity.canonical_authority || NOT_APPLICABLE2}'`, this.correlationId);
-        const metadata2 = this.getCloudDiscoveryMetadataFromConfig();
-        if (metadata2) {
+        const metadata = this.getCloudDiscoveryMetadataFromConfig();
+        if (metadata) {
           this.logger.verbose("Found cloud discovery metadata in authority configuration", this.correlationId);
-          updateCloudDiscoveryMetadata2(metadataEntity, metadata2, false);
+          updateCloudDiscoveryMetadata2(metadataEntity, metadata, false);
           return AuthorityMetadataSource2.CONFIG;
         }
         this.logger.verbose("Did not find cloud discovery metadata in the config... Attempting to get cloud discovery metadata from the hardcoded values.", this.correlationId);
@@ -70491,11 +70491,11 @@ var require_msal_node2 = __commonJS({
           try {
             this.logger.verbose("Attempting to parse the cloud discovery metadata.", this.correlationId);
             const parsedResponse = JSON.parse(this.authorityOptions.cloudDiscoveryMetadata);
-            const metadata2 = getCloudDiscoveryMetadataFromNetworkResponse2(parsedResponse.metadata, this.hostnameAndPort);
+            const metadata = getCloudDiscoveryMetadataFromNetworkResponse2(parsedResponse.metadata, this.hostnameAndPort);
             this.logger.verbose("Parsed the cloud discovery metadata.", "");
-            if (metadata2) {
+            if (metadata) {
               this.logger.verbose("There is returnable metadata attached to the parsed cloud discovery metadata.", this.correlationId);
-              return metadata2;
+              return metadata;
             } else {
               this.logger.verbose("There is no metadata attached to the parsed cloud discovery metadata.", this.correlationId);
             }
@@ -70522,10 +70522,10 @@ var require_msal_node2 = __commonJS({
         try {
           const response = await this.networkInterface.sendGetRequestAsync(instanceDiscoveryEndpoint, options);
           let typedResponseBody;
-          let metadata2;
+          let metadata;
           if (isCloudInstanceDiscoveryResponse2(response.body)) {
             typedResponseBody = response.body;
-            metadata2 = typedResponseBody.metadata;
+            metadata = typedResponseBody.metadata;
             this.logger.verbosePii(`tenant_discovery_endpoint is: '${typedResponseBody.tenant_discovery_endpoint}'`, this.correlationId);
           } else if (isCloudInstanceDiscoveryErrorResponse2(response.body)) {
             this.logger.warning(`A CloudInstanceDiscoveryErrorResponse was returned. The cloud instance discovery network request's status code is: '${response.status}'`, this.correlationId);
@@ -70537,13 +70537,13 @@ var require_msal_node2 = __commonJS({
             this.logger.warning(`The CloudInstanceDiscoveryErrorResponse error is '${typedResponseBody.error}'`, this.correlationId);
             this.logger.warning(`The CloudInstanceDiscoveryErrorResponse error description is '${typedResponseBody.error_description}'`, this.correlationId);
             this.logger.warning("Setting the value of the CloudInstanceDiscoveryMetadata (returned from the network, correlationId) to []", this.correlationId);
-            metadata2 = [];
+            metadata = [];
           } else {
             this.logger.error("AAD did not return a CloudInstanceDiscoveryResponse or CloudInstanceDiscoveryErrorResponse", this.correlationId);
             return null;
           }
           this.logger.verbose("Attempting to find a match between the developer's authority and the CloudInstanceDiscoveryMetadata returned from the network request.", this.correlationId);
-          match = getCloudDiscoveryMetadataFromNetworkResponse2(metadata2, this.hostnameAndPort);
+          match = getCloudDiscoveryMetadataFromNetworkResponse2(metadata, this.hostnameAndPort);
         } catch (error) {
           if (error instanceof AuthError2) {
             this.logger.error(`There was a network error while attempting to get the cloud discovery instance metadata.
@@ -70747,13 +70747,13 @@ Error Description: '${typedError.message}'`, this.correlationId);
         if (this.isPublicCloudAuthority(authorityUrlParts.HostNameAndPort)) {
           hostNameAndPort = `${region}.${REGIONAL_AUTH_PUBLIC_CLOUD_SUFFIX2}`;
         }
-        const url3 = UrlString2.constructAuthorityUriFromObject({
+        const url2 = UrlString2.constructAuthorityUriFromObject({
           ...authorityUrlInstance.getUrlComponents(),
           HostNameAndPort: hostNameAndPort
         }, correlationId).urlString;
         if (queryString)
-          return `${url3}?${queryString}`;
-        return url3;
+          return `${url2}?${queryString}`;
+        return url2;
       }
       /**
        * Replace the endpoints in the metadata object with their regional equivalents.
@@ -70761,8 +70761,8 @@ Error Description: '${typedError.message}'`, this.correlationId);
        * @param metadata OpenIdConfigResponse
        * @param azureRegion string
        */
-      static replaceWithRegionalInformation(metadata2, azureRegion, correlationId) {
-        const regionalMetadata = { ...metadata2 };
+      static replaceWithRegionalInformation(metadata, azureRegion, correlationId) {
+        const regionalMetadata = { ...metadata };
         regionalMetadata.authorization_endpoint = _Authority.buildRegionalAuthorityString(regionalMetadata.authorization_endpoint, azureRegion, correlationId);
         regionalMetadata.token_endpoint = _Authority.buildRegionalAuthorityString(regionalMetadata.token_endpoint, azureRegion, correlationId);
         if (regionalMetadata.end_session_endpoint) {
@@ -70829,11 +70829,11 @@ Error Description: '${typedError.message}'`, this.correlationId);
         cloudDiscoveryMetadata
       };
     }
-    async function createDiscoveredInstance2(authorityUri, networkClient, cacheManager, authorityOptions, logger32, correlationId, performanceClient) {
+    async function createDiscoveredInstance2(authorityUri, networkClient, cacheManager, authorityOptions, logger33, correlationId, performanceClient) {
       const authorityUriFinal = Authority2.transformCIAMAuthority(formatAuthorityUri2(authorityUri), correlationId);
-      const acquireTokenAuthority = new Authority2(authorityUriFinal, networkClient, cacheManager, authorityOptions, logger32, correlationId, performanceClient);
+      const acquireTokenAuthority = new Authority2(authorityUriFinal, networkClient, cacheManager, authorityOptions, logger33, correlationId, performanceClient);
       try {
-        await invokeAsync2(acquireTokenAuthority.resolveEndpointsAsync.bind(acquireTokenAuthority), AuthorityResolveEndpointsAsync2, logger32, performanceClient, correlationId)();
+        await invokeAsync2(acquireTokenAuthority.resolveEndpointsAsync.bind(acquireTokenAuthority), AuthorityResolveEndpointsAsync2, logger33, performanceClient, correlationId)();
         return acquireTokenAuthority;
       } catch (e) {
         throw createClientAuthError2(endpointResolutionError2, correlationId);
@@ -71587,11 +71587,11 @@ Error Description: '${typedError.message}'`, this.correlationId);
       }
     }
     var CacheManager2 = class {
-      constructor(clientId, cryptoImpl, logger32, performanceClient, staticAuthorityOptions, tokenBindingKeyManager) {
+      constructor(clientId, cryptoImpl, logger33, performanceClient, staticAuthorityOptions, tokenBindingKeyManager) {
         this.clientId = clientId;
         this.cryptoImpl = cryptoImpl;
         this.tokenBindingKeyManager = tokenBindingKeyManager;
-        this.commonLogger = logger32.clone(name$1, version$1);
+        this.commonLogger = logger33.clone(name$1, version$1);
         this.staticAuthorityOptions = staticAuthorityOptions;
         this.performanceClient = performanceClient;
       }
@@ -72873,8 +72873,8 @@ Error Description: '${typedError.message}'`, this.correlationId);
        * @param request
        * @returns
        */
-      async generateCnf(request, logger32) {
-        const reqCnf = await invokeAsync2(this.generateKid.bind(this), PopTokenGenerateCnf2, logger32, this.performanceClient, request.correlationId)(request);
+      async generateCnf(request, logger33) {
+        const reqCnf = await invokeAsync2(this.generateKid.bind(this), PopTokenGenerateCnf2, logger33, this.performanceClient, request.correlationId)(request);
         const reqCnfString = this.cryptoUtils.base64UrlEncode(JSON.stringify(reqCnf));
         return {
           kid: reqCnf.kid,
@@ -72958,14 +72958,14 @@ Error Description: '${typedError.message}'`, this.correlationId);
       }
       return htm.toUpperCase();
     }
-    function normalizeHtu2(url3, correlationId) {
+    function normalizeHtu2(url2, correlationId) {
       let parsedUrl;
       try {
-        parsedUrl = new URL(url3);
+        parsedUrl = new URL(url2);
       } catch {
         throw createClientConfigurationError2(urlParseError2, correlationId);
       }
-      if (!/^https:\/\//i.test(url3) || parsedUrl.protocol !== "https:" || parsedUrl.username || parsedUrl.password) {
+      if (!/^https:\/\//i.test(url2) || parsedUrl.protocol !== "https:" || parsedUrl.username || parsedUrl.password) {
         throw createClientConfigurationError2(invalidDpopHtu2, correlationId);
       }
       parsedUrl.search = "";
@@ -73152,12 +73152,12 @@ Error Description: '${typedError.message}'`, this.correlationId);
       }
     }
     var ResponseHandler2 = class _ResponseHandler {
-      constructor(clientId, cacheStorage, cryptoObj, logger32, performanceClient, serializableCache, persistencePlugin, tokenBindingKeyManager = DEFAULT_TOKEN_BINDING_KEY_MANAGER2) {
+      constructor(clientId, cacheStorage, cryptoObj, logger33, performanceClient, serializableCache, persistencePlugin, tokenBindingKeyManager = DEFAULT_TOKEN_BINDING_KEY_MANAGER2) {
         this.clientId = clientId;
         this.cacheStorage = cacheStorage;
         this.cryptoObj = cryptoObj;
         this.tokenBindingKeyManager = tokenBindingKeyManager;
-        this.logger = logger32;
+        this.logger = logger33;
         this.performanceClient = performanceClient;
         this.serializableCache = serializableCache;
         this.persistencePlugin = persistencePlugin;
@@ -73354,7 +73354,7 @@ ${serverError}`, correlationId);
        * @param stateString
        */
       static async generateAuthenticationResult(cryptoObj, authority, cacheRecord, fromTokenCache, request, performanceClient, options = {}) {
-        const { idTokenClaims, requestState, serverTokenResponse, requestId: requestId3, tokenBindingKeyManager = DEFAULT_TOKEN_BINDING_KEY_MANAGER2 } = options;
+        const { idTokenClaims, requestState, serverTokenResponse, requestId: requestId2, tokenBindingKeyManager = DEFAULT_TOKEN_BINDING_KEY_MANAGER2 } = options;
         let accessToken = "";
         let responseScopes = [];
         let expiresOn = null;
@@ -73433,7 +73433,7 @@ ${serverError}`, correlationId);
           extExpiresOn,
           refreshOn,
           correlationId: request.correlationId,
-          requestId: requestId3 || "",
+          requestId: requestId2 || "",
           familyId,
           tokenType: cacheRecord.accessToken?.tokenType?.toLowerCase() === AuthenticationScheme2.DPOP.toLowerCase() ? AuthenticationScheme2.DPOP : cacheRecord.accessToken?.tokenType || "",
           state: requestState ? requestState.userRequestState : "",
@@ -73444,13 +73444,13 @@ ${serverError}`, correlationId);
         };
       }
     };
-    function buildAccountToCache2(cacheStorage, authority, homeAccountId, base64Decode2, correlationId, idTokenClaims, clientInfo, environment, claimsTenantId, authCodePayload, nativeAccountId, logger32, performanceClient) {
-      logger32?.verbose("setCachedAccount called", correlationId);
+    function buildAccountToCache2(cacheStorage, authority, homeAccountId, base64Decode2, correlationId, idTokenClaims, clientInfo, environment, claimsTenantId, authCodePayload, nativeAccountId, logger33, performanceClient) {
+      logger33?.verbose("setCachedAccount called", correlationId);
       const accountEnvironment = environment || authority.getPreferredCache();
       const matchedAccounts = cacheStorage.getAccountsFilteredBy({ homeAccountId, environment: accountEnvironment }, correlationId);
       performanceClient?.addFields({ cacheMatchedAccounts: matchedAccounts.length }, correlationId);
       if (matchedAccounts.length > 1) {
-        logger32?.warning("Multiple base accounts matched homeAccountId. Ignoring cached account and creating a new base account.", correlationId);
+        logger33?.warning("Multiple base accounts matched homeAccountId. Ignoring cached account and creating a new base account.", correlationId);
       }
       const cachedAccount = matchedAccounts.length === 1 ? matchedAccounts[0] : null;
       const baseAccount = cachedAccount || createAccountEntity2({
@@ -73594,7 +73594,7 @@ ${serverError}`, correlationId);
       error.errorMessage = `${error.errorMessage}, additionalErrorInfo: error.name:${additionalError?.name}, error.message:${additionalError?.message}`;
       return new NetworkError2(error, httpStatus, responseHeaders);
     }
-    function createTokenRequestHeaders2(logger32, preventCorsPreflight, ccsCred) {
+    function createTokenRequestHeaders2(logger33, preventCorsPreflight, ccsCred) {
       const headers = {};
       headers[HeaderNames2.CONTENT_TYPE] = URL_FORM_CONTENT_TYPE2;
       if (!preventCorsPreflight && ccsCred) {
@@ -73604,7 +73604,7 @@ ${serverError}`, correlationId);
               const clientInfo = buildClientInfoFromHomeAccountId2(ccsCred.credential);
               headers[HeaderNames2.CCS_HEADER] = `Oid:${clientInfo.uid}@${clientInfo.utid}`;
             } catch (e) {
-              logger32.verbose(`Could not parse home account ID for CCS Header: '${e}'`, "");
+              logger33.verbose(`Could not parse home account ID for CCS Header: '${e}'`, "");
             }
             break;
           case CcsCredentialType2.UPN:
@@ -73639,18 +73639,18 @@ ${serverError}`, correlationId);
       instrumentBrokerParams2(parameters, request.correlationId, performanceClient);
       return mapToQueryString2(parameters);
     }
-    async function executePostToTokenEndpoint2(tokenEndpoint, queryString, headers, thumbprint, correlationId, cacheManager, networkClient, logger32, performanceClient, serverTelemetryManager) {
-      const response = await sendPostRequest2(thumbprint, tokenEndpoint, { body: queryString, headers }, correlationId, cacheManager, networkClient, logger32, performanceClient);
+    async function executePostToTokenEndpoint2(tokenEndpoint, queryString, headers, thumbprint, correlationId, cacheManager, networkClient, logger33, performanceClient, serverTelemetryManager) {
+      const response = await sendPostRequest2(thumbprint, tokenEndpoint, { body: queryString, headers }, correlationId, cacheManager, networkClient, logger33, performanceClient);
       if (serverTelemetryManager && response.status < 500 && response.status !== 429) {
         serverTelemetryManager.clearTelemetryCache();
       }
       return response;
     }
-    async function sendPostRequest2(thumbprint, tokenEndpoint, options, correlationId, cacheManager, networkClient, logger32, performanceClient) {
+    async function sendPostRequest2(thumbprint, tokenEndpoint, options, correlationId, cacheManager, networkClient, logger33, performanceClient) {
       ThrottlingUtils2.preProcess(cacheManager, thumbprint, correlationId);
       let response;
       try {
-        response = await invokeAsync2(networkClient.sendPostRequestAsync.bind(networkClient), NetworkClientSendPostRequestAsync2, logger32, performanceClient, correlationId)(tokenEndpoint, { ...options, correlationId, performanceClient });
+        response = await invokeAsync2(networkClient.sendPostRequestAsync.bind(networkClient), NetworkClientSendPostRequestAsync2, logger33, performanceClient, correlationId)(tokenEndpoint, { ...options, correlationId, performanceClient });
         const responseHeaders = response.headers || {};
         performanceClient?.addFields({
           refreshTokenSize: response.body.refresh_token?.length || 0,
@@ -73707,10 +73707,10 @@ ${serverError}`, correlationId);
         }
         const reqTimestamp = nowSeconds2();
         const response = await invokeAsync2(this.executeTokenRequest.bind(this), AuthClientExecuteTokenRequest2, this.logger, this.performanceClient, request.correlationId)(this.authority, request, this.serverTelemetryManager);
-        const requestId3 = response.headers?.[HeaderNames2.X_MS_REQUEST_ID];
+        const requestId2 = response.headers?.[HeaderNames2.X_MS_REQUEST_ID];
         const responseHandler = new ResponseHandler2(this.config.authOptions.clientId, this.cacheManager, this.cryptoUtils, this.logger, this.performanceClient, this.config.serializableCache, this.config.persistencePlugin, this.config.tokenBindingKeyManager);
         responseHandler.validateTokenResponse(response.body, request.correlationId);
-        return invokeAsync2(responseHandler.handleServerTokenResponse.bind(responseHandler), HandleServerTokenResponse2, this.logger, this.performanceClient, request.correlationId)(response.body, this.authority, reqTimestamp, request, apiId, authCodePayload, void 0, void 0, void 0, requestId3);
+        return invokeAsync2(responseHandler.handleServerTokenResponse.bind(responseHandler), HandleServerTokenResponse2, this.logger, this.performanceClient, request.correlationId)(response.body, this.authority, reqTimestamp, request, apiId, authCodePayload, void 0, void 0, void 0, requestId2);
       }
       /**
        * Used to log out the current user, and redirect the user to the postLogoutRedirectUri.
@@ -73893,7 +73893,7 @@ ${serverError}`, correlationId);
         this.authority = cloudInstanceAuthority;
       }
     };
-    function getStandardAuthorizeRequestParameters2(authOptions, request, logger32, performanceClient) {
+    function getStandardAuthorizeRequestParameters2(authOptions, request, logger33, performanceClient) {
       const correlationId = request.correlationId;
       const parameters = /* @__PURE__ */ new Map();
       addClientId2(parameters, request.embeddedClientId || request.extraQueryParameters?.[CLIENT_ID2] || authOptions.clientId);
@@ -73916,54 +73916,54 @@ ${serverError}`, correlationId);
       }
       if (request.prompt !== PromptValue$1.SELECT_ACCOUNT) {
         if (request.sid && request.prompt === PromptValue$1.NONE) {
-          logger32.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from request", request.correlationId);
+          logger33.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from request", request.correlationId);
           addSid2(parameters, request.sid);
         } else if (request.account) {
           const accountSid = extractAccountSid2(request.account);
           let accountLoginHintClaim = extractLoginHint2(request.account);
           if (accountLoginHintClaim && request.domainHint) {
-            logger32.warning(`AuthorizationCodeClient.createAuthCodeUrlQueryString: "domainHint" param is set, skipping opaque "login_hint" claim. Please consider not passing domainHint`, request.correlationId);
+            logger33.warning(`AuthorizationCodeClient.createAuthCodeUrlQueryString: "domainHint" param is set, skipping opaque "login_hint" claim. Please consider not passing domainHint`, request.correlationId);
             accountLoginHintClaim = null;
           }
           if (accountLoginHintClaim) {
-            logger32.verbose("createAuthCodeUrlQueryString: login_hint claim present on account", request.correlationId);
+            logger33.verbose("createAuthCodeUrlQueryString: login_hint claim present on account", request.correlationId);
             addLoginHint2(parameters, accountLoginHintClaim);
             try {
               const clientInfo = buildClientInfoFromHomeAccountId2(request.account.homeAccountId);
               addCcsOid2(parameters, clientInfo);
             } catch (e) {
-              logger32.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header", request.correlationId);
+              logger33.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header", request.correlationId);
             }
           } else if (accountSid && request.prompt === PromptValue$1.NONE) {
-            logger32.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from account", request.correlationId);
+            logger33.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from account", request.correlationId);
             addSid2(parameters, accountSid);
             try {
               const clientInfo = buildClientInfoFromHomeAccountId2(request.account.homeAccountId);
               addCcsOid2(parameters, clientInfo);
             } catch (e) {
-              logger32.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header", request.correlationId);
+              logger33.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header", request.correlationId);
             }
           } else if (request.loginHint) {
-            logger32.verbose("createAuthCodeUrlQueryString: Adding login_hint from request", request.correlationId);
+            logger33.verbose("createAuthCodeUrlQueryString: Adding login_hint from request", request.correlationId);
             addLoginHint2(parameters, request.loginHint);
             addCcsUpn2(parameters, request.loginHint);
           } else if (request.account.username) {
-            logger32.verbose("createAuthCodeUrlQueryString: Adding login_hint from account", request.correlationId);
+            logger33.verbose("createAuthCodeUrlQueryString: Adding login_hint from account", request.correlationId);
             addLoginHint2(parameters, request.account.username);
             try {
               const clientInfo = buildClientInfoFromHomeAccountId2(request.account.homeAccountId);
               addCcsOid2(parameters, clientInfo);
             } catch (e) {
-              logger32.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header", request.correlationId);
+              logger33.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header", request.correlationId);
             }
           }
         } else if (request.loginHint) {
-          logger32.verbose("createAuthCodeUrlQueryString: No account, adding login_hint from request", request.correlationId);
+          logger33.verbose("createAuthCodeUrlQueryString: No account, adding login_hint from request", request.correlationId);
           addLoginHint2(parameters, request.loginHint);
           addCcsUpn2(parameters, request.loginHint);
         }
       } else {
-        logger32.verbose("createAuthCodeUrlQueryString: Prompt is select_account, ignoring account hints", request.correlationId);
+        logger33.verbose("createAuthCodeUrlQueryString: Prompt is select_account, ignoring account hints", request.correlationId);
       }
       if (request.nonce) {
         addNonce2(parameters, request.nonce);
@@ -74005,10 +74005,10 @@ ${serverError}`, correlationId);
       async acquireToken(request, apiId) {
         const reqTimestamp = nowSeconds2();
         const response = await invokeAsync2(this.executeTokenRequest.bind(this), RefreshTokenClientExecuteTokenRequest2, this.logger, this.performanceClient, request.correlationId)(request, this.authority);
-        const requestId3 = response.headers?.[HeaderNames2.X_MS_REQUEST_ID];
+        const requestId2 = response.headers?.[HeaderNames2.X_MS_REQUEST_ID];
         const responseHandler = new ResponseHandler2(this.config.authOptions.clientId, this.cacheManager, this.cryptoUtils, this.logger, this.performanceClient, this.config.serializableCache, this.config.persistencePlugin, this.config.tokenBindingKeyManager);
         responseHandler.validateTokenResponse(response.body, request.correlationId);
-        return invokeAsync2(responseHandler.handleServerTokenResponse.bind(responseHandler), HandleServerTokenResponse2, this.logger, this.performanceClient, request.correlationId)(response.body, this.authority, reqTimestamp, request, apiId, void 0, void 0, true, request.forceCache, requestId3);
+        return invokeAsync2(responseHandler.handleServerTokenResponse.bind(responseHandler), HandleServerTokenResponse2, this.logger, this.performanceClient, request.correlationId)(response.body, this.authority, reqTimestamp, request, apiId, void 0, void 0, true, request.forceCache, requestId2);
       }
       /**
        * Gets cached refresh token and attaches to request, then calls acquireToken API
@@ -74785,8 +74785,8 @@ ${serverError}`, correlationId);
        * @throws {AuthError} When the request times out or response parsing fails
        * @throws {NetworkError} When the network request fails
        */
-      async sendGetRequestAsync(url3, options, timeout2) {
-        return this.sendRequest(url3, HttpMethod3.GET, options, timeout2);
+      async sendGetRequestAsync(url2, options, timeout2) {
+        return this.sendRequest(url2, HttpMethod3.GET, options, timeout2);
       }
       /**
        * Sends an HTTP POST request to the specified URL.
@@ -74801,8 +74801,8 @@ ${serverError}`, correlationId);
        * @throws {AuthError} When the request times out or response parsing fails
        * @throws {NetworkError} When the network request fails
        */
-      async sendPostRequestAsync(url3, options) {
-        return this.sendRequest(url3, HttpMethod3.POST, options);
+      async sendPostRequestAsync(url2, options) {
+        return this.sendRequest(url2, HttpMethod3.POST, options);
       }
       /**
        * Core HTTP request implementation using native fetch API.
@@ -74828,7 +74828,7 @@ ${serverError}`, correlationId);
        * @throws {AuthError} For timeouts or JSON parsing errors
        * @throws {NetworkError} For network failures
        */
-      async sendRequest(url3, method, options, timeout2) {
+      async sendRequest(url2, method, options, timeout2) {
         const controller = new AbortController();
         let timeoutId;
         if (timeout2) {
@@ -74847,7 +74847,7 @@ ${serverError}`, correlationId);
         }
         let response;
         try {
-          response = await fetch(url3, fetchOptions);
+          response = await fetch(url2, fetchOptions);
         } catch (error) {
           if (timeoutId) {
             clearTimeout(timeoutId);
@@ -75372,11 +75372,11 @@ ${serverError}`, correlationId);
       return accountKey.join(CACHE2.KEY_SEPARATOR).toLowerCase();
     }
     var NodeStorage2 = class extends CacheManager2 {
-      constructor(logger32, clientId, cryptoImpl, staticAuthorityOptions) {
-        super(clientId, cryptoImpl, logger32, new StubPerformanceClient2(), staticAuthorityOptions, DEFAULT_TOKEN_BINDING_KEY_MANAGER2);
+      constructor(logger33, clientId, cryptoImpl, staticAuthorityOptions) {
+        super(clientId, cryptoImpl, logger33, new StubPerformanceClient2(), staticAuthorityOptions, DEFAULT_TOKEN_BINDING_KEY_MANAGER2);
         this.cache = {};
         this.changeEmitters = [];
-        this.logger = logger32;
+        this.logger = logger33;
       }
       /**
        * Queue up callbacks
@@ -75653,8 +75653,8 @@ ${serverError}`, correlationId);
        * @param key - lookup key to fetch cache type AuthorityMetadataEntity
        * @param metadata - cache value to be set of type AuthorityMetadataEntity
        */
-      setAuthorityMetadata(key, metadata2) {
-        this.setItem(key, metadata2);
+      setAuthorityMetadata(key, metadata) {
+        this.setItem(key, metadata);
       }
       /**
        * fetch throttling entity from the platform cache
@@ -75771,14 +75771,14 @@ ${serverError}`, correlationId);
       AppMetadata: {}
     };
     var TokenCache2 = class {
-      constructor(storage, logger32, cachePlugin) {
+      constructor(storage, logger33, cachePlugin) {
         this.cacheHasChanged = false;
         this.storage = storage;
         this.storage.registerChangeEmitter(this.handleChangeEvent.bind(this));
         if (cachePlugin) {
           this.persistence = cachePlugin;
         }
-        this.logger = logger32;
+        this.logger = logger33;
       }
       /**
        * Set to true if cache state has changed since last time serialize or writeToPersistence was called
@@ -76142,11 +76142,11 @@ ${serverError}`, correlationId);
       }
     };
     var name3 = "@azure/msal-node";
-    var version5 = "6.0.1";
+    var version4 = "6.0.1";
     var BaseClient2 = class {
       constructor(configuration) {
         this.config = buildClientConfiguration2(configuration);
-        this.logger = new Logger2(this.config.loggerOptions, name3, version5);
+        this.logger = new Logger2(this.config.loggerOptions, name3, version4);
         this.cryptoUtils = this.config.cryptoInterface;
         this.cacheManager = this.config.storageInterface;
         this.networkClient = this.config.networkInterface;
@@ -76270,15 +76270,15 @@ ${serverError}`, correlationId);
         return mapToQueryString2(parameters);
       }
     };
-    function getAuthCodeRequestUrl2(config, authority, request, logger32) {
+    function getAuthCodeRequestUrl2(config, authority, request, logger33) {
       const parameters = getStandardAuthorizeRequestParameters2({
         ...config.auth,
         authority,
         redirectUri: request.redirectUri || ""
-      }, request, logger32);
+      }, request, logger33);
       addLibraryInfo2(parameters, {
         sku: Constants3.MSAL_SKU,
-        version: version5,
+        version: version4,
         cpu: process.arch || "",
         os: process.platform || ""
       });
@@ -76299,7 +76299,7 @@ ${serverError}`, correlationId);
       constructor(configuration) {
         this.config = buildAppConfiguration2(configuration);
         this.cryptoProvider = new CryptoProvider2();
-        this.logger = new Logger2(this.config.system.loggerOptions, name3, version5);
+        this.logger = new Logger2(this.config.system.loggerOptions, name3, version4);
         this.storage = new NodeStorage2(this.logger, this.config.auth.clientId, this.cryptoProvider, buildStaticAuthorityOptions2(this.config.auth));
         this.tokenCache = new TokenCache2(this.storage, this.logger, this.config.cache.cachePlugin);
       }
@@ -76518,8 +76518,8 @@ ${serverError}`, correlationId);
        * Replaces the default logger set in configurations with new Logger with new configurations
        * @param logger - Logger instance
        */
-      setLogger(logger32) {
-        this.logger = logger32;
+      setLogger(logger33) {
+        this.logger = logger33;
       }
       /**
        * Builds the common configuration to be passed to the common component based on the platform configurarion
@@ -76554,7 +76554,7 @@ ${serverError}`, correlationId);
           },
           libraryInfo: {
             sku: Constants3.MSAL_SKU,
-            version: version5,
+            version: version4,
             cpu: process.arch || "",
             os: process.platform || ""
           },
@@ -76657,12 +76657,12 @@ ${serverError}`, correlationId);
               res.end("Method Not Allowed");
               return;
             }
-            const url3 = req.url;
-            if (!url3) {
+            const url2 = req.url;
+            if (!url2) {
               res.end(errorTemplate || "Error occurred loading redirectUrl");
               reject(NodeAuthError2.createUnableToLoadRedirectUrlError());
               return;
-            } else if (url3 === FORWARD_SLASH2) {
+            } else if (url2 === FORWARD_SLASH2) {
               if (method === "POST") {
                 this.handlePostRequest(req, res, resolve, successTemplate, errorTemplate);
                 return;
@@ -76672,7 +76672,7 @@ ${serverError}`, correlationId);
             }
             if (method === "GET") {
               const redirectUri = this.getRedirectUri();
-              const parsedUrl = new URL(url3, redirectUri);
+              const parsedUrl = new URL(url2, redirectUri);
               const authCodeResponse = getDeserializedResponse2(parsedUrl.search) || {};
               if (!authCodeResponse.code && !authCodeResponse.error) {
                 res.writeHead(200);
@@ -76709,8 +76709,8 @@ ${serverError}`, correlationId);
        * Handles POST requests for form_post response mode
        */
       handlePostRequest(req, res, resolve, successTemplate, errorTemplate) {
-        const contentType4 = req.headers["content-type"]?.split(";")[0]?.trim();
-        if (contentType4 !== "application/x-www-form-urlencoded") {
+        const contentType3 = req.headers["content-type"]?.split(";")[0]?.trim();
+        if (contentType3 !== "application/x-www-form-urlencoded") {
           res.writeHead(415);
           res.end("Unsupported Media Type");
           return;
@@ -76982,7 +76982,7 @@ ${serverError}`, correlationId);
         }
         this.skus = ServerTelemetryManager2.makeExtraSkuString({
           libraryName: Constants3.MSAL_SKU,
-          libraryVersion: version5
+          libraryVersion: version4
         });
       }
       /**
@@ -77898,35 +77898,35 @@ ${serverError}`, correlationId);
       return !isNaN(date.getTime()) && date.toISOString() === dateString;
     }
     var HttpClientWithRetries2 = class {
-      constructor(httpClientNoRetries, retryPolicy4, logger32) {
+      constructor(httpClientNoRetries, retryPolicy4, logger33) {
         this.httpClientNoRetries = httpClientNoRetries;
         this.retryPolicy = retryPolicy4;
-        this.logger = logger32;
+        this.logger = logger33;
       }
-      async sendNetworkRequestAsyncHelper(httpMethod, url3, options) {
+      async sendNetworkRequestAsyncHelper(httpMethod, url2, options) {
         if (httpMethod === HttpMethod3.GET) {
-          return this.httpClientNoRetries.sendGetRequestAsync(url3, options);
+          return this.httpClientNoRetries.sendGetRequestAsync(url2, options);
         } else {
-          return this.httpClientNoRetries.sendPostRequestAsync(url3, options);
+          return this.httpClientNoRetries.sendPostRequestAsync(url2, options);
         }
       }
-      async sendNetworkRequestAsync(httpMethod, url3, options) {
-        let response = await this.sendNetworkRequestAsyncHelper(httpMethod, url3, options);
+      async sendNetworkRequestAsync(httpMethod, url2, options) {
+        let response = await this.sendNetworkRequestAsyncHelper(httpMethod, url2, options);
         if ("isNewRequest" in this.retryPolicy) {
           this.retryPolicy.isNewRequest = true;
         }
         let currentRetry = 0;
         while (await this.retryPolicy.pauseForRetry(response.status, currentRetry, this.logger, response.headers[HeaderNames2.RETRY_AFTER])) {
-          response = await this.sendNetworkRequestAsyncHelper(httpMethod, url3, options);
+          response = await this.sendNetworkRequestAsyncHelper(httpMethod, url2, options);
           currentRetry++;
         }
         return response;
       }
-      async sendGetRequestAsync(url3, options) {
-        return this.sendNetworkRequestAsync(HttpMethod3.GET, url3, options);
+      async sendGetRequestAsync(url2, options) {
+        return this.sendNetworkRequestAsync(HttpMethod3.GET, url2, options);
       }
-      async sendPostRequestAsync(url3, options) {
-        return this.sendNetworkRequestAsync(HttpMethod3.POST, url3, options);
+      async sendPostRequestAsync(url2, options) {
+        return this.sendNetworkRequestAsync(HttpMethod3.POST, url2, options);
       }
     };
     var ManagedIdentityUserAssignedIdQueryParameterNames2 = {
@@ -77946,8 +77946,8 @@ ${serverError}`, correlationId);
        * @param cryptoProvider - Cryptographic provider for token operations
        * @param disableInternalRetries - Whether to disable automatic retry logic
        */
-      constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
-        this.logger = logger32;
+      constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
+        this.logger = logger33;
         this.nodeStorage = nodeStorage;
         this.networkClient = networkClient;
         this.cryptoProvider = cryptoProvider;
@@ -78096,11 +78096,11 @@ ${serverError}`, correlationId);
         }
       }
     };
-    BaseManagedIdentitySource2.getValidatedEnvVariableUrlString = (envVariableStringName, envVariable, sourceName, logger32) => {
+    BaseManagedIdentitySource2.getValidatedEnvVariableUrlString = (envVariableStringName, envVariable, sourceName, logger33) => {
       try {
         return new UrlString2(envVariable, "").urlString;
       } catch (error) {
-        logger32.info(`[Managed Identity] ${sourceName} managed identity is unavailable because the '${envVariableStringName}' environment variable is malformed.`, "");
+        logger33.info(`[Managed Identity] ${sourceName} managed identity is unavailable because the '${envVariableStringName}' environment variable is malformed.`, "");
         throw createManagedIdentityError2(MsiEnvironmentVariableUrlMalformedErrorCodes2[envVariableStringName], "");
       }
     };
@@ -78145,10 +78145,10 @@ ${serverError}`, correlationId);
       static get DEFAULT_MANAGED_IDENTITY_RETRY_DELAY_MS() {
         return DEFAULT_MANAGED_IDENTITY_RETRY_DELAY_MS2;
       }
-      async pauseForRetry(httpStatusCode, currentRetry, logger32, retryAfterHeader) {
+      async pauseForRetry(httpStatusCode, currentRetry, logger33, retryAfterHeader) {
         if (DEFAULT_MANAGED_IDENTITY_HTTP_STATUS_CODES_TO_RETRY_ON2.includes(httpStatusCode) && currentRetry < DEFAULT_MANAGED_IDENTITY_MAX_RETRIES2) {
           const retryAfterDelay = this.linearRetryStrategy.calculateDelay(retryAfterHeader, _DefaultManagedIdentityRetryPolicy.DEFAULT_MANAGED_IDENTITY_RETRY_DELAY_MS);
-          logger32.verbose(`Retrying request in ${retryAfterDelay}ms (retry attempt: ${currentRetry + 1})`, "");
+          logger33.verbose(`Retrying request in ${retryAfterDelay}ms (retry attempt: ${currentRetry + 1})`, "");
           await new Promise((resolve) => {
             return setTimeout(resolve, retryAfterDelay);
           });
@@ -78195,8 +78195,8 @@ ${serverError}`, correlationId);
        * @param identityEndpoint - The App Service identity endpoint URL
        * @param identityHeader - The secret header value required for authentication
        */
-      constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader) {
-        super(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
+      constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader) {
+        super(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
         this.identityEndpoint = identityEndpoint;
         this.identityHeader = identityHeader;
       }
@@ -78230,15 +78230,15 @@ ${serverError}`, correlationId);
        *
        * @returns A new AppService instance if the environment is suitable, null otherwise
        */
-      static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
+      static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
         const [identityEndpoint, identityHeader] = _AppService.getEnvironmentVariables();
         if (!identityEndpoint || !identityHeader) {
-          logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames2.APP_SERVICE} managed identity is unavailable because one or both of the '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_HEADER}' and '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT}' environment variables are not defined.`, "");
+          logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames2.APP_SERVICE} managed identity is unavailable because one or both of the '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_HEADER}' and '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT}' environment variables are not defined.`, "");
           return null;
         }
-        const validatedIdentityEndpoint = _AppService.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames2.APP_SERVICE, logger32);
-        logger32.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames2.APP_SERVICE} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames2.APP_SERVICE} managed identity.`, "");
-        return new _AppService(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader);
+        const validatedIdentityEndpoint = _AppService.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames2.APP_SERVICE, logger33);
+        logger33.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames2.APP_SERVICE} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames2.APP_SERVICE} managed identity.`, "");
+        return new _AppService(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader);
       }
       /**
        * Creates a managed identity token request for the App Service environment.
@@ -78285,8 +78285,8 @@ ${serverError}`, correlationId);
        * @param disableInternalRetries - Flag to disable automatic retry logic for failed requests
        * @param identityEndpoint - The Azure Arc identity endpoint URL for token requests
        */
-      constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint) {
-        super(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
+      constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint) {
+        super(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
         this.identityEndpoint = identityEndpoint;
       }
       /**
@@ -78333,21 +78333,21 @@ ${serverError}`, correlationId);
        *
        * @returns AzureArc instance if the environment supports Azure Arc managed identity, null otherwise
        */
-      static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, _managedIdentityId) {
+      static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, _managedIdentityId) {
         const [identityEndpoint, imdsEndpoint] = _AzureArc.getEnvironmentVariables();
         if (!identityEndpoint || !imdsEndpoint) {
-          logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity is unavailable through environment variables because one or both of '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT}' and '${ManagedIdentityEnvironmentVariableNames2.IMDS_ENDPOINT}' are not defined. ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity is also unavailable through file detection.`, "");
+          logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity is unavailable through environment variables because one or both of '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT}' and '${ManagedIdentityEnvironmentVariableNames2.IMDS_ENDPOINT}' are not defined. ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity is also unavailable through file detection.`, "");
           return null;
         }
         if (imdsEndpoint === HIMDS_EXECUTABLE_HELPER_STRING2) {
-          logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity is available through file detection. Defaulting to known ${ManagedIdentitySourceNames2.AZURE_ARC} endpoint: ${DEFAULT_AZURE_ARC_IDENTITY_ENDPOINT2}. Creating ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity.`, "");
+          logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity is available through file detection. Defaulting to known ${ManagedIdentitySourceNames2.AZURE_ARC} endpoint: ${DEFAULT_AZURE_ARC_IDENTITY_ENDPOINT2}. Creating ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity.`, "");
         } else {
-          const validatedIdentityEndpoint = _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames2.AZURE_ARC, logger32);
+          const validatedIdentityEndpoint = _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames2.AZURE_ARC, logger33);
           validatedIdentityEndpoint.endsWith("/") ? validatedIdentityEndpoint.slice(0, -1) : validatedIdentityEndpoint;
-          _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IMDS_ENDPOINT, imdsEndpoint, ManagedIdentitySourceNames2.AZURE_ARC, logger32);
-          logger32.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity.`, "");
+          _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IMDS_ENDPOINT, imdsEndpoint, ManagedIdentitySourceNames2.AZURE_ARC, logger33);
+          logger33.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames2.AZURE_ARC} managed identity.`, "");
         }
-        return new _AzureArc(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint);
+        return new _AzureArc(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint);
       }
       /**
        * Creates a properly formatted HTTP request for acquiring tokens from the Azure Arc identity endpoint.
@@ -78500,8 +78500,8 @@ ${serverError}`, correlationId);
        * @param disableInternalRetries - Whether to disable automatic retry logic for failed requests
        * @param msiEndpoint - The MSI endpoint URL obtained from environment variables
        */
-      constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint) {
-        super(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
+      constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint) {
+        super(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
         this.msiEndpoint = msiEndpoint;
       }
       /**
@@ -78535,18 +78535,18 @@ ${serverError}`, correlationId);
        * @throws {ManagedIdentityError} When a user-assigned managed identity is requested,
        *         as Cloud Shell only supports system-assigned identities
        */
-      static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
+      static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
         const [msiEndpoint] = _CloudShell.getEnvironmentVariables();
         if (!msiEndpoint) {
-          logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames2.CLOUD_SHELL} managed identity is unavailable because the '${ManagedIdentityEnvironmentVariableNames2.MSI_ENDPOINT} environment variable is not defined.`, "");
+          logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames2.CLOUD_SHELL} managed identity is unavailable because the '${ManagedIdentityEnvironmentVariableNames2.MSI_ENDPOINT} environment variable is not defined.`, "");
           return null;
         }
-        const validatedMsiEndpoint = _CloudShell.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.MSI_ENDPOINT, msiEndpoint, ManagedIdentitySourceNames2.CLOUD_SHELL, logger32);
-        logger32.info(`[Managed Identity] Environment variable validation passed for ${ManagedIdentitySourceNames2.CLOUD_SHELL} managed identity. Endpoint URI: ${validatedMsiEndpoint}. Creating ${ManagedIdentitySourceNames2.CLOUD_SHELL} managed identity.`, "");
+        const validatedMsiEndpoint = _CloudShell.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.MSI_ENDPOINT, msiEndpoint, ManagedIdentitySourceNames2.CLOUD_SHELL, logger33);
+        logger33.info(`[Managed Identity] Environment variable validation passed for ${ManagedIdentitySourceNames2.CLOUD_SHELL} managed identity. Endpoint URI: ${validatedMsiEndpoint}. Creating ${ManagedIdentitySourceNames2.CLOUD_SHELL} managed identity.`, "");
         if (managedIdentityId.idType !== ManagedIdentityIdType2.SYSTEM_ASSIGNED) {
           throw createManagedIdentityError2(unableToCreateCloudShell2, "");
         }
-        return new _CloudShell(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint);
+        return new _CloudShell(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint);
       }
       /**
        * Creates an HTTP request to acquire an access token from the Cloud Shell managed identity endpoint.
@@ -78638,14 +78638,14 @@ ${serverError}`, correlationId);
        * @param retryAfterHeader - The value of the "retry-after" header from the response.
        * @returns A promise that resolves to a boolean indicating whether a retry should be attempted.
        */
-      async pauseForRetry(httpStatusCode, currentRetry, logger32) {
+      async pauseForRetry(httpStatusCode, currentRetry, logger33) {
         if (this._isNewRequest) {
           this._isNewRequest = false;
           this.maxRetries = httpStatusCode === HTTP_GONE2 ? LINEAR_STRATEGY_NUM_RETRIES2 : EXPONENTIAL_STRATEGY_NUM_RETRIES2;
         }
         if ((HTTP_STATUS_400_CODES_FOR_EXPONENTIAL_STRATEGY2.includes(httpStatusCode) || httpStatusCode >= HTTP_SERVER_ERROR_RANGE_START2 && httpStatusCode <= HTTP_SERVER_ERROR_RANGE_END2 && currentRetry < this.maxRetries) && currentRetry < this.maxRetries) {
           const retryAfterDelay = httpStatusCode === HTTP_GONE2 ? _ImdsRetryPolicy.HTTP_STATUS_GONE_RETRY_AFTER_MS : this.exponentialRetryStrategy.calculateDelay(currentRetry);
-          logger32.verbose(`Retrying request in ${retryAfterDelay}ms (retry attempt: ${currentRetry + 1})`, "");
+          logger33.verbose(`Retrying request in ${retryAfterDelay}ms (retry attempt: ${currentRetry + 1})`, "");
           await new Promise((resolve) => {
             return setTimeout(resolve, retryAfterDelay);
           });
@@ -78668,8 +78668,8 @@ ${serverError}`, correlationId);
        * @param disableInternalRetries - When true, disables the built-in retry logic for IMDS requests
        * @param identityEndpoint - The complete IMDS endpoint URL including the token path
        */
-      constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint) {
-        super(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
+      constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint) {
+        super(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
         this.identityEndpoint = identityEndpoint;
       }
       /**
@@ -78688,16 +78688,16 @@ ${serverError}`, correlationId);
        *
        * @returns A configured Imds instance ready to make token requests
        */
-      static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
+      static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
         let validatedIdentityEndpoint;
         if (process.env[ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST]) {
-          logger32.info(`[Managed Identity] Environment variable ${ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST} for ${ManagedIdentitySourceNames2.IMDS} returned endpoint: ${process.env[ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST]}`, "");
-          validatedIdentityEndpoint = _Imds.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST, `${process.env[ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST]}${IMDS_TOKEN_PATH2}`, ManagedIdentitySourceNames2.IMDS, logger32);
+          logger33.info(`[Managed Identity] Environment variable ${ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST} for ${ManagedIdentitySourceNames2.IMDS} returned endpoint: ${process.env[ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST]}`, "");
+          validatedIdentityEndpoint = _Imds.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST, `${process.env[ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST]}${IMDS_TOKEN_PATH2}`, ManagedIdentitySourceNames2.IMDS, logger33);
         } else {
-          logger32.info(`[Managed Identity] Unable to find ${ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST} environment variable for ${ManagedIdentitySourceNames2.IMDS}, using the default endpoint.`, "");
+          logger33.info(`[Managed Identity] Unable to find ${ManagedIdentityEnvironmentVariableNames2.AZURE_POD_IDENTITY_AUTHORITY_HOST} environment variable for ${ManagedIdentitySourceNames2.IMDS}, using the default endpoint.`, "");
           validatedIdentityEndpoint = DEFAULT_IMDS_ENDPOINT2;
         }
-        return new _Imds(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, validatedIdentityEndpoint);
+        return new _Imds(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, validatedIdentityEndpoint);
       }
       /**
        * Creates a properly configured HTTP request for acquiring an access token from IMDS.
@@ -78722,7 +78722,7 @@ ${serverError}`, correlationId);
         const request = new ManagedIdentityRequestParameters2(HttpMethod3.GET, this.identityEndpoint);
         request.headers[ManagedIdentityHeaders2.METADATA_HEADER_NAME] = "true";
         request.headers[ManagedIdentityHeaders2.CLIENT_SKU] = Constants3.MSAL_SKU;
-        request.headers[ManagedIdentityHeaders2.CLIENT_VER] = version5;
+        request.headers[ManagedIdentityHeaders2.CLIENT_VER] = version4;
         request.headers[ManagedIdentityHeaders2.CLIENT_REQUEST_ID] = this.createCorrelationId();
         request.queryParameters[ManagedIdentityQueryParameters2.API_VERSION] = IMDS_API_VERSION2;
         request.queryParameters[ManagedIdentityQueryParameters2.RESOURCE] = resource;
@@ -78754,8 +78754,8 @@ ${serverError}`, correlationId);
        * @param identityEndpoint - The Service Fabric managed identity endpoint URL
        * @param identityHeader - The Service Fabric managed identity secret header value
        */
-      constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader) {
-        super(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
+      constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader) {
+        super(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
         this.identityEndpoint = identityEndpoint;
         this.identityHeader = identityHeader;
       }
@@ -78796,18 +78796,18 @@ ${serverError}`, correlationId);
        *
        * @returns A ServiceFabric instance if all environment variables are valid and present, otherwise null
        */
-      static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
+      static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
         const [identityEndpoint, identityHeader, identityServerThumbprint] = _ServiceFabric.getEnvironmentVariables();
         if (!identityEndpoint || !identityHeader || !identityServerThumbprint) {
-          logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames2.SERVICE_FABRIC} managed identity is unavailable because one or all of the '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_HEADER}', '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT}' or '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_SERVER_THUMBPRINT}' environment variables are not defined.`, "");
+          logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames2.SERVICE_FABRIC} managed identity is unavailable because one or all of the '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_HEADER}', '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT}' or '${ManagedIdentityEnvironmentVariableNames2.IDENTITY_SERVER_THUMBPRINT}' environment variables are not defined.`, "");
           return null;
         }
-        const validatedIdentityEndpoint = _ServiceFabric.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames2.SERVICE_FABRIC, logger32);
-        logger32.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames2.SERVICE_FABRIC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames2.SERVICE_FABRIC} managed identity.`, "");
+        const validatedIdentityEndpoint = _ServiceFabric.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames2.SERVICE_FABRIC, logger33);
+        logger33.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames2.SERVICE_FABRIC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames2.SERVICE_FABRIC} managed identity.`, "");
         if (managedIdentityId.idType !== ManagedIdentityIdType2.SYSTEM_ASSIGNED) {
-          logger32.warning(`[Managed Identity] ${ManagedIdentitySourceNames2.SERVICE_FABRIC} user assigned managed identity is configured in the cluster, not during runtime. See also: https://learn.microsoft.com/en-us/azure/service-fabric/configure-existing-cluster-enable-managed-identity-token-service.`, "");
+          logger33.warning(`[Managed Identity] ${ManagedIdentitySourceNames2.SERVICE_FABRIC} user assigned managed identity is configured in the cluster, not during runtime. See also: https://learn.microsoft.com/en-us/azure/service-fabric/configure-existing-cluster-enable-managed-identity-token-service.`, "");
         }
-        return new _ServiceFabric(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader);
+        return new _ServiceFabric(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader);
       }
       /**
        * Creates HTTP request parameters for acquiring an access token from the Service Fabric Managed Identity Token Service (MITS).
@@ -78852,8 +78852,8 @@ ${serverError}`, correlationId);
        * @param msiEndpoint - The MSI endpoint URL from environment variables
        * @param secret - The MSI secret from environment variables
        */
-      constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint, secret) {
-        super(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
+      constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint, secret) {
+        super(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
         this.msiEndpoint = msiEndpoint;
         this.secret = secret;
       }
@@ -78889,15 +78889,15 @@ ${serverError}`, correlationId);
        *
        * @returns A new MachineLearning instance if the environment is valid, null otherwise
        */
-      static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
+      static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
         const [msiEndpoint, secret] = _MachineLearning.getEnvironmentVariables();
         if (!msiEndpoint || !secret) {
-          logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames2.MACHINE_LEARNING} managed identity is unavailable because one or both of the '${ManagedIdentityEnvironmentVariableNames2.MSI_ENDPOINT}' and '${ManagedIdentityEnvironmentVariableNames2.MSI_SECRET}' environment variables are not defined.`, "");
+          logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames2.MACHINE_LEARNING} managed identity is unavailable because one or both of the '${ManagedIdentityEnvironmentVariableNames2.MSI_ENDPOINT}' and '${ManagedIdentityEnvironmentVariableNames2.MSI_SECRET}' environment variables are not defined.`, "");
           return null;
         }
-        const validatedMsiEndpoint = _MachineLearning.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.MSI_ENDPOINT, msiEndpoint, ManagedIdentitySourceNames2.MACHINE_LEARNING, logger32);
-        logger32.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames2.MACHINE_LEARNING} managed identity. Endpoint URI: ${validatedMsiEndpoint}. Creating ${ManagedIdentitySourceNames2.MACHINE_LEARNING} managed identity.`, "");
-        return new _MachineLearning(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint, secret);
+        const validatedMsiEndpoint = _MachineLearning.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames2.MSI_ENDPOINT, msiEndpoint, ManagedIdentitySourceNames2.MACHINE_LEARNING, logger33);
+        logger33.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames2.MACHINE_LEARNING} managed identity. Endpoint URI: ${validatedMsiEndpoint}. Creating ${ManagedIdentitySourceNames2.MACHINE_LEARNING} managed identity.`, "");
+        return new _MachineLearning(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint, secret);
       }
       /**
        * Creates a managed identity token request for Azure Machine Learning environments.
@@ -78942,8 +78942,8 @@ ${serverError}`, correlationId);
       }
     };
     var ManagedIdentityClient2 = class _ManagedIdentityClient {
-      constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
-        this.logger = logger32;
+      constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
+        this.logger = logger33;
         this.nodeStorage = nodeStorage;
         this.networkClient = networkClient;
         this.cryptoProvider = cryptoProvider;
@@ -78972,8 +78972,8 @@ ${serverError}`, correlationId);
        * Tries to create a managed identity source for all sources
        * @returns the managed identity Source
        */
-      selectManagedIdentitySource(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
-        const source = ServiceFabric2.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || AppService2.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) || MachineLearning2.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) || CloudShell2.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || AzureArc2.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || Imds2.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
+      selectManagedIdentitySource(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
+        const source = ServiceFabric2.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || AppService2.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) || MachineLearning2.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) || CloudShell2.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || AzureArc2.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || Imds2.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
         if (!source) {
           throw createManagedIdentityError2(unableToCreateSource2, "");
         }
@@ -78984,7 +78984,7 @@ ${serverError}`, correlationId);
     var ManagedIdentityApplication2 = class _ManagedIdentityApplication {
       constructor(configuration) {
         this.config = buildManagedIdentityConfiguration2(configuration || {});
-        this.logger = new Logger2(this.config.system.loggerOptions, name3, version5);
+        this.logger = new Logger2(this.config.system.loggerOptions, name3, version4);
         const fakeStatusAuthorityOptions = {
           canonicalAuthority: DEFAULT_AUTHORITY2
         };
@@ -79141,7 +79141,7 @@ ${serverError}`, correlationId);
     exports2.TokenCache = TokenCache2;
     exports2.TokenCacheContext = TokenCacheContext2;
     exports2.internals = internals;
-    exports2.version = version5;
+    exports2.version = version4;
   }
 });
 
@@ -79223,14 +79223,14 @@ var require_utils3 = __commonJS({
     var import_errors24 = require_errors2();
     var import_logging29 = require_logging();
     var import_constants37 = require_constants4();
-    var import_core_util17 = require_commonjs4();
+    var import_core_util18 = require_commonjs4();
     var import_abort_controller7 = require_commonjs3();
     var import_msal2 = require_msal();
-    var logger32 = (0, import_logging29.credentialLogger)("IdentityUtils");
+    var logger33 = (0, import_logging29.credentialLogger)("IdentityUtils");
     var LatestAuthenticationRecordVersion2 = "1.0";
     function ensureValidMsalToken2(scopes, msalToken, getTokenOptions) {
       const error = (message) => {
-        logger32.getToken.info(message);
+        logger33.getToken.info(message);
         return new import_errors24.AuthenticationRequiredError({
           scopes: Array.isArray(scopes) ? scopes : [scopes],
           getTokenOptions,
@@ -79249,7 +79249,7 @@ var require_utils3 = __commonJS({
     }
     function getAuthorityHost2(options) {
       let authorityHost = options?.authorityHost;
-      if (!authorityHost && import_core_util17.isNodeLike) {
+      if (!authorityHost && import_core_util18.isNodeLike) {
         authorityHost = process.env.AZURE_AUTHORITY_HOST;
       }
       return authorityHost ?? import_constants37.DefaultAuthorityHost;
@@ -79273,7 +79273,7 @@ var require_utils3 = __commonJS({
       }
       return [];
     }
-    var defaultLoggerCallback2 = (credLogger, platform2 = import_core_util17.isNode ? "Node" : "Browser") => (level, message, containsPii) => {
+    var defaultLoggerCallback2 = (credLogger, platform2 = import_core_util18.isNode ? "Node" : "Browser") => (level, message, containsPii) => {
       if (containsPii) {
         return;
       }
@@ -79307,26 +79307,26 @@ var require_utils3 = __commonJS({
       }
     }
     function randomUUID6() {
-      return (0, import_core_util17.randomUUID)();
+      return (0, import_core_util18.randomUUID)();
     }
     function handleMsalError2(scopes, error, getTokenOptions) {
       if (error.name === "AuthError" || error.name === "ClientAuthError" || error.name === "BrowserAuthError") {
         const msalError = error;
         switch (msalError.errorCode) {
           case "endpoints_resolution_error":
-            logger32.info((0, import_logging29.formatError)(scopes, error.message));
+            logger33.info((0, import_logging29.formatError)(scopes, error.message));
             return new import_errors24.CredentialUnavailableError(error.message);
           case "device_code_polling_cancelled":
             return new import_abort_controller7.AbortError("The authentication has been aborted by the caller.");
           case "consent_required":
           case "interaction_required":
           case "login_required":
-            logger32.info(
+            logger33.info(
               (0, import_logging29.formatError)(scopes, `Authentication returned errorCode ${msalError.errorCode}`)
             );
             break;
           default:
-            logger32.info((0, import_logging29.formatError)(scopes, `Failed to acquire token: ${error.message}`));
+            logger33.info((0, import_logging29.formatError)(scopes, `Failed to acquire token: ${error.message}`));
             break;
         }
       }
@@ -79334,7 +79334,7 @@ var require_utils3 = __commonJS({
         return error;
       }
       if (error.name === "NativeAuthError") {
-        logger32.info(
+        logger33.info(
           (0, import_logging29.formatError)(
             scopes,
             `Error from the native broker: ${error.message} with status code: ${error.statusCode}`
@@ -79527,9 +79527,9 @@ var require_identityClient = __commonJS({
       getIdentityClientAuthorityHost: () => getIdentityClientAuthorityHost2
     });
     module2.exports = __toCommonJS2(identityClient_exports);
-    var import_core_client6 = require_commonjs8();
-    var import_core_util17 = require_commonjs4();
-    var import_core_rest_pipeline25 = require_commonjs6();
+    var import_core_client9 = require_commonjs8();
+    var import_core_util18 = require_commonjs4();
+    var import_core_rest_pipeline27 = require_commonjs6();
     var import_errors24 = require_errors2();
     var import_identityTokenEndpoint2 = require_identityTokenEndpoint();
     var import_constants37 = require_constants4();
@@ -79539,12 +79539,12 @@ var require_identityClient = __commonJS({
     var noCorrelationId2 = "noCorrelationId";
     function getIdentityClientAuthorityHost2(options) {
       let authorityHost = options?.authorityHost;
-      if (import_core_util17.isNode) {
+      if (import_core_util18.isNode) {
         authorityHost = authorityHost ?? process.env.AZURE_AUTHORITY_HOST;
       }
       return authorityHost ?? import_constants37.DefaultAuthorityHost;
     }
-    var IdentityClient2 = class extends import_core_client6.ServiceClient {
+    var IdentityClient2 = class extends import_core_client9.ServiceClient {
       authorityHost;
       allowLoggingAccountIdentifiers;
       abortControllers;
@@ -79630,12 +79630,12 @@ var require_identityClient = __commonJS({
           async (updatedOptions) => {
             try {
               const urlSuffix = (0, import_identityTokenEndpoint2.getIdentityTokenEndpointSuffix)(tenantId);
-              const request = (0, import_core_rest_pipeline25.createPipelineRequest)({
+              const request = (0, import_core_rest_pipeline27.createPipelineRequest)({
                 url: `${this.authorityHost}/${tenantId}/${urlSuffix}`,
                 method: "POST",
                 body: query.toString(),
                 abortSignal: options.abortSignal,
-                headers: (0, import_core_rest_pipeline25.createHttpHeaders)({
+                headers: (0, import_core_rest_pipeline27.createHttpHeaders)({
                   Accept: "application/json",
                   "Content-Type": "application/x-www-form-urlencoded"
                 }),
@@ -79694,13 +79694,13 @@ var require_identityClient = __commonJS({
         return parameter && parameter.length ? parameter[1] || noCorrelationId2 : noCorrelationId2;
       }
       // The MSAL network module methods follow
-      async sendGetRequestAsync(url3, options) {
-        const request = (0, import_core_rest_pipeline25.createPipelineRequest)({
-          url: url3,
+      async sendGetRequestAsync(url2, options) {
+        const request = (0, import_core_rest_pipeline27.createPipelineRequest)({
+          url: url2,
           method: "GET",
           body: options?.body,
           allowInsecureConnection: this.allowInsecureConnection,
-          headers: (0, import_core_rest_pipeline25.createHttpHeaders)(options?.headers),
+          headers: (0, import_core_rest_pipeline27.createHttpHeaders)(options?.headers),
           abortSignal: this.generateAbortSignal(noCorrelationId2)
         });
         const response = await this.sendRequest(request);
@@ -79711,12 +79711,12 @@ var require_identityClient = __commonJS({
           status: response.status
         };
       }
-      async sendPostRequestAsync(url3, options) {
-        const request = (0, import_core_rest_pipeline25.createPipelineRequest)({
-          url: url3,
+      async sendPostRequestAsync(url2, options) {
+        const request = (0, import_core_rest_pipeline27.createPipelineRequest)({
+          url: url2,
           method: "POST",
           body: options?.body,
-          headers: (0, import_core_rest_pipeline25.createHttpHeaders)(options?.headers),
+          headers: (0, import_core_rest_pipeline27.createHttpHeaders)(options?.headers),
           allowInsecureConnection: this.allowInsecureConnection,
           // MSAL doesn't send the correlation ID on the get requests.
           abortSignal: this.generateAbortSignal(this.getCorrelationId(options))
@@ -79901,7 +79901,7 @@ var require_processMultiTenantRequest = __commonJS({
     function createConfigurationErrorMessage2(tenantId) {
       return `The current credential is not configured to acquire tokens for tenant ${tenantId}. To enable acquiring tokens for this tenant add it to the AdditionallyAllowedTenants on the credential options, or add "*" to AdditionallyAllowedTenants to allow acquiring tokens for any tenant.`;
     }
-    function processMultiTenantRequest3(tenantId, getTokenOptions, additionallyAllowedTenantIds = [], logger32) {
+    function processMultiTenantRequest3(tenantId, getTokenOptions, additionallyAllowedTenantIds = [], logger33) {
       let resolvedTenantId;
       if (process.env.AZURE_IDENTITY_DISABLE_MULTITENANTAUTH) {
         resolvedTenantId = tenantId;
@@ -79912,7 +79912,7 @@ var require_processMultiTenantRequest = __commonJS({
       }
       if (tenantId && resolvedTenantId !== tenantId && !additionallyAllowedTenantIds.includes("*") && !additionallyAllowedTenantIds.some((t) => t.localeCompare(resolvedTenantId) === 0)) {
         const message = createConfigurationErrorMessage2(resolvedTenantId);
-        logger32?.info(message);
+        logger33?.info(message);
         throw new import_errors24.CredentialUnavailableError(message);
       }
       return resolvedTenantId;
@@ -79951,18 +79951,18 @@ var require_tenantIdUtils = __commonJS({
     var import_constants37 = require_constants4();
     var import_logging29 = require_logging();
     var import_processMultiTenantRequest2 = require_processMultiTenantRequest();
-    function checkTenantId2(logger32, tenantId) {
+    function checkTenantId2(logger33, tenantId) {
       if (!tenantId.match(/^[0-9a-zA-Z-.]+$/)) {
         const error = new Error(
           "Invalid tenant id provided. You can locate your tenant id by following the instructions listed here: https://learn.microsoft.com/partner-center/find-ids-and-domain-names."
         );
-        logger32.info((0, import_logging29.formatError)("", error));
+        logger33.info((0, import_logging29.formatError)("", error));
         throw error;
       }
     }
-    function resolveTenantId2(logger32, tenantId, clientId) {
+    function resolveTenantId2(logger33, tenantId, clientId) {
       if (tenantId) {
-        checkTenantId2(logger32, tenantId);
+        checkTenantId2(logger33, tenantId);
         return tenantId;
       }
       if (!clientId) {
@@ -80620,7 +80620,7 @@ var require_msalClient = __commonJS({
     var import_errors24 = require_errors2();
     var import_identityClient4 = require_identityClient();
     var import_regionalAuthority2 = require_regionalAuthority();
-    var import_logger17 = require_commonjs2();
+    var import_logger19 = require_commonjs2();
     var import_tenantIdUtils20 = require_tenantIdUtils();
     var msalLogger2 = (0, import_logging29.credentialLogger)("MsalClient");
     function generateMsalConfiguration2(clientId, tenantId, msalClientOptions = {}) {
@@ -80649,7 +80649,7 @@ var require_msalClient = __commonJS({
           networkClient: httpClient,
           loggerOptions: {
             loggerCallback: (0, import_utils10.defaultLoggerCallback)(msalClientOptions.logger ?? msalLogger2),
-            logLevel: (0, import_utils10.getMSALLogLevel)((0, import_logger17.getLogLevel)()),
+            logLevel: (0, import_utils10.getMSALLogLevel)((0, import_logger19.getLogLevel)()),
             piiLoggingEnabled: msalClientOptions.loggingOptions?.enableUnsafeSupportLogging
           }
         }
@@ -80941,9 +80941,9 @@ var require_msalClient = __commonJS({
       }
       function createBaseInteractiveRequest(scopes, options) {
         return {
-          openBrowser: async (url3) => {
+          openBrowser: async (url2) => {
             const open2 = await Promise.resolve().then(() => (init_open(), open_exports));
-            await open2.default(url3);
+            await open2.default(url2);
           },
           scopes,
           authority: calculateRequestAuthority(options),
@@ -81085,7 +81085,7 @@ var require_clientCertificateCredential = __commonJS({
     var import_promises6 = require("node:fs/promises");
     var import_tracing23 = require_tracing();
     var credentialName6 = "ClientCertificateCredential";
-    var logger32 = (0, import_logging29.credentialLogger)(credentialName6);
+    var logger33 = (0, import_logging29.credentialLogger)(credentialName6);
     var ClientCertificateCredential3 = class {
       tenantId;
       additionallyAllowedTenantIds;
@@ -81120,7 +81120,7 @@ var require_clientCertificateCredential = __commonJS({
         }
         this.msalClient = (0, import_msalClient11.createMsalClient)(clientId, tenantId, {
           ...options,
-          logger: logger32,
+          logger: logger33,
           tokenCredentialOptions: options
         });
       }
@@ -81138,7 +81138,7 @@ var require_clientCertificateCredential = __commonJS({
             this.tenantId,
             newOptions,
             this.additionallyAllowedTenantIds,
-            logger32
+            logger33
           );
           const arrayScopes = Array.isArray(scopes) ? scopes : [scopes];
           const certificate = await this.buildClientCertificate();
@@ -81231,10 +81231,10 @@ var require_scopeUtils = __commonJS({
     function ensureScopes2(scopes) {
       return Array.isArray(scopes) ? scopes : [scopes];
     }
-    function ensureValidScopeForDevTimeCreds2(scope, logger32) {
+    function ensureValidScopeForDevTimeCreds2(scope, logger33) {
       if (!scope.match(/^[0-9a-zA-Z-_.:/]+$/)) {
         const error = new Error("Invalid scope was specified by the user or calling client");
-        logger32.getToken.info((0, import_logging29.formatError)(scope, error));
+        logger33.getToken.info((0, import_logging29.formatError)(scope, error));
         throw error;
       }
     }
@@ -81275,7 +81275,7 @@ var require_clientSecretCredential = __commonJS({
     var import_logging29 = require_logging();
     var import_scopeUtils12 = require_scopeUtils();
     var import_tracing23 = require_tracing();
-    var logger32 = (0, import_logging29.credentialLogger)("ClientSecretCredential");
+    var logger33 = (0, import_logging29.credentialLogger)("ClientSecretCredential");
     var ClientSecretCredential3 = class {
       tenantId;
       additionallyAllowedTenantIds;
@@ -81314,7 +81314,7 @@ var require_clientSecretCredential = __commonJS({
         );
         this.msalClient = (0, import_msalClient11.createMsalClient)(clientId, tenantId, {
           ...options,
-          logger: logger32,
+          logger: logger33,
           tokenCredentialOptions: options
         });
       }
@@ -81335,7 +81335,7 @@ var require_clientSecretCredential = __commonJS({
               this.tenantId,
               newOptions,
               this.additionallyAllowedTenantIds,
-              logger32
+              logger33
             );
             const arrayScopes = (0, import_scopeUtils12.ensureScopes)(scopes);
             return this.msalClient.getTokenByClientSecret(arrayScopes, this.clientSecret, newOptions);
@@ -81377,7 +81377,7 @@ var require_usernamePasswordCredential = __commonJS({
     var import_logging29 = require_logging();
     var import_scopeUtils12 = require_scopeUtils();
     var import_tracing23 = require_tracing();
-    var logger32 = (0, import_logging29.credentialLogger)("UsernamePasswordCredential");
+    var logger33 = (0, import_logging29.credentialLogger)("UsernamePasswordCredential");
     var UsernamePasswordCredential3 = class {
       tenantId;
       additionallyAllowedTenantIds;
@@ -81448,7 +81448,7 @@ var require_usernamePasswordCredential = __commonJS({
               this.tenantId,
               newOptions,
               this.additionallyAllowedTenantIds,
-              logger32
+              logger33
             );
             const arrayScopes = (0, import_scopeUtils12.ensureScopes)(scopes);
             return this.msalClient.getTokenByUsernamePassword(
@@ -81514,11 +81514,11 @@ var require_environmentCredential = __commonJS({
       return additionallyAllowedValues.split(";");
     }
     var credentialName6 = "EnvironmentCredential";
-    var logger32 = (0, import_logging29.credentialLogger)(credentialName6);
+    var logger33 = (0, import_logging29.credentialLogger)(credentialName6);
     function getSendCertificateChain2() {
       const sendCertificateChain = (process.env.AZURE_CLIENT_SEND_CERTIFICATE_CHAIN ?? "").toLowerCase();
       const result = sendCertificateChain === "true" || sendCertificateChain === "1";
-      logger32.verbose(
+      logger33.verbose(
         `AZURE_CLIENT_SEND_CERTIFICATE_CHAIN: ${process.env.AZURE_CLIENT_SEND_CERTIFICATE_CHAIN}; sendCertificateChain: ${result}`
       );
       return result;
@@ -81552,16 +81552,16 @@ var require_environmentCredential = __commonJS({
        */
       constructor(options) {
         const assigned = (0, import_logging29.processEnvVars)(AllSupportedEnvironmentVariables2).assigned.join(", ");
-        logger32.info(`Found the following environment variables: ${assigned}`);
+        logger33.info(`Found the following environment variables: ${assigned}`);
         const tenantId = process.env.AZURE_TENANT_ID, clientId = process.env.AZURE_CLIENT_ID, clientSecret = process.env.AZURE_CLIENT_SECRET;
         const additionallyAllowedTenantIds = getAdditionallyAllowedTenants2();
         const sendCertificateChain = getSendCertificateChain2();
         const newOptions = { ...options, additionallyAllowedTenantIds, sendCertificateChain };
         if (tenantId) {
-          (0, import_tenantIdUtils20.checkTenantId)(logger32, tenantId);
+          (0, import_tenantIdUtils20.checkTenantId)(logger33, tenantId);
         }
         if (tenantId && clientId && clientSecret) {
-          logger32.info(
+          logger33.info(
             `Invoking ClientSecretCredential with tenant ID: ${tenantId}, clientId: ${clientId} and clientSecret: [REDACTED]`
           );
           this._credential = new import_clientSecretCredential3.ClientSecretCredential(tenantId, clientId, clientSecret, newOptions);
@@ -81570,7 +81570,7 @@ var require_environmentCredential = __commonJS({
         const certificatePath = process.env.AZURE_CLIENT_CERTIFICATE_PATH;
         const certificatePassword = process.env.AZURE_CLIENT_CERTIFICATE_PASSWORD;
         if (tenantId && clientId && certificatePath) {
-          logger32.info(
+          logger33.info(
             `Invoking ClientCertificateCredential with tenant ID: ${tenantId}, clientId: ${clientId} and certificatePath: ${certificatePath}`
           );
           this._credential = new import_clientCertificateCredential3.ClientCertificateCredential(
@@ -81584,10 +81584,10 @@ var require_environmentCredential = __commonJS({
         const username = process.env.AZURE_USERNAME;
         const password = process.env.AZURE_PASSWORD;
         if (tenantId && clientId && username && password) {
-          logger32.info(
+          logger33.info(
             `Invoking UsernamePasswordCredential with tenant ID: ${tenantId}, clientId: ${clientId} and username: ${username}`
           );
-          logger32.warning(
+          logger33.warning(
             "Environment is configured to use username and password authentication. This authentication method is deprecated, as it doesn't support multifactor authentication (MFA). Use a more secure credential. For more details, see https://aka.ms/azsdk/identity/mfa."
           );
           this._credential = new import_usernamePasswordCredential3.UsernamePasswordCredential(
@@ -81610,14 +81610,14 @@ var require_environmentCredential = __commonJS({
           if (this._credential) {
             try {
               const result = await this._credential.getToken(scopes, newOptions);
-              logger32.getToken.info((0, import_logging29.formatSuccess)(scopes));
+              logger33.getToken.info((0, import_logging29.formatSuccess)(scopes));
               return result;
             } catch (err) {
               const authenticationError = new import_errors24.AuthenticationError(400, {
                 error: `${credentialName6} authentication failed. To troubleshoot, visit https://aka.ms/azsdk/js/identity/environmentcredential/troubleshoot.`,
                 error_description: err.message.toString().split("More details:").join("")
               });
-              logger32.getToken.info((0, import_logging29.formatError)(scopes, authenticationError));
+              logger33.getToken.info((0, import_logging29.formatError)(scopes, authenticationError));
               throw authenticationError;
             }
           }
@@ -81655,12 +81655,12 @@ var require_imdsRetryPolicy = __commonJS({
       imdsRetryPolicy: () => imdsRetryPolicy2
     });
     module2.exports = __toCommonJS2(imdsRetryPolicy_exports);
-    var import_core_rest_pipeline25 = require_commonjs6();
-    var import_core_util17 = require_commonjs4();
+    var import_core_rest_pipeline27 = require_commonjs6();
+    var import_core_util18 = require_commonjs4();
     var DEFAULT_CLIENT_MAX_RETRY_INTERVAL3 = 1e3 * 64;
     var MIN_DELAY_FOR_410_MS2 = 3e3;
     function imdsRetryPolicy2(msiRetryConfig) {
-      return (0, import_core_rest_pipeline25.retryPolicy)(
+      return (0, import_core_rest_pipeline27.retryPolicy)(
         [
           {
             name: "imdsRetryPolicy",
@@ -81669,7 +81669,7 @@ var require_imdsRetryPolicy = __commonJS({
                 return { skipStrategy: true };
               }
               const initialDelayMs = response?.status === 410 ? Math.max(MIN_DELAY_FOR_410_MS2, msiRetryConfig.startDelayInMs) : msiRetryConfig.startDelayInMs;
-              return (0, import_core_util17.calculateRetryDelay)(retryCount, {
+              return (0, import_core_util18.calculateRetryDelay)(retryCount, {
                 retryDelayInMs: initialDelayMs,
                 maxRetryDelayInMs: DEFAULT_CLIENT_MAX_RETRY_INTERVAL3
               });
@@ -81709,13 +81709,13 @@ var require_imdsMsi = __commonJS({
       imdsMsi: () => imdsMsi2
     });
     module2.exports = __toCommonJS2(imdsMsi_exports);
-    var import_core_rest_pipeline25 = require_commonjs6();
-    var import_core_util17 = require_commonjs4();
+    var import_core_rest_pipeline27 = require_commonjs6();
+    var import_core_util18 = require_commonjs4();
     var import_logging29 = require_logging();
     var import_utils10 = require_utils4();
     var import_tracing23 = require_tracing();
     var msiName3 = "ManagedIdentityCredential - IMDS";
-    var logger32 = (0, import_logging29.credentialLogger)(msiName3);
+    var logger33 = (0, import_logging29.credentialLogger)(msiName3);
     var imdsHost2 = "http://169.254.169.254";
     var imdsEndpointPath2 = "/metadata/identity/oauth2/token";
     function prepareInvalidRequestOptions2(scopes) {
@@ -81723,16 +81723,16 @@ var require_imdsMsi = __commonJS({
       if (!resource) {
         throw new Error(`${msiName3}: Multiple scopes are not supported.`);
       }
-      const url3 = new URL(imdsEndpointPath2, process.env.AZURE_POD_IDENTITY_AUTHORITY_HOST ?? imdsHost2);
+      const url2 = new URL(imdsEndpointPath2, process.env.AZURE_POD_IDENTITY_AUTHORITY_HOST ?? imdsHost2);
       const rawHeaders = {
         Accept: "application/json"
         // intentionally leave out the Metadata header to invoke an error from IMDS endpoint.
       };
       return {
         // intentionally not including any query
-        url: `${url3}`,
+        url: `${url2}`,
         method: "GET",
-        headers: (0, import_core_rest_pipeline25.createHttpHeaders)(rawHeaders)
+        headers: (0, import_core_rest_pipeline27.createHttpHeaders)(rawHeaders)
       };
     }
     var imdsMsi2 = {
@@ -81741,7 +81741,7 @@ var require_imdsMsi = __commonJS({
         const { scopes, identityClient, getTokenOptions } = options;
         const resource = (0, import_utils10.mapScopesToResource)(scopes);
         if (!resource) {
-          logger32.info(`${msiName3}: Unavailable. Multiple scopes are not supported.`);
+          logger33.info(`${msiName3}: Unavailable. Multiple scopes are not supported.`);
           return false;
         }
         if (process.env.AZURE_POD_IDENTITY_AUTHORITY_HOST) {
@@ -81756,28 +81756,28 @@ var require_imdsMsi = __commonJS({
           getTokenOptions ?? {},
           async (updatedOptions) => {
             requestOptions.tracingOptions = updatedOptions.tracingOptions;
-            const request = (0, import_core_rest_pipeline25.createPipelineRequest)(requestOptions);
+            const request = (0, import_core_rest_pipeline27.createPipelineRequest)(requestOptions);
             request.timeout = updatedOptions.requestOptions?.timeout || 1e3;
             request.allowInsecureConnection = true;
             let response;
             try {
-              logger32.info(`${msiName3}: Pinging the Azure IMDS endpoint`);
+              logger33.info(`${msiName3}: Pinging the Azure IMDS endpoint`);
               response = await identityClient.sendRequest(request);
             } catch (err) {
-              if ((0, import_core_util17.isError)(err)) {
-                logger32.verbose(`${msiName3}: Caught error ${err.name}: ${err.message}`);
+              if ((0, import_core_util18.isError)(err)) {
+                logger33.verbose(`${msiName3}: Caught error ${err.name}: ${err.message}`);
               }
-              logger32.info(`${msiName3}: The Azure IMDS endpoint is unavailable`);
+              logger33.info(`${msiName3}: The Azure IMDS endpoint is unavailable`);
               return false;
             }
             if (response.status === 403) {
               if (response.bodyAsText?.includes("unreachable")) {
-                logger32.info(`${msiName3}: The Azure IMDS endpoint is unavailable`);
-                logger32.info(`${msiName3}: ${response.bodyAsText}`);
+                logger33.info(`${msiName3}: The Azure IMDS endpoint is unavailable`);
+                logger33.info(`${msiName3}: ${response.bodyAsText}`);
                 return false;
               }
             }
-            logger32.info(`${msiName3}: The Azure IMDS endpoint is available`);
+            logger33.info(`${msiName3}: The Azure IMDS endpoint is available`);
             return true;
           }
         );
@@ -81816,7 +81816,7 @@ var require_clientAssertionCredential = __commonJS({
     var import_errors24 = require_errors2();
     var import_logging29 = require_logging();
     var import_tracing23 = require_tracing();
-    var logger32 = (0, import_logging29.credentialLogger)("ClientAssertionCredential");
+    var logger33 = (0, import_logging29.credentialLogger)("ClientAssertionCredential");
     var ClientAssertionCredential3 = class {
       msalClient;
       tenantId;
@@ -81857,7 +81857,7 @@ var require_clientAssertionCredential = __commonJS({
         this.getAssertion = getAssertion;
         this.msalClient = (0, import_msalClient11.createMsalClient)(clientId, tenantId, {
           ...options,
-          logger: logger32,
+          logger: logger33,
           tokenCredentialOptions: this.options
         });
       }
@@ -81878,7 +81878,7 @@ var require_clientAssertionCredential = __commonJS({
               this.tenantId,
               newOptions,
               this.additionallyAllowedTenantIds,
-              logger32
+              logger33
             );
             const arrayScopes = Array.isArray(scopes) ? scopes : [scopes];
             return this.msalClient.getTokenByClientAssertion(
@@ -81930,7 +81930,7 @@ var require_workloadIdentityCredential = __commonJS({
       "AZURE_CLIENT_ID",
       "AZURE_FEDERATED_TOKEN_FILE"
     ];
-    var logger32 = (0, import_logging29.credentialLogger)(credentialName6);
+    var logger33 = (0, import_logging29.credentialLogger)(credentialName6);
     var WorkloadIdentityCredential3 = class {
       client;
       azureFederatedTokenFileContent = void 0;
@@ -81943,13 +81943,13 @@ var require_workloadIdentityCredential = __commonJS({
        */
       constructor(options) {
         const assignedEnv = (0, import_logging29.processEnvVars)(SupportedWorkloadEnvironmentVariables2).assigned.join(", ");
-        logger32.info(`Found the following environment variables: ${assignedEnv}`);
+        logger33.info(`Found the following environment variables: ${assignedEnv}`);
         const workloadIdentityCredentialOptions = options ?? {};
         const tenantId = workloadIdentityCredentialOptions.tenantId || process.env.AZURE_TENANT_ID;
         const clientId = workloadIdentityCredentialOptions.clientId || process.env.AZURE_CLIENT_ID;
         this.federatedTokenFilePath = workloadIdentityCredentialOptions.tokenFilePath || process.env.AZURE_FEDERATED_TOKEN_FILE;
         if (tenantId) {
-          (0, import_tenantIdUtils20.checkTenantId)(logger32, tenantId);
+          (0, import_tenantIdUtils20.checkTenantId)(logger33, tenantId);
         }
         if (!clientId) {
           throw new import_errors24.CredentialUnavailableError(
@@ -81969,7 +81969,7 @@ var require_workloadIdentityCredential = __commonJS({
         See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`
           );
         }
-        logger32.info(
+        logger33.info(
           `Invoking ClientAssertionCredential with tenant ID: ${tenantId}, clientId: ${workloadIdentityCredentialOptions.clientId} and federated token path: [REDACTED]`
         );
         this.client = new import_clientAssertionCredential4.ClientAssertionCredential(
@@ -81994,10 +81994,10 @@ var require_workloadIdentityCredential = __commonJS({
       "AZURE_TENANT_ID",
       "AZURE_CLIENT_ID",
       "AZURE_FEDERATED_TOKEN_FILE". See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`;
-          logger32.info(errorMessage);
+          logger33.info(errorMessage);
           throw new import_errors24.CredentialUnavailableError(errorMessage);
         }
-        logger32.info("Invoking getToken() of Client Assertion Credential");
+        logger33.info("Invoking getToken() of Client Assertion Credential");
         return this.client.getToken(scopes, options);
       }
       async readFileContents() {
@@ -82055,7 +82055,7 @@ var require_tokenExchangeMsi = __commonJS({
     var import_workloadIdentityCredential4 = require_workloadIdentityCredential();
     var import_logging29 = require_logging();
     var msiName3 = "ManagedIdentityCredential - Token Exchange";
-    var logger32 = (0, import_logging29.credentialLogger)(msiName3);
+    var logger33 = (0, import_logging29.credentialLogger)(msiName3);
     var tokenExchangeMsi2 = {
       name: "tokenExchangeMsi",
       async isAvailable(clientId) {
@@ -82064,7 +82064,7 @@ var require_tokenExchangeMsi = __commonJS({
           (clientId || env.AZURE_CLIENT_ID) && env.AZURE_TENANT_ID && process.env.AZURE_FEDERATED_TOKEN_FILE
         );
         if (!result) {
-          logger32.info(
+          logger33.info(
             `${msiName3}: Unavailable. The environment variables needed are: AZURE_CLIENT_ID (or the client ID sent through the parameters), AZURE_TENANT_ID and AZURE_FEDERATED_TOKEN_FILE`
           );
         }
@@ -82111,7 +82111,7 @@ var require_managedIdentityCredential = __commonJS({
       ManagedIdentityCredential: () => ManagedIdentityCredential3
     });
     module2.exports = __toCommonJS2(managedIdentityCredential_exports);
-    var import_logger17 = require_commonjs2();
+    var import_logger19 = require_commonjs2();
     var import_msal_node2 = require_msal_node2();
     var import_identityClient4 = require_identityClient();
     var import_errors24 = require_errors2();
@@ -82122,7 +82122,7 @@ var require_managedIdentityCredential = __commonJS({
     var import_imdsMsi2 = require_imdsMsi();
     var import_tokenExchangeMsi2 = require_tokenExchangeMsi();
     var import_utils22 = require_utils4();
-    var logger32 = (0, import_logging29.credentialLogger)("ManagedIdentityCredential");
+    var logger33 = (0, import_logging29.credentialLogger)("ManagedIdentityCredential");
     var ManagedIdentityCredential3 = class {
       managedIdentityApp;
       identityClient;
@@ -82182,9 +82182,9 @@ var require_managedIdentityCredential = __commonJS({
             disableInternalRetries: true,
             networkClient: this.identityClient,
             loggerOptions: {
-              logLevel: (0, import_utils10.getMSALLogLevel)((0, import_logger17.getLogLevel)()),
+              logLevel: (0, import_utils10.getMSALLogLevel)((0, import_logger19.getLogLevel)()),
               piiLoggingEnabled: _options.loggingOptions?.enableUnsafeSupportLogging,
-              loggerCallback: (0, import_utils10.defaultLoggerCallback)(logger32)
+              loggerCallback: (0, import_utils10.defaultLoggerCallback)(logger33)
             }
           }
         });
@@ -82197,7 +82197,7 @@ var require_managedIdentityCredential = __commonJS({
         const managedIdentitySource = this.managedIdentityApp.getManagedIdentitySource();
         if (managedIdentitySource === "CloudShell") {
           if (this.clientId || this.resourceId || this.objectId) {
-            logger32.warning(
+            logger33.warning(
               `CloudShell MSI detected with user-provided IDs - throwing. Received values: ${JSON.stringify(
                 {
                   clientId: this.clientId,
@@ -82213,7 +82213,7 @@ var require_managedIdentityCredential = __commonJS({
         }
         if (managedIdentitySource === "ServiceFabric") {
           if (this.clientId || this.resourceId || this.objectId) {
-            logger32.warning(
+            logger33.warning(
               `Service Fabric detected with user-provided IDs - throwing. Received values: ${JSON.stringify(
                 {
                   clientId: this.clientId,
@@ -82227,10 +82227,10 @@ var require_managedIdentityCredential = __commonJS({
             );
           }
         }
-        logger32.info(`Using ${managedIdentitySource} managed identity.`);
+        logger33.info(`Using ${managedIdentitySource} managed identity.`);
         if (providedIds.length === 1) {
           const { key, value } = providedIds[0];
-          logger32.info(`${managedIdentitySource} with ${key}: ${value}`);
+          logger33.info(`${managedIdentitySource} with ${key}: ${value}`);
         }
       }
       /**
@@ -82243,7 +82243,7 @@ var require_managedIdentityCredential = __commonJS({
        *                TokenCredential implementation might make.
        */
       async getToken(scopes, options = {}) {
-        logger32.getToken.info("Using the MSAL provider for Managed Identity.");
+        logger33.getToken.info("Using the MSAL provider for Managed Identity.");
         const resource = (0, import_utils22.mapScopesToResource)(scopes);
         if (!resource) {
           throw new import_errors24.CredentialUnavailableError(
@@ -82257,9 +82257,9 @@ var require_managedIdentityCredential = __commonJS({
             const isTokenExchangeMsi = await import_tokenExchangeMsi2.tokenExchangeMsi.isAvailable(this.clientId);
             const identitySource = this.managedIdentityApp.getManagedIdentitySource();
             const isImdsMsi = identitySource === "DefaultToImds" || identitySource === "Imds";
-            logger32.getToken.info(`MSAL Identity source: ${identitySource}`);
+            logger33.getToken.info(`MSAL Identity source: ${identitySource}`);
             if (isTokenExchangeMsi) {
-              logger32.getToken.info("Using the token exchange managed identity.");
+              logger33.getToken.info("Using the token exchange managed identity.");
               const result = await import_tokenExchangeMsi2.tokenExchangeMsi.getToken({
                 scopes,
                 clientId: this.clientId,
@@ -82274,7 +82274,7 @@ var require_managedIdentityCredential = __commonJS({
               }
               return result;
             } else if (isImdsMsi && this.sendProbeRequest) {
-              logger32.getToken.info("Using the IMDS endpoint to probe for availability.");
+              logger33.getToken.info("Using the IMDS endpoint to probe for availability.");
               const isAvailable = await import_imdsMsi2.imdsMsi.isAvailable({
                 scopes,
                 clientId: this.clientId,
@@ -82288,12 +82288,12 @@ var require_managedIdentityCredential = __commonJS({
                 );
               }
             }
-            logger32.getToken.info("Calling into MSAL for managed identity token.");
+            logger33.getToken.info("Calling into MSAL for managed identity token.");
             const token = await this.managedIdentityApp.acquireToken({
               resource
             });
             this.ensureValidMsalToken(scopes, token, options);
-            logger32.getToken.info((0, import_logging29.formatSuccess)(scopes));
+            logger33.getToken.info((0, import_logging29.formatSuccess)(scopes));
             return {
               expiresOnTimestamp: token.expiresOn.getTime(),
               token: token.accessToken,
@@ -82301,7 +82301,7 @@ var require_managedIdentityCredential = __commonJS({
               tokenType: "Bearer"
             };
           } catch (err) {
-            logger32.getToken.error((0, import_logging29.formatError)(scopes, err));
+            logger33.getToken.error((0, import_logging29.formatError)(scopes, err));
             if (err.name === "AuthenticationRequiredError") {
               throw err;
             }
@@ -82323,7 +82323,7 @@ var require_managedIdentityCredential = __commonJS({
        */
       ensureValidMsalToken(scopes, msalToken, getTokenOptions) {
         const createError = (message) => {
-          logger32.getToken.info(message);
+          logger33.getToken.info(message);
           return new import_errors24.AuthenticationRequiredError({
             scopes: Array.isArray(scopes) ? scopes : [scopes],
             getTokenOptions,
@@ -83209,7 +83209,7 @@ var require_azureDeveloperCliCredential = __commonJS({
     var import_tracing23 = require_tracing();
     var import_scopeUtils12 = require_scopeUtils();
     var import_processUtils4 = require_processUtils();
-    var logger32 = (0, import_logging29.credentialLogger)("AzureDeveloperCliCredential");
+    var logger33 = (0, import_logging29.credentialLogger)("AzureDeveloperCliCredential");
     var azureDeveloperCliPublicErrorMessages2 = {
       notInstalled: "Azure Developer CLI couldn't be found. To mitigate this issue, see the troubleshooting guidelines at https://aka.ms/azsdk/js/identity/azdevclicredential/troubleshoot.",
       login: "Please run 'azd auth login' from a command prompt to authenticate before using this credential. For more information, see the troubleshooting guidelines at https://aka.ms/azsdk/js/identity/azdevclicredential/troubleshoot.",
@@ -83224,7 +83224,7 @@ var require_azureDeveloperCliCredential = __commonJS({
         if (process.platform === "win32") {
           let systemRoot = process.env.SystemRoot || process.env["SYSTEMROOT"];
           if (!systemRoot) {
-            logger32.getToken.warning(
+            logger33.getToken.warning(
               "The SystemRoot environment variable is not set. This may cause issues when using the Azure Developer CLI credential."
             );
             systemRoot = "C:\\Windows";
@@ -83281,7 +83281,7 @@ var require_azureDeveloperCliCredential = __commonJS({
        */
       constructor(options) {
         if (options?.tenantId) {
-          (0, import_tenantIdUtils20.checkTenantId)(logger32, options?.tenantId);
+          (0, import_tenantIdUtils20.checkTenantId)(logger33, options?.tenantId);
           this.tenantId = options?.tenantId;
         }
         this.additionallyAllowedTenantIds = (0, import_tenantIdUtils20.resolveAdditionallyAllowedTenantIds)(
@@ -83304,7 +83304,7 @@ var require_azureDeveloperCliCredential = __commonJS({
           this.additionallyAllowedTenantIds
         );
         if (tenantId) {
-          (0, import_tenantIdUtils20.checkTenantId)(logger32, tenantId);
+          (0, import_tenantIdUtils20.checkTenantId)(logger33, tenantId);
         }
         let scopeList;
         if (typeof scopes === "string") {
@@ -83312,11 +83312,11 @@ var require_azureDeveloperCliCredential = __commonJS({
         } else {
           scopeList = scopes;
         }
-        logger32.getToken.info(`Using the scopes ${scopes}`);
+        logger33.getToken.info(`Using the scopes ${scopes}`);
         return import_tracing23.tracingClient.withSpan(`${this.constructor.name}.getToken`, options, async () => {
           try {
             scopeList.forEach((scope) => {
-              (0, import_scopeUtils12.ensureValidScopeForDevTimeCreds)(scope, logger32);
+              (0, import_scopeUtils12.ensureValidScopeForDevTimeCreds)(scope, logger33);
             });
             const obj = await developerCliCredentialInternals2.getAzdAccessToken(
               scopeList,
@@ -83331,12 +83331,12 @@ var require_azureDeveloperCliCredential = __commonJS({
               const error = new import_errors24.CredentialUnavailableError(
                 azureDeveloperCliPublicErrorMessages2.notInstalled
               );
-              logger32.getToken.info((0, import_logging29.formatError)(scopes, error));
+              logger33.getToken.info((0, import_logging29.formatError)(scopes, error));
               throw error;
             }
             if (isNotLoggedInError) {
               const error = new import_errors24.CredentialUnavailableError(azureDeveloperCliPublicErrorMessages2.login);
-              logger32.getToken.info((0, import_logging29.formatError)(scopes, error));
+              logger33.getToken.info((0, import_logging29.formatError)(scopes, error));
               throw error;
             }
             if (isMFARequiredError) {
@@ -83345,12 +83345,12 @@ var require_azureDeveloperCliCredential = __commonJS({
               const error = new import_errors24.CredentialUnavailableError(
                 `${azureDeveloperCliPublicErrorMessages2.claim} ${loginCmd}`
               );
-              logger32.getToken.info((0, import_logging29.formatError)(scopes, error));
+              logger33.getToken.info((0, import_logging29.formatError)(scopes, error));
               throw error;
             }
             try {
               const resp = JSON.parse(obj.stdout);
-              logger32.getToken.info((0, import_logging29.formatSuccess)(scopes));
+              logger33.getToken.info((0, import_logging29.formatSuccess)(scopes));
               return {
                 token: resp.token,
                 expiresOnTimestamp: new Date(resp.expiresOn).getTime(),
@@ -83366,7 +83366,7 @@ var require_azureDeveloperCliCredential = __commonJS({
             const error = err.name === "CredentialUnavailableError" ? err : new import_errors24.CredentialUnavailableError(
               err.message || azureDeveloperCliPublicErrorMessages2.unknown
             );
-            logger32.getToken.info((0, import_logging29.formatError)(scopes, error));
+            logger33.getToken.info((0, import_logging29.formatError)(scopes, error));
             throw error;
           }
         });
@@ -83401,12 +83401,12 @@ var require_subscriptionUtils = __commonJS({
     });
     module2.exports = __toCommonJS2(subscriptionUtils_exports);
     var import_logging29 = require_logging();
-    function checkSubscription2(logger32, subscription) {
+    function checkSubscription2(logger33, subscription) {
       if (!subscription.match(/^[0-9a-zA-Z-._ ]+$/)) {
         const error = new Error(
           `Subscription '${subscription}' contains invalid characters. If this is the name of a subscription, use its ID instead. You can locate your subscription by following the instructions listed here: https://learn.microsoft.com/azure/azure-portal/get-subscription-tenant-id`
         );
-        logger32.info((0, import_logging29.formatError)("", error));
+        logger33.info((0, import_logging29.formatError)("", error));
         throw error;
       }
     }
@@ -83448,7 +83448,7 @@ var require_azureCliCredential = __commonJS({
     var import_subscriptionUtils2 = require_subscriptionUtils();
     var import_processUtils4 = require_processUtils();
     var import_core_process3 = require_commonjs10();
-    var logger32 = (0, import_logging29.credentialLogger)("AzureCliCredential");
+    var logger33 = (0, import_logging29.credentialLogger)("AzureCliCredential");
     var azureCliPublicErrorMessages2 = {
       claim: "This credential doesn't support claims challenges. To authenticate with the required claims, please run the following command:",
       notInstalled: "Azure CLI could not be found. Please visit https://aka.ms/azure-cli for installation instructions and then, once installed, authenticate to your Azure account using 'az login'.",
@@ -83464,7 +83464,7 @@ var require_azureCliCredential = __commonJS({
         if (process.platform === "win32") {
           let systemRoot = process.env.SystemRoot || process.env["SYSTEMROOT"];
           if (!systemRoot) {
-            logger32.getToken.warning(
+            logger33.getToken.warning(
               "The SystemRoot environment variable is not set. This may cause issues when using the Azure CLI credential."
             );
             systemRoot = "C:\\Windows";
@@ -83521,11 +83521,11 @@ var require_azureCliCredential = __commonJS({
        */
       constructor(options) {
         if (options?.tenantId) {
-          (0, import_tenantIdUtils20.checkTenantId)(logger32, options?.tenantId);
+          (0, import_tenantIdUtils20.checkTenantId)(logger33, options?.tenantId);
           this.tenantId = options?.tenantId;
         }
         if (options?.subscription) {
-          (0, import_subscriptionUtils2.checkSubscription)(logger32, options?.subscription);
+          (0, import_subscriptionUtils2.checkSubscription)(logger33, options?.subscription);
           this.subscription = options?.subscription;
         }
         this.additionallyAllowedTenantIds = (0, import_tenantIdUtils20.resolveAdditionallyAllowedTenantIds)(
@@ -83554,7 +83554,7 @@ var require_azureCliCredential = __commonJS({
           const error = new import_errors24.CredentialUnavailableError(
             `${azureCliPublicErrorMessages2.claim} ${loginCmd}`
           );
-          logger32.getToken.info((0, import_logging29.formatError)(scope, error));
+          logger33.getToken.info((0, import_logging29.formatError)(scope, error));
           throw error;
         }
         const tenantId = (0, import_tenantIdUtils20.processMultiTenantRequest)(
@@ -83563,15 +83563,15 @@ var require_azureCliCredential = __commonJS({
           this.additionallyAllowedTenantIds
         );
         if (tenantId) {
-          (0, import_tenantIdUtils20.checkTenantId)(logger32, tenantId);
+          (0, import_tenantIdUtils20.checkTenantId)(logger33, tenantId);
         }
         if (this.subscription) {
-          (0, import_subscriptionUtils2.checkSubscription)(logger32, this.subscription);
+          (0, import_subscriptionUtils2.checkSubscription)(logger33, this.subscription);
         }
-        logger32.getToken.info(`Using the scope ${scope}`);
+        logger33.getToken.info(`Using the scope ${scope}`);
         return import_tracing23.tracingClient.withSpan(`${this.constructor.name}.getToken`, options, async () => {
           try {
-            (0, import_scopeUtils12.ensureValidScopeForDevTimeCreds)(scope, logger32);
+            (0, import_scopeUtils12.ensureValidScopeForDevTimeCreds)(scope, logger33);
             const resource = (0, import_scopeUtils12.getScopeResource)(scope);
             const obj = await cliCredentialInternals2.getAzureCliAccessToken(
               resource,
@@ -83584,18 +83584,18 @@ var require_azureCliCredential = __commonJS({
             const isNotInstallError = obj.stderr?.match("az:(.*)not found") || obj.stderr?.startsWith("'az' is not recognized") || obj.error && (0, import_core_process3.isProcessError)(obj.error) && obj.error.code === "ENOENT";
             if (isNotInstallError) {
               const error = new import_errors24.CredentialUnavailableError(azureCliPublicErrorMessages2.notInstalled);
-              logger32.getToken.info((0, import_logging29.formatError)(scopes, error));
+              logger33.getToken.info((0, import_logging29.formatError)(scopes, error));
               throw error;
             }
             if (isLoginError2) {
               const error = new import_errors24.CredentialUnavailableError(azureCliPublicErrorMessages2.login);
-              logger32.getToken.info((0, import_logging29.formatError)(scopes, error));
+              logger33.getToken.info((0, import_logging29.formatError)(scopes, error));
               throw error;
             }
             try {
               const responseData = obj.stdout;
               const response = this.parseRawResponse(responseData);
-              logger32.getToken.info((0, import_logging29.formatSuccess)(scopes));
+              logger33.getToken.info((0, import_logging29.formatSuccess)(scopes));
               return response;
             } catch (e) {
               if (obj.stderr) {
@@ -83607,7 +83607,7 @@ var require_azureCliCredential = __commonJS({
             const error = err.name === "CredentialUnavailableError" ? err : new import_errors24.CredentialUnavailableError(
               err.message || azureCliPublicErrorMessages2.unknown
             );
-            logger32.getToken.info((0, import_logging29.formatError)(scopes, error));
+            logger33.getToken.info((0, import_logging29.formatError)(scopes, error));
             throw error;
           }
         });
@@ -83627,7 +83627,7 @@ var require_azureCliCredential = __commonJS({
         const token = response.accessToken;
         let expiresOnTimestamp = Number.parseInt(response.expires_on, 10) * 1e3;
         if (!isNaN(expiresOnTimestamp)) {
-          logger32.getToken.info("expires_on is available and is valid, using it");
+          logger33.getToken.info("expires_on is available and is valid, using it");
           return {
             token,
             expiresOnTimestamp,
@@ -83687,7 +83687,7 @@ var require_azurePowerShellCredential = __commonJS({
     var import_errors24 = require_errors2();
     var import_processUtils4 = require_processUtils();
     var import_tracing23 = require_tracing();
-    var logger32 = (0, import_logging29.credentialLogger)("AzurePowerShellCredential");
+    var logger33 = (0, import_logging29.credentialLogger)("AzurePowerShellCredential");
     var isWindows2 = process.platform === "win32";
     var powerShellResourceEnvironmentVariable2 = "AZURE_IDENTITY_POWERSHELL_RESOURCE";
     var powerShellTenantEnvironmentVariable2 = "AZURE_IDENTITY_POWERSHELL_TENANT_ID";
@@ -83759,7 +83759,7 @@ var require_azurePowerShellCredential = __commonJS({
        */
       constructor(options) {
         if (options?.tenantId) {
-          (0, import_tenantIdUtils20.checkTenantId)(logger32, options?.tenantId);
+          (0, import_tenantIdUtils20.checkTenantId)(logger33, options?.tenantId);
           this.tenantId = options?.tenantId;
         }
         this.additionallyAllowedTenantIds = (0, import_tenantIdUtils20.resolveAdditionallyAllowedTenantIds)(
@@ -83860,7 +83860,7 @@ var require_azurePowerShellCredential = __commonJS({
             const error = new import_errors24.CredentialUnavailableError(
               `${powerShellPublicErrorMessages2.claim} ${loginCmd}`
             );
-            logger32.getToken.info((0, import_logging29.formatError)(scope, error));
+            logger33.getToken.info((0, import_logging29.formatError)(scope, error));
             throw error;
           }
           const tenantId = (0, import_tenantIdUtils20.processMultiTenantRequest)(
@@ -83869,14 +83869,14 @@ var require_azurePowerShellCredential = __commonJS({
             this.additionallyAllowedTenantIds
           );
           if (tenantId) {
-            (0, import_tenantIdUtils20.checkTenantId)(logger32, tenantId);
+            (0, import_tenantIdUtils20.checkTenantId)(logger33, tenantId);
           }
           try {
-            (0, import_scopeUtils12.ensureValidScopeForDevTimeCreds)(scope, logger32);
-            logger32.getToken.info(`Using the scope ${scope}`);
+            (0, import_scopeUtils12.ensureValidScopeForDevTimeCreds)(scope, logger33);
+            logger33.getToken.info(`Using the scope ${scope}`);
             const resource = (0, import_scopeUtils12.getScopeResource)(scope);
             const response = await this.getAzurePowerShellAccessToken(resource, tenantId, this.timeout);
-            logger32.getToken.info((0, import_logging29.formatSuccess)(scopes));
+            logger33.getToken.info((0, import_logging29.formatSuccess)(scopes));
             return {
               token: response.Token,
               expiresOnTimestamp: new Date(response.ExpiresOn).getTime(),
@@ -83885,17 +83885,17 @@ var require_azurePowerShellCredential = __commonJS({
           } catch (err) {
             if (isNotInstalledError2(err)) {
               const error2 = new import_errors24.CredentialUnavailableError(powerShellPublicErrorMessages2.installed);
-              logger32.getToken.info((0, import_logging29.formatError)(scope, error2));
+              logger33.getToken.info((0, import_logging29.formatError)(scope, error2));
               throw error2;
             } else if (isLoginError2(err)) {
               const error2 = new import_errors24.CredentialUnavailableError(powerShellPublicErrorMessages2.login);
-              logger32.getToken.info((0, import_logging29.formatError)(scope, error2));
+              logger33.getToken.info((0, import_logging29.formatError)(scope, error2));
               throw error2;
             }
             const error = new import_errors24.CredentialUnavailableError(
               `${err}. ${powerShellPublicErrorMessages2.troubleshoot}`
             );
-            logger32.getToken.info((0, import_logging29.formatError)(scope, error));
+            logger33.getToken.info((0, import_logging29.formatError)(scope, error));
             throw error;
           }
         });
@@ -83913,7 +83913,7 @@ var require_azurePowerShellCredential = __commonJS({
               if (jsonContent?.Token) {
                 resultWithoutToken = resultWithoutToken.replace(item, "");
                 if (resultWithoutToken) {
-                  logger32.getToken.warning(resultWithoutToken);
+                  logger33.getToken.warning(resultWithoutToken);
                 }
                 return jsonContent;
               }
@@ -83968,7 +83968,7 @@ var require_visualStudioCodeCredential = __commonJS({
     var import_promises6 = require("node:fs/promises");
     var CommonTenantId2 = "common";
     var VSCodeClientId2 = "aebc6443-996d-45c2-90f0-388ff96faa56";
-    var logger32 = (0, import_logging29.credentialLogger)("VisualStudioCodeCredential");
+    var logger33 = (0, import_logging29.credentialLogger)("VisualStudioCodeCredential");
     var unsupportedTenantIds2 = {
       adfs: "The VisualStudioCodeCredential does not support authentication with ADFS tenants."
     };
@@ -83995,7 +83995,7 @@ var require_visualStudioCodeCredential = __commonJS({
       constructor(options) {
         this.options = options || {};
         if (options && options.tenantId) {
-          (0, import_tenantIdUtils22.checkTenantId)(logger32, options.tenantId);
+          (0, import_tenantIdUtils22.checkTenantId)(logger33, options.tenantId);
           this.tenantId = options.tenantId;
         } else {
           this.tenantId = CommonTenantId2;
@@ -84016,7 +84016,7 @@ var require_visualStudioCodeCredential = __commonJS({
           this.tenantId,
           this.options,
           this.additionallyAllowedTenantIds,
-          logger32
+          logger33
         ) || this.tenantId;
         if (!(0, import_msalPlugins4.hasVSCodePlugin)() || !import_msalPlugins4.vsCodeAuthRecordPath) {
           throw new import_errors24.CredentialUnavailableError(
@@ -84080,7 +84080,7 @@ var require_visualStudioCodeCredential = __commonJS({
           const authRecordContent = await (0, import_promises6.readFile)(authRecordPath, { encoding: "utf8" });
           return (0, import_utils10.deserializeAuthenticationRecord)(authRecordContent);
         } catch (error) {
-          logger32.getToken.info((0, import_logging29.formatError)(scopes, error));
+          logger33.getToken.info((0, import_logging29.formatError)(scopes, error));
           throw new import_errors24.CredentialUnavailableError(
             "Cannot load authentication record in Visual Studio Code. Ensure you have have Azure Resources Extension installed in VS Code, signed into Azure via VS Code, installed the @azure/identity-vscode package, and properly configured the extension."
           );
@@ -84122,7 +84122,7 @@ var require_brokerCredential = __commonJS({
     var import_msalClient11 = require_msalClient();
     var import_constants37 = require_constants4();
     var import_errors24 = require_errors2();
-    var logger32 = (0, import_logging29.credentialLogger)("BrokerCredential");
+    var logger33 = (0, import_logging29.credentialLogger)("BrokerCredential");
     var BrokerCredential2 = class {
       brokerMsalClient;
       brokerTenantId;
@@ -84136,14 +84136,14 @@ var require_brokerCredential = __commonJS({
        * @param options - Options for configuring the broker credential, including required broker options.
        */
       constructor(options) {
-        this.brokerTenantId = (0, import_tenantIdUtils20.resolveTenantId)(logger32, options.tenantId);
+        this.brokerTenantId = (0, import_tenantIdUtils20.resolveTenantId)(logger33, options.tenantId);
         this.brokerAdditionallyAllowedTenantIds = (0, import_tenantIdUtils20.resolveAdditionallyAllowedTenantIds)(
           options?.additionallyAllowedTenants
         );
         const msalClientOptions = {
           ...options,
           tokenCredentialOptions: options,
-          logger: logger32,
+          logger: logger33,
           brokerOptions: {
             enabled: true,
             parentWindowHandle: new Uint8Array(0),
@@ -84175,7 +84175,7 @@ var require_brokerCredential = __commonJS({
               this.brokerTenantId,
               newOptions,
               this.brokerAdditionallyAllowedTenantIds,
-              logger32
+              logger33
             );
             const arrayScopes = (0, import_scopeUtils12.ensureScopes)(scopes);
             try {
@@ -84184,7 +84184,7 @@ var require_brokerCredential = __commonJS({
                 disableAutomaticAuthentication: true
               });
             } catch (e) {
-              logger32.getToken.info((0, import_logging29.formatError)(arrayScopes, e));
+              logger33.getToken.info((0, import_logging29.formatError)(arrayScopes, e));
               throw new import_errors24.CredentialUnavailableError(
                 "Failed to acquire token using broker authentication",
                 { cause: e }
@@ -84347,7 +84347,7 @@ var require_defaultAzureCredential = __commonJS({
     var import_chainedTokenCredential3 = require_chainedTokenCredential();
     var import_logging29 = require_logging();
     var import_defaultAzureCredentialFunctions2 = require_defaultAzureCredentialFunctions();
-    var logger32 = (0, import_logging29.credentialLogger)("DefaultAzureCredential");
+    var logger33 = (0, import_logging29.credentialLogger)("DefaultAzureCredential");
     var UnavailableDefaultCredential2 = class {
       credentialUnavailableErrorMessage;
       credentialName;
@@ -84356,7 +84356,7 @@ var require_defaultAzureCredential = __commonJS({
         this.credentialUnavailableErrorMessage = message;
       }
       getToken() {
-        logger32.getToken.info(
+        logger33.getToken.info(
           `Skipping ${this.credentialName}, reason: ${this.credentialUnavailableErrorMessage}`
         );
         return Promise.resolve(null);
@@ -84416,7 +84416,7 @@ var require_defaultAzureCredential = __commonJS({
               break;
             default: {
               const errorMessage = `Invalid value for AZURE_TOKEN_CREDENTIALS = ${process.env.AZURE_TOKEN_CREDENTIALS}. Valid values are 'prod' or 'dev' or any of these credentials - ${validCredentialNames}.`;
-              logger32.warning(errorMessage);
+              logger33.warning(errorMessage);
               throw new Error(errorMessage);
             }
           }
@@ -84427,7 +84427,7 @@ var require_defaultAzureCredential = __commonJS({
           try {
             return createCredentialFn(options ?? {});
           } catch (err) {
-            logger32.warning(
+            logger33.warning(
               `Skipped ${createCredentialFn.name} because of an error creating the credential: ${err}`
             );
             return new UnavailableDefaultCredential2(createCredentialFn.name, err.message);
@@ -84442,7 +84442,7 @@ var require_defaultAzureCredential = __commonJS({
         const missing = requiredVars.filter((envVar) => !process.env[envVar]);
         if (missing.length > 0) {
           const errorMessage = `Required environment ${missing.length === 1 ? "variable" : "variables"} '${missing.join(", ")}' for DefaultAzureCredential ${missing.length === 1 ? "is" : "are"} not set or empty.`;
-          logger32.warning(errorMessage);
+          logger33.warning(errorMessage);
           throw new Error(errorMessage);
         }
       }
@@ -84481,7 +84481,7 @@ var require_interactiveBrowserCredential = __commonJS({
     var import_tracing23 = require_tracing();
     var import_msalClient11 = require_msalClient();
     var import_constants37 = require_constants4();
-    var logger32 = (0, import_logging29.credentialLogger)("InteractiveBrowserCredential");
+    var logger33 = (0, import_logging29.credentialLogger)("InteractiveBrowserCredential");
     var InteractiveBrowserCredential3 = class {
       tenantId;
       additionallyAllowedTenantIds;
@@ -84502,14 +84502,14 @@ var require_interactiveBrowserCredential = __commonJS({
        * @param options - Options for configuring the client which makes the authentication requests.
        */
       constructor(options) {
-        this.tenantId = (0, import_tenantIdUtils20.resolveTenantId)(logger32, options.tenantId, options.clientId);
+        this.tenantId = (0, import_tenantIdUtils20.resolveTenantId)(logger33, options.tenantId, options.clientId);
         this.additionallyAllowedTenantIds = (0, import_tenantIdUtils20.resolveAdditionallyAllowedTenantIds)(
           options?.additionallyAllowedTenants
         );
         const msalClientOptions = {
           ...options,
           tokenCredentialOptions: options,
-          logger: logger32
+          logger: logger33
         };
         const ibcNodeOptions = options;
         this.browserCustomizationOptions = ibcNodeOptions.browserCustomizationOptions;
@@ -84556,7 +84556,7 @@ var require_interactiveBrowserCredential = __commonJS({
               this.tenantId,
               newOptions,
               this.additionallyAllowedTenantIds,
-              logger32
+              logger33
             );
             const arrayScopes = (0, import_scopeUtils12.ensureScopes)(scopes);
             return this.msalClient.getTokenByInteractiveRequest(arrayScopes, {
@@ -84634,7 +84634,7 @@ var require_deviceCodeCredential = __commonJS({
     var import_tracing23 = require_tracing();
     var import_msalClient11 = require_msalClient();
     var import_constants37 = require_constants4();
-    var logger32 = (0, import_logging29.credentialLogger)("DeviceCodeCredential");
+    var logger33 = (0, import_logging29.credentialLogger)("DeviceCodeCredential");
     function defaultDeviceCodePromptCallback(deviceCodeInfo) {
       console.log(deviceCodeInfo.message);
     }
@@ -84672,11 +84672,11 @@ var require_deviceCodeCredential = __commonJS({
           options?.additionallyAllowedTenants
         );
         const clientId = options?.clientId ?? import_constants37.DeveloperSignOnClientId;
-        const tenantId = (0, import_tenantIdUtils20.resolveTenantId)(logger32, options?.tenantId, clientId);
+        const tenantId = (0, import_tenantIdUtils20.resolveTenantId)(logger33, options?.tenantId, clientId);
         this.userPromptCallback = options?.userPromptCallback ?? defaultDeviceCodePromptCallback;
         this.msalClient = (0, import_msalClient11.createMsalClient)(clientId, tenantId, {
           ...options,
-          logger: logger32,
+          logger: logger33,
           tokenCredentialOptions: options || {}
         });
         this.disableAutomaticAuthentication = options?.disableAutomaticAuthentication;
@@ -84702,7 +84702,7 @@ var require_deviceCodeCredential = __commonJS({
               this.tenantId,
               newOptions,
               this.additionallyAllowedTenantIds,
-              logger32
+              logger33
             );
             const arrayScopes = (0, import_scopeUtils12.ensureScopes)(scopes);
             return this.msalClient.getTokenByDeviceCode(arrayScopes, this.userPromptCallback, {
@@ -84768,13 +84768,13 @@ var require_azurePipelinesCredential = __commonJS({
     });
     module2.exports = __toCommonJS2(azurePipelinesCredential_exports);
     var import_errors24 = require_errors2();
-    var import_core_rest_pipeline25 = require_commonjs6();
+    var import_core_rest_pipeline27 = require_commonjs6();
     var import_clientAssertionCredential4 = require_clientAssertionCredential();
     var import_identityClient4 = require_identityClient();
     var import_tenantIdUtils20 = require_tenantIdUtils();
     var import_logging29 = require_logging();
     var credentialName6 = "AzurePipelinesCredential";
-    var logger32 = (0, import_logging29.credentialLogger)(credentialName6);
+    var logger33 = (0, import_logging29.credentialLogger)(credentialName6);
     var OIDC_API_VERSION = "7.1";
     var AzurePipelinesCredential3 = class {
       clientAssertionCredential;
@@ -84817,8 +84817,8 @@ var require_azurePipelinesCredential = __commonJS({
           ]
         };
         this.identityClient = new import_identityClient4.IdentityClient(options);
-        (0, import_tenantIdUtils20.checkTenantId)(logger32, tenantId);
-        logger32.info(
+        (0, import_tenantIdUtils20.checkTenantId)(logger33, tenantId);
+        logger33.info(
           `Invoking AzurePipelinesCredential with tenant ID: ${tenantId}, client ID: ${clientId}, and service connection ID: ${serviceConnectionId}`
         );
         if (!process.env.SYSTEM_OIDCREQUESTURI) {
@@ -84827,7 +84827,7 @@ var require_azurePipelinesCredential = __commonJS({
           );
         }
         const oidcRequestUrl = `${process.env.SYSTEM_OIDCREQUESTURI}?api-version=${OIDC_API_VERSION}&serviceConnectionId=${serviceConnectionId}`;
-        logger32.info(
+        logger33.info(
           `Invoking ClientAssertionCredential with tenant ID: ${tenantId}, client ID: ${clientId} and service connection ID: ${serviceConnectionId}`
         );
         this.clientAssertionCredential = new import_clientAssertionCredential4.ClientAssertionCredential(
@@ -84854,10 +84854,10 @@ var require_azurePipelinesCredential = __commonJS({
       systemAccessToken,
       "SYSTEM_OIDCREQUESTURI".      
       See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/azurepipelinescredential/troubleshoot`;
-          logger32.error(errorMessage);
+          logger33.error(errorMessage);
           throw new import_errors24.CredentialUnavailableError(errorMessage);
         }
-        logger32.info("Invoking getToken() of Client Assertion Credential");
+        logger33.info("Invoking getToken() of Client Assertion Credential");
         return this.clientAssertionCredential.getToken(scopes, options);
       }
       /**
@@ -84867,12 +84867,12 @@ var require_azurePipelinesCredential = __commonJS({
        * @returns OIDC token from Azure Pipelines
        */
       async requestOidcToken(oidcRequestUrl, systemAccessToken) {
-        logger32.info("Requesting OIDC token from Azure Pipelines...");
-        logger32.info(oidcRequestUrl);
-        const request = (0, import_core_rest_pipeline25.createPipelineRequest)({
+        logger33.info("Requesting OIDC token from Azure Pipelines...");
+        logger33.info(oidcRequestUrl);
+        const request = (0, import_core_rest_pipeline27.createPipelineRequest)({
           url: oidcRequestUrl,
           method: "POST",
-          headers: (0, import_core_rest_pipeline25.createHttpHeaders)({
+          headers: (0, import_core_rest_pipeline27.createHttpHeaders)({
             "Content-Type": "application/json",
             Authorization: `Bearer ${systemAccessToken}`,
             // Prevents the service from responding with a redirect HTTP status code (useful for automation).
@@ -84887,7 +84887,7 @@ var require_azurePipelinesCredential = __commonJS({
       const text = response.bodyAsText;
       const responseDetails = stringifyOidcResponse(response);
       if (!text) {
-        logger32.error(
+        logger33.error(
           `${credentialName6}: Authentication Failed. Received null token from OIDC request. Response status- ${response.status}. Complete response - ${responseDetails}`
         );
         throw new import_errors24.AuthenticationError(response.status, {
@@ -84905,8 +84905,8 @@ var require_azurePipelinesCredential = __commonJS({
           if (response.status !== 200) {
             errorDescription = `${responseDetails}. See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/azurepipelinescredential/troubleshoot`;
           }
-          logger32.error(errorMessage);
-          logger32.error(errorDescription);
+          logger33.error(errorMessage);
+          logger33.error(errorDescription);
           throw new import_errors24.AuthenticationError(response.status, {
             error: errorMessage,
             error_description: errorDescription
@@ -84914,8 +84914,8 @@ var require_azurePipelinesCredential = __commonJS({
         }
       } catch (e) {
         const errorDetails = `${credentialName6}: Authentication Failed. oidcToken field not detected in the response.`;
-        logger32.error(`Response from service = ${responseDetails}, error message = ${e.message}`);
-        logger32.error(errorDetails);
+        logger33.error(`Response from service = ${responseDetails}, error message = ${e.message}`);
+        logger33.error(errorDetails);
         throw new import_errors24.AuthenticationError(response.status, {
           error: errorDetails,
           error_description: `Response from service = ${responseDetails}. See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/azurepipelinescredential/troubleshoot`
@@ -84966,7 +84966,7 @@ var require_authorizationCodeCredential = __commonJS({
     var import_scopeUtils12 = require_scopeUtils();
     var import_tracing23 = require_tracing();
     var import_msalClient11 = require_msalClient();
-    var logger32 = (0, import_logging29.credentialLogger)("AuthorizationCodeCredential");
+    var logger33 = (0, import_logging29.credentialLogger)("AuthorizationCodeCredential");
     var AuthorizationCodeCredential3 = class {
       msalClient;
       disableAutomaticAuthentication;
@@ -84980,7 +84980,7 @@ var require_authorizationCodeCredential = __commonJS({
        * @internal
        */
       constructor(tenantId, clientId, clientSecretOrAuthorizationCode, authorizationCodeOrRedirectUri, redirectUriOrOptions, options) {
-        (0, import_tenantIdUtils22.checkTenantId)(logger32, tenantId);
+        (0, import_tenantIdUtils22.checkTenantId)(logger33, tenantId);
         this.clientSecret = clientSecretOrAuthorizationCode;
         if (typeof redirectUriOrOptions === "string") {
           this.authorizationCode = authorizationCodeOrRedirectUri;
@@ -84997,7 +84997,7 @@ var require_authorizationCodeCredential = __commonJS({
         );
         this.msalClient = (0, import_msalClient11.createMsalClient)(clientId, tenantId, {
           ...options,
-          logger: logger32,
+          logger: logger33,
           tokenCredentialOptions: options ?? {}
         });
       }
@@ -85072,7 +85072,7 @@ var require_onBehalfOfCredential = __commonJS({
     var import_promises6 = require("node:fs/promises");
     var import_tracing23 = require_tracing();
     var credentialName6 = "OnBehalfOfCredential";
-    var logger32 = (0, import_logging29.credentialLogger)(credentialName6);
+    var logger33 = (0, import_logging29.credentialLogger)(credentialName6);
     var OnBehalfOfCredential3 = class {
       tenantId;
       additionallyAllowedTenantIds;
@@ -85123,7 +85123,7 @@ var require_onBehalfOfCredential = __commonJS({
         );
         this.msalClient = (0, import_msalClient11.createMsalClient)(clientId, this.tenantId, {
           ...options,
-          logger: logger32,
+          logger: logger33,
           tokenCredentialOptions: options
         });
       }
@@ -85140,7 +85140,7 @@ var require_onBehalfOfCredential = __commonJS({
             this.tenantId,
             newOptions,
             this.additionallyAllowedTenantIds,
-            logger32
+            logger33
           );
           const arrayScopes = (0, import_scopeUtils12.ensureScopes)(scopes);
           if (this.certificatePath) {
@@ -85182,7 +85182,7 @@ var require_onBehalfOfCredential = __commonJS({
             x5c: parts.x5c
           };
         } catch (error) {
-          logger32.info((0, import_logging29.formatError)("", error));
+          logger33.info((0, import_logging29.formatError)("", error));
           throw error;
         }
       }
@@ -85240,11 +85240,11 @@ var require_tokenProvider = __commonJS({
       getBearerTokenProvider: () => getBearerTokenProvider3
     });
     module2.exports = __toCommonJS2(tokenProvider_exports);
-    var import_core_rest_pipeline25 = require_commonjs6();
+    var import_core_rest_pipeline27 = require_commonjs6();
     function getBearerTokenProvider3(credential, scopes, options) {
       const { abortSignal, tracingOptions } = options || {};
-      const pipeline = (0, import_core_rest_pipeline25.createEmptyPipeline)();
-      pipeline.addPolicy((0, import_core_rest_pipeline25.bearerTokenAuthenticationPolicy)({ credential, scopes }));
+      const pipeline = (0, import_core_rest_pipeline27.createEmptyPipeline)();
+      pipeline.addPolicy((0, import_core_rest_pipeline27.bearerTokenAuthenticationPolicy)({ credential, scopes }));
       async function getRefreshedToken() {
         const res = await pipeline.sendRequest(
           {
@@ -85254,7 +85254,7 @@ var require_tokenProvider = __commonJS({
               headers: request.headers
             })
           },
-          (0, import_core_rest_pipeline25.createPipelineRequest)({
+          (0, import_core_rest_pipeline27.createPipelineRequest)({
             url: "https://example.com",
             abortSignal,
             tracingOptions
@@ -89135,11 +89135,11 @@ var require_node_ponyfill = __commonJS({
   "node_modules/cross-fetch/dist/node-ponyfill.js"(exports2, module2) {
     var nodeFetch = require_lib4();
     var realFetch = nodeFetch.default || nodeFetch;
-    var fetch2 = function(url3, options) {
-      if (/^\/\//.test(url3)) {
-        url3 = "https:" + url3;
+    var fetch2 = function(url2, options) {
+      if (/^\/\//.test(url2)) {
+        url2 = "https:" + url2;
       }
-      return realFetch.call(this, url3, options);
+      return realFetch.call(this, url2, options);
     };
     fetch2.ponyfill = true;
     module2.exports = exports2 = fetch2;
@@ -91141,39 +91141,39 @@ var require_telemetryLoggerMiddleware = __commonJS({
       fillReceiveEventProperties(activity, telemetryProperties) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s;
         return __awaiter2(this, void 0, void 0, function* () {
-          const properties2 = {};
+          const properties = {};
           if (activity) {
-            properties2[telemetryConstants_1.TelemetryConstants.fromIdProperty] = (_b = (_a = activity.from) === null || _a === void 0 ? void 0 : _a.id) !== null && _b !== void 0 ? _b : "";
-            properties2[telemetryConstants_1.TelemetryConstants.conversationIdProperty] = (_d = (_c = activity.conversation) === null || _c === void 0 ? void 0 : _c.id) !== null && _d !== void 0 ? _d : "";
-            properties2[telemetryConstants_1.TelemetryConstants.conversationNameProperty] = (_f = (_e = activity.conversation) === null || _e === void 0 ? void 0 : _e.name) !== null && _f !== void 0 ? _f : "";
-            properties2[telemetryConstants_1.TelemetryConstants.localeProperty] = (_g = activity.locale) !== null && _g !== void 0 ? _g : "";
-            properties2[telemetryConstants_1.TelemetryConstants.recipientIdProperty] = (_j = (_h = activity.recipient) === null || _h === void 0 ? void 0 : _h.id) !== null && _j !== void 0 ? _j : "";
-            properties2[telemetryConstants_1.TelemetryConstants.recipientNameProperty] = (_l = (_k = activity.recipient) === null || _k === void 0 ? void 0 : _k.name) !== null && _l !== void 0 ? _l : "";
-            properties2[telemetryConstants_1.TelemetryConstants.activityTypeProperty] = (_m = activity.type) !== null && _m !== void 0 ? _m : "";
-            properties2[telemetryConstants_1.TelemetryConstants.activityIdProperty] = (_o = activity.id) !== null && _o !== void 0 ? _o : "";
+            properties[telemetryConstants_1.TelemetryConstants.fromIdProperty] = (_b = (_a = activity.from) === null || _a === void 0 ? void 0 : _a.id) !== null && _b !== void 0 ? _b : "";
+            properties[telemetryConstants_1.TelemetryConstants.conversationIdProperty] = (_d = (_c = activity.conversation) === null || _c === void 0 ? void 0 : _c.id) !== null && _d !== void 0 ? _d : "";
+            properties[telemetryConstants_1.TelemetryConstants.conversationNameProperty] = (_f = (_e = activity.conversation) === null || _e === void 0 ? void 0 : _e.name) !== null && _f !== void 0 ? _f : "";
+            properties[telemetryConstants_1.TelemetryConstants.localeProperty] = (_g = activity.locale) !== null && _g !== void 0 ? _g : "";
+            properties[telemetryConstants_1.TelemetryConstants.recipientIdProperty] = (_j = (_h = activity.recipient) === null || _h === void 0 ? void 0 : _h.id) !== null && _j !== void 0 ? _j : "";
+            properties[telemetryConstants_1.TelemetryConstants.recipientNameProperty] = (_l = (_k = activity.recipient) === null || _k === void 0 ? void 0 : _k.name) !== null && _l !== void 0 ? _l : "";
+            properties[telemetryConstants_1.TelemetryConstants.activityTypeProperty] = (_m = activity.type) !== null && _m !== void 0 ? _m : "";
+            properties[telemetryConstants_1.TelemetryConstants.activityIdProperty] = (_o = activity.id) !== null && _o !== void 0 ? _o : "";
             if (this.logPersonalInformation) {
               const fromName = (_q = (_p = activity.from) === null || _p === void 0 ? void 0 : _p.name) === null || _q === void 0 ? void 0 : _q.trim();
               if (fromName) {
-                properties2[telemetryConstants_1.TelemetryConstants.fromNameProperty] = fromName;
+                properties[telemetryConstants_1.TelemetryConstants.fromNameProperty] = fromName;
               }
               const activityText = (_r = activity.text) === null || _r === void 0 ? void 0 : _r.trim();
               if (activityText) {
-                properties2[telemetryConstants_1.TelemetryConstants.textProperty] = activityText;
+                properties[telemetryConstants_1.TelemetryConstants.textProperty] = activityText;
               }
               const activitySpeak = (_s = activity.speak) === null || _s === void 0 ? void 0 : _s.trim();
               if (activitySpeak) {
-                properties2[telemetryConstants_1.TelemetryConstants.speakProperty] = activitySpeak;
+                properties[telemetryConstants_1.TelemetryConstants.speakProperty] = activitySpeak;
               }
             }
             if (telemetryProperties) {
-              return Object.assign({}, properties2, telemetryProperties);
+              return Object.assign({}, properties, telemetryProperties);
             }
           }
-          this.populateAdditionalChannelProperties(activity, properties2);
+          this.populateAdditionalChannelProperties(activity, properties);
           if (telemetryProperties) {
-            return Object.assign({}, properties2, telemetryProperties);
+            return Object.assign({}, properties, telemetryProperties);
           }
-          return properties2;
+          return properties;
         });
       }
       /**
@@ -91187,37 +91187,37 @@ var require_telemetryLoggerMiddleware = __commonJS({
       fillSendEventProperties(activity, telemetryProperties) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
         return __awaiter2(this, void 0, void 0, function* () {
-          const properties2 = {};
+          const properties = {};
           if (activity) {
-            properties2[telemetryConstants_1.TelemetryConstants.replyActivityIdProperty] = (_a = activity.replyToId) !== null && _a !== void 0 ? _a : "";
-            properties2[telemetryConstants_1.TelemetryConstants.recipientIdProperty] = (_c = (_b = activity.recipient) === null || _b === void 0 ? void 0 : _b.id) !== null && _c !== void 0 ? _c : "";
-            properties2[telemetryConstants_1.TelemetryConstants.conversationIdProperty] = (_e = (_d = activity.conversation) === null || _d === void 0 ? void 0 : _d.id) !== null && _e !== void 0 ? _e : "";
-            properties2[telemetryConstants_1.TelemetryConstants.conversationNameProperty] = (_g = (_f = activity.conversation) === null || _f === void 0 ? void 0 : _f.name) !== null && _g !== void 0 ? _g : "";
-            properties2[telemetryConstants_1.TelemetryConstants.localeProperty] = (_h = activity.locale) !== null && _h !== void 0 ? _h : "";
-            properties2[telemetryConstants_1.TelemetryConstants.activityTypeProperty] = (_j = activity.type) !== null && _j !== void 0 ? _j : "";
-            properties2[telemetryConstants_1.TelemetryConstants.activityIdProperty] = (_k = activity.id) !== null && _k !== void 0 ? _k : "";
+            properties[telemetryConstants_1.TelemetryConstants.replyActivityIdProperty] = (_a = activity.replyToId) !== null && _a !== void 0 ? _a : "";
+            properties[telemetryConstants_1.TelemetryConstants.recipientIdProperty] = (_c = (_b = activity.recipient) === null || _b === void 0 ? void 0 : _b.id) !== null && _c !== void 0 ? _c : "";
+            properties[telemetryConstants_1.TelemetryConstants.conversationIdProperty] = (_e = (_d = activity.conversation) === null || _d === void 0 ? void 0 : _d.id) !== null && _e !== void 0 ? _e : "";
+            properties[telemetryConstants_1.TelemetryConstants.conversationNameProperty] = (_g = (_f = activity.conversation) === null || _f === void 0 ? void 0 : _f.name) !== null && _g !== void 0 ? _g : "";
+            properties[telemetryConstants_1.TelemetryConstants.localeProperty] = (_h = activity.locale) !== null && _h !== void 0 ? _h : "";
+            properties[telemetryConstants_1.TelemetryConstants.activityTypeProperty] = (_j = activity.type) !== null && _j !== void 0 ? _j : "";
+            properties[telemetryConstants_1.TelemetryConstants.activityIdProperty] = (_k = activity.id) !== null && _k !== void 0 ? _k : "";
             if (this.logPersonalInformation) {
               const recipientName = (_m = (_l = activity.recipient) === null || _l === void 0 ? void 0 : _l.name) === null || _m === void 0 ? void 0 : _m.trim();
               if (recipientName) {
-                properties2[telemetryConstants_1.TelemetryConstants.recipientNameProperty] = recipientName;
+                properties[telemetryConstants_1.TelemetryConstants.recipientNameProperty] = recipientName;
               }
               const activityText = (_o = activity.text) === null || _o === void 0 ? void 0 : _o.trim();
               if (activityText) {
-                properties2[telemetryConstants_1.TelemetryConstants.textProperty] = activityText;
+                properties[telemetryConstants_1.TelemetryConstants.textProperty] = activityText;
               }
               const activitySpeak = (_p = activity.speak) === null || _p === void 0 ? void 0 : _p.trim();
               if (activitySpeak) {
-                properties2[telemetryConstants_1.TelemetryConstants.speakProperty] = activitySpeak;
+                properties[telemetryConstants_1.TelemetryConstants.speakProperty] = activitySpeak;
               }
               if ((_q = activity.attachments) === null || _q === void 0 ? void 0 : _q.length) {
-                properties2[telemetryConstants_1.TelemetryConstants.attachmentsProperty] = JSON.stringify(activity.attachments);
+                properties[telemetryConstants_1.TelemetryConstants.attachmentsProperty] = JSON.stringify(activity.attachments);
               }
             }
             if (telemetryProperties) {
-              return Object.assign({}, properties2, telemetryProperties);
+              return Object.assign({}, properties, telemetryProperties);
             }
           }
-          return properties2;
+          return properties;
         });
       }
       /**
@@ -91233,25 +91233,25 @@ var require_telemetryLoggerMiddleware = __commonJS({
       fillUpdateEventProperties(activity, telemetryProperties) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         return __awaiter2(this, void 0, void 0, function* () {
-          const properties2 = {};
+          const properties = {};
           if (activity) {
-            properties2[telemetryConstants_1.TelemetryConstants.recipientIdProperty] = (_b = (_a = activity.recipient) === null || _a === void 0 ? void 0 : _a.id) !== null && _b !== void 0 ? _b : "";
-            properties2[telemetryConstants_1.TelemetryConstants.conversationIdProperty] = (_d = (_c = activity.conversation) === null || _c === void 0 ? void 0 : _c.id) !== null && _d !== void 0 ? _d : "";
-            properties2[telemetryConstants_1.TelemetryConstants.conversationNameProperty] = (_f = (_e = activity.conversation) === null || _e === void 0 ? void 0 : _e.name) !== null && _f !== void 0 ? _f : "";
-            properties2[telemetryConstants_1.TelemetryConstants.localeProperty] = (_g = activity.locale) !== null && _g !== void 0 ? _g : "";
-            properties2[telemetryConstants_1.TelemetryConstants.activityTypeProperty] = (_h = activity.type) !== null && _h !== void 0 ? _h : "";
-            properties2[telemetryConstants_1.TelemetryConstants.activityIdProperty] = (_j = activity.id) !== null && _j !== void 0 ? _j : "";
+            properties[telemetryConstants_1.TelemetryConstants.recipientIdProperty] = (_b = (_a = activity.recipient) === null || _a === void 0 ? void 0 : _a.id) !== null && _b !== void 0 ? _b : "";
+            properties[telemetryConstants_1.TelemetryConstants.conversationIdProperty] = (_d = (_c = activity.conversation) === null || _c === void 0 ? void 0 : _c.id) !== null && _d !== void 0 ? _d : "";
+            properties[telemetryConstants_1.TelemetryConstants.conversationNameProperty] = (_f = (_e = activity.conversation) === null || _e === void 0 ? void 0 : _e.name) !== null && _f !== void 0 ? _f : "";
+            properties[telemetryConstants_1.TelemetryConstants.localeProperty] = (_g = activity.locale) !== null && _g !== void 0 ? _g : "";
+            properties[telemetryConstants_1.TelemetryConstants.activityTypeProperty] = (_h = activity.type) !== null && _h !== void 0 ? _h : "";
+            properties[telemetryConstants_1.TelemetryConstants.activityIdProperty] = (_j = activity.id) !== null && _j !== void 0 ? _j : "";
             if (this.logPersonalInformation) {
               const activityText = (_k = activity.text) === null || _k === void 0 ? void 0 : _k.trim();
               if (activityText) {
-                properties2[telemetryConstants_1.TelemetryConstants.textProperty] = activityText;
+                properties[telemetryConstants_1.TelemetryConstants.textProperty] = activityText;
               }
             }
             if (telemetryProperties) {
-              return Object.assign({}, properties2, telemetryProperties);
+              return Object.assign({}, properties, telemetryProperties);
             }
           }
-          return properties2;
+          return properties;
         });
       }
       /**
@@ -91265,32 +91265,32 @@ var require_telemetryLoggerMiddleware = __commonJS({
       fillDeleteEventProperties(activity, telemetryProperties) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         return __awaiter2(this, void 0, void 0, function* () {
-          const properties2 = {};
+          const properties = {};
           if (activity) {
-            properties2[telemetryConstants_1.TelemetryConstants.channelIdProperty] = (_a = activity.channelId) !== null && _a !== void 0 ? _a : "";
-            properties2[telemetryConstants_1.TelemetryConstants.recipientIdProperty] = (_c = (_b = activity.recipient) === null || _b === void 0 ? void 0 : _b.id) !== null && _c !== void 0 ? _c : "";
-            properties2[telemetryConstants_1.TelemetryConstants.conversationIdProperty] = (_e = (_d = activity.conversation) === null || _d === void 0 ? void 0 : _d.id) !== null && _e !== void 0 ? _e : "";
-            properties2[telemetryConstants_1.TelemetryConstants.conversationNameProperty] = (_g = (_f = activity.conversation) === null || _f === void 0 ? void 0 : _f.name) !== null && _g !== void 0 ? _g : "";
-            properties2[telemetryConstants_1.TelemetryConstants.activityTypeProperty] = (_h = activity.type) !== null && _h !== void 0 ? _h : "";
-            properties2[telemetryConstants_1.TelemetryConstants.activityIdProperty] = (_j = activity.id) !== null && _j !== void 0 ? _j : "";
+            properties[telemetryConstants_1.TelemetryConstants.channelIdProperty] = (_a = activity.channelId) !== null && _a !== void 0 ? _a : "";
+            properties[telemetryConstants_1.TelemetryConstants.recipientIdProperty] = (_c = (_b = activity.recipient) === null || _b === void 0 ? void 0 : _b.id) !== null && _c !== void 0 ? _c : "";
+            properties[telemetryConstants_1.TelemetryConstants.conversationIdProperty] = (_e = (_d = activity.conversation) === null || _d === void 0 ? void 0 : _d.id) !== null && _e !== void 0 ? _e : "";
+            properties[telemetryConstants_1.TelemetryConstants.conversationNameProperty] = (_g = (_f = activity.conversation) === null || _f === void 0 ? void 0 : _f.name) !== null && _g !== void 0 ? _g : "";
+            properties[telemetryConstants_1.TelemetryConstants.activityTypeProperty] = (_h = activity.type) !== null && _h !== void 0 ? _h : "";
+            properties[telemetryConstants_1.TelemetryConstants.activityIdProperty] = (_j = activity.id) !== null && _j !== void 0 ? _j : "";
             if (telemetryProperties) {
-              return Object.assign({}, properties2, telemetryProperties);
+              return Object.assign({}, properties, telemetryProperties);
             }
           }
-          return properties2;
+          return properties;
         });
       }
-      populateAdditionalChannelProperties(activity, properties2) {
+      populateAdditionalChannelProperties(activity, properties) {
         var _a, _b, _c, _d;
         if (activity) {
           const channelData = activity.channelData;
           switch (activity.channelId) {
             case "msteams":
-              properties2.TeamsUserAadObjectId = (_b = (_a = activity.from) === null || _a === void 0 ? void 0 : _a.aadObjectId) !== null && _b !== void 0 ? _b : "";
+              properties.TeamsUserAadObjectId = (_b = (_a = activity.from) === null || _a === void 0 ? void 0 : _a.aadObjectId) !== null && _b !== void 0 ? _b : "";
               if (isTeamsChannelData(channelData)) {
-                properties2.TeamsTenantId = (_d = (_c = channelData.tenant) === null || _c === void 0 ? void 0 : _c.id) !== null && _d !== void 0 ? _d : "";
+                properties.TeamsTenantId = (_d = (_c = channelData.tenant) === null || _c === void 0 ? void 0 : _c.id) !== null && _d !== void 0 ? _d : "";
                 if (channelData.team) {
-                  properties2.TeamsTeamInfo = JSON.stringify(channelData.team);
+                  properties.TeamsTeamInfo = JSON.stringify(channelData.team);
                 }
               }
               break;
@@ -92164,11 +92164,11 @@ var require_transcriptLogger = __commonJS({
        *
        * @param logger Transcript logger
        */
-      constructor(logger32) {
-        if (!logger32) {
+      constructor(logger33) {
+        if (!logger33) {
           throw new Error("TranscriptLoggerMiddleware requires a TranscriptLogger instance.");
         }
-        this.logger = logger32;
+        this.logger = logger33;
       }
       /**
        * Initialization for middleware turn.
@@ -92191,11 +92191,11 @@ var require_transcriptLogger = __commonJS({
               const clonedActivity = this.cloneActivity(activity);
               clonedActivity.id = responses && responses[index] ? responses[index].id : clonedActivity.id;
               if (!clonedActivity.id) {
-                const prefix2 = `g_${Math.random().toString(36).slice(2, 8)}`;
+                const prefix = `g_${Math.random().toString(36).slice(2, 8)}`;
                 if (clonedActivity.timestamp) {
-                  clonedActivity.id = `${prefix2}${new Date(clonedActivity.timestamp).getTime().toString()}`;
+                  clonedActivity.id = `${prefix}${new Date(clonedActivity.timestamp).getTime().toString()}`;
                 } else {
-                  clonedActivity.id = `${prefix2}${(/* @__PURE__ */ new Date()).getTime().toString()}`;
+                  clonedActivity.id = `${prefix}${(/* @__PURE__ */ new Date()).getTime().toString()}`;
                 }
               }
               this.logActivity(transcript, clonedActivity);
@@ -94136,8 +94136,8 @@ var require_copy = __commonJS({
       }
       const { srcStat, destStat } = await stat.checkPaths(src, dest, "copy", opts);
       await stat.checkParentPaths(src, srcStat, dest, "copy");
-      const include2 = await runFilter(src, dest, opts);
-      if (!include2) return;
+      const include = await runFilter(src, dest, opts);
+      if (!include) return;
       const destParent = path5.dirname(dest);
       const dirExists = await pathExists(destParent);
       if (!dirExists) {
@@ -94193,8 +94193,8 @@ var require_copy = __commonJS({
       await asyncIteratorConcurrentProcess(await fs6.opendir(src), async (item) => {
         const srcItem = path5.join(src, item.name);
         const destItem = path5.join(dest, item.name);
-        const include2 = await runFilter(srcItem, destItem, opts);
-        if (include2) {
+        const include = await runFilter(srcItem, destItem, opts);
+        if (include) {
           const { destStat: destStat2 } = await stat.checkPaths(srcItem, destItem, "copy", opts);
           await getStatsAndPerformCopy(destStat2, srcItem, destItem, opts);
         }
@@ -95317,8 +95317,8 @@ var require_fileTranscriptStore = __commonJS({
             return pagedResult;
           }
           const transcriptFolderContents = yield (0, fs_extra_1.readdir)(transcriptFolder);
-          const include2 = includeWhen((fileName) => !continuationToken || (0, path_1.parse)(fileName).name === continuationToken);
-          const items = transcriptFolderContents.filter((transcript) => transcript.endsWith(".json") && withDateFilter(startDate, transcript) && include2(transcript));
+          const include = includeWhen((fileName) => !continuationToken || (0, path_1.parse)(fileName).name === continuationToken);
+          const items = transcriptFolderContents.filter((transcript) => transcript.endsWith(".json") && withDateFilter(startDate, transcript) && include(transcript));
           pagedResult.items = yield Promise.all(items.slice(0, _FileTranscriptStore.PageSize).sort().map((activityFilename) => __awaiter2(this, void 0, void 0, function* () {
             const json = yield (0, fs_extra_1.readFile)((0, path_1.join)(transcriptFolder, activityFilename), "utf8");
             return parseActivity(json);
@@ -101244,12 +101244,12 @@ var require_requestManager = __commonJS({
        * @param response The [IReceiveResponse](xref:botframework-streaming.IReceiveResponse) in response to the request.
        * @returns A Promise that when completed returns `true` if the `requestId`'s pending response task was completed, otherwise `false`.
        */
-      signalResponse(requestId3, response) {
+      signalResponse(requestId2, response) {
         return __awaiter2(this, void 0, void 0, function* () {
-          const pendingRequest = this._pendingRequests[requestId3];
+          const pendingRequest = this._pendingRequests[requestId2];
           if (pendingRequest) {
             pendingRequest.resolve(response);
-            delete this._pendingRequests[requestId3];
+            delete this._pendingRequests[requestId2];
             return true;
           }
           return false;
@@ -101261,18 +101261,18 @@ var require_requestManager = __commonJS({
        * @param requestId The ID of the StreamingRequest being responded to.
        * @returns The response to the specified request.
        */
-      getResponse(requestId3) {
-        let pendingRequest = this._pendingRequests[requestId3];
+      getResponse(requestId2) {
+        let pendingRequest = this._pendingRequests[requestId2];
         if (pendingRequest) {
-          return Promise.reject(`requestId '${requestId3}' already exists in RequestManager`);
+          return Promise.reject(`requestId '${requestId2}' already exists in RequestManager`);
         }
         pendingRequest = new PendingRequest();
-        pendingRequest.requestId = requestId3;
+        pendingRequest.requestId = requestId2;
         const promise = new Promise((resolve, reject) => {
           pendingRequest.resolve = resolve;
           pendingRequest.reject = reject;
         });
-        this._pendingRequests[requestId3] = pendingRequest;
+        this._pendingRequests[requestId2] = pendingRequest;
         return promise;
       }
       /**
@@ -101281,9 +101281,9 @@ var require_requestManager = __commonJS({
        * @param reason The reason for rejection.
        */
       rejectAllResponses(reason) {
-        Object.entries(this._pendingRequests).forEach(([requestId3, { reject }]) => {
+        Object.entries(this._pendingRequests).forEach(([requestId2, { reject }]) => {
           reject(reason);
-          delete this._pendingRequests[requestId3];
+          delete this._pendingRequests[requestId2];
         });
       }
     };
@@ -101885,9 +101885,9 @@ var require_payloadAssembler = __commonJS({
         return __awaiter2(this, void 0, void 0, function* () {
           (_a = responsePayload.streams) === null || _a === void 0 ? void 0 : _a.forEach((responseStream) => {
             var _a2;
-            const contentType4 = (_a2 = responseStream.type) !== null && _a2 !== void 0 ? _a2 : responseStream.contentType;
+            const contentType3 = (_a2 = responseStream.type) !== null && _a2 !== void 0 ? _a2 : responseStream.contentType;
             const contentAssembler = this.streamManager.getPayloadAssembler(responseStream.id);
-            contentAssembler.payloadType = contentType4;
+            contentAssembler.payloadType = contentType3;
             contentAssembler.contentLength = responseStream.length;
             receiveResponse.streams.push(new contentStream_1.ContentStream(responseStream.id, contentAssembler));
           });
@@ -102040,9 +102040,9 @@ var require_protocolAdapter = __commonJS({
        */
       sendRequest(request) {
         return __awaiter2(this, void 0, void 0, function* () {
-          const requestId3 = (0, protocol_base_1.generateGuid)();
-          const getResponsePromise = this.requestManager.getResponse(requestId3);
-          yield this.sendOperations.sendRequest(requestId3, request);
+          const requestId2 = (0, protocol_base_1.generateGuid)();
+          const getResponsePromise = this.requestManager.getResponse(requestId2);
+          yield this.sendOperations.sendRequest(requestId2, request);
           return getResponsePromise;
         });
       }
@@ -104039,9 +104039,9 @@ var require_receiver = __commonJS({
       }
     };
     module2.exports = Receiver;
-    function error(ErrorCtor, message, prefix2, statusCode, errorCode) {
+    function error(ErrorCtor, message, prefix, statusCode, errorCode) {
       const err = new ErrorCtor(
-        prefix2 ? `Invalid WebSocket frame: ${message}` : message
+        prefix ? `Invalid WebSocket frame: ${message}` : message
       );
       Error.captureStackTrace(err, error);
       err.code = errorCode;
@@ -104849,7 +104849,7 @@ var require_websocket = __commonJS({
     var net = require("net");
     var tls = require("tls");
     var { randomBytes, createHash: createHash6 } = require("crypto");
-    var { Readable: Readable2 } = require("stream");
+    var { Readable: Readable3 } = require("stream");
     var { URL: URL2 } = require("url");
     var PerMessageDeflate = require_permessage_deflate();
     var Receiver = require_receiver();
@@ -105910,9 +105910,9 @@ var require_websocket_server = __commonJS({
         socket.on("error", socketOnError);
         const key = req.headers["sec-websocket-key"] !== void 0 ? req.headers["sec-websocket-key"].trim() : false;
         const upgrade = req.headers.upgrade;
-        const version5 = +req.headers["sec-websocket-version"];
+        const version4 = +req.headers["sec-websocket-version"];
         const extensions = {};
-        if (req.method !== "GET" || upgrade === void 0 || upgrade.toLowerCase() !== "websocket" || !key || !keyRegex.test(key) || version5 !== 8 && version5 !== 13 || !this.shouldHandle(req)) {
+        if (req.method !== "GET" || upgrade === void 0 || upgrade.toLowerCase() !== "websocket" || !key || !keyRegex.test(key) || version4 !== 8 && version4 !== 13 || !this.shouldHandle(req)) {
           return abortHandshake(socket, 400);
         }
         if (this.options.perMessageDeflate) {
@@ -105933,7 +105933,7 @@ var require_websocket_server = __commonJS({
         }
         if (this.options.verifyClient) {
           const info = {
-            origin: req.headers[`${version5 === 8 ? "sec-websocket-origin" : "origin"}`],
+            origin: req.headers[`${version4 === 8 ? "sec-websocket-origin" : "origin"}`],
             secure: !!(req.socket.authorized || req.socket.encrypted),
             req
           };
@@ -106162,14 +106162,14 @@ var require_nodeWebSocket = __commonJS({
        */
       connect(serverAddressOrHostName, port = 8082) {
         return __awaiter2(this, void 0, void 0, function* () {
-          let url3;
+          let url2;
           try {
-            url3 = new url_1.URL(serverAddressOrHostName);
+            url2 = new url_1.URL(serverAddressOrHostName);
           } catch (_error) {
           }
-          if (url3 === null || url3 === void 0 ? void 0 : url3.hostname) {
+          if (url2 === null || url2 === void 0 ? void 0 : url2.hostname) {
             return new Promise((resolve, reject) => {
-              const ws = this.wsSocket = new ws_1.default(url3);
+              const ws = this.wsSocket = new ws_1.default(url2);
               ws.once("error", ({ message }) => reject(new Error(message)));
               ws.once("open", () => resolve());
             });
@@ -106558,8 +106558,8 @@ var require_nodeWebSocketClient = __commonJS({
        * @param config.requestHandler The [RequestHandler](xref:botframework-streaming.RequestHandler) used to process incoming messages received by this client.
        * @param config.disconnectionHandler Optional function to handle the disconnection message.
        */
-      constructor({ url: url3, requestHandler, disconnectionHandler = null }) {
-        this._url = url3;
+      constructor({ url: url2, requestHandler, disconnectionHandler = null }) {
+        this._url = url2;
         this._requestHandler = requestHandler;
         this._disconnectionHandler = disconnectionHandler;
         this._requestManager = new payloads_1.RequestManager();
@@ -107508,8 +107508,8 @@ var require_botFrameworkAdapter = __commonJS({
           }
           this.checkEmulatingOAuthCards(context3);
           const userId = context3.activity.from.id;
-          const url3 = this.oauthApiUrl(context3);
-          const client = this.createTokenApiClient(url3, oAuthAppCredentials);
+          const url2 = this.oauthApiUrl(context3);
+          const client = this.createTokenApiClient(url2, oAuthAppCredentials);
           context3.turnState.set(this.TokenApiClientCredentialsKey, client);
           const result = yield client.userToken.getToken(userId, connectionName, { code: magicCode, channelId: context3.activity.channelId });
           if (!result || !result.token || result._response.status == 404) {
@@ -107536,8 +107536,8 @@ var require_botFrameworkAdapter = __commonJS({
             userId = context3.activity.from.id;
           }
           this.checkEmulatingOAuthCards(context3);
-          const url3 = this.oauthApiUrl(context3);
-          const client = this.createTokenApiClient(url3, oAuthAppCredentials);
+          const url2 = this.oauthApiUrl(context3);
+          const client = this.createTokenApiClient(url2, oAuthAppCredentials);
           context3.turnState.set(this.TokenApiClientCredentialsKey, client);
           yield client.userToken.signOut(userId, {
             connectionName,
@@ -107563,8 +107563,8 @@ var require_botFrameworkAdapter = __commonJS({
           }
           this.checkEmulatingOAuthCards(context3);
           const conversation = botbuilder_core_1.TurnContext.getConversationReference(context3.activity);
-          const url3 = this.oauthApiUrl(context3);
-          const client = this.createTokenApiClient(url3, oAuthAppCredentials);
+          const url2 = this.oauthApiUrl(context3);
+          const client = this.createTokenApiClient(url2, oAuthAppCredentials);
           context3.turnState.set(this.TokenApiClientCredentialsKey, client);
           const state5 = {
             ConnectionName: connectionName,
@@ -107594,8 +107594,8 @@ var require_botFrameworkAdapter = __commonJS({
           }
           this.checkEmulatingOAuthCards(context3);
           userId = userId || context3.activity.from.id;
-          const url3 = this.oauthApiUrl(context3);
-          const client = this.createTokenApiClient(url3, oAuthAppCredentials);
+          const url2 = this.oauthApiUrl(context3);
+          const client = this.createTokenApiClient(url2, oAuthAppCredentials);
           context3.turnState.set(this.TokenApiClientCredentialsKey, client);
           return (yield client.userToken.getTokenStatus(userId, {
             channelId: context3.activity.channelId,
@@ -107619,8 +107619,8 @@ var require_botFrameworkAdapter = __commonJS({
           }
           this.checkEmulatingOAuthCards(context3);
           const userId = context3.activity.from.id;
-          const url3 = this.oauthApiUrl(context3);
-          const client = this.createTokenApiClient(url3, oAuthAppCredentials);
+          const url2 = this.oauthApiUrl(context3);
+          const client = this.createTokenApiClient(url2, oAuthAppCredentials);
           context3.turnState.set(this.TokenApiClientCredentialsKey, client);
           return (yield client.userToken.getAadTokens(userId, connectionName, { resourceUrls }, { channelId: context3.activity.channelId }))._response.parsedBody;
         });
@@ -107646,9 +107646,9 @@ var require_botFrameworkAdapter = __commonJS({
           if (userId && context3.activity.from.id !== userId) {
             throw new Error("BotFrameworkAdapter.getSiginInResource(): cannot get signin resource for a user that is different from the conversation");
           }
-          const url3 = this.oauthApiUrl(context3);
+          const url2 = this.oauthApiUrl(context3);
           const credentials = appCredentials;
-          const client = this.createTokenApiClient(url3, credentials);
+          const client = this.createTokenApiClient(url2, credentials);
           const conversation = botbuilder_core_1.TurnContext.getConversationReference(context3.activity);
           const state5 = {
             ConnectionName: connectionName,
@@ -107682,8 +107682,8 @@ var require_botFrameworkAdapter = __commonJS({
           if (tokenExchangeRequest && !tokenExchangeRequest.token && !tokenExchangeRequest.uri) {
             throw new Error("BotFrameworkAdapter.exchangeToken(): Either a Token or Uri property is required on the TokenExchangeRequest");
           }
-          const url3 = this.oauthApiUrl(context3);
-          const client = this.createTokenApiClient(url3, appCredentials);
+          const url2 = this.oauthApiUrl(context3);
+          const client = this.createTokenApiClient(url2, appCredentials);
           return (yield client.userToken.exchangeAsync(userId, connectionName, context3.activity.channelId, tokenExchangeRequest))._response.parsedBody;
         });
       }
@@ -107700,8 +107700,8 @@ var require_botFrameworkAdapter = __commonJS({
       emulateOAuthCards(contextOrServiceUrl, emulate) {
         return __awaiter2(this, void 0, void 0, function* () {
           this.isEmulatingOAuthCards = emulate;
-          const url3 = this.oauthApiUrl(contextOrServiceUrl);
-          yield botframework_connector_1.EmulatorApiClient.emulateOAuthCards(this.credentials, url3, emulate);
+          const url2 = this.oauthApiUrl(contextOrServiceUrl);
+          yield botframework_connector_1.EmulatorApiClient.emulateOAuthCards(this.credentials, url2, emulate);
         });
       }
       /**
@@ -108338,9 +108338,9 @@ var require_botFrameworkAdapter = __commonJS({
           const [activityStream, ...attachmentStreams] = request.streams;
           const activity = yield activityStream.readAsJson();
           activity.attachments = yield Promise.all(attachmentStreams.map((attachmentStream) => __awaiter2(this, void 0, void 0, function* () {
-            const contentType4 = attachmentStream.contentType;
-            const content = contentType4 === "application/json" ? yield attachmentStream.readAsJson() : yield attachmentStream.readAsString();
-            return { contentType: contentType4, content };
+            const contentType3 = attachmentStream.contentType;
+            const content = contentType3 === "application/json" ? yield attachmentStream.readAsJson() : yield attachmentStream.readAsString();
+            return { contentType: contentType3, content };
           })));
           return activity;
         });
@@ -109368,9 +109368,9 @@ var require_cloudAdapter = __commonJS({
           try {
             activity = (0, activityValidator_1.validateAndFixActivity)(ActivityT.parse(yield activityStream.readAsJson()));
             activity.attachments = yield Promise.all(attachmentStreams.map((attachmentStream) => __awaiter2(this, void 0, void 0, function* () {
-              const contentType4 = attachmentStream.contentType;
-              const content = contentType4 === "application/json" ? yield attachmentStream.readAsJson() : yield attachmentStream.readAsString();
-              return { contentType: contentType4, content };
+              const contentType3 = attachmentStream.contentType;
+              const content = contentType3 === "application/json" ? yield attachmentStream.readAsJson() : yield attachmentStream.readAsString();
+              return { contentType: contentType3, content };
             })));
           } catch (err) {
             return end(botbuilder_core_1.StatusCodes.BAD_REQUEST, `Request body missing or malformed: ${err}`);
@@ -112415,10 +112415,10 @@ var ProviderRequestError = class extends Error {
 
 // bot.ts
 var ManagedIdentityTeamsBot = class {
-  constructor(appId, tenantId, conversations, logger32) {
+  constructor(appId, tenantId, conversations, logger33) {
     this.appId = appId;
     this.conversations = conversations;
-    this.logger = logger32;
+    this.logger = logger33;
     const authentication = new import_botbuilder.ConfigurationBotFrameworkAuthentication({
       MicrosoftAppType: "UserAssignedMSI",
       MicrosoftAppId: appId,
@@ -112646,8 +112646,8 @@ function newNotificationDeliveryResult(envelope, route, options) {
     ...options.status === "failed" ? { failure: { ...options.failure } } : {}
   };
 }
-function recordNotificationDeliveryResult(logger32, result) {
-  logger32.info(`AZD_NOTIFICATION_DELIVERY_RESULT ${JSON.stringify(result)}`);
+function recordNotificationDeliveryResult(logger33, result) {
+  logger33.info(`AZD_NOTIFICATION_DELIVERY_RESULT ${JSON.stringify(result)}`);
 }
 
 // routing.ts
@@ -113286,6 +113286,9 @@ var import_node_process9 = __toESM(require("node:process"), 1);
 function getEnvironmentVariable(name3) {
   return import_node_process9.default.env[name3];
 }
+function emitNodeWarning(warning) {
+  import_node_process9.default.emitWarning(warning);
+}
 var isDeno2 = typeof import_node_process9.default.versions.deno === "string" && import_node_process9.default.versions.deno.length > 0;
 var isBun2 = typeof import_node_process9.default.versions.bun === "string" && import_node_process9.default.versions.bun.length > 0;
 var isNodeLike2 = true;
@@ -113478,9 +113481,9 @@ function createLoggerContext2(options) {
     }
     logLevel = level;
     const enabledNamespaces2 = [];
-    for (const logger32 of registeredLoggers) {
-      if (shouldEnable(logger32)) {
-        enabledNamespaces2.push(logger32.namespace);
+    for (const logger33 of registeredLoggers) {
+      if (shouldEnable(logger33)) {
+        enabledNamespaces2.push(logger33.namespace);
       }
     }
     debug_default.enable(enabledNamespaces2.join(","));
@@ -113492,20 +113495,20 @@ function createLoggerContext2(options) {
       console.error(`${options.logLevelEnvVarName} set to unknown log level '${logLevelFromEnv}'; logging is not enabled. Acceptable values: ${TYPESPEC_RUNTIME_LOG_LEVELS.join(", ")}.`);
     }
   }
-  function shouldEnable(logger32) {
-    return Boolean(logLevel && levelMap[logger32.level] <= levelMap[logLevel]);
+  function shouldEnable(logger33) {
+    return Boolean(logLevel && levelMap[logger33.level] <= levelMap[logLevel]);
   }
   function createLogger(parent, level) {
-    const logger32 = Object.assign(parent.extend(level), {
+    const logger33 = Object.assign(parent.extend(level), {
       level
     });
-    patchLogMethod(parent, logger32);
-    if (shouldEnable(logger32)) {
+    patchLogMethod(parent, logger33);
+    if (shouldEnable(logger33)) {
       const enabledNamespaces2 = debug_default.disable();
-      debug_default.enable(enabledNamespaces2 + "," + logger32.namespace);
+      debug_default.enable(enabledNamespaces2 + "," + logger33.namespace);
     }
-    registeredLoggers.add(logger32);
-    return logger32;
+    registeredLoggers.add(logger33);
+    return logger33;
   }
   function contextGetLogLevel() {
     return logLevel;
@@ -114837,7 +114840,7 @@ function createAccountEntityFromAccountInfo(accountInfo, cloudGraphHostName, msG
     dataBoundary: accountInfo.dataBoundary
   };
 }
-function generateHomeAccountId(serverClientInfo, authType, logger32, cryptoObj, correlationId, idTokenClaims) {
+function generateHomeAccountId(serverClientInfo, authType, logger33, cryptoObj, correlationId, idTokenClaims) {
   if (authType !== AuthorityType.Adfs) {
     if (serverClientInfo) {
       try {
@@ -114848,7 +114851,7 @@ function generateHomeAccountId(serverClientInfo, authType, logger32, cryptoObj, 
       } catch (e) {
       }
     }
-    logger32.warning("No client info in response", correlationId);
+    logger33.warning("No client info in response", correlationId);
   }
   return idTokenClaims?.sub || "";
 }
@@ -115026,23 +115029,23 @@ var UrlString = class _UrlString {
   get urlString() {
     return this._urlString;
   }
-  constructor(url3, correlationId) {
-    this._urlString = url3;
+  constructor(url2, correlationId) {
+    this._urlString = url2;
     this.correlationId = correlationId;
     if (!this._urlString) {
       throw createClientConfigurationError(urlEmptyError, correlationId);
     }
-    if (!url3.includes("#")) {
-      this._urlString = _UrlString.canonicalizeUri(url3);
+    if (!url2.includes("#")) {
+      this._urlString = _UrlString.canonicalizeUri(url2);
     }
   }
   /**
    * Ensure urls are lower case and end with a / character.
    * @param url
    */
-  static canonicalizeUri(url3) {
-    if (url3) {
-      let lowerCaseUrl = url3.toLowerCase();
+  static canonicalizeUri(url2) {
+    if (url2) {
+      let lowerCaseUrl = url2.toLowerCase();
       if (StringUtils.endsWith(lowerCaseUrl, "?")) {
         lowerCaseUrl = lowerCaseUrl.slice(0, -1);
       } else if (StringUtils.endsWith(lowerCaseUrl, "?/")) {
@@ -115053,7 +115056,7 @@ var UrlString = class _UrlString {
       }
       return lowerCaseUrl;
     }
-    return url3;
+    return url2;
   }
   /**
    * Throws if urlString passed is not a valid authority URI string.
@@ -115077,18 +115080,18 @@ var UrlString = class _UrlString {
    * @param url
    * @param queryString
    */
-  static appendQueryString(url3, queryString) {
+  static appendQueryString(url2, queryString) {
     if (!queryString) {
-      return url3;
+      return url2;
     }
-    return url3.indexOf("?") < 0 ? `${url3}?${queryString}` : `${url3}&${queryString}`;
+    return url2.indexOf("?") < 0 ? `${url2}?${queryString}` : `${url2}&${queryString}`;
   }
   /**
    * Returns a url with the hash removed
    * @param url
    */
-  static removeHashFromUrl(url3) {
-    return _UrlString.canonicalizeUri(url3.split("#")[0]);
+  static removeHashFromUrl(url2) {
+    return _UrlString.canonicalizeUri(url2.split("#")[0]);
   }
   /**
    * Given a url like https://a:b/common/d?e=f#g, and a tenantId, returns https://a:b/tenantId/d
@@ -115127,9 +115130,9 @@ var UrlString = class _UrlString {
     }
     return urlComponents;
   }
-  static getDomainFromUrl(url3, correlationId) {
+  static getDomainFromUrl(url2, correlationId) {
     const regEx = RegExp("^([^:/?#]+://)?([^/?#]*)");
-    const match = url3.match(regEx);
+    const match = url2.match(regEx);
     if (!match) {
       throw createClientConfigurationError(urlParseError, correlationId);
     }
@@ -115137,8 +115140,8 @@ var UrlString = class _UrlString {
   }
   static getAbsoluteUrl(relativeUrl, baseUrl, correlationId) {
     if (relativeUrl[0] === FORWARD_SLASH) {
-      const url3 = new _UrlString(baseUrl, correlationId);
-      const baseComponents = url3.getUrlComponents();
+      const url2 = new _UrlString(baseUrl, correlationId);
+      const baseComponents = url2.getUrlComponents();
       return baseComponents.Protocol + "//" + baseComponents.HostNameAndPort + relativeUrl;
     }
     return relativeUrl;
@@ -115236,37 +115239,37 @@ InstanceDiscoveryMetadata.metadata.forEach((metadataEntry) => {
     InstanceDiscoveryMetadataAliases.add(alias);
   });
 });
-function getAliasesFromStaticSources(staticAuthorityOptions, logger32, correlationId) {
+function getAliasesFromStaticSources(staticAuthorityOptions, logger33, correlationId) {
   let staticAliases;
   const canonicalAuthority = staticAuthorityOptions.canonicalAuthority;
   if (canonicalAuthority) {
     const authorityHost = new UrlString(canonicalAuthority, correlationId).getUrlComponents().HostNameAndPort;
-    staticAliases = getAliasesFromMetadata(logger32, correlationId, authorityHost, staticAuthorityOptions.cloudDiscoveryMetadata?.metadata, AuthorityMetadataSource.CONFIG) || getAliasesFromMetadata(logger32, correlationId, authorityHost, InstanceDiscoveryMetadata.metadata, AuthorityMetadataSource.HARDCODED_VALUES) || staticAuthorityOptions.knownAuthorities;
+    staticAliases = getAliasesFromMetadata(logger33, correlationId, authorityHost, staticAuthorityOptions.cloudDiscoveryMetadata?.metadata, AuthorityMetadataSource.CONFIG) || getAliasesFromMetadata(logger33, correlationId, authorityHost, InstanceDiscoveryMetadata.metadata, AuthorityMetadataSource.HARDCODED_VALUES) || staticAuthorityOptions.knownAuthorities;
   }
   return staticAliases || [];
 }
-function getAliasesFromMetadata(logger32, correlationId, authorityHost, cloudDiscoveryMetadata, source) {
-  logger32.trace(`getAliasesFromMetadata called with source: '${source}'`, correlationId);
+function getAliasesFromMetadata(logger33, correlationId, authorityHost, cloudDiscoveryMetadata, source) {
+  logger33.trace(`getAliasesFromMetadata called with source: '${source}'`, correlationId);
   if (authorityHost && cloudDiscoveryMetadata) {
-    const metadata2 = getCloudDiscoveryMetadataFromNetworkResponse(cloudDiscoveryMetadata, authorityHost);
-    if (metadata2) {
-      logger32.trace(`getAliasesFromMetadata: found cloud discovery metadata in '${source}', returning aliases`, correlationId);
-      return metadata2.aliases;
+    const metadata = getCloudDiscoveryMetadataFromNetworkResponse(cloudDiscoveryMetadata, authorityHost);
+    if (metadata) {
+      logger33.trace(`getAliasesFromMetadata: found cloud discovery metadata in '${source}', returning aliases`, correlationId);
+      return metadata.aliases;
     } else {
-      logger32.trace(`getAliasesFromMetadata: did not find cloud discovery metadata in '${source}'`, correlationId);
+      logger33.trace(`getAliasesFromMetadata: did not find cloud discovery metadata in '${source}'`, correlationId);
     }
   }
   return null;
 }
 function getCloudDiscoveryMetadataFromHardcodedValues(authorityHost) {
-  const metadata2 = getCloudDiscoveryMetadataFromNetworkResponse(InstanceDiscoveryMetadata.metadata, authorityHost);
-  return metadata2;
+  const metadata = getCloudDiscoveryMetadataFromNetworkResponse(InstanceDiscoveryMetadata.metadata, authorityHost);
+  return metadata;
 }
 function getCloudDiscoveryMetadataFromNetworkResponse(response, authorityHost) {
   for (let i = 0; i < response.length; i++) {
-    const metadata2 = response[i];
-    if (metadata2.aliases.includes(authorityHost)) {
-      return metadata2;
+    const metadata = response[i];
+    if (metadata.aliases.includes(authorityHost)) {
+      return metadata;
     }
   }
   return null;
@@ -115322,9 +115325,9 @@ var RegionDiscoveryGetCurrentVersion = "regionDiscoveryGetCurrentVersion";
 var CacheManagerGetRefreshToken = "cacheManagerGetRefreshToken";
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/utils/FunctionWrappers.mjs
-var invoke = (callback, eventName, logger32, telemetryClient, correlationId) => {
+var invoke = (callback, eventName, logger33, telemetryClient, correlationId) => {
   return (...args) => {
-    logger32.trace(`Executing function '${eventName}'`, correlationId);
+    logger33.trace(`Executing function '${eventName}'`, correlationId);
     const inProgressEvent = telemetryClient.startMeasurement(eventName, correlationId);
     if (correlationId) {
       telemetryClient.incrementFields({ [`ext.${eventName}CallCount`]: 1 }, correlationId);
@@ -115334,14 +115337,14 @@ var invoke = (callback, eventName, logger32, telemetryClient, correlationId) => 
       inProgressEvent.end({
         success: true
       });
-      logger32.trace(`Returning result from '${eventName}'`, correlationId);
+      logger33.trace(`Returning result from '${eventName}'`, correlationId);
       return result;
     } catch (e) {
-      logger32.trace(`Error occurred in '${eventName}'`, correlationId);
+      logger33.trace(`Error occurred in '${eventName}'`, correlationId);
       try {
-        logger32.trace(JSON.stringify(e), correlationId);
+        logger33.trace(JSON.stringify(e), correlationId);
       } catch (e2) {
-        logger32.trace("Unable to print error message.", correlationId);
+        logger33.trace("Unable to print error message.", correlationId);
       }
       inProgressEvent.end({
         success: false
@@ -115350,25 +115353,25 @@ var invoke = (callback, eventName, logger32, telemetryClient, correlationId) => 
     }
   };
 };
-var invokeAsync = (callback, eventName, logger32, telemetryClient, correlationId) => {
+var invokeAsync = (callback, eventName, logger33, telemetryClient, correlationId) => {
   return (...args) => {
-    logger32.trace(`Executing function '${eventName}'`, correlationId);
+    logger33.trace(`Executing function '${eventName}'`, correlationId);
     const inProgressEvent = telemetryClient.startMeasurement(eventName, correlationId);
     if (correlationId) {
       telemetryClient.incrementFields({ [`ext.${eventName}CallCount`]: 1 }, correlationId);
     }
     return callback(...args).then((response) => {
-      logger32.trace(`Returning result from '${eventName}'`, correlationId);
+      logger33.trace(`Returning result from '${eventName}'`, correlationId);
       inProgressEvent.end({
         success: true
       });
       return response;
     }).catch((e) => {
-      logger32.trace(`Error occurred in '${eventName}'`, correlationId);
+      logger33.trace(`Error occurred in '${eventName}'`, correlationId);
       try {
-        logger32.trace(JSON.stringify(e), correlationId);
+        logger33.trace(JSON.stringify(e), correlationId);
       } catch (e2) {
-        logger32.trace("Unable to print error message.", correlationId);
+        logger33.trace("Unable to print error message.", correlationId);
       }
       inProgressEvent.end({
         success: false
@@ -115380,9 +115383,9 @@ var invokeAsync = (callback, eventName, logger32, telemetryClient, correlationId
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/authority/RegionDiscovery.mjs
 var RegionDiscovery = class _RegionDiscovery {
-  constructor(networkInterface, logger32, performanceClient, correlationId) {
+  constructor(networkInterface, logger33, performanceClient, correlationId) {
     this.networkInterface = networkInterface;
-    this.logger = logger32;
+    this.logger = logger33;
     this.performanceClient = performanceClient;
     this.correlationId = correlationId;
   }
@@ -115436,8 +115439,8 @@ var RegionDiscovery = class _RegionDiscovery {
    * @param options
    * @returns Promise<NetworkResponse<ImdsComputeResponse>>
    */
-  async getRegionFromIMDS(version5, options) {
-    return this.networkInterface.sendGetRequestAsync(`${IMDS_ENDPOINT}?api-version=${version5}`, options, IMDS_TIMEOUT);
+  async getRegionFromIMDS(version4, options) {
+    return this.networkInterface.sendGetRequestAsync(`${IMDS_ENDPOINT}?api-version=${version4}`, options, IMDS_TIMEOUT);
   }
   /**
    * Get the most recent version of the IMDS endpoint available
@@ -115683,8 +115686,8 @@ function updateCloudDiscoveryMetadata(authorityMetadata, updatedValues, fromNetw
   authorityMetadata.preferred_network = updatedValues.preferred_network;
   authorityMetadata.aliasesFromNetwork = fromNetwork;
 }
-function isAuthorityMetadataExpired(metadata2) {
-  return metadata2.expiresAt <= nowSeconds();
+function isAuthorityMetadataExpired(metadata) {
+  return metadata.expiresAt <= nowSeconds();
 }
 function serializeAttributeTokens(attributeTokens) {
   if (!attributeTokens || attributeTokens.length === 0) {
@@ -115695,7 +115698,7 @@ function serializeAttributeTokens(attributeTokens) {
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/authority/Authority.mjs
 var Authority = class _Authority {
-  constructor(authority, networkInterface, cacheManager, authorityOptions, logger32, correlationId, performanceClient, managedIdentity) {
+  constructor(authority, networkInterface, cacheManager, authorityOptions, logger33, correlationId, performanceClient, managedIdentity) {
     this.canonicalAuthority = authority;
     this._canonicalAuthority.validateAsUri();
     this.networkInterface = networkInterface;
@@ -115706,7 +115709,7 @@ var Authority = class _Authority {
       region_source: void 0,
       region_outcome: void 0
     };
-    this.logger = logger32;
+    this.logger = logger33;
     this.performanceClient = performanceClient;
     this.correlationId = correlationId;
     this.managedIdentity = managedIdentity || false;
@@ -115755,8 +115758,8 @@ var Authority = class _Authority {
   /**
    * Sets canonical authority.
    */
-  set canonicalAuthority(url3) {
-    this._canonicalAuthority = new UrlString(url3, this.correlationId);
+  set canonicalAuthority(url2) {
+    this._canonicalAuthority = new UrlString(url2, this.correlationId);
     this._canonicalAuthority.validateAsUri();
     this._canonicalAuthorityUrlComponents = null;
   }
@@ -115973,13 +115976,13 @@ var Authority = class _Authority {
       }
       return localMetadata.source;
     }
-    let metadata2 = await invokeAsync(this.getEndpointMetadataFromNetwork.bind(this), AuthorityGetEndpointMetadataFromNetwork, this.logger, this.performanceClient, this.correlationId)();
-    if (metadata2) {
-      this.validateIssuer(metadata2.issuer);
+    let metadata = await invokeAsync(this.getEndpointMetadataFromNetwork.bind(this), AuthorityGetEndpointMetadataFromNetwork, this.logger, this.performanceClient, this.correlationId)();
+    if (metadata) {
+      this.validateIssuer(metadata.issuer);
       if (this.authorityOptions.azureRegionConfiguration?.azureRegion) {
-        metadata2 = await invokeAsync(this.updateMetadataWithRegionalInformation.bind(this), AuthorityUpdateMetadataWithRegionalInformation, this.logger, this.performanceClient, this.correlationId)(metadata2);
+        metadata = await invokeAsync(this.updateMetadataWithRegionalInformation.bind(this), AuthorityUpdateMetadataWithRegionalInformation, this.logger, this.performanceClient, this.correlationId)(metadata);
       }
-      updateAuthorityEndpointMetadata(metadataEntity, metadata2, true);
+      updateAuthorityEndpointMetadata(metadataEntity, metadata, true);
       return AuthorityMetadataSource.NETWORK;
     } else {
       throw createClientAuthError(openIdConfigError, this.defaultOpenIdConfigurationEndpoint, this.correlationId);
@@ -116081,23 +116084,23 @@ var Authority = class _Authority {
    * Update the retrieved metadata with regional information.
    * User selected Azure region will be used if configured.
    */
-  async updateMetadataWithRegionalInformation(metadata2) {
+  async updateMetadataWithRegionalInformation(metadata) {
     const userConfiguredAzureRegion = this.authorityOptions.azureRegionConfiguration?.azureRegion;
     if (userConfiguredAzureRegion) {
       if (userConfiguredAzureRegion !== AZURE_REGION_AUTO_DISCOVER_FLAG) {
         this.regionDiscoveryMetadata.region_outcome = RegionDiscoveryOutcomes.CONFIGURED_NO_AUTO_DETECTION;
         this.regionDiscoveryMetadata.region_used = userConfiguredAzureRegion;
-        return _Authority.replaceWithRegionalInformation(metadata2, userConfiguredAzureRegion, this.correlationId);
+        return _Authority.replaceWithRegionalInformation(metadata, userConfiguredAzureRegion, this.correlationId);
       }
       const autodetectedRegionName = await invokeAsync(this.regionDiscovery.detectRegion.bind(this.regionDiscovery), RegionDiscoveryDetectRegion, this.logger, this.performanceClient, this.correlationId)(this.authorityOptions.azureRegionConfiguration?.environmentRegion, this.regionDiscoveryMetadata);
       if (autodetectedRegionName) {
         this.regionDiscoveryMetadata.region_outcome = RegionDiscoveryOutcomes.AUTO_DETECTION_REQUESTED_SUCCESSFUL;
         this.regionDiscoveryMetadata.region_used = autodetectedRegionName;
-        return _Authority.replaceWithRegionalInformation(metadata2, autodetectedRegionName, this.correlationId);
+        return _Authority.replaceWithRegionalInformation(metadata, autodetectedRegionName, this.correlationId);
       }
       this.regionDiscoveryMetadata.region_outcome = RegionDiscoveryOutcomes.AUTO_DETECTION_REQUESTED_FAILED;
     }
-    return metadata2;
+    return metadata;
   }
   /**
    * Updates the AuthorityMetadataEntity with new aliases, preferred_network and preferred_cache
@@ -116110,9 +116113,9 @@ var Authority = class _Authority {
     if (localMetadataSource) {
       return localMetadataSource;
     }
-    const metadata2 = await invokeAsync(this.getCloudDiscoveryMetadataFromNetwork.bind(this), AuthorityGetCloudDiscoveryMetadataFromNetwork, this.logger, this.performanceClient, this.correlationId)();
-    if (metadata2) {
-      updateCloudDiscoveryMetadata(metadataEntity, metadata2, true);
+    const metadata = await invokeAsync(this.getCloudDiscoveryMetadataFromNetwork.bind(this), AuthorityGetCloudDiscoveryMetadataFromNetwork, this.logger, this.performanceClient, this.correlationId)();
+    if (metadata) {
+      updateCloudDiscoveryMetadata(metadataEntity, metadata, true);
       return AuthorityMetadataSource.NETWORK;
     }
     throw createClientConfigurationError(untrustedAuthority, this.correlationId);
@@ -116122,10 +116125,10 @@ var Authority = class _Authority {
     this.logger.verbosePii(`Known Authorities: '${this.authorityOptions.knownAuthorities || NOT_APPLICABLE}'`, this.correlationId);
     this.logger.verbosePii(`Authority Metadata: '${this.authorityOptions.authorityMetadata || NOT_APPLICABLE}'`, this.correlationId);
     this.logger.verbosePii(`Canonical Authority: '${metadataEntity.canonical_authority || NOT_APPLICABLE}'`, this.correlationId);
-    const metadata2 = this.getCloudDiscoveryMetadataFromConfig();
-    if (metadata2) {
+    const metadata = this.getCloudDiscoveryMetadataFromConfig();
+    if (metadata) {
       this.logger.verbose("Found cloud discovery metadata in authority configuration", this.correlationId);
-      updateCloudDiscoveryMetadata(metadataEntity, metadata2, false);
+      updateCloudDiscoveryMetadata(metadataEntity, metadata, false);
       return AuthorityMetadataSource.CONFIG;
     }
     this.logger.verbose("Did not find cloud discovery metadata in the config... Attempting to get cloud discovery metadata from the hardcoded values.", this.correlationId);
@@ -116158,11 +116161,11 @@ var Authority = class _Authority {
       try {
         this.logger.verbose("Attempting to parse the cloud discovery metadata.", this.correlationId);
         const parsedResponse = JSON.parse(this.authorityOptions.cloudDiscoveryMetadata);
-        const metadata2 = getCloudDiscoveryMetadataFromNetworkResponse(parsedResponse.metadata, this.hostnameAndPort);
+        const metadata = getCloudDiscoveryMetadataFromNetworkResponse(parsedResponse.metadata, this.hostnameAndPort);
         this.logger.verbose("Parsed the cloud discovery metadata.", "");
-        if (metadata2) {
+        if (metadata) {
           this.logger.verbose("There is returnable metadata attached to the parsed cloud discovery metadata.", this.correlationId);
-          return metadata2;
+          return metadata;
         } else {
           this.logger.verbose("There is no metadata attached to the parsed cloud discovery metadata.", this.correlationId);
         }
@@ -116189,10 +116192,10 @@ var Authority = class _Authority {
     try {
       const response = await this.networkInterface.sendGetRequestAsync(instanceDiscoveryEndpoint, options);
       let typedResponseBody;
-      let metadata2;
+      let metadata;
       if (isCloudInstanceDiscoveryResponse(response.body)) {
         typedResponseBody = response.body;
-        metadata2 = typedResponseBody.metadata;
+        metadata = typedResponseBody.metadata;
         this.logger.verbosePii(`tenant_discovery_endpoint is: '${typedResponseBody.tenant_discovery_endpoint}'`, this.correlationId);
       } else if (isCloudInstanceDiscoveryErrorResponse(response.body)) {
         this.logger.warning(`A CloudInstanceDiscoveryErrorResponse was returned. The cloud instance discovery network request's status code is: '${response.status}'`, this.correlationId);
@@ -116204,13 +116207,13 @@ var Authority = class _Authority {
         this.logger.warning(`The CloudInstanceDiscoveryErrorResponse error is '${typedResponseBody.error}'`, this.correlationId);
         this.logger.warning(`The CloudInstanceDiscoveryErrorResponse error description is '${typedResponseBody.error_description}'`, this.correlationId);
         this.logger.warning("Setting the value of the CloudInstanceDiscoveryMetadata (returned from the network, correlationId) to []", this.correlationId);
-        metadata2 = [];
+        metadata = [];
       } else {
         this.logger.error("AAD did not return a CloudInstanceDiscoveryResponse or CloudInstanceDiscoveryErrorResponse", this.correlationId);
         return null;
       }
       this.logger.verbose("Attempting to find a match between the developer's authority and the CloudInstanceDiscoveryMetadata returned from the network request.", this.correlationId);
-      match = getCloudDiscoveryMetadataFromNetworkResponse(metadata2, this.hostnameAndPort);
+      match = getCloudDiscoveryMetadataFromNetworkResponse(metadata, this.hostnameAndPort);
     } catch (error) {
       if (error instanceof AuthError) {
         this.logger.error(`There was a network error while attempting to get the cloud discovery instance metadata.
@@ -116414,13 +116417,13 @@ Error Description: '${typedError.message}'`, this.correlationId);
     if (this.isPublicCloudAuthority(authorityUrlParts.HostNameAndPort)) {
       hostNameAndPort = `${region}.${REGIONAL_AUTH_PUBLIC_CLOUD_SUFFIX}`;
     }
-    const url3 = UrlString.constructAuthorityUriFromObject({
+    const url2 = UrlString.constructAuthorityUriFromObject({
       ...authorityUrlInstance.getUrlComponents(),
       HostNameAndPort: hostNameAndPort
     }, correlationId).urlString;
     if (queryString)
-      return `${url3}?${queryString}`;
-    return url3;
+      return `${url2}?${queryString}`;
+    return url2;
   }
   /**
    * Replace the endpoints in the metadata object with their regional equivalents.
@@ -116428,8 +116431,8 @@ Error Description: '${typedError.message}'`, this.correlationId);
    * @param metadata OpenIdConfigResponse
    * @param azureRegion string
    */
-  static replaceWithRegionalInformation(metadata2, azureRegion, correlationId) {
-    const regionalMetadata = { ...metadata2 };
+  static replaceWithRegionalInformation(metadata, azureRegion, correlationId) {
+    const regionalMetadata = { ...metadata };
     regionalMetadata.authorization_endpoint = _Authority.buildRegionalAuthorityString(regionalMetadata.authorization_endpoint, azureRegion, correlationId);
     regionalMetadata.token_endpoint = _Authority.buildRegionalAuthorityString(regionalMetadata.token_endpoint, azureRegion, correlationId);
     if (regionalMetadata.end_session_endpoint) {
@@ -116502,11 +116505,11 @@ var AuthorityFactory_exports = {};
 __export(AuthorityFactory_exports, {
   createDiscoveredInstance: () => createDiscoveredInstance
 });
-async function createDiscoveredInstance(authorityUri, networkClient, cacheManager, authorityOptions, logger32, correlationId, performanceClient) {
+async function createDiscoveredInstance(authorityUri, networkClient, cacheManager, authorityOptions, logger33, correlationId, performanceClient) {
   const authorityUriFinal = Authority.transformCIAMAuthority(formatAuthorityUri(authorityUri), correlationId);
-  const acquireTokenAuthority = new Authority(authorityUriFinal, networkClient, cacheManager, authorityOptions, logger32, correlationId, performanceClient);
+  const acquireTokenAuthority = new Authority(authorityUriFinal, networkClient, cacheManager, authorityOptions, logger33, correlationId, performanceClient);
   try {
-    await invokeAsync(acquireTokenAuthority.resolveEndpointsAsync.bind(acquireTokenAuthority), AuthorityResolveEndpointsAsync, logger32, performanceClient, correlationId)();
+    await invokeAsync(acquireTokenAuthority.resolveEndpointsAsync.bind(acquireTokenAuthority), AuthorityResolveEndpointsAsync, logger33, performanceClient, correlationId)();
     return acquireTokenAuthority;
   } catch (e) {
     throw createClientAuthError(endpointResolutionError, correlationId);
@@ -117042,11 +117045,11 @@ function mapToQueryString(parameters) {
   });
   return queryParameterArray.join("&");
 }
-function normalizeUrlForComparison(url3, logger32, correlationId) {
-  if (!url3) {
-    return url3;
+function normalizeUrlForComparison(url2, logger33, correlationId) {
+  if (!url2) {
+    return url2;
   }
-  const urlWithoutHash = url3.split("#")[0];
+  const urlWithoutHash = url2.split("#")[0];
   if (!urlWithoutHash) {
     return urlWithoutHash;
   }
@@ -117067,15 +117070,15 @@ function normalizeUrlForComparison(url3, logger32, correlationId) {
     urlObj.pathname = pathname;
     return urlObj.href;
   } catch (e) {
-    logger32?.error(`Failed to normalize URL for comparison: '${e}'`, correlationId || "");
+    logger33?.error(`Failed to normalize URL for comparison: '${e}'`, correlationId || "");
     throw createClientConfigurationError(urlParseError, correlationId || "");
   }
 }
-function validateUrl(url3, logger32, correlationId) {
+function validateUrl(url2, logger33, correlationId) {
   try {
-    new URL(url3);
+    new URL(url2);
   } catch (e) {
-    logger32?.error(`Failed to validate URL: '${e}'`, correlationId || "");
+    logger33?.error(`Failed to validate URL: '${e}'`, correlationId || "");
     throw createClientConfigurationError(urlParseError, correlationId || "");
   }
 }
@@ -117386,11 +117389,11 @@ function createCacheError(e) {
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/cache/CacheManager.mjs
 var CacheManager = class {
-  constructor(clientId, cryptoImpl, logger32, performanceClient, staticAuthorityOptions, tokenBindingKeyManager) {
+  constructor(clientId, cryptoImpl, logger33, performanceClient, staticAuthorityOptions, tokenBindingKeyManager) {
     this.clientId = clientId;
     this.cryptoImpl = cryptoImpl;
     this.tokenBindingKeyManager = tokenBindingKeyManager;
-    this.commonLogger = logger32.clone(name, version);
+    this.commonLogger = logger33.clone(name, version);
     this.staticAuthorityOptions = staticAuthorityOptions;
     this.performanceClient = performanceClient;
   }
@@ -118692,8 +118695,8 @@ var PopTokenGenerator = class {
    * @param request
    * @returns
    */
-  async generateCnf(request, logger32) {
-    const reqCnf = await invokeAsync(this.generateKid.bind(this), PopTokenGenerateCnf, logger32, this.performanceClient, request.correlationId)(request);
+  async generateCnf(request, logger33) {
+    const reqCnf = await invokeAsync(this.generateKid.bind(this), PopTokenGenerateCnf, logger33, this.performanceClient, request.correlationId)(request);
     const reqCnfString = this.cryptoUtils.base64UrlEncode(JSON.stringify(reqCnf));
     return {
       kid: reqCnf.kid,
@@ -118779,14 +118782,14 @@ function normalizeHtm(htm, correlationId) {
   }
   return htm.toUpperCase();
 }
-function normalizeHtu(url3, correlationId) {
+function normalizeHtu(url2, correlationId) {
   let parsedUrl;
   try {
-    parsedUrl = new URL(url3);
+    parsedUrl = new URL(url2);
   } catch {
     throw createClientConfigurationError(urlParseError, correlationId);
   }
-  if (!/^https:\/\//i.test(url3) || parsedUrl.protocol !== "https:" || parsedUrl.username || parsedUrl.password) {
+  if (!/^https:\/\//i.test(url2) || parsedUrl.protocol !== "https:" || parsedUrl.username || parsedUrl.password) {
     throw createClientConfigurationError(invalidDpopHtu, correlationId);
   }
   parsedUrl.search = "";
@@ -118983,12 +118986,12 @@ function parseRequestState(base64Decode2, state5, correlationId) {
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/response/ResponseHandler.mjs
 var ResponseHandler = class _ResponseHandler {
-  constructor(clientId, cacheStorage, cryptoObj, logger32, performanceClient, serializableCache, persistencePlugin, tokenBindingKeyManager = DEFAULT_TOKEN_BINDING_KEY_MANAGER) {
+  constructor(clientId, cacheStorage, cryptoObj, logger33, performanceClient, serializableCache, persistencePlugin, tokenBindingKeyManager = DEFAULT_TOKEN_BINDING_KEY_MANAGER) {
     this.clientId = clientId;
     this.cacheStorage = cacheStorage;
     this.cryptoObj = cryptoObj;
     this.tokenBindingKeyManager = tokenBindingKeyManager;
-    this.logger = logger32;
+    this.logger = logger33;
     this.performanceClient = performanceClient;
     this.serializableCache = serializableCache;
     this.persistencePlugin = persistencePlugin;
@@ -119185,7 +119188,7 @@ ${serverError}`, correlationId);
    * @param stateString
    */
   static async generateAuthenticationResult(cryptoObj, authority, cacheRecord, fromTokenCache, request, performanceClient, options = {}) {
-    const { idTokenClaims, requestState, serverTokenResponse, requestId: requestId3, tokenBindingKeyManager = DEFAULT_TOKEN_BINDING_KEY_MANAGER } = options;
+    const { idTokenClaims, requestState, serverTokenResponse, requestId: requestId2, tokenBindingKeyManager = DEFAULT_TOKEN_BINDING_KEY_MANAGER } = options;
     let accessToken = "";
     let responseScopes = [];
     let expiresOn = null;
@@ -119264,7 +119267,7 @@ ${serverError}`, correlationId);
       extExpiresOn,
       refreshOn,
       correlationId: request.correlationId,
-      requestId: requestId3 || "",
+      requestId: requestId2 || "",
       familyId,
       tokenType: cacheRecord.accessToken?.tokenType?.toLowerCase() === AuthenticationScheme.DPOP.toLowerCase() ? AuthenticationScheme.DPOP : cacheRecord.accessToken?.tokenType || "",
       state: requestState ? requestState.userRequestState : "",
@@ -119275,13 +119278,13 @@ ${serverError}`, correlationId);
     };
   }
 };
-function buildAccountToCache(cacheStorage, authority, homeAccountId, base64Decode2, correlationId, idTokenClaims, clientInfo, environment, claimsTenantId, authCodePayload, nativeAccountId, logger32, performanceClient) {
-  logger32?.verbose("setCachedAccount called", correlationId);
+function buildAccountToCache(cacheStorage, authority, homeAccountId, base64Decode2, correlationId, idTokenClaims, clientInfo, environment, claimsTenantId, authCodePayload, nativeAccountId, logger33, performanceClient) {
+  logger33?.verbose("setCachedAccount called", correlationId);
   const accountEnvironment = environment || authority.getPreferredCache();
   const matchedAccounts = cacheStorage.getAccountsFilteredBy({ homeAccountId, environment: accountEnvironment }, correlationId);
   performanceClient?.addFields({ cacheMatchedAccounts: matchedAccounts.length }, correlationId);
   if (matchedAccounts.length > 1) {
-    logger32?.warning("Multiple base accounts matched homeAccountId. Ignoring cached account and creating a new base account.", correlationId);
+    logger33?.warning("Multiple base accounts matched homeAccountId. Ignoring cached account and creating a new base account.", correlationId);
   }
   const cachedAccount = matchedAccounts.length === 1 ? matchedAccounts[0] : null;
   const baseAccount = cachedAccount || createAccountEntity({
@@ -119447,7 +119450,7 @@ function createNetworkError(error, httpStatus, responseHeaders, additionalError)
 }
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/protocol/Token.mjs
-function createTokenRequestHeaders(logger32, preventCorsPreflight, ccsCred) {
+function createTokenRequestHeaders(logger33, preventCorsPreflight, ccsCred) {
   const headers = {};
   headers[HeaderNames.CONTENT_TYPE] = URL_FORM_CONTENT_TYPE;
   if (!preventCorsPreflight && ccsCred) {
@@ -119457,7 +119460,7 @@ function createTokenRequestHeaders(logger32, preventCorsPreflight, ccsCred) {
           const clientInfo = buildClientInfoFromHomeAccountId(ccsCred.credential);
           headers[HeaderNames.CCS_HEADER] = `Oid:${clientInfo.uid}@${clientInfo.utid}`;
         } catch (e) {
-          logger32.verbose(`Could not parse home account ID for CCS Header: '${e}'`, "");
+          logger33.verbose(`Could not parse home account ID for CCS Header: '${e}'`, "");
         }
         break;
       case CcsCredentialType.UPN:
@@ -119492,18 +119495,18 @@ function createTokenQueryParameters(request, clientId, redirectUri, performanceC
   instrumentBrokerParams(parameters, request.correlationId, performanceClient);
   return mapToQueryString(parameters);
 }
-async function executePostToTokenEndpoint(tokenEndpoint, queryString, headers, thumbprint, correlationId, cacheManager, networkClient, logger32, performanceClient, serverTelemetryManager) {
-  const response = await sendPostRequest(thumbprint, tokenEndpoint, { body: queryString, headers }, correlationId, cacheManager, networkClient, logger32, performanceClient);
+async function executePostToTokenEndpoint(tokenEndpoint, queryString, headers, thumbprint, correlationId, cacheManager, networkClient, logger33, performanceClient, serverTelemetryManager) {
+  const response = await sendPostRequest(thumbprint, tokenEndpoint, { body: queryString, headers }, correlationId, cacheManager, networkClient, logger33, performanceClient);
   if (serverTelemetryManager && response.status < 500 && response.status !== 429) {
     serverTelemetryManager.clearTelemetryCache();
   }
   return response;
 }
-async function sendPostRequest(thumbprint, tokenEndpoint, options, correlationId, cacheManager, networkClient, logger32, performanceClient) {
+async function sendPostRequest(thumbprint, tokenEndpoint, options, correlationId, cacheManager, networkClient, logger33, performanceClient) {
   ThrottlingUtils.preProcess(cacheManager, thumbprint, correlationId);
   let response;
   try {
-    response = await invokeAsync(networkClient.sendPostRequestAsync.bind(networkClient), NetworkClientSendPostRequestAsync, logger32, performanceClient, correlationId)(tokenEndpoint, { ...options, correlationId, performanceClient });
+    response = await invokeAsync(networkClient.sendPostRequestAsync.bind(networkClient), NetworkClientSendPostRequestAsync, logger33, performanceClient, correlationId)(tokenEndpoint, { ...options, correlationId, performanceClient });
     const responseHeaders = response.headers || {};
     performanceClient?.addFields({
       refreshTokenSize: response.body.refresh_token?.length || 0,
@@ -119562,10 +119565,10 @@ var AuthorizationCodeClient = class {
     }
     const reqTimestamp = nowSeconds();
     const response = await invokeAsync(this.executeTokenRequest.bind(this), AuthClientExecuteTokenRequest, this.logger, this.performanceClient, request.correlationId)(this.authority, request, this.serverTelemetryManager);
-    const requestId3 = response.headers?.[HeaderNames.X_MS_REQUEST_ID];
+    const requestId2 = response.headers?.[HeaderNames.X_MS_REQUEST_ID];
     const responseHandler = new ResponseHandler(this.config.authOptions.clientId, this.cacheManager, this.cryptoUtils, this.logger, this.performanceClient, this.config.serializableCache, this.config.persistencePlugin, this.config.tokenBindingKeyManager);
     responseHandler.validateTokenResponse(response.body, request.correlationId);
-    return invokeAsync(responseHandler.handleServerTokenResponse.bind(responseHandler), HandleServerTokenResponse, this.logger, this.performanceClient, request.correlationId)(response.body, this.authority, reqTimestamp, request, apiId, authCodePayload, void 0, void 0, void 0, requestId3);
+    return invokeAsync(responseHandler.handleServerTokenResponse.bind(responseHandler), HandleServerTokenResponse, this.logger, this.performanceClient, request.correlationId)(response.body, this.authority, reqTimestamp, request, apiId, authCodePayload, void 0, void 0, void 0, requestId2);
   }
   /**
    * Used to log out the current user, and redirect the user to the postLogoutRedirectUri.
@@ -119757,7 +119760,7 @@ __export(Authorize_exports, {
   getStandardAuthorizeRequestParameters: () => getStandardAuthorizeRequestParameters,
   validateAuthorizationResponse: () => validateAuthorizationResponse
 });
-function getStandardAuthorizeRequestParameters(authOptions, request, logger32, performanceClient) {
+function getStandardAuthorizeRequestParameters(authOptions, request, logger33, performanceClient) {
   const correlationId = request.correlationId;
   const parameters = /* @__PURE__ */ new Map();
   addClientId(parameters, request.embeddedClientId || request.extraQueryParameters?.[CLIENT_ID] || authOptions.clientId);
@@ -119782,60 +119785,60 @@ function getStandardAuthorizeRequestParameters(authOptions, request, logger32, p
   }
   if (request.prompt !== PromptValue.SELECT_ACCOUNT) {
     if (request.sid && request.prompt === PromptValue.NONE) {
-      logger32.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from request", request.correlationId);
+      logger33.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from request", request.correlationId);
       addSid(parameters, request.sid);
       performanceClient?.addFields({ sidFromRequest: true }, correlationId);
     } else if (request.account) {
       const accountSid = extractAccountSid(request.account);
       let accountLoginHintClaim = extractLoginHint(request.account);
       if (accountLoginHintClaim && request.domainHint) {
-        logger32.warning(`AuthorizationCodeClient.createAuthCodeUrlQueryString: "domainHint" param is set, skipping opaque "login_hint" claim. Please consider not passing domainHint`, request.correlationId);
+        logger33.warning(`AuthorizationCodeClient.createAuthCodeUrlQueryString: "domainHint" param is set, skipping opaque "login_hint" claim. Please consider not passing domainHint`, request.correlationId);
         accountLoginHintClaim = null;
       }
       if (accountLoginHintClaim) {
-        logger32.verbose("createAuthCodeUrlQueryString: login_hint claim present on account", request.correlationId);
+        logger33.verbose("createAuthCodeUrlQueryString: login_hint claim present on account", request.correlationId);
         addLoginHint(parameters, accountLoginHintClaim);
         performanceClient?.addFields({ loginHintFromClaim: true }, correlationId);
         try {
           const clientInfo = buildClientInfoFromHomeAccountId(request.account.homeAccountId);
           addCcsOid(parameters, clientInfo);
         } catch (e) {
-          logger32.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header", request.correlationId);
+          logger33.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header", request.correlationId);
         }
       } else if (accountSid && request.prompt === PromptValue.NONE) {
-        logger32.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from account", request.correlationId);
+        logger33.verbose("createAuthCodeUrlQueryString: Prompt is none, adding sid from account", request.correlationId);
         addSid(parameters, accountSid);
         performanceClient?.addFields({ sidFromClaim: true }, correlationId);
         try {
           const clientInfo = buildClientInfoFromHomeAccountId(request.account.homeAccountId);
           addCcsOid(parameters, clientInfo);
         } catch (e) {
-          logger32.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header", request.correlationId);
+          logger33.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header", request.correlationId);
         }
       } else if (request.loginHint) {
-        logger32.verbose("createAuthCodeUrlQueryString: Adding login_hint from request", request.correlationId);
+        logger33.verbose("createAuthCodeUrlQueryString: Adding login_hint from request", request.correlationId);
         addLoginHint(parameters, request.loginHint);
         addCcsUpn(parameters, request.loginHint);
         performanceClient?.addFields({ loginHintFromRequest: true }, correlationId);
       } else if (request.account.username) {
-        logger32.verbose("createAuthCodeUrlQueryString: Adding login_hint from account", request.correlationId);
+        logger33.verbose("createAuthCodeUrlQueryString: Adding login_hint from account", request.correlationId);
         addLoginHint(parameters, request.account.username);
         performanceClient?.addFields({ loginHintFromUpn: true }, correlationId);
         try {
           const clientInfo = buildClientInfoFromHomeAccountId(request.account.homeAccountId);
           addCcsOid(parameters, clientInfo);
         } catch (e) {
-          logger32.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header", request.correlationId);
+          logger33.verbose("createAuthCodeUrlQueryString: Could not parse home account ID for CCS Header", request.correlationId);
         }
       }
     } else if (request.loginHint) {
-      logger32.verbose("createAuthCodeUrlQueryString: No account, adding login_hint from request", request.correlationId);
+      logger33.verbose("createAuthCodeUrlQueryString: No account, adding login_hint from request", request.correlationId);
       addLoginHint(parameters, request.loginHint);
       addCcsUpn(parameters, request.loginHint);
       performanceClient?.addFields({ loginHintFromRequest: true }, correlationId);
     }
   } else {
-    logger32.verbose("createAuthCodeUrlQueryString: Prompt is select_account, ignoring account hints", request.correlationId);
+    logger33.verbose("createAuthCodeUrlQueryString: Prompt is select_account, ignoring account hints", request.correlationId);
   }
   if (request.nonce) {
     addNonce(parameters, request.nonce);
@@ -119918,10 +119921,10 @@ var RefreshTokenClient = class {
   async acquireToken(request, apiId) {
     const reqTimestamp = nowSeconds();
     const response = await invokeAsync(this.executeTokenRequest.bind(this), RefreshTokenClientExecuteTokenRequest, this.logger, this.performanceClient, request.correlationId)(request, this.authority);
-    const requestId3 = response.headers?.[HeaderNames.X_MS_REQUEST_ID];
+    const requestId2 = response.headers?.[HeaderNames.X_MS_REQUEST_ID];
     const responseHandler = new ResponseHandler(this.config.authOptions.clientId, this.cacheManager, this.cryptoUtils, this.logger, this.performanceClient, this.config.serializableCache, this.config.persistencePlugin, this.config.tokenBindingKeyManager);
     responseHandler.validateTokenResponse(response.body, request.correlationId);
-    return invokeAsync(responseHandler.handleServerTokenResponse.bind(responseHandler), HandleServerTokenResponse, this.logger, this.performanceClient, request.correlationId)(response.body, this.authority, reqTimestamp, request, apiId, void 0, void 0, true, request.forceCache, requestId3);
+    return invokeAsync(responseHandler.handleServerTokenResponse.bind(responseHandler), HandleServerTokenResponse, this.logger, this.performanceClient, request.correlationId)(response.body, this.authority, reqTimestamp, request, apiId, void 0, void 0, true, request.forceCache, requestId2);
   }
   /**
    * Gets cached refresh token and attaches to request, then calls acquireToken API
@@ -120705,8 +120708,8 @@ var HttpClient = class {
    * @throws {AuthError} When the request times out or response parsing fails
    * @throws {NetworkError} When the network request fails
    */
-  async sendGetRequestAsync(url3, options, timeout2) {
-    return this.sendRequest(url3, HttpMethod2.GET, options, timeout2);
+  async sendGetRequestAsync(url2, options, timeout2) {
+    return this.sendRequest(url2, HttpMethod2.GET, options, timeout2);
   }
   /**
    * Sends an HTTP POST request to the specified URL.
@@ -120721,8 +120724,8 @@ var HttpClient = class {
    * @throws {AuthError} When the request times out or response parsing fails
    * @throws {NetworkError} When the network request fails
    */
-  async sendPostRequestAsync(url3, options) {
-    return this.sendRequest(url3, HttpMethod2.POST, options);
+  async sendPostRequestAsync(url2, options) {
+    return this.sendRequest(url2, HttpMethod2.POST, options);
   }
   /**
    * Core HTTP request implementation using native fetch API.
@@ -120748,7 +120751,7 @@ var HttpClient = class {
    * @throws {AuthError} For timeouts or JSON parsing errors
    * @throws {NetworkError} For network failures
    */
-  async sendRequest(url3, method, options, timeout2) {
+  async sendRequest(url2, method, options, timeout2) {
     const controller = new AbortController();
     let timeoutId;
     if (timeout2) {
@@ -120767,7 +120770,7 @@ var HttpClient = class {
     }
     let response;
     try {
-      response = await fetch(url3, fetchOptions);
+      response = await fetch(url2, fetchOptions);
     } catch (error) {
       if (timeoutId) {
         clearTimeout(timeoutId);
@@ -121320,11 +121323,11 @@ function generateAccountKey(account) {
 
 // node_modules/@azure/msal-node/dist/cache/NodeStorage.mjs
 var NodeStorage = class extends CacheManager {
-  constructor(logger32, clientId, cryptoImpl, staticAuthorityOptions) {
-    super(clientId, cryptoImpl, logger32, new StubPerformanceClient(), staticAuthorityOptions, DEFAULT_TOKEN_BINDING_KEY_MANAGER);
+  constructor(logger33, clientId, cryptoImpl, staticAuthorityOptions) {
+    super(clientId, cryptoImpl, logger33, new StubPerformanceClient(), staticAuthorityOptions, DEFAULT_TOKEN_BINDING_KEY_MANAGER);
     this.cache = {};
     this.changeEmitters = [];
-    this.logger = logger32;
+    this.logger = logger33;
   }
   /**
    * Queue up callbacks
@@ -121601,8 +121604,8 @@ var NodeStorage = class extends CacheManager {
    * @param key - lookup key to fetch cache type AuthorityMetadataEntity
    * @param metadata - cache value to be set of type AuthorityMetadataEntity
    */
-  setAuthorityMetadata(key, metadata2) {
-    this.setItem(key, metadata2);
+  setAuthorityMetadata(key, metadata) {
+    this.setItem(key, metadata);
   }
   /**
    * fetch throttling entity from the platform cache
@@ -121721,14 +121724,14 @@ var defaultSerializedCache = {
   AppMetadata: {}
 };
 var TokenCache = class {
-  constructor(storage, logger32, cachePlugin) {
+  constructor(storage, logger33, cachePlugin) {
     this.cacheHasChanged = false;
     this.storage = storage;
     this.storage.registerChangeEmitter(this.handleChangeEvent.bind(this));
     if (cachePlugin) {
       this.persistence = cachePlugin;
     }
-    this.logger = logger32;
+    this.logger = logger33;
   }
   /**
    * Set to true if cache state has changed since last time serialize or writeToPersistence was called
@@ -122235,12 +122238,12 @@ var UsernamePasswordClient = class extends BaseClient {
 };
 
 // node_modules/@azure/msal-node/dist/protocol/Authorize.mjs
-function getAuthCodeRequestUrl(config, authority, request, logger32) {
+function getAuthCodeRequestUrl(config, authority, request, logger33) {
   const parameters = Authorize_exports.getStandardAuthorizeRequestParameters({
     ...config.auth,
     authority,
     redirectUri: request.redirectUri || ""
-  }, request, logger32);
+  }, request, logger33);
   RequestParameterBuilder_exports.addLibraryInfo(parameters, {
     sku: Constants.MSAL_SKU,
     version: version2,
@@ -122485,8 +122488,8 @@ var ClientApplication = class {
    * Replaces the default logger set in configurations with new Logger with new configurations
    * @param logger - Logger instance
    */
-  setLogger(logger32) {
-    this.logger = logger32;
+  setLogger(logger33) {
+    this.logger = logger33;
   }
   /**
    * Builds the common configuration to be passed to the common component based on the platform configurarion
@@ -122627,12 +122630,12 @@ var LoopbackClient = class {
           res.end("Method Not Allowed");
           return;
         }
-        const url3 = req.url;
-        if (!url3) {
+        const url2 = req.url;
+        if (!url2) {
           res.end(errorTemplate || "Error occurred loading redirectUrl");
           reject(NodeAuthError.createUnableToLoadRedirectUrlError());
           return;
-        } else if (url3 === Constants_exports.FORWARD_SLASH) {
+        } else if (url2 === Constants_exports.FORWARD_SLASH) {
           if (method === "POST") {
             this.handlePostRequest(req, res, resolve, successTemplate, errorTemplate);
             return;
@@ -122642,7 +122645,7 @@ var LoopbackClient = class {
         }
         if (method === "GET") {
           const redirectUri = this.getRedirectUri();
-          const parsedUrl = new URL(url3, redirectUri);
+          const parsedUrl = new URL(url2, redirectUri);
           const authCodeResponse = UrlUtils_exports.getDeserializedResponse(parsedUrl.search) || {};
           if (!authCodeResponse.code && !authCodeResponse.error) {
             res.writeHead(200);
@@ -122679,8 +122682,8 @@ var LoopbackClient = class {
    * Handles POST requests for form_post response mode
    */
   handlePostRequest(req, res, resolve, successTemplate, errorTemplate) {
-    const contentType4 = req.headers["content-type"]?.split(";")[0]?.trim();
-    if (contentType4 !== "application/x-www-form-urlencoded") {
+    const contentType3 = req.headers["content-type"]?.split(";")[0]?.trim();
+    if (contentType3 !== "application/x-www-form-urlencoded") {
       res.writeHead(415);
       res.end("Unsupported Media Type");
       return;
@@ -123884,35 +123887,35 @@ function isIso8601(dateString) {
 
 // node_modules/@azure/msal-node/dist/network/HttpClientWithRetries.mjs
 var HttpClientWithRetries = class {
-  constructor(httpClientNoRetries, retryPolicy4, logger32) {
+  constructor(httpClientNoRetries, retryPolicy4, logger33) {
     this.httpClientNoRetries = httpClientNoRetries;
     this.retryPolicy = retryPolicy4;
-    this.logger = logger32;
+    this.logger = logger33;
   }
-  async sendNetworkRequestAsyncHelper(httpMethod, url3, options) {
+  async sendNetworkRequestAsyncHelper(httpMethod, url2, options) {
     if (httpMethod === HttpMethod2.GET) {
-      return this.httpClientNoRetries.sendGetRequestAsync(url3, options);
+      return this.httpClientNoRetries.sendGetRequestAsync(url2, options);
     } else {
-      return this.httpClientNoRetries.sendPostRequestAsync(url3, options);
+      return this.httpClientNoRetries.sendPostRequestAsync(url2, options);
     }
   }
-  async sendNetworkRequestAsync(httpMethod, url3, options) {
-    let response = await this.sendNetworkRequestAsyncHelper(httpMethod, url3, options);
+  async sendNetworkRequestAsync(httpMethod, url2, options) {
+    let response = await this.sendNetworkRequestAsyncHelper(httpMethod, url2, options);
     if ("isNewRequest" in this.retryPolicy) {
       this.retryPolicy.isNewRequest = true;
     }
     let currentRetry = 0;
     while (await this.retryPolicy.pauseForRetry(response.status, currentRetry, this.logger, response.headers[Constants_exports.HeaderNames.RETRY_AFTER])) {
-      response = await this.sendNetworkRequestAsyncHelper(httpMethod, url3, options);
+      response = await this.sendNetworkRequestAsyncHelper(httpMethod, url2, options);
       currentRetry++;
     }
     return response;
   }
-  async sendGetRequestAsync(url3, options) {
-    return this.sendNetworkRequestAsync(HttpMethod2.GET, url3, options);
+  async sendGetRequestAsync(url2, options) {
+    return this.sendNetworkRequestAsync(HttpMethod2.GET, url2, options);
   }
-  async sendPostRequestAsync(url3, options) {
-    return this.sendNetworkRequestAsync(HttpMethod2.POST, url3, options);
+  async sendPostRequestAsync(url2, options) {
+    return this.sendNetworkRequestAsync(HttpMethod2.POST, url2, options);
   }
 };
 
@@ -123934,8 +123937,8 @@ var BaseManagedIdentitySource = class {
    * @param cryptoProvider - Cryptographic provider for token operations
    * @param disableInternalRetries - Whether to disable automatic retry logic
    */
-  constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
-    this.logger = logger32;
+  constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
+    this.logger = logger33;
     this.nodeStorage = nodeStorage;
     this.networkClient = networkClient;
     this.cryptoProvider = cryptoProvider;
@@ -124084,11 +124087,11 @@ var BaseManagedIdentitySource = class {
     }
   }
 };
-BaseManagedIdentitySource.getValidatedEnvVariableUrlString = (envVariableStringName, envVariable, sourceName, logger32) => {
+BaseManagedIdentitySource.getValidatedEnvVariableUrlString = (envVariableStringName, envVariable, sourceName, logger33) => {
   try {
     return new UrlString(envVariable, "").urlString;
   } catch (error) {
-    logger32.info(`[Managed Identity] ${sourceName} managed identity is unavailable because the '${envVariableStringName}' environment variable is malformed.`, "");
+    logger33.info(`[Managed Identity] ${sourceName} managed identity is unavailable because the '${envVariableStringName}' environment variable is malformed.`, "");
     throw createManagedIdentityError(MsiEnvironmentVariableUrlMalformedErrorCodes[envVariableStringName], "");
   }
 };
@@ -124137,10 +124140,10 @@ var DefaultManagedIdentityRetryPolicy = class _DefaultManagedIdentityRetryPolicy
   static get DEFAULT_MANAGED_IDENTITY_RETRY_DELAY_MS() {
     return DEFAULT_MANAGED_IDENTITY_RETRY_DELAY_MS;
   }
-  async pauseForRetry(httpStatusCode, currentRetry, logger32, retryAfterHeader) {
+  async pauseForRetry(httpStatusCode, currentRetry, logger33, retryAfterHeader) {
     if (DEFAULT_MANAGED_IDENTITY_HTTP_STATUS_CODES_TO_RETRY_ON.includes(httpStatusCode) && currentRetry < DEFAULT_MANAGED_IDENTITY_MAX_RETRIES) {
       const retryAfterDelay = this.linearRetryStrategy.calculateDelay(retryAfterHeader, _DefaultManagedIdentityRetryPolicy.DEFAULT_MANAGED_IDENTITY_RETRY_DELAY_MS);
-      logger32.verbose(`Retrying request in ${retryAfterDelay}ms (retry attempt: ${currentRetry + 1})`, "");
+      logger33.verbose(`Retrying request in ${retryAfterDelay}ms (retry attempt: ${currentRetry + 1})`, "");
       await new Promise((resolve) => {
         return setTimeout(resolve, retryAfterDelay);
       });
@@ -124191,8 +124194,8 @@ var AppService = class _AppService extends BaseManagedIdentitySource {
    * @param identityEndpoint - The App Service identity endpoint URL
    * @param identityHeader - The secret header value required for authentication
    */
-  constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader) {
-    super(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
+  constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader) {
+    super(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
     this.identityEndpoint = identityEndpoint;
     this.identityHeader = identityHeader;
   }
@@ -124226,15 +124229,15 @@ var AppService = class _AppService extends BaseManagedIdentitySource {
    *
    * @returns A new AppService instance if the environment is suitable, null otherwise
    */
-  static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
+  static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
     const [identityEndpoint, identityHeader] = _AppService.getEnvironmentVariables();
     if (!identityEndpoint || !identityHeader) {
-      logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames.APP_SERVICE} managed identity is unavailable because one or both of the '${ManagedIdentityEnvironmentVariableNames.IDENTITY_HEADER}' and '${ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT}' environment variables are not defined.`, "");
+      logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames.APP_SERVICE} managed identity is unavailable because one or both of the '${ManagedIdentityEnvironmentVariableNames.IDENTITY_HEADER}' and '${ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT}' environment variables are not defined.`, "");
       return null;
     }
-    const validatedIdentityEndpoint = _AppService.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames.APP_SERVICE, logger32);
-    logger32.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.APP_SERVICE} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames.APP_SERVICE} managed identity.`, "");
-    return new _AppService(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader);
+    const validatedIdentityEndpoint = _AppService.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames.APP_SERVICE, logger33);
+    logger33.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.APP_SERVICE} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames.APP_SERVICE} managed identity.`, "");
+    return new _AppService(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader);
   }
   /**
    * Creates a managed identity token request for the App Service environment.
@@ -124285,8 +124288,8 @@ var AzureArc = class _AzureArc extends BaseManagedIdentitySource {
    * @param disableInternalRetries - Flag to disable automatic retry logic for failed requests
    * @param identityEndpoint - The Azure Arc identity endpoint URL for token requests
    */
-  constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint) {
-    super(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
+  constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint) {
+    super(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
     this.identityEndpoint = identityEndpoint;
   }
   /**
@@ -124333,21 +124336,21 @@ var AzureArc = class _AzureArc extends BaseManagedIdentitySource {
    *
    * @returns AzureArc instance if the environment supports Azure Arc managed identity, null otherwise
    */
-  static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, _managedIdentityId) {
+  static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, _managedIdentityId) {
     const [identityEndpoint, imdsEndpoint] = _AzureArc.getEnvironmentVariables();
     if (!identityEndpoint || !imdsEndpoint) {
-      logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames.AZURE_ARC} managed identity is unavailable through environment variables because one or both of '${ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT}' and '${ManagedIdentityEnvironmentVariableNames.IMDS_ENDPOINT}' are not defined. ${ManagedIdentitySourceNames.AZURE_ARC} managed identity is also unavailable through file detection.`, "");
+      logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames.AZURE_ARC} managed identity is unavailable through environment variables because one or both of '${ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT}' and '${ManagedIdentityEnvironmentVariableNames.IMDS_ENDPOINT}' are not defined. ${ManagedIdentitySourceNames.AZURE_ARC} managed identity is also unavailable through file detection.`, "");
       return null;
     }
     if (imdsEndpoint === HIMDS_EXECUTABLE_HELPER_STRING) {
-      logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames.AZURE_ARC} managed identity is available through file detection. Defaulting to known ${ManagedIdentitySourceNames.AZURE_ARC} endpoint: ${DEFAULT_AZURE_ARC_IDENTITY_ENDPOINT}. Creating ${ManagedIdentitySourceNames.AZURE_ARC} managed identity.`, "");
+      logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames.AZURE_ARC} managed identity is available through file detection. Defaulting to known ${ManagedIdentitySourceNames.AZURE_ARC} endpoint: ${DEFAULT_AZURE_ARC_IDENTITY_ENDPOINT}. Creating ${ManagedIdentitySourceNames.AZURE_ARC} managed identity.`, "");
     } else {
-      const validatedIdentityEndpoint = _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames.AZURE_ARC, logger32);
+      const validatedIdentityEndpoint = _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames.AZURE_ARC, logger33);
       validatedIdentityEndpoint.endsWith("/") ? validatedIdentityEndpoint.slice(0, -1) : validatedIdentityEndpoint;
-      _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IMDS_ENDPOINT, imdsEndpoint, ManagedIdentitySourceNames.AZURE_ARC, logger32);
-      logger32.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.AZURE_ARC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames.AZURE_ARC} managed identity.`, "");
+      _AzureArc.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IMDS_ENDPOINT, imdsEndpoint, ManagedIdentitySourceNames.AZURE_ARC, logger33);
+      logger33.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.AZURE_ARC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames.AZURE_ARC} managed identity.`, "");
     }
-    return new _AzureArc(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint);
+    return new _AzureArc(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint);
   }
   /**
    * Creates a properly formatted HTTP request for acquiring tokens from the Azure Arc identity endpoint.
@@ -124502,8 +124505,8 @@ var CloudShell = class _CloudShell extends BaseManagedIdentitySource {
    * @param disableInternalRetries - Whether to disable automatic retry logic for failed requests
    * @param msiEndpoint - The MSI endpoint URL obtained from environment variables
    */
-  constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint) {
-    super(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
+  constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint) {
+    super(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
     this.msiEndpoint = msiEndpoint;
   }
   /**
@@ -124537,18 +124540,18 @@ var CloudShell = class _CloudShell extends BaseManagedIdentitySource {
    * @throws {ManagedIdentityError} When a user-assigned managed identity is requested,
    *         as Cloud Shell only supports system-assigned identities
    */
-  static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
+  static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
     const [msiEndpoint] = _CloudShell.getEnvironmentVariables();
     if (!msiEndpoint) {
-      logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames.CLOUD_SHELL} managed identity is unavailable because the '${ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT} environment variable is not defined.`, "");
+      logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames.CLOUD_SHELL} managed identity is unavailable because the '${ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT} environment variable is not defined.`, "");
       return null;
     }
-    const validatedMsiEndpoint = _CloudShell.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT, msiEndpoint, ManagedIdentitySourceNames.CLOUD_SHELL, logger32);
-    logger32.info(`[Managed Identity] Environment variable validation passed for ${ManagedIdentitySourceNames.CLOUD_SHELL} managed identity. Endpoint URI: ${validatedMsiEndpoint}. Creating ${ManagedIdentitySourceNames.CLOUD_SHELL} managed identity.`, "");
+    const validatedMsiEndpoint = _CloudShell.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT, msiEndpoint, ManagedIdentitySourceNames.CLOUD_SHELL, logger33);
+    logger33.info(`[Managed Identity] Environment variable validation passed for ${ManagedIdentitySourceNames.CLOUD_SHELL} managed identity. Endpoint URI: ${validatedMsiEndpoint}. Creating ${ManagedIdentitySourceNames.CLOUD_SHELL} managed identity.`, "");
     if (managedIdentityId.idType !== ManagedIdentityIdType.SYSTEM_ASSIGNED) {
       throw createManagedIdentityError(unableToCreateCloudShell, "");
     }
-    return new _CloudShell(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint);
+    return new _CloudShell(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint);
   }
   /**
    * Creates an HTTP request to acquire an access token from the Cloud Shell managed identity endpoint.
@@ -124644,14 +124647,14 @@ var ImdsRetryPolicy = class _ImdsRetryPolicy {
    * @param retryAfterHeader - The value of the "retry-after" header from the response.
    * @returns A promise that resolves to a boolean indicating whether a retry should be attempted.
    */
-  async pauseForRetry(httpStatusCode, currentRetry, logger32) {
+  async pauseForRetry(httpStatusCode, currentRetry, logger33) {
     if (this._isNewRequest) {
       this._isNewRequest = false;
       this.maxRetries = httpStatusCode === Constants_exports.HTTP_GONE ? LINEAR_STRATEGY_NUM_RETRIES : EXPONENTIAL_STRATEGY_NUM_RETRIES;
     }
     if ((HTTP_STATUS_400_CODES_FOR_EXPONENTIAL_STRATEGY.includes(httpStatusCode) || httpStatusCode >= Constants_exports.HTTP_SERVER_ERROR_RANGE_START && httpStatusCode <= Constants_exports.HTTP_SERVER_ERROR_RANGE_END && currentRetry < this.maxRetries) && currentRetry < this.maxRetries) {
       const retryAfterDelay = httpStatusCode === Constants_exports.HTTP_GONE ? _ImdsRetryPolicy.HTTP_STATUS_GONE_RETRY_AFTER_MS : this.exponentialRetryStrategy.calculateDelay(currentRetry);
-      logger32.verbose(`Retrying request in ${retryAfterDelay}ms (retry attempt: ${currentRetry + 1})`, "");
+      logger33.verbose(`Retrying request in ${retryAfterDelay}ms (retry attempt: ${currentRetry + 1})`, "");
       await new Promise((resolve) => {
         return setTimeout(resolve, retryAfterDelay);
       });
@@ -124676,8 +124679,8 @@ var Imds = class _Imds extends BaseManagedIdentitySource {
    * @param disableInternalRetries - When true, disables the built-in retry logic for IMDS requests
    * @param identityEndpoint - The complete IMDS endpoint URL including the token path
    */
-  constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint) {
-    super(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
+  constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint) {
+    super(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
     this.identityEndpoint = identityEndpoint;
   }
   /**
@@ -124696,16 +124699,16 @@ var Imds = class _Imds extends BaseManagedIdentitySource {
    *
    * @returns A configured Imds instance ready to make token requests
    */
-  static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
+  static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
     let validatedIdentityEndpoint;
     if (process.env[ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST]) {
-      logger32.info(`[Managed Identity] Environment variable ${ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST} for ${ManagedIdentitySourceNames.IMDS} returned endpoint: ${process.env[ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST]}`, "");
-      validatedIdentityEndpoint = _Imds.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST, `${process.env[ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST]}${IMDS_TOKEN_PATH}`, ManagedIdentitySourceNames.IMDS, logger32);
+      logger33.info(`[Managed Identity] Environment variable ${ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST} for ${ManagedIdentitySourceNames.IMDS} returned endpoint: ${process.env[ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST]}`, "");
+      validatedIdentityEndpoint = _Imds.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST, `${process.env[ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST]}${IMDS_TOKEN_PATH}`, ManagedIdentitySourceNames.IMDS, logger33);
     } else {
-      logger32.info(`[Managed Identity] Unable to find ${ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST} environment variable for ${ManagedIdentitySourceNames.IMDS}, using the default endpoint.`, "");
+      logger33.info(`[Managed Identity] Unable to find ${ManagedIdentityEnvironmentVariableNames.AZURE_POD_IDENTITY_AUTHORITY_HOST} environment variable for ${ManagedIdentitySourceNames.IMDS}, using the default endpoint.`, "");
       validatedIdentityEndpoint = DEFAULT_IMDS_ENDPOINT;
     }
-    return new _Imds(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, validatedIdentityEndpoint);
+    return new _Imds(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, validatedIdentityEndpoint);
   }
   /**
    * Creates a properly configured HTTP request for acquiring an access token from IMDS.
@@ -124764,8 +124767,8 @@ var ServiceFabric = class _ServiceFabric extends BaseManagedIdentitySource {
    * @param identityEndpoint - The Service Fabric managed identity endpoint URL
    * @param identityHeader - The Service Fabric managed identity secret header value
    */
-  constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader) {
-    super(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
+  constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader) {
+    super(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
     this.identityEndpoint = identityEndpoint;
     this.identityHeader = identityHeader;
   }
@@ -124806,18 +124809,18 @@ var ServiceFabric = class _ServiceFabric extends BaseManagedIdentitySource {
    *
    * @returns A ServiceFabric instance if all environment variables are valid and present, otherwise null
    */
-  static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
+  static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
     const [identityEndpoint, identityHeader, identityServerThumbprint] = _ServiceFabric.getEnvironmentVariables();
     if (!identityEndpoint || !identityHeader || !identityServerThumbprint) {
-      logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames.SERVICE_FABRIC} managed identity is unavailable because one or all of the '${ManagedIdentityEnvironmentVariableNames.IDENTITY_HEADER}', '${ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT}' or '${ManagedIdentityEnvironmentVariableNames.IDENTITY_SERVER_THUMBPRINT}' environment variables are not defined.`, "");
+      logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames.SERVICE_FABRIC} managed identity is unavailable because one or all of the '${ManagedIdentityEnvironmentVariableNames.IDENTITY_HEADER}', '${ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT}' or '${ManagedIdentityEnvironmentVariableNames.IDENTITY_SERVER_THUMBPRINT}' environment variables are not defined.`, "");
       return null;
     }
-    const validatedIdentityEndpoint = _ServiceFabric.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames.SERVICE_FABRIC, logger32);
-    logger32.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.SERVICE_FABRIC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames.SERVICE_FABRIC} managed identity.`, "");
+    const validatedIdentityEndpoint = _ServiceFabric.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.IDENTITY_ENDPOINT, identityEndpoint, ManagedIdentitySourceNames.SERVICE_FABRIC, logger33);
+    logger33.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.SERVICE_FABRIC} managed identity. Endpoint URI: ${validatedIdentityEndpoint}. Creating ${ManagedIdentitySourceNames.SERVICE_FABRIC} managed identity.`, "");
     if (managedIdentityId.idType !== ManagedIdentityIdType.SYSTEM_ASSIGNED) {
-      logger32.warning(`[Managed Identity] ${ManagedIdentitySourceNames.SERVICE_FABRIC} user assigned managed identity is configured in the cluster, not during runtime. See also: https://learn.microsoft.com/en-us/azure/service-fabric/configure-existing-cluster-enable-managed-identity-token-service.`, "");
+      logger33.warning(`[Managed Identity] ${ManagedIdentitySourceNames.SERVICE_FABRIC} user assigned managed identity is configured in the cluster, not during runtime. See also: https://learn.microsoft.com/en-us/azure/service-fabric/configure-existing-cluster-enable-managed-identity-token-service.`, "");
     }
-    return new _ServiceFabric(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader);
+    return new _ServiceFabric(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, identityEndpoint, identityHeader);
   }
   /**
    * Creates HTTP request parameters for acquiring an access token from the Service Fabric Managed Identity Token Service (MITS).
@@ -124864,8 +124867,8 @@ var MachineLearning = class _MachineLearning extends BaseManagedIdentitySource {
    * @param msiEndpoint - The MSI endpoint URL from environment variables
    * @param secret - The MSI secret from environment variables
    */
-  constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint, secret) {
-    super(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
+  constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint, secret) {
+    super(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
     this.msiEndpoint = msiEndpoint;
     this.secret = secret;
   }
@@ -124901,15 +124904,15 @@ var MachineLearning = class _MachineLearning extends BaseManagedIdentitySource {
    *
    * @returns A new MachineLearning instance if the environment is valid, null otherwise
    */
-  static tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
+  static tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
     const [msiEndpoint, secret] = _MachineLearning.getEnvironmentVariables();
     if (!msiEndpoint || !secret) {
-      logger32.info(`[Managed Identity] ${ManagedIdentitySourceNames.MACHINE_LEARNING} managed identity is unavailable because one or both of the '${ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT}' and '${ManagedIdentityEnvironmentVariableNames.MSI_SECRET}' environment variables are not defined.`, "");
+      logger33.info(`[Managed Identity] ${ManagedIdentitySourceNames.MACHINE_LEARNING} managed identity is unavailable because one or both of the '${ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT}' and '${ManagedIdentityEnvironmentVariableNames.MSI_SECRET}' environment variables are not defined.`, "");
       return null;
     }
-    const validatedMsiEndpoint = _MachineLearning.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT, msiEndpoint, ManagedIdentitySourceNames.MACHINE_LEARNING, logger32);
-    logger32.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.MACHINE_LEARNING} managed identity. Endpoint URI: ${validatedMsiEndpoint}. Creating ${ManagedIdentitySourceNames.MACHINE_LEARNING} managed identity.`, "");
-    return new _MachineLearning(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint, secret);
+    const validatedMsiEndpoint = _MachineLearning.getValidatedEnvVariableUrlString(ManagedIdentityEnvironmentVariableNames.MSI_ENDPOINT, msiEndpoint, ManagedIdentitySourceNames.MACHINE_LEARNING, logger33);
+    logger33.info(`[Managed Identity] Environment variables validation passed for ${ManagedIdentitySourceNames.MACHINE_LEARNING} managed identity. Endpoint URI: ${validatedMsiEndpoint}. Creating ${ManagedIdentitySourceNames.MACHINE_LEARNING} managed identity.`, "");
+    return new _MachineLearning(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, msiEndpoint, secret);
   }
   /**
    * Creates a managed identity token request for Azure Machine Learning environments.
@@ -124956,8 +124959,8 @@ var MachineLearning = class _MachineLearning extends BaseManagedIdentitySource {
 
 // node_modules/@azure/msal-node/dist/client/ManagedIdentityClient.mjs
 var ManagedIdentityClient = class _ManagedIdentityClient {
-  constructor(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
-    this.logger = logger32;
+  constructor(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) {
+    this.logger = logger33;
     this.nodeStorage = nodeStorage;
     this.networkClient = networkClient;
     this.cryptoProvider = cryptoProvider;
@@ -124986,8 +124989,8 @@ var ManagedIdentityClient = class _ManagedIdentityClient {
    * Tries to create a managed identity source for all sources
    * @returns the managed identity Source
    */
-  selectManagedIdentitySource(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
-    const source = ServiceFabric.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || AppService.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) || MachineLearning.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) || CloudShell.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || AzureArc.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || Imds.tryCreate(logger32, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
+  selectManagedIdentitySource(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) {
+    const source = ServiceFabric.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || AppService.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) || MachineLearning.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries) || CloudShell.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || AzureArc.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries, managedIdentityId) || Imds.tryCreate(logger33, nodeStorage, networkClient, cryptoProvider, disableInternalRetries);
     if (!source) {
       throw createManagedIdentityError(unableToCreateSource, "");
     }
@@ -125280,16 +125283,16 @@ var Sanitizer2 = class {
     if (typeof value !== "string" || value === null || value === "") {
       return value;
     }
-    const url3 = new URL(value);
-    if (!url3.search) {
+    const url2 = new URL(value);
+    if (!url2.search) {
       return value;
     }
-    for (const [key] of url3.searchParams) {
+    for (const [key] of url2.searchParams) {
       if (!this.allowedQueryParameters.has(key.toLowerCase())) {
-        url3.searchParams.set(key, RedactedString);
+        url2.searchParams.set(key, RedactedString);
       }
     }
-    return url3.toString();
+    return url2.toString();
   }
   sanitizeHeaders(obj) {
     const sanitized = {};
@@ -125396,11 +125399,11 @@ function getErrorMessage2(e) {
 function isDefined2(thing) {
   return typeof thing !== "undefined" && thing !== null;
 }
-function isObjectWithProperties2(thing, properties2) {
+function isObjectWithProperties2(thing, properties) {
   if (!isDefined2(thing) || typeof thing !== "object") {
     return false;
   }
-  for (const property2 of properties2) {
+  for (const property2 of properties) {
     if (!objectHasProperty2(thing, property2)) {
       return false;
     }
@@ -126960,17 +126963,17 @@ var NodeHttpClient = class {
     }
   }
   makeRequest(request, abortController, body) {
-    const url3 = new URL(request.url);
-    const isInsecure = url3.protocol !== "https:";
+    const url2 = new URL(request.url);
+    const isInsecure = url2.protocol !== "https:";
     if (isInsecure && !request.allowInsecureConnection) {
       throw new Error(`Cannot connect to ${request.url} while allowInsecureConnection is false.`);
     }
     const agent = request.agent ?? this.getOrCreateAgent(request, isInsecure);
     const options = {
       agent,
-      hostname: url3.hostname,
-      path: `${url3.pathname}${url3.search}`,
-      port: url3.port,
+      hostname: url2.hostname,
+      path: `${url2.pathname}${url2.search}`,
+      port: url2.port,
       method: request.method,
       headers: request.headers.toJSON({ preserveCase: true }),
       ...request.requestOverrides
@@ -127110,7 +127113,7 @@ function createDefaultHttpClient2() {
 // node_modules/@typespec/ts-http-runtime/dist/esm/policies/logPolicy.js
 var logPolicyName2 = "logPolicy";
 function logPolicy2(options = {}) {
-  const logger32 = options.logger ?? logger5.info;
+  const logger33 = options.logger ?? logger5.info;
   const sanitizer = new Sanitizer2({
     additionalAllowedHeaderNames: options.additionalAllowedHeaderNames,
     additionalAllowedQueryParameters: options.additionalAllowedQueryParameters
@@ -127118,33 +127121,77 @@ function logPolicy2(options = {}) {
   return {
     name: logPolicyName2,
     async sendRequest(request, next) {
-      if (!logger32.enabled) {
+      if (!logger33.enabled) {
         return next(request);
       }
-      logger32(`Request: ${sanitizer.sanitize(request)}`);
+      logger33(`Request: ${sanitizer.sanitize(request)}`);
       const response = await next(request);
-      logger32(`Response status code: ${response.status}`);
-      logger32(`Headers: ${sanitizer.sanitize({ headers: response.headers })}`);
+      logger33(`Response status code: ${response.status}`);
+      logger33(`Headers: ${sanitizer.sanitize({ headers: response.headers })}`);
       return response;
     }
   };
 }
 
 // node_modules/@typespec/ts-http-runtime/dist/esm/util/userAgentPlatform.js
+var import_node_os3 = __toESM(require("node:os"), 1);
+var import_node_process10 = __toESM(require("node:process"), 1);
 function getHeaderName() {
   return "User-Agent";
 }
+async function setPlatformSpecificData2(map) {
+  if (import_node_process10.default && import_node_process10.default.versions) {
+    const osInfo = `${import_node_os3.default.type()} ${import_node_os3.default.release()}; ${import_node_os3.default.arch()}`;
+    if (import_node_process10.default.versions.bun) {
+      map.set("Bun", `${import_node_process10.default.versions.bun} (${osInfo})`);
+    } else if (import_node_process10.default.versions.deno) {
+      map.set("Deno", `${import_node_process10.default.versions.deno} (${osInfo})`);
+    } else if (import_node_process10.default.versions.node) {
+      map.set("Node", `${import_node_process10.default.versions.node} (${osInfo})`);
+    }
+  }
+}
 
 // node_modules/@typespec/ts-http-runtime/dist/esm/constants.js
+var SDK_VERSION2 = "0.3.8";
 var DEFAULT_RETRY_POLICY_COUNT = 3;
 
 // node_modules/@typespec/ts-http-runtime/dist/esm/util/userAgent.js
+function getUserAgentString(telemetryInfo) {
+  const parts = [];
+  for (const [key, value] of telemetryInfo) {
+    const token = value ? `${key}/${value}` : key;
+    parts.push(token);
+  }
+  return parts.join(" ");
+}
 function getUserAgentHeaderName() {
   return getHeaderName();
+}
+async function getUserAgentValue(prefix) {
+  const runtimeInfo = /* @__PURE__ */ new Map();
+  runtimeInfo.set("ts-http-runtime", SDK_VERSION2);
+  await setPlatformSpecificData2(runtimeInfo);
+  const defaultAgent = getUserAgentString(runtimeInfo);
+  const userAgentValue = prefix ? `${prefix} ${defaultAgent}` : defaultAgent;
+  return userAgentValue;
 }
 
 // node_modules/@typespec/ts-http-runtime/dist/esm/policies/userAgentPolicy.js
 var UserAgentHeaderName = getUserAgentHeaderName();
+var userAgentPolicyName2 = "userAgentPolicy";
+function userAgentPolicy2(options = {}) {
+  const userAgentValue = getUserAgentValue(options.userAgentPrefix);
+  return {
+    name: userAgentPolicyName2,
+    async sendRequest(request, next) {
+      if (!request.headers.has(UserAgentHeaderName)) {
+        request.headers.set(UserAgentHeaderName, await userAgentValue);
+      }
+      return next(request);
+    }
+  };
+}
 
 // node_modules/@typespec/ts-http-runtime/dist/esm/util/helpers.js
 var StandardAbortMessage2 = "The operation was aborted.";
@@ -127272,7 +127319,7 @@ function isSystemError(err) {
 var retryPolicyLogger = createClientLogger2("ts-http-runtime retryPolicy");
 var retryPolicyName = "retryPolicy";
 function retryPolicy2(strategies, options = { maxRetries: DEFAULT_RETRY_POLICY_COUNT }) {
-  const logger32 = options.logger || retryPolicyLogger;
+  const logger33 = options.logger || retryPolicyLogger;
   return {
     name: retryPolicyName,
     async sendRequest(request, next) {
@@ -127284,11 +127331,11 @@ function retryPolicy2(strategies, options = { maxRetries: DEFAULT_RETRY_POLICY_C
         response = void 0;
         responseError = void 0;
         try {
-          logger32.info(`Retry ${retryCount}: Attempting to send request`, request.requestId);
+          logger33.info(`Retry ${retryCount}: Attempting to send request`, request.requestId);
           response = await next(request);
-          logger32.info(`Retry ${retryCount}: Received a response from request`, request.requestId);
+          logger33.info(`Retry ${retryCount}: Received a response from request`, request.requestId);
         } catch (e) {
-          logger32.error(`Retry ${retryCount}: Received an error from request`, request.requestId);
+          logger33.error(`Retry ${retryCount}: Received an error from request`, request.requestId);
           if (!isRestError2(e)) {
             throw e;
           }
@@ -127296,12 +127343,12 @@ function retryPolicy2(strategies, options = { maxRetries: DEFAULT_RETRY_POLICY_C
           response = e.response;
         }
         if (request.abortSignal?.aborted) {
-          logger32.error(`Retry ${retryCount}: Request aborted.`);
+          logger33.error(`Retry ${retryCount}: Request aborted.`);
           const abortError = new AbortError3();
           throw abortError;
         }
         if (retryCount >= (options.maxRetries ?? DEFAULT_RETRY_POLICY_COUNT)) {
-          logger32.info(`Retry ${retryCount}: Maximum retries reached. Returning the last received response, or throwing the last received error.`);
+          logger33.info(`Retry ${retryCount}: Maximum retries reached. Returning the last received response, or throwing the last received error.`);
           if (responseError) {
             throw responseError;
           } else if (response) {
@@ -127310,9 +127357,9 @@ function retryPolicy2(strategies, options = { maxRetries: DEFAULT_RETRY_POLICY_C
             throw new Error("Maximum retries reached with no response or error to throw");
           }
         }
-        logger32.info(`Retry ${retryCount}: Processing ${strategies.length} retry strategies.`);
+        logger33.info(`Retry ${retryCount}: Processing ${strategies.length} retry strategies.`);
         strategiesLoop: for (const strategy of strategies) {
-          const strategyLogger = strategy.logger || logger32;
+          const strategyLogger = strategy.logger || logger33;
           strategyLogger.info(`Retry ${retryCount}: Processing retry strategy ${strategy.name}.`);
           const modifiers = strategy.retry({
             retryCount,
@@ -127340,11 +127387,11 @@ function retryPolicy2(strategies, options = { maxRetries: DEFAULT_RETRY_POLICY_C
           }
         }
         if (responseError) {
-          logger32.info(`None of the retry strategies could work with the received error. Throwing it.`);
+          logger33.info(`None of the retry strategies could work with the received error. Throwing it.`);
           throw responseError;
         }
         if (response) {
-          logger32.info(`None of the retry strategies could work with the received response. Returning it.`);
+          logger33.info(`None of the retry strategies could work with the received response. Returning it.`);
           return response;
         }
       }
@@ -127392,8 +127439,8 @@ function formDataPolicy2() {
         request.body = void 0;
       }
       if (request.formData) {
-        const contentType4 = request.headers.get("Content-Type");
-        if (contentType4 && contentType4.indexOf("application/x-www-form-urlencoded") !== -1) {
+        const contentType3 = request.headers.get("Content-Type");
+        if (contentType3 && contentType3.indexOf("application/x-www-form-urlencoded") !== -1) {
           request.body = wwwFormUrlEncode(request.formData);
         } else {
           await prepareFormData(request.formData, request);
@@ -127418,11 +127465,11 @@ function wwwFormUrlEncode(formData) {
   return urlSearchParams.toString();
 }
 async function prepareFormData(formData, request) {
-  const contentType4 = request.headers.get("Content-Type");
-  if (contentType4 && !contentType4.startsWith("multipart/form-data")) {
+  const contentType3 = request.headers.get("Content-Type");
+  if (contentType3 && !contentType3.startsWith("multipart/form-data")) {
     return;
   }
-  request.headers.set("Content-Type", contentType4 ?? "multipart/form-data");
+  request.headers.set("Content-Type", contentType3 ?? "multipart/form-data");
   const parts = [];
   for (const [fieldName, values] of Object.entries(formData)) {
     for (const value of Array.isArray(values) ? values : [values]) {
@@ -127581,8 +127628,8 @@ function setProxyAgentOnRequest(request, cachedAgents, proxyUrl) {
   if (request.agent) {
     return;
   }
-  const url3 = new URL(request.url);
-  const isInsecure = url3.protocol !== "https:";
+  const url2 = new URL(request.url);
+  const isInsecure = url2.protocol !== "https:";
   if (request.tlsSettings) {
     logger5.warning("TLS settings are not supported in combination with custom Proxy, certificates provided to the client will be ignored.");
   }
@@ -127648,15 +127695,15 @@ async function handleRedirect(next, response, maxRetries, allowCrossOriginRedire
   const { request, status, headers } = response;
   const locationHeader = headers.get("location");
   if (locationHeader && (status === 300 || status === 301 && allowedRedirect.includes(request.method) || status === 302 && allowedRedirect.includes(request.method) || status === 303 && request.method === "POST" || status === 307) && currentRetries < maxRetries) {
-    const url3 = new URL(locationHeader, request.url);
+    const url2 = new URL(locationHeader, request.url);
     if (!allowCrossOriginRedirects) {
       const originalUrl = new URL(request.url);
-      if (url3.origin !== originalUrl.origin) {
-        logger5.verbose(`Skipping cross-origin redirect from ${originalUrl.origin} to ${url3.origin}.`);
+      if (url2.origin !== originalUrl.origin) {
+        logger5.verbose(`Skipping cross-origin redirect from ${originalUrl.origin} to ${url2.origin}.`);
         return response;
       }
     }
-    request.url = url3.toString();
+    request.url = url2.toString();
     if (status === 303) {
       request.method = "GET";
       request.headers.delete("Content-Length");
@@ -127669,13 +127716,41 @@ async function handleRedirect(next, response, maxRetries, allowCrossOriginRedire
   return response;
 }
 
+// node_modules/@typespec/ts-http-runtime/dist/esm/policies/platformPolicies.js
+function addPlatformPolicies(pipeline, options) {
+  if (options.agent) {
+    pipeline.addPolicy(agentPolicy2(options.agent));
+  }
+  if (options.tlsOptions) {
+    pipeline.addPolicy(tlsPolicy2(options.tlsOptions));
+  }
+  pipeline.addPolicy(proxyPolicy2(options.proxyOptions));
+  pipeline.addPolicy(decompressResponsePolicy2());
+  pipeline.addPolicy(redirectPolicy2(options.redirectOptions), { afterPhase: "Retry" });
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/util/typeGuards-node.js
+var import_stream = require("stream");
+function isNodeReadableStream2(x) {
+  return x instanceof import_stream.Readable;
+}
+function isWebReadableStream2(x) {
+  return x instanceof ReadableStream;
+}
+
 // node_modules/@typespec/ts-http-runtime/dist/esm/util/typeGuards.js
+function isBinaryBody(body) {
+  return body !== void 0 && (body instanceof Uint8Array || isReadableStream2(body) || typeof body === "function" || body instanceof Blob);
+}
+function isReadableStream2(x) {
+  return isNodeReadableStream2(x) || isWebReadableStream2(x);
+}
 function isBlob(x) {
   return x instanceof Blob;
 }
 
 // node_modules/@typespec/ts-http-runtime/dist/esm/util/concat.js
-var import_stream = require("stream");
+var import_stream2 = require("stream");
 async function* streamAsyncIterator() {
   const reader = this.getReader();
   try {
@@ -127701,14 +127776,14 @@ function makeAsyncIterable(webStream) {
 function ensureNodeStream(stream) {
   if (stream instanceof ReadableStream) {
     makeAsyncIterable(stream);
-    return import_stream.Readable.fromWeb(stream);
+    return import_stream2.Readable.fromWeb(stream);
   } else {
     return stream;
   }
 }
 function toStream(source) {
   if (source instanceof Uint8Array) {
-    return import_stream.Readable.from(Buffer.from(source));
+    return import_stream2.Readable.from(Buffer.from(source));
   } else if (isBlob(source)) {
     return ensureNodeStream(source.stream());
   } else {
@@ -127718,7 +127793,7 @@ function toStream(source) {
 async function concat(sources) {
   return function() {
     const streams = sources.map((x) => typeof x === "function" ? x() : x).map(toStream);
-    return import_stream.Readable.from((async function* () {
+    return import_stream2.Readable.from((async function* () {
       for (const stream of streams) {
         for await (const chunk of stream) {
           yield chunk;
@@ -127807,7 +127882,7 @@ function multipartPolicy2() {
       if (!parsedHeader) {
         throw new Error(`Got multipart request body, but content-type header was not multipart: ${contentTypeHeader}`);
       }
-      const [, contentType4, parsedBoundary] = parsedHeader;
+      const [, contentType3, parsedBoundary] = parsedHeader;
       if (parsedBoundary && boundary && parsedBoundary !== boundary) {
         throw new Error(`Multipart boundary was specified as ${parsedBoundary} in the header, but got ${boundary} in the request body`);
       }
@@ -127817,12 +127892,742 @@ function multipartPolicy2() {
       } else {
         boundary = generateBoundary();
       }
-      request.headers.set("Content-Type", `${contentType4}; boundary=${boundary}`);
+      request.headers.set("Content-Type", `${contentType3}; boundary=${boundary}`);
       await buildRequestBody(request, request.multipartBody.parts, boundary);
       request.multipartBody = void 0;
       return next(request);
     }
   };
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/createPipelineFromOptions.js
+function createPipelineFromOptions2(options) {
+  const pipeline = createEmptyPipeline2();
+  addPlatformPolicies(pipeline, options);
+  pipeline.addPolicy(formDataPolicy2(), { beforePolicies: [multipartPolicyName2] });
+  pipeline.addPolicy(userAgentPolicy2(options.userAgentOptions));
+  pipeline.addPolicy(multipartPolicy2(), { afterPhase: "Deserialize" });
+  pipeline.addPolicy(defaultRetryPolicy2(options.retryOptions), { phase: "Retry" });
+  pipeline.addPolicy(logPolicy2(options.loggingOptions), { afterPhase: "Sign" });
+  return pipeline;
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/client/apiVersionPolicy.js
+var apiVersionPolicyName = "ApiVersionPolicy";
+function apiVersionPolicy(options) {
+  return {
+    name: apiVersionPolicyName,
+    sendRequest: (req, next) => {
+      const url2 = new URL(req.url);
+      if (!url2.searchParams.get("api-version") && options.apiVersion) {
+        req.url = `${req.url}${Array.from(url2.searchParams.keys()).length > 0 ? "&" : "?"}api-version=${options.apiVersion}`;
+      }
+      return next(req);
+    }
+  };
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/auth/credentials.js
+function isOAuth2TokenCredential(credential) {
+  return "getOAuth2Token" in credential;
+}
+function isBearerTokenCredential(credential) {
+  return "getBearerToken" in credential;
+}
+function isBasicCredential(credential) {
+  return "username" in credential && "password" in credential;
+}
+function isApiKeyCredential(credential) {
+  return "key" in credential;
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/policies/auth/checkInsecureConnection.js
+var insecureConnectionWarningEmmitted = false;
+function allowInsecureConnection(request, options) {
+  if (options.allowInsecureConnection && request.allowInsecureConnection) {
+    const url2 = new URL(request.url);
+    if (url2.hostname === "localhost" || url2.hostname === "127.0.0.1") {
+      return true;
+    }
+  }
+  return false;
+}
+function emitInsecureConnectionWarning() {
+  const warning = "Sending token over insecure transport. Assume any token issued is compromised.";
+  logger5.warning(warning);
+  if (!insecureConnectionWarningEmmitted) {
+    insecureConnectionWarningEmmitted = true;
+    emitNodeWarning(warning);
+  }
+}
+function ensureSecureConnection(request, options) {
+  if (!request.url.toLowerCase().startsWith("https://")) {
+    if (allowInsecureConnection(request, options)) {
+      emitInsecureConnectionWarning();
+    } else {
+      throw new Error("Authentication is not permitted for non-TLS protected (non-https) URLs when allowInsecureConnection is false.");
+    }
+  }
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/policies/auth/apiKeyAuthenticationPolicy.js
+var apiKeyAuthenticationPolicyName = "apiKeyAuthenticationPolicy";
+function apiKeyAuthenticationPolicy(options) {
+  return {
+    name: apiKeyAuthenticationPolicyName,
+    async sendRequest(request, next) {
+      ensureSecureConnection(request, options);
+      const scheme = (request.authSchemes ?? options.authSchemes)?.find((x) => x.kind === "apiKey");
+      if (!scheme) {
+        return next(request);
+      }
+      if (scheme.apiKeyLocation !== "header") {
+        throw new Error(`Unsupported API key location: ${scheme.apiKeyLocation}`);
+      }
+      request.headers.set(scheme.name, options.credential.key);
+      return next(request);
+    }
+  };
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/policies/auth/basicAuthenticationPolicy.js
+var basicAuthenticationPolicyName = "bearerAuthenticationPolicy";
+function basicAuthenticationPolicy(options) {
+  return {
+    name: basicAuthenticationPolicyName,
+    async sendRequest(request, next) {
+      ensureSecureConnection(request, options);
+      const scheme = (request.authSchemes ?? options.authSchemes)?.find((x) => x.kind === "http" && x.scheme === "basic");
+      if (!scheme) {
+        return next(request);
+      }
+      const { username, password } = options.credential;
+      const headerValue = uint8ArrayToString2(stringToUint8Array2(`${username}:${password}`, "utf-8"), "base64");
+      request.headers.set("Authorization", `Basic ${headerValue}`);
+      return next(request);
+    }
+  };
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/policies/auth/bearerAuthenticationPolicy.js
+var bearerAuthenticationPolicyName = "bearerAuthenticationPolicy";
+function bearerAuthenticationPolicy(options) {
+  return {
+    name: bearerAuthenticationPolicyName,
+    async sendRequest(request, next) {
+      ensureSecureConnection(request, options);
+      const scheme = (request.authSchemes ?? options.authSchemes)?.find((x) => x.kind === "http" && x.scheme === "bearer");
+      if (!scheme) {
+        return next(request);
+      }
+      const token = await options.credential.getBearerToken({
+        abortSignal: request.abortSignal
+      });
+      request.headers.set("Authorization", `Bearer ${token}`);
+      return next(request);
+    }
+  };
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/policies/auth/oauth2AuthenticationPolicy.js
+var oauth2AuthenticationPolicyName = "oauth2AuthenticationPolicy";
+function oauth2AuthenticationPolicy(options) {
+  return {
+    name: oauth2AuthenticationPolicyName,
+    async sendRequest(request, next) {
+      ensureSecureConnection(request, options);
+      const scheme = (request.authSchemes ?? options.authSchemes)?.find((x) => x.kind === "oauth2");
+      if (!scheme) {
+        return next(request);
+      }
+      const token = await options.credential.getOAuth2Token(scheme.flows, {
+        abortSignal: request.abortSignal
+      });
+      request.headers.set("Authorization", `Bearer ${token}`);
+      return next(request);
+    }
+  };
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/client/clientHelpers.js
+var cachedHttpClient;
+function createDefaultPipeline(options = {}) {
+  const pipeline = createPipelineFromOptions2(options);
+  pipeline.addPolicy(apiVersionPolicy(options));
+  const { credential, authSchemes, allowInsecureConnection: allowInsecureConnection2 } = options;
+  if (credential) {
+    if (isApiKeyCredential(credential)) {
+      pipeline.addPolicy(apiKeyAuthenticationPolicy({ authSchemes, credential, allowInsecureConnection: allowInsecureConnection2 }));
+    } else if (isBasicCredential(credential)) {
+      pipeline.addPolicy(basicAuthenticationPolicy({ authSchemes, credential, allowInsecureConnection: allowInsecureConnection2 }));
+    } else if (isBearerTokenCredential(credential)) {
+      pipeline.addPolicy(bearerAuthenticationPolicy({ authSchemes, credential, allowInsecureConnection: allowInsecureConnection2 }));
+    } else if (isOAuth2TokenCredential(credential)) {
+      pipeline.addPolicy(oauth2AuthenticationPolicy({ authSchemes, credential, allowInsecureConnection: allowInsecureConnection2 }));
+    }
+  }
+  return pipeline;
+}
+function getCachedDefaultHttpsClient() {
+  if (!cachedHttpClient) {
+    cachedHttpClient = createDefaultHttpClient2();
+  }
+  return cachedHttpClient;
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/client/multipart.js
+function getHeaderValue(descriptor, headerName) {
+  if (descriptor.headers) {
+    const actualHeaderName = Object.keys(descriptor.headers).find((x) => x.toLowerCase() === headerName.toLowerCase());
+    if (actualHeaderName) {
+      return descriptor.headers[actualHeaderName];
+    }
+  }
+  return void 0;
+}
+function getPartContentType(descriptor) {
+  const contentTypeHeader = getHeaderValue(descriptor, "content-type");
+  if (contentTypeHeader) {
+    return contentTypeHeader;
+  }
+  if (descriptor.contentType === null) {
+    return void 0;
+  }
+  if (descriptor.contentType) {
+    return descriptor.contentType;
+  }
+  const { body } = descriptor;
+  if (body === null || body === void 0) {
+    return void 0;
+  }
+  if (typeof body === "string" || typeof body === "number" || typeof body === "boolean") {
+    return "text/plain; charset=UTF-8";
+  }
+  if (body instanceof Blob) {
+    return body.type || "application/octet-stream";
+  }
+  if (isBinaryBody(body)) {
+    return "application/octet-stream";
+  }
+  return "application/json";
+}
+function escapeDispositionField(value) {
+  return JSON.stringify(value);
+}
+function getContentDisposition(descriptor) {
+  const contentDispositionHeader = getHeaderValue(descriptor, "content-disposition");
+  if (contentDispositionHeader) {
+    return contentDispositionHeader;
+  }
+  if (descriptor.dispositionType === void 0 && descriptor.name === void 0 && descriptor.filename === void 0) {
+    return void 0;
+  }
+  const dispositionType = descriptor.dispositionType ?? "form-data";
+  let disposition = dispositionType;
+  if (descriptor.name) {
+    disposition += `; name=${escapeDispositionField(descriptor.name)}`;
+  }
+  let filename = void 0;
+  if (descriptor.filename) {
+    filename = descriptor.filename;
+  } else if (typeof File !== "undefined" && descriptor.body instanceof File) {
+    const filenameFromFile = descriptor.body.name;
+    if (filenameFromFile !== "") {
+      filename = filenameFromFile;
+    }
+  }
+  if (filename) {
+    disposition += `; filename=${escapeDispositionField(filename)}`;
+  }
+  return disposition;
+}
+function normalizeBody(body, contentType3) {
+  if (body === void 0) {
+    return new Uint8Array([]);
+  }
+  if (isBinaryBody(body)) {
+    return body;
+  }
+  if (typeof body === "string" || typeof body === "number" || typeof body === "boolean") {
+    return stringToUint8Array2(String(body), "utf-8");
+  }
+  if (contentType3 && /application\/(.+\+)?json(;.+)?/i.test(String(contentType3))) {
+    return stringToUint8Array2(JSON.stringify(body), "utf-8");
+  }
+  throw new RestError2(`Unsupported body/content-type combination: ${body}, ${contentType3}`);
+}
+function buildBodyPart(descriptor) {
+  const contentType3 = getPartContentType(descriptor);
+  const contentDisposition = getContentDisposition(descriptor);
+  const headers = createHttpHeaders2(descriptor.headers ?? {});
+  if (contentType3) {
+    headers.set("content-type", contentType3);
+  }
+  if (contentDisposition) {
+    headers.set("content-disposition", contentDisposition);
+  }
+  const body = normalizeBody(descriptor.body, contentType3);
+  return {
+    headers,
+    body
+  };
+}
+function buildMultipartBody(parts) {
+  return { parts: parts.map(buildBodyPart) };
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/client/sendRequest.js
+async function sendRequest(method, url2, pipeline, options = {}, customHttpClient) {
+  const httpClient = customHttpClient ?? getCachedDefaultHttpsClient();
+  const request = buildPipelineRequest(method, url2, options);
+  try {
+    const response = await pipeline.sendRequest(httpClient, request);
+    const headers = response.headers.toJSON();
+    const stream = response.readableStreamBody ?? response.browserStreamBody;
+    const parsedBody = options.responseAsStream || stream !== void 0 ? void 0 : getResponseBody(response);
+    const body = stream ?? parsedBody;
+    if (options?.onResponse) {
+      options.onResponse({ ...response, request, rawHeaders: headers, parsedBody });
+    }
+    return {
+      request,
+      headers,
+      status: `${response.status}`,
+      body
+    };
+  } catch (e) {
+    if (isRestError2(e) && e.response && options.onResponse) {
+      const { response } = e;
+      const rawHeaders = response.headers.toJSON();
+      options?.onResponse({ ...response, request, rawHeaders }, e);
+    }
+    throw e;
+  }
+}
+function getRequestContentType(options = {}) {
+  if (options.contentType) {
+    return options.contentType;
+  }
+  const headerContentType = options.headers?.["content-type"];
+  if (typeof headerContentType === "string") {
+    return headerContentType;
+  }
+  return getContentType(options.body);
+}
+function getContentType(body) {
+  if (body === void 0) {
+    return void 0;
+  }
+  if (ArrayBuffer.isView(body)) {
+    return "application/octet-stream";
+  }
+  if (isBlob(body) && body.type) {
+    return body.type;
+  }
+  if (typeof body === "string") {
+    try {
+      JSON.parse(body);
+      return "application/json";
+    } catch (error) {
+      return void 0;
+    }
+  }
+  return "application/json";
+}
+function buildPipelineRequest(method, url2, options = {}) {
+  const requestContentType = getRequestContentType(options);
+  const { body, multipartBody } = getRequestBody(options.body, requestContentType);
+  const accept4 = options.accept ?? options.headers?.accept ?? (options.noDefaultAcceptHeader ? void 0 : "application/json");
+  const headers = createHttpHeaders2({
+    ...options.headers ? options.headers : {},
+    ...accept4 !== void 0 && { accept: accept4 },
+    ...requestContentType && {
+      "content-type": requestContentType
+    }
+  });
+  const { allowInsecureConnection: allowInsecureConnection2, abortSignal, onUploadProgress, onDownloadProgress, timeout: timeout2, responseAsStream, noDefaultAcceptHeader: _noDefaultAcceptHeader, url: _url, method: _method, body: _body, multipartBody: _multiBody, headers: _headers, ...rest } = options;
+  const request = createPipelineRequest2({
+    url: url2,
+    method,
+    body,
+    multipartBody,
+    headers,
+    allowInsecureConnection: allowInsecureConnection2,
+    abortSignal,
+    onUploadProgress,
+    onDownloadProgress,
+    timeout: timeout2,
+    enableBrowserStreams: true,
+    streamResponseStatusCodes: responseAsStream ? /* @__PURE__ */ new Set([Number.POSITIVE_INFINITY]) : void 0
+  });
+  Object.assign(request, rest);
+  return request;
+}
+function getRequestBody(body, contentType3 = "") {
+  if (body === void 0) {
+    return { body: void 0 };
+  }
+  if (typeof FormData !== "undefined" && body instanceof FormData) {
+    return { body };
+  }
+  if (isBlob(body)) {
+    return { body };
+  }
+  if (isReadableStream2(body)) {
+    return { body };
+  }
+  if (typeof body === "function") {
+    return { body };
+  }
+  if (ArrayBuffer.isView(body)) {
+    return {
+      body: body instanceof Uint8Array ? body : JSON.stringify(body)
+    };
+  }
+  const firstType = contentType3.split(";")[0];
+  switch (firstType) {
+    case "application/json":
+      return { body: JSON.stringify(body) };
+    case "multipart/form-data":
+      if (Array.isArray(body)) {
+        return { multipartBody: buildMultipartBody(body) };
+      }
+      return { body: JSON.stringify(body) };
+    case "text/plain":
+      return { body: String(body) };
+    default:
+      if (typeof body === "string") {
+        return { body };
+      }
+      return { body: JSON.stringify(body) };
+  }
+}
+function getResponseBody(response) {
+  const contentType3 = response.headers.get("content-type") ?? "";
+  const firstType = contentType3.split(";")[0];
+  const bodyToParse = response.bodyAsText ?? "";
+  if (firstType === "text/plain") {
+    return String(bodyToParse);
+  }
+  try {
+    return bodyToParse ? JSON.parse(bodyToParse) : void 0;
+  } catch (error) {
+    if (firstType === "application/json") {
+      throw createParseError(response, error);
+    }
+    return String(bodyToParse);
+  }
+}
+function createParseError(response, err) {
+  const msg = `Error "${err}" occurred while parsing the response body - ${response.bodyAsText}.`;
+  const errCode = err.code ?? RestError2.PARSE_ERROR;
+  return new RestError2(msg, {
+    code: errCode,
+    statusCode: response.status,
+    request: response.request,
+    response
+  });
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/client/urlHelpers.js
+function isQueryParameterWithOptions(x) {
+  if (typeof x !== "object" || x === null || !Object.hasOwn(x, "value")) {
+    return false;
+  }
+  const value = x.value;
+  return typeof value?.toString === "function";
+}
+function buildRequestUrl(endpoint, routePath, pathParameters, options = {}) {
+  if (routePath.startsWith("https://") || routePath.startsWith("http://")) {
+    return routePath;
+  }
+  endpoint = buildBaseUrl(endpoint, options);
+  const updatedRoutePath = buildRoutePath(routePath, pathParameters, options);
+  const requestUrl = appendQueryParams(appendPath(endpoint, updatedRoutePath), options);
+  const url2 = new URL(requestUrl);
+  return url2.toString();
+}
+function appendPath(endpoint, pathToAppend) {
+  const endpointSearchStart = endpoint.indexOf("?");
+  const pathSearchStart = pathToAppend.indexOf("?");
+  const endpointParts = endpointSearchStart !== -1 ? [endpoint.substring(0, endpointSearchStart), endpoint.substring(endpointSearchStart + 1)] : [endpoint, ""];
+  const pathParts = pathSearchStart !== -1 ? [pathToAppend.substring(0, pathSearchStart), pathToAppend.substring(pathSearchStart + 1)] : [pathToAppend, ""];
+  const combinedSearch = [endpointParts[1], pathParts[1].replaceAll("?", "&")].filter(Boolean).join("&");
+  const baseEndpoint = endpointParts[0].replace(/(^[^:]+:\/\/[^/]+)\/\/+/, "$1/");
+  const basePathToAppend = pathParts[0];
+  let combinedUrl = baseEndpoint;
+  if (!baseEndpoint.endsWith("/") && !basePathToAppend.startsWith("/") && basePathToAppend !== "") {
+    combinedUrl += `/${basePathToAppend}`;
+  } else if (baseEndpoint.endsWith("/") && basePathToAppend.startsWith("/")) {
+    combinedUrl += basePathToAppend.substring(1);
+  } else {
+    combinedUrl += basePathToAppend;
+  }
+  if (combinedSearch) {
+    combinedUrl += `?${combinedSearch}`;
+  }
+  return combinedUrl;
+}
+function getQueryParamValue(key, allowReserved, style, param) {
+  let separator;
+  if (style === "pipeDelimited") {
+    separator = "|";
+  } else if (style === "spaceDelimited") {
+    separator = "%20";
+  } else {
+    separator = ",";
+  }
+  let paramValues;
+  if (Array.isArray(param)) {
+    paramValues = param;
+  } else if (typeof param === "object" && param.toString === Object.prototype.toString) {
+    paramValues = Object.entries(param).flat();
+  } else {
+    paramValues = [param];
+  }
+  const value = paramValues.map((p) => {
+    if (p === null || p === void 0) {
+      return "";
+    }
+    if (!p.toString || typeof p.toString !== "function") {
+      throw new Error(`Query parameters must be able to be represented as string, ${key} can't`);
+    }
+    const rawValue = p.toISOString !== void 0 ? p.toISOString() : p.toString();
+    return allowReserved ? rawValue : encodeURIComponent(rawValue);
+  }).join(separator);
+  return `${allowReserved ? key : encodeURIComponent(key)}=${value}`;
+}
+function simpleParseQueryParams(queryString) {
+  const result = /* @__PURE__ */ new Map();
+  if (!queryString || queryString[0] !== "?") {
+    return result;
+  }
+  queryString = queryString.slice(1);
+  const pairs = queryString.split("&");
+  for (const pair of pairs) {
+    const eqIndex = pair.indexOf("=");
+    const name3 = eqIndex === -1 ? pair : pair.substring(0, eqIndex);
+    const value = eqIndex === -1 ? "" : pair.substring(eqIndex + 1);
+    const existingValue = result.get(name3);
+    if (existingValue !== void 0) {
+      if (Array.isArray(existingValue)) {
+        existingValue.push(value);
+      } else {
+        result.set(name3, [existingValue, value]);
+      }
+    } else {
+      result.set(name3, value);
+    }
+  }
+  return result;
+}
+function appendQueryParams(url2, options = {}) {
+  if (!options.queryParameters) {
+    return url2;
+  }
+  const parsedUrl = new URL(url2);
+  const queryParams = options.queryParameters;
+  const existingParams = simpleParseQueryParams(parsedUrl.search);
+  const newParamStrings = [];
+  for (const key of Object.keys(queryParams)) {
+    const param = queryParams[key];
+    if (param === void 0 || param === null) {
+      continue;
+    }
+    const hasMetadata = isQueryParameterWithOptions(param);
+    const rawValue = hasMetadata ? param.value : param;
+    const explode = hasMetadata ? param.explode ?? false : false;
+    const style = hasMetadata && param.style ? param.style : "form";
+    if (explode) {
+      if (Array.isArray(rawValue)) {
+        for (const item of rawValue) {
+          newParamStrings.push(getQueryParamValue(key, options.skipUrlEncoding ?? false, style, item));
+        }
+      } else if (rawValue !== null && typeof rawValue === "object") {
+        for (const [actualKey, value] of Object.entries(rawValue)) {
+          newParamStrings.push(getQueryParamValue(actualKey, options.skipUrlEncoding ?? false, style, value));
+        }
+      } else {
+        throw new Error("explode can only be set to true for objects and arrays");
+      }
+    } else {
+      newParamStrings.push(getQueryParamValue(key, options.skipUrlEncoding ?? false, style, rawValue));
+    }
+  }
+  for (const paramString of newParamStrings) {
+    const eqIndex = paramString.indexOf("=");
+    const name3 = paramString.substring(0, eqIndex);
+    const value = paramString.substring(eqIndex + 1);
+    const existingValue = existingParams.get(name3);
+    if (existingValue !== void 0) {
+      if (Array.isArray(existingValue)) {
+        if (!existingValue.includes(value)) {
+          existingValue.push(value);
+        }
+      } else if (existingValue !== value) {
+        existingParams.set(name3, [existingValue, value]);
+      }
+    } else {
+      existingParams.set(name3, value);
+    }
+  }
+  const searchPieces = [];
+  for (const [name3, value] of existingParams) {
+    if (Array.isArray(value)) {
+      for (const subValue of value) {
+        searchPieces.push(`${name3}=${subValue}`);
+      }
+    } else {
+      searchPieces.push(`${name3}=${value}`);
+    }
+  }
+  parsedUrl.search = searchPieces.length ? `?${searchPieces.join("&")}` : "";
+  return parsedUrl.toString();
+}
+function buildBaseUrl(endpoint, options) {
+  if (!options.pathParameters) {
+    return endpoint;
+  }
+  const pathParams = options.pathParameters;
+  for (const [key, param] of Object.entries(pathParams)) {
+    if (param === void 0 || param === null) {
+      throw new Error(`Path parameters ${key} must not be undefined or null`);
+    }
+    if (!param.toString || typeof param.toString !== "function") {
+      throw new Error(`Path parameters must be able to be represented as string, ${key} can't`);
+    }
+    let value = param.toISOString !== void 0 ? param.toISOString() : String(param);
+    if (!options.skipUrlEncoding) {
+      value = encodeURIComponent(param);
+    }
+    endpoint = replaceAll(endpoint, `{${key}}`, value) ?? "";
+  }
+  return endpoint;
+}
+function buildRoutePath(routePath, pathParameters, options = {}) {
+  for (const pathParam of pathParameters) {
+    const allowReserved = typeof pathParam === "object" && (pathParam.allowReserved ?? false);
+    let value = typeof pathParam === "object" ? pathParam.value : pathParam;
+    if (!options.skipUrlEncoding && !allowReserved) {
+      value = encodeURIComponent(value);
+    }
+    routePath = routePath.replace(/\{[\w-]+\}/, String(value));
+  }
+  return routePath;
+}
+function replaceAll(value, searchValue, replaceValue) {
+  return !value || !searchValue ? value : value.split(searchValue).join(replaceValue || "");
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/client/getClient.js
+function getClient2(endpoint, clientOptions = {}) {
+  const pipeline = clientOptions.pipeline ?? createDefaultPipeline(clientOptions);
+  if (clientOptions.additionalPolicies?.length) {
+    for (const { policy, position } of clientOptions.additionalPolicies) {
+      const afterPhase = position === "perRetry" ? "Sign" : void 0;
+      pipeline.addPolicy(policy, {
+        afterPhase
+      });
+    }
+  }
+  const noDefaultAcceptHeader = clientOptions.internal?.noDefaultAcceptHeader ?? false;
+  const { allowInsecureConnection: allowInsecureConnection2, httpClient } = clientOptions;
+  const endpointUrl = clientOptions.endpoint ?? endpoint;
+  const client = (path5, ...args) => {
+    const getUrl = (requestOptions) => buildRequestUrl(endpointUrl, path5, args, { allowInsecureConnection: allowInsecureConnection2, ...requestOptions });
+    return {
+      get: (requestOptions = {}) => {
+        return buildOperation("GET", getUrl(requestOptions), pipeline, requestOptions, allowInsecureConnection2, httpClient, noDefaultAcceptHeader);
+      },
+      post: (requestOptions = {}) => {
+        return buildOperation("POST", getUrl(requestOptions), pipeline, requestOptions, allowInsecureConnection2, httpClient, noDefaultAcceptHeader);
+      },
+      put: (requestOptions = {}) => {
+        return buildOperation("PUT", getUrl(requestOptions), pipeline, requestOptions, allowInsecureConnection2, httpClient, noDefaultAcceptHeader);
+      },
+      patch: (requestOptions = {}) => {
+        return buildOperation("PATCH", getUrl(requestOptions), pipeline, requestOptions, allowInsecureConnection2, httpClient, noDefaultAcceptHeader);
+      },
+      delete: (requestOptions = {}) => {
+        return buildOperation("DELETE", getUrl(requestOptions), pipeline, requestOptions, allowInsecureConnection2, httpClient, noDefaultAcceptHeader);
+      },
+      head: (requestOptions = {}) => {
+        return buildOperation("HEAD", getUrl(requestOptions), pipeline, requestOptions, allowInsecureConnection2, httpClient, noDefaultAcceptHeader);
+      },
+      options: (requestOptions = {}) => {
+        return buildOperation("OPTIONS", getUrl(requestOptions), pipeline, requestOptions, allowInsecureConnection2, httpClient, noDefaultAcceptHeader);
+      },
+      trace: (requestOptions = {}) => {
+        return buildOperation("TRACE", getUrl(requestOptions), pipeline, requestOptions, allowInsecureConnection2, httpClient, noDefaultAcceptHeader);
+      }
+    };
+  };
+  return {
+    path: client,
+    pathUnchecked: client,
+    pipeline
+  };
+}
+function buildOperation(method, url2, pipeline, options, allowInsecureConnection2, httpClient, noDefaultAcceptHeader = false) {
+  allowInsecureConnection2 = options.allowInsecureConnection ?? allowInsecureConnection2;
+  return {
+    then: function(onFulfilled, onrejected) {
+      return sendRequest(method, url2, pipeline, { ...options, allowInsecureConnection: allowInsecureConnection2, noDefaultAcceptHeader }, httpClient).then(onFulfilled, onrejected);
+    },
+    async asBrowserStream() {
+      if (isNodeLike2) {
+        throw new Error("`asBrowserStream` is supported only in the browser environment. Use `asNodeStream` instead to obtain the response body stream. If you require a Web stream of the response in Node, consider using `Readable.toWeb` on the result of `asNodeStream`.");
+      } else {
+        return sendRequest(method, url2, pipeline, { ...options, allowInsecureConnection: allowInsecureConnection2, noDefaultAcceptHeader, responseAsStream: true }, httpClient);
+      }
+    },
+    async asNodeStream() {
+      if (isNodeLike2) {
+        return sendRequest(method, url2, pipeline, { ...options, allowInsecureConnection: allowInsecureConnection2, noDefaultAcceptHeader, responseAsStream: true }, httpClient);
+      } else {
+        throw new Error("`isNodeStream` is not supported in the browser environment. Use `asBrowserStream` to obtain the response body stream.");
+      }
+    }
+  };
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/client/operationOptionHelpers.js
+function operationOptionsToRequestParameters2(options) {
+  return {
+    allowInsecureConnection: options.requestOptions?.allowInsecureConnection,
+    timeout: options.requestOptions?.timeout,
+    skipUrlEncoding: options.requestOptions?.skipUrlEncoding,
+    abortSignal: options.abortSignal,
+    onUploadProgress: options.requestOptions?.onUploadProgress,
+    onDownloadProgress: options.requestOptions?.onDownloadProgress,
+    headers: { ...options.requestOptions?.headers },
+    onResponse: options.onResponse
+  };
+}
+
+// node_modules/@typespec/ts-http-runtime/dist/esm/client/restError.js
+function createRestError2(messageOrResponse, response) {
+  const resp = typeof messageOrResponse === "string" ? response : messageOrResponse;
+  const internalError = resp.body?.error ?? resp.body;
+  const message = typeof messageOrResponse === "string" ? messageOrResponse : internalError?.message ?? `Unexpected status code: ${resp.status}`;
+  return new RestError2(message, {
+    statusCode: statusCodeToNumber(resp.status),
+    code: internalError?.code,
+    request: resp.request,
+    response: toPipelineResponse(resp)
+  });
+}
+function toPipelineResponse(errorResponse) {
+  return {
+    headers: createHttpHeaders2(errorResponse.headers),
+    request: errorResponse.request,
+    status: statusCodeToNumber(errorResponse.status) ?? -1,
+    ...typeof errorResponse.body === "string" ? { bodyAsText: errorResponse.body } : {}
+  };
+}
+function statusCodeToNumber(statusCode) {
+  const status = Number.parseInt(statusCode);
+  return Number.isNaN(status) ? void 0 : status;
 }
 
 // node_modules/@azure/core-rest-pipeline/dist/esm/pipeline.js
@@ -127842,26 +128647,25 @@ function logPolicy3(options = {}) {
 }
 
 // node_modules/@azure/core-rest-pipeline/dist/esm/policies/redirectPolicy.js
-var redirectPolicyName3 = redirectPolicyName2;
 function redirectPolicy3(options = {}) {
   return redirectPolicy2(options);
 }
 
 // node_modules/@azure/core-rest-pipeline/dist/esm/util/userAgentPlatform.js
-var import_node_os3 = __toESM(require("node:os"), 1);
-var import_node_process10 = __toESM(require("node:process"), 1);
+var import_node_os4 = __toESM(require("node:os"), 1);
+var import_node_process11 = __toESM(require("node:process"), 1);
 function getHeaderName2() {
   return "User-Agent";
 }
 async function setPlatformSpecificData3(map) {
-  if (import_node_process10.default && import_node_process10.default.versions) {
-    const osInfo = `${import_node_os3.default.type()} ${import_node_os3.default.release()}; ${import_node_os3.default.arch()}`;
-    if (import_node_process10.default.versions.bun) {
-      map.set("Bun", `${import_node_process10.default.versions.bun} (${osInfo})`);
-    } else if (import_node_process10.default.versions.deno) {
-      map.set("Deno", `${import_node_process10.default.versions.deno} (${osInfo})`);
-    } else if (import_node_process10.default.versions.node) {
-      map.set("Node", `${import_node_process10.default.versions.node} (${osInfo})`);
+  if (import_node_process11.default && import_node_process11.default.versions) {
+    const osInfo = `${import_node_os4.default.type()} ${import_node_os4.default.release()}; ${import_node_os4.default.arch()}`;
+    if (import_node_process11.default.versions.bun) {
+      map.set("Bun", `${import_node_process11.default.versions.bun} (${osInfo})`);
+    } else if (import_node_process11.default.versions.deno) {
+      map.set("Deno", `${import_node_process11.default.versions.deno} (${osInfo})`);
+    } else if (import_node_process11.default.versions.node) {
+      map.set("Node", `${import_node_process11.default.versions.node} (${osInfo})`);
     }
   }
 }
@@ -127871,7 +128675,7 @@ var SDK_VERSION3 = "1.25.0";
 var DEFAULT_RETRY_POLICY_COUNT2 = 3;
 
 // node_modules/@azure/core-rest-pipeline/dist/esm/util/userAgent.js
-function getUserAgentString(telemetryInfo) {
+function getUserAgentString2(telemetryInfo) {
   const parts = [];
   for (const [key, value] of telemetryInfo) {
     const token = value ? `${key}/${value}` : key;
@@ -127882,12 +128686,12 @@ function getUserAgentString(telemetryInfo) {
 function getUserAgentHeaderName2() {
   return getHeaderName2();
 }
-async function getUserAgentValue2(prefix2) {
+async function getUserAgentValue2(prefix) {
   const runtimeInfo = /* @__PURE__ */ new Map();
   runtimeInfo.set("core-rest-pipeline", SDK_VERSION3);
   await setPlatformSpecificData3(runtimeInfo);
-  const defaultAgent = getUserAgentString(runtimeInfo);
-  const userAgentValue = prefix2 ? `${prefix2} ${defaultAgent}` : defaultAgent;
+  const defaultAgent = getUserAgentString2(runtimeInfo);
+  const userAgentValue = prefix ? `${prefix} ${defaultAgent}` : defaultAgent;
   return userAgentValue;
 }
 
@@ -128358,7 +129162,7 @@ async function authorizeRequestOnCaeChallenge(onChallengeOptions, caeClaims) {
 }
 function bearerTokenAuthenticationPolicy2(options) {
   const { credential, scopes, challengeCallbacks } = options;
-  const logger32 = options.logger || logger6;
+  const logger33 = options.logger || logger6;
   const callbacks = {
     authorizeRequest: challengeCallbacks?.authorizeRequest?.bind(challengeCallbacks) ?? defaultAuthorizeRequest,
     authorizeRequestOnChallenge: challengeCallbacks?.authorizeRequestOnChallenge?.bind(challengeCallbacks)
@@ -128390,7 +129194,7 @@ function bearerTokenAuthenticationPolicy2(options) {
         scopes: Array.isArray(scopes) ? scopes : [scopes],
         request,
         getAccessToken,
-        logger: logger32
+        logger: logger33
       });
       let response;
       let error;
@@ -128403,7 +129207,7 @@ function bearerTokenAuthenticationPolicy2(options) {
           try {
             parsedClaim = atob(claims);
           } catch (e) {
-            logger32.warning(`The WWW-Authenticate header contains "claims" that cannot be parsed. Unable to perform the Continuous Access Evaluation authentication flow. Unparsable claims: ${claims}`);
+            logger33.warning(`The WWW-Authenticate header contains "claims" that cannot be parsed. Unable to perform the Continuous Access Evaluation authentication flow. Unparsable claims: ${claims}`);
             return response;
           }
           shouldSendRequest = await authorizeRequestOnCaeChallenge({
@@ -128411,7 +129215,7 @@ function bearerTokenAuthenticationPolicy2(options) {
             response,
             request,
             getAccessToken,
-            logger: logger32
+            logger: logger33
           }, parsedClaim);
           if (shouldSendRequest) {
             [response, error] = await trySendRequest(request, next);
@@ -128422,7 +129226,7 @@ function bearerTokenAuthenticationPolicy2(options) {
             request,
             response,
             getAccessToken,
-            logger: logger32
+            logger: logger33
           });
           if (shouldSendRequest) {
             [response, error] = await trySendRequest(request, next);
@@ -128434,7 +129238,7 @@ function bearerTokenAuthenticationPolicy2(options) {
               try {
                 parsedClaim = atob(claims);
               } catch (e) {
-                logger32.warning(`The WWW-Authenticate header contains "claims" that cannot be parsed. Unable to perform the Continuous Access Evaluation authentication flow. Unparsable claims: ${claims}`);
+                logger33.warning(`The WWW-Authenticate header contains "claims" that cannot be parsed. Unable to perform the Continuous Access Evaluation authentication flow. Unparsable claims: ${claims}`);
                 return response;
               }
               shouldSendRequest = await authorizeRequestOnCaeChallenge({
@@ -128442,7 +129246,7 @@ function bearerTokenAuthenticationPolicy2(options) {
                 response,
                 request,
                 getAccessToken,
-                logger: logger32
+                logger: logger33
               }, parsedClaim);
               if (shouldSendRequest) {
                 [response, error] = await trySendRequest(request, next);
@@ -128727,8 +129531,8 @@ function handleErrorResponse(parsedResponse, operationSpec, responseSpec, option
 async function parse(jsonContentTypes, xmlContentTypes, operationResponse, opts, parseXML2) {
   if (!operationResponse.request.streamResponseStatusCodes?.has(operationResponse.status) && operationResponse.bodyAsText) {
     const text = operationResponse.bodyAsText;
-    const contentType4 = operationResponse.headers.get("Content-Type") || "";
-    const contentComponents = !contentType4 ? [] : contentType4.split(";").map((component) => component.toLowerCase());
+    const contentType3 = operationResponse.headers.get("Content-Type") || "";
+    const contentComponents = !contentType3 ? [] : contentType3.split(";").map((component) => component.toLowerCase());
     try {
       if (contentComponents.length === 0 || contentComponents.some((component) => jsonContentTypes.indexOf(component) !== -1)) {
         operationResponse.parsedBody = JSON.parse(text);
@@ -128912,12 +129716,12 @@ function createClientPipeline(options = {}) {
 }
 
 // node_modules/@azure/core-client/dist/esm/httpClientCache.js
-var cachedHttpClient;
+var cachedHttpClient2;
 function getCachedDefaultHttpClient() {
-  if (!cachedHttpClient) {
-    cachedHttpClient = createDefaultHttpClient3();
+  if (!cachedHttpClient2) {
+    cachedHttpClient2 = createDefaultHttpClient3();
   }
-  return cachedHttpClient;
+  return cachedHttpClient2;
 }
 
 // node_modules/@azure/core-client/dist/esm/urlHelpers.js
@@ -128931,9 +129735,9 @@ var CollectionFormatToDelimiterMap = {
 function getRequestUrl(baseUri, operationSpec, operationArguments, fallbackObject) {
   const urlReplacements = calculateUrlReplacements(operationSpec, operationArguments, fallbackObject);
   let isAbsolutePath = false;
-  let requestUrl = replaceAll(baseUri, urlReplacements);
+  let requestUrl = replaceAll2(baseUri, urlReplacements);
   if (operationSpec.path) {
-    let path5 = replaceAll(operationSpec.path, urlReplacements);
+    let path5 = replaceAll2(operationSpec.path, urlReplacements);
     if (operationSpec.path === "/{nextLink}" && path5.startsWith("/")) {
       path5 = path5.substring(1);
     }
@@ -128941,14 +129745,14 @@ function getRequestUrl(baseUri, operationSpec, operationArguments, fallbackObjec
       requestUrl = path5;
       isAbsolutePath = true;
     } else {
-      requestUrl = appendPath(requestUrl, path5);
+      requestUrl = appendPath2(requestUrl, path5);
     }
   }
   const { queryParams, sequenceParams } = calculateQueryParameters(operationSpec, operationArguments, fallbackObject);
-  requestUrl = appendQueryParams(requestUrl, queryParams, sequenceParams, isAbsolutePath);
+  requestUrl = appendQueryParams2(requestUrl, queryParams, sequenceParams, isAbsolutePath);
   return requestUrl;
 }
-function replaceAll(input, replacements) {
+function replaceAll2(input, replacements) {
   let result = input;
   for (const [searchValue, replaceValue] of replacements) {
     result = result.split(searchValue).join(replaceValue);
@@ -128970,14 +129774,14 @@ function calculateUrlReplacements(operationSpec, operationArguments, fallbackObj
   }
   return result;
 }
-function isAbsoluteUrl(url3) {
-  return url3.includes("://");
+function isAbsoluteUrl(url2) {
+  return url2.includes("://");
 }
-function appendPath(url3, pathToAppend) {
+function appendPath2(url2, pathToAppend) {
   if (!pathToAppend) {
-    return url3;
+    return url2;
   }
-  const parsedUrl = new URL(url3);
+  const parsedUrl = new URL(url2);
   let newPath = parsedUrl.pathname;
   if (!newPath.endsWith("/")) {
     newPath = `${newPath}/`;
@@ -129045,7 +129849,7 @@ function calculateQueryParameters(operationSpec, operationArguments, fallbackObj
     sequenceParams
   };
 }
-function simpleParseQueryParams(queryString) {
+function simpleParseQueryParams2(queryString) {
   const result = /* @__PURE__ */ new Map();
   if (!queryString || queryString[0] !== "?") {
     return result;
@@ -129067,12 +129871,12 @@ function simpleParseQueryParams(queryString) {
   }
   return result;
 }
-function appendQueryParams(url3, queryParams, sequenceParams, noOverwrite = false) {
+function appendQueryParams2(url2, queryParams, sequenceParams, noOverwrite = false) {
   if (queryParams.size === 0) {
-    return url3;
+    return url2;
   }
-  const parsedUrl = new URL(url3);
-  const combinedParams = simpleParseQueryParams(parsedUrl.search);
+  const parsedUrl = new URL(url2);
+  const combinedParams = simpleParseQueryParams2(parsedUrl.search);
   for (const [name3, value] of queryParams) {
     const existingValue = combinedParams.get(name3);
     if (Array.isArray(existingValue)) {
@@ -129178,17 +129982,17 @@ var ServiceClient = class {
     if (!endpoint) {
       throw new Error("If operationSpec.baseUrl is not specified, then the ServiceClient must have a endpoint string property that contains the base URL to use.");
     }
-    const url3 = getRequestUrl(endpoint, operationSpec, operationArguments, this);
+    const url2 = getRequestUrl(endpoint, operationSpec, operationArguments, this);
     const request = createPipelineRequest3({
-      url: url3
+      url: url2
     });
     request.method = operationSpec.httpMethod;
     const operationInfo = getOperationRequestInfo(request);
     operationInfo.operationSpec = operationSpec;
     operationInfo.operationArguments = operationArguments;
-    const contentType4 = operationSpec.contentType || this._requestContentType;
-    if (contentType4 && operationSpec.requestBody) {
-      request.headers.set("Content-Type", contentType4);
+    const contentType3 = operationSpec.contentType || this._requestContentType;
+    if (contentType3 && operationSpec.requestBody) {
+      request.headers.set("Content-Type", contentType3);
     }
     const options = operationArguments.options;
     if (options) {
@@ -129562,9 +130366,9 @@ var IdentityClient = class extends ServiceClient {
     return parameter && parameter.length ? parameter[1] || noCorrelationId : noCorrelationId;
   }
   // The MSAL network module methods follow
-  async sendGetRequestAsync(url3, options) {
+  async sendGetRequestAsync(url2, options) {
     const request = createPipelineRequest3({
-      url: url3,
+      url: url2,
       method: "GET",
       body: options?.body,
       allowInsecureConnection: this.allowInsecureConnection,
@@ -129579,9 +130383,9 @@ var IdentityClient = class extends ServiceClient {
       status: response.status
     };
   }
-  async sendPostRequestAsync(url3, options) {
+  async sendPostRequestAsync(url2, options) {
     const request = createPipelineRequest3({
-      url: url3,
+      url: url2,
       method: "POST",
       body: options?.body,
       headers: createHttpHeaders3(options?.headers),
@@ -129708,7 +130512,7 @@ function calculateRegionalAuthority(regionalAuthority) {
 function createConfigurationErrorMessage(tenantId) {
   return `The current credential is not configured to acquire tokens for tenant ${tenantId}. To enable acquiring tokens for this tenant add it to the AdditionallyAllowedTenants on the credential options, or add "*" to AdditionallyAllowedTenants to allow acquiring tokens for any tenant.`;
 }
-function processMultiTenantRequest2(tenantId, getTokenOptions, additionallyAllowedTenantIds = [], logger32) {
+function processMultiTenantRequest2(tenantId, getTokenOptions, additionallyAllowedTenantIds = [], logger33) {
   let resolvedTenantId;
   if (process.env.AZURE_IDENTITY_DISABLE_MULTITENANTAUTH) {
     resolvedTenantId = tenantId;
@@ -129719,23 +130523,23 @@ function processMultiTenantRequest2(tenantId, getTokenOptions, additionallyAllow
   }
   if (tenantId && resolvedTenantId !== tenantId && !additionallyAllowedTenantIds.includes("*") && !additionallyAllowedTenantIds.some((t) => t.localeCompare(resolvedTenantId) === 0)) {
     const message = createConfigurationErrorMessage(resolvedTenantId);
-    logger32?.info(message);
+    logger33?.info(message);
     throw new CredentialUnavailableError2(message);
   }
   return resolvedTenantId;
 }
 
 // node_modules/@azure/identity/dist/esm/util/tenantIdUtils.js
-function checkTenantId(logger32, tenantId) {
+function checkTenantId(logger33, tenantId) {
   if (!tenantId.match(/^[0-9a-zA-Z-.]+$/)) {
     const error = new Error("Invalid tenant id provided. You can locate your tenant id by following the instructions listed here: https://learn.microsoft.com/partner-center/find-ids-and-domain-names.");
-    logger32.info(formatError("", error));
+    logger33.info(formatError("", error));
     throw error;
   }
 }
-function resolveTenantId(logger32, tenantId, clientId) {
+function resolveTenantId(logger33, tenantId, clientId) {
   if (tenantId) {
-    checkTenantId(logger32, tenantId);
+    checkTenantId(logger33, tenantId);
     return tenantId;
   }
   if (!clientId) {
@@ -130062,9 +130866,9 @@ function createMsalClient(clientId, tenantId, createMsalClientOptions = {}) {
   }
   function createBaseInteractiveRequest(scopes, options) {
     return {
-      openBrowser: async (url3) => {
+      openBrowser: async (url2) => {
         const open2 = await Promise.resolve().then(() => (init_open(), open_exports));
-        await open2.default(url3);
+        await open2.default(url2);
       },
       scopes,
       authority: calculateRequestAuthority(options),
@@ -130268,10 +131072,10 @@ async function parseCertificate(certificateConfiguration, sendCertificateChain) 
 function ensureScopes(scopes) {
   return Array.isArray(scopes) ? scopes : [scopes];
 }
-function ensureValidScopeForDevTimeCreds(scope, logger32) {
+function ensureValidScopeForDevTimeCreds(scope, logger33) {
   if (!scope.match(/^[0-9a-zA-Z-_.:/]+$/)) {
     const error = new Error("Invalid scope was specified by the user or calling client");
-    logger32.getToken.info(formatError(scope, error));
+    logger33.getToken.info(formatError(scope, error));
     throw error;
   }
 }
@@ -130535,14 +131339,14 @@ function prepareInvalidRequestOptions(scopes) {
   if (!resource) {
     throw new Error(`${msiName}: Multiple scopes are not supported.`);
   }
-  const url3 = new URL(imdsEndpointPath, process.env.AZURE_POD_IDENTITY_AUTHORITY_HOST ?? imdsHost);
+  const url2 = new URL(imdsEndpointPath, process.env.AZURE_POD_IDENTITY_AUTHORITY_HOST ?? imdsHost);
   const rawHeaders = {
     Accept: "application/json"
     // intentionally leave out the Metadata header to invoke an error from IMDS endpoint.
   };
   return {
     // intentionally not including any query
-    url: `${url3}`,
+    url: `${url2}`,
     method: "GET",
     headers: createHttpHeaders3(rawHeaders)
   };
@@ -131669,10 +132473,10 @@ var AzureDeveloperCliCredential2 = class {
 };
 
 // node_modules/@azure/identity/dist/esm/util/subscriptionUtils.js
-function checkSubscription(logger32, subscription) {
+function checkSubscription(logger33, subscription) {
   if (!subscription.match(/^[0-9a-zA-Z-._ ]+$/)) {
     const error = new Error(`Subscription '${subscription}' contains invalid characters. If this is the name of a subscription, use its ID instead. You can locate your subscription by following the instructions listed here: https://learn.microsoft.com/azure/azure-portal/get-subscription-tenant-id`);
-    logger32.info(formatError("", error));
+    logger33.info(formatError("", error));
     throw error;
   }
 }
@@ -132443,16 +133247,16 @@ var logger27 = credentialLogger(credentialName5);
 // graph.ts
 var sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 function validateGraphRequestUrl(value) {
-  let url3;
+  let url2;
   try {
-    url3 = new URL(value);
+    url2 = new URL(value);
   } catch {
     throw new Error("Graph request URL rejected");
   }
-  if (url3.protocol !== "https:" || url3.hostname !== "graph.microsoft.com" || url3.port !== "" || url3.username !== "" || url3.password !== "" || url3.pathname !== "/v1.0" && !url3.pathname.startsWith("/v1.0/") || url3.hash !== "") {
+  if (url2.protocol !== "https:" || url2.hostname !== "graph.microsoft.com" || url2.port !== "" || url2.username !== "" || url2.password !== "" || url2.pathname !== "/v1.0" && !url2.pathname.startsWith("/v1.0/") || url2.hash !== "") {
     throw new Error("Graph request URL rejected");
   }
-  return url3.href;
+  return url2.href;
 }
 function requestIdentifier(response) {
   for (const name3 of ["request-id", "client-request-id"]) {
@@ -132483,8 +133287,8 @@ var GraphClient = class {
   fetcher;
   sleeper;
   now;
-  async request(url3, init, retrySafe = !init?.method || init.method === "GET") {
-    const validatedUrl = validateGraphRequestUrl(url3);
+  async request(url2, init, retrySafe = !init?.method || init.method === "GET") {
+    const validatedUrl = validateGraphRequestUrl(url2);
     const maxAttempts = retrySafe ? 6 : 1;
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       let response;
@@ -132608,12 +133412,12 @@ function detectManagedDeviceEvents(device, previous, now, enrollmentLookbackMs2)
 }
 
 // pollers.ts
-async function publish(events, outbox, logger32) {
+async function publish(events, outbox, logger33) {
   for (const event of events) {
     if (!event) continue;
     const reservation = await outbox.reserve(event.id, event);
     if (reservation === "published") {
-      logger32.info("Duplicate event suppressed", { eventId: event.id, eventType: event.type });
+      logger33.info("Duplicate event suppressed", { eventId: event.id, eventType: event.type });
       continue;
     }
     if (reservation === "pending") {
@@ -132690,6 +133494,11 @@ var KnownGeoReplicationStatusType;
   KnownGeoReplicationStatusType2["Bootstrap"] = "bootstrap";
   KnownGeoReplicationStatusType2["Unavailable"] = "unavailable";
 })(KnownGeoReplicationStatusType || (KnownGeoReplicationStatusType = {}));
+
+// node_modules/@azure/core-auth/dist/esm/keyCredential.js
+function isKeyCredential2(credential) {
+  return isObjectWithProperties2(credential, ["key"]) && typeof credential.key === "string";
+}
 
 // node_modules/@azure/core-auth/dist/esm/azureNamedKeyCredential.js
 var AzureNamedKeyCredential2 = class {
@@ -133496,8 +134305,8 @@ var EntityDecoder = class {
    * Call this as soon as the document's `<?xml version="...">` declaration is parsed.
    * @param {1.0|1.1|number} version
    */
-  setXmlVersion(version5) {
-    this._ncrXmlVersion = version5 === 1.1 ? 1.1 : 1;
+  setXmlVersion(version4) {
+    this._ncrXmlVersion = version4 === 1.1 ? 1.1 : 1;
   }
   // -------------------------------------------------------------------------
   // Primary API
@@ -136292,12 +137101,12 @@ function parseTextData(val, tagName, jPath, dontTrim, hasAttributes, isLeafNode,
 function resolveNameSpace(tagname) {
   if (this.options.removeNSPrefix) {
     const tags = tagname.split(":");
-    const prefix2 = tagname.charAt(0) === "/" ? "/" : "";
+    const prefix = tagname.charAt(0) === "/" ? "/" : "";
     if (tags[0] === "xmlns") {
       return "";
     }
     if (tags.length === 2) {
-      tagname = prefix2 + tags[1];
+      tagname = prefix + tags[1];
     }
   }
   return tagname;
@@ -136784,13 +137593,13 @@ function sanitizeName(name3, options) {
 
 // node_modules/fast-xml-parser/src/xmlparser/node2json.js
 var METADATA_SYMBOL2 = XmlNode.getMetaDataSymbol();
-function stripAttributePrefix(attrs, prefix2) {
+function stripAttributePrefix(attrs, prefix) {
   if (!attrs || typeof attrs !== "object") return {};
-  if (!prefix2) return attrs;
+  if (!prefix) return attrs;
   const rawAttrs = {};
   for (const key in attrs) {
-    if (key.startsWith(prefix2)) {
-      const rawName = key.substring(prefix2.length);
+    if (key.startsWith(prefix)) {
+      const rawName = key.substring(prefix.length);
       rawAttrs[rawName] = attrs[key];
     } else {
       rawAttrs[key] = attrs[key];
@@ -140055,8 +140864,8 @@ var GeneratedClient = class extends ServiceClient {
    * @param url The URL of the service account or table that is the target of the desired operation.
    * @param options The parameter options
    */
-  constructor(url3, options) {
-    if (url3 === void 0) {
+  constructor(url2, options) {
+    if (url2 === void 0) {
       throw new Error("'url' cannot be null");
     }
     if (!options) {
@@ -140076,7 +140885,7 @@ var GeneratedClient = class extends ServiceClient {
       baseUri: options.endpoint ?? options.baseUri ?? "{url}"
     };
     super(optionsWithDefaults);
-    this.url = url3;
+    this.url = url2;
     this.version = options.version || "2019-02-02";
     this.table = new TableImpl(this);
     this.service = new ServiceImpl(this);
@@ -140086,10 +140895,10 @@ var GeneratedClient = class extends ServiceClient {
 };
 
 // node_modules/@azure/data-tables/dist/esm/utils/apiVersionPolicy.js
-var apiVersionPolicyName = "apiVersionPolicy";
+var apiVersionPolicyName2 = "apiVersionPolicy";
 var apiVersionPolicy2 = (apiVersion) => {
   return {
-    name: apiVersionPolicyName,
+    name: apiVersionPolicyName2,
     sendRequest: async (req, next) => {
       req.headers.set("x-ms-version", apiVersion);
       return next(req);
@@ -140195,18 +141004,18 @@ function getValuePair(kvp) {
   const value = kvp.substr(kvp.indexOf("=") + 1);
   return [key, value];
 }
-function getAccountNameFromUrl(url3) {
-  if (!url3) {
-    return url3;
+function getAccountNameFromUrl(url2) {
+  if (!url2) {
+    return url2;
   }
-  const parsedUrl = new URL(url3);
+  const parsedUrl = new URL(url2);
   let accountName;
   const host = parsedUrl.host || "";
   const path5 = parsedUrl.pathname || "";
   const hostParts = host.split(".");
   const pathParts = path5.split("/");
   if (hostParts.length >= 1 && hostParts[1] === "table") {
-    url3 = url3.endsWith("/") ? url3.slice(0, -1) : url3;
+    url2 = url2.endsWith("/") ? url2.slice(0, -1) : url2;
     accountName = host.split(".")[0];
   } else if (pathParts.length >= 1) {
     accountName = pathParts[1];
@@ -140306,12 +141115,12 @@ function getHeaderValueToSign(request, headerName) {
   return value;
 }
 function getCanonicalizedResourceString(request, credential) {
-  const url3 = new URL(request.url);
-  const path5 = url3.pathname || "/";
+  const url2 = new URL(request.url);
+  const path5 = url2.pathname || "/";
   let canonicalizedResourceString = "/" + credential.name + path5;
-  const comp6 = url3.searchParams.get("comp");
-  if (comp6) {
-    canonicalizedResourceString = `${canonicalizedResourceString}?comp=${comp6}`;
+  const comp3 = url2.searchParams.get("comp");
+  if (comp3) {
+    canonicalizedResourceString = `${canonicalizedResourceString}?comp=${comp3}`;
   }
   return canonicalizedResourceString;
 }
@@ -140329,11 +141138,11 @@ function tablesSASTokenPolicy(credential) {
 }
 function signURLWithSAS(request, credential) {
   const sasParams = new URLSearchParams(credential.signature);
-  const url3 = new URL(request.url);
+  const url2 = new URL(request.url);
   for (const [name3, value] of sasParams) {
-    url3.searchParams.append(name3, value);
+    url2.searchParams.append(name3, value);
   }
-  request.url = url3.toString();
+  request.url = url2.toString();
 }
 
 // node_modules/@azure/data-tables/dist/esm/utils/tracing.js
@@ -140344,8 +141153,8 @@ var tracingClient2 = createTracingClient({
 });
 
 // node_modules/@azure/data-tables/dist/esm/utils/isCosmosEndpoint.js
-function isCosmosEndpoint(url3) {
-  const parsedURL = new URL(url3);
+function isCosmosEndpoint(url2) {
+  const parsedURL = new URL(url2);
   if (parsedURL.hostname.indexOf(".table.cosmosdb.") !== -1) {
     return true;
   }
@@ -140414,9 +141223,9 @@ function transactionHeaderFilterPolicy() {
     }
   };
 }
-function getSubRequestUrl(url3) {
+function getSubRequestUrl(url2) {
   const sasTokenParts = ["sv", "ss", "srt", "sp", "se", "st", "spr", "sig"];
-  const urlParsed = new URL(url3);
+  const urlParsed = new URL(url2);
   sasTokenParts.forEach((part) => urlParsed.searchParams.delete(part));
   return urlParsed.toString();
 }
@@ -140497,14 +141306,14 @@ var InternalTableTransaction = class {
    * @param partitionKey - partition key
    * @param credential - credential to authenticate the transaction request
    */
-  constructor(url3, partitionKey2, transactionId, changesetId, client, interceptClient, credential, allowInsecureConnection = false) {
+  constructor(url2, partitionKey2, transactionId, changesetId, client, interceptClient, credential, allowInsecureConnection2 = false) {
     this.client = client;
-    this.url = url3;
+    this.url = url2;
     this.interceptClient = interceptClient;
-    this.allowInsecureConnection = allowInsecureConnection;
+    this.allowInsecureConnection = allowInsecureConnection2;
     this.state = this.initializeState(transactionId, changesetId, partitionKey2);
     if (!credential) {
-      const urlParts = url3.split("?");
+      const urlParts = url2.split("?");
       this.url = urlParts[0];
       const sas = urlParts.length > 1 ? `?${urlParts[1]}` : "";
       this.url = `${this.getUrlWithSlash()}$batch${sas}`;
@@ -140936,8 +141745,8 @@ var TableClient = class _TableClient {
    * Name of the table to perform operations on.
    */
   tableName;
-  constructor(url3, tableName, credentialOrOptions, options = {}) {
-    this.url = url3;
+  constructor(url2, tableName, credentialOrOptions, options = {}) {
+    this.url = url2;
     this.tableName = tableName;
     const isCosmos = isCosmosEndpoint(this.url);
     const credential = isCredential(credentialOrOptions) ? credentialOrOptions : void 0;
@@ -141495,11 +142304,11 @@ var TableClient = class _TableClient {
    * @returns A new TableClient from the given connection string.
    */
   static fromConnectionString(connectionString, tableName, options) {
-    const { url: url3, options: clientOptions, credential } = getClientParamsFromConnectionString(connectionString, options);
+    const { url: url2, options: clientOptions, credential } = getClientParamsFromConnectionString(connectionString, options);
     if (credential) {
-      return new _TableClient(url3, tableName, credential, clientOptions);
+      return new _TableClient(url2, tableName, credential, clientOptions);
     } else {
-      return new _TableClient(url3, tableName, clientOptions);
+      return new _TableClient(url2, tableName, clientOptions);
     }
   }
 };
@@ -141510,7 +142319,7 @@ function ipRangeToString2(ipRange) {
 }
 
 // node_modules/@azure/storage-queue/dist/esm/utils/constants.js
-var SDK_VERSION4 = "12.31.0";
+var SDK_VERSION4 = "12.32.0";
 var SERVICE_VERSION2 = "2026-06-06";
 var StorageOAuthScopes = "https://storage.azure.com/.default";
 var DevelopmentConnectionString2 = `DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;
@@ -141586,9 +142395,342 @@ var PathStylePorts = [
   "11104"
 ];
 
+// node_modules/@azure/core-http-compat/dist/esm/util.js
+var originalRequestSymbol2 = /* @__PURE__ */ Symbol("Original PipelineRequest");
+var originalClientRequestSymbol = /* @__PURE__ */ Symbol.for("@azure/core-client original request");
+var passThroughProps = /* @__PURE__ */ new Set([
+  "url",
+  "method",
+  "withCredentials",
+  "timeout",
+  "requestId",
+  "abortSignal",
+  "body",
+  "formData",
+  "onDownloadProgress",
+  "onUploadProgress",
+  "proxySettings",
+  "streamResponseStatusCodes",
+  "agent",
+  "requestOverrides"
+]);
+function toPipelineRequest(webResource, options = {}) {
+  const compatWebResource = webResource;
+  const request = compatWebResource[originalRequestSymbol2];
+  const headers = createHttpHeaders3(webResource.headers.toJson({ preserveCase: true }));
+  if (request) {
+    request.headers = headers;
+    return request;
+  } else {
+    const newRequest = createPipelineRequest3({
+      url: webResource.url,
+      method: webResource.method,
+      headers,
+      withCredentials: webResource.withCredentials,
+      timeout: webResource.timeout,
+      requestId: webResource.requestId,
+      abortSignal: webResource.abortSignal,
+      body: webResource.body,
+      formData: webResource.formData,
+      disableKeepAlive: !!webResource.keepAlive,
+      onDownloadProgress: webResource.onDownloadProgress,
+      onUploadProgress: webResource.onUploadProgress,
+      proxySettings: webResource.proxySettings,
+      streamResponseStatusCodes: webResource.streamResponseStatusCodes,
+      agent: webResource.agent,
+      requestOverrides: webResource.requestOverrides
+    });
+    if (options.originalRequest) {
+      newRequest[originalClientRequestSymbol] = options.originalRequest;
+    }
+    return newRequest;
+  }
+}
+function toWebResourceLike(request, options) {
+  const originalRequest = options?.originalRequest ?? request;
+  const webResource = {
+    url: request.url,
+    method: request.method,
+    headers: toHttpHeadersLike2(request.headers),
+    withCredentials: request.withCredentials,
+    timeout: request.timeout,
+    requestId: request.headers.get("x-ms-client-request-id") || request.requestId,
+    abortSignal: request.abortSignal,
+    body: request.body,
+    formData: request.formData,
+    keepAlive: !!request.disableKeepAlive,
+    onDownloadProgress: request.onDownloadProgress,
+    onUploadProgress: request.onUploadProgress,
+    proxySettings: request.proxySettings,
+    streamResponseStatusCodes: request.streamResponseStatusCodes,
+    agent: request.agent,
+    requestOverrides: request.requestOverrides,
+    clone() {
+      throw new Error("Cannot clone a non-proxied WebResourceLike");
+    },
+    prepare() {
+      throw new Error("WebResourceLike.prepare() is not supported by @azure/core-http-compat");
+    },
+    validateRequestProperties() {
+    }
+  };
+  if (options?.createProxy) {
+    return new Proxy(webResource, {
+      get(target, prop, receiver) {
+        if (prop === originalRequestSymbol2) {
+          return request;
+        } else if (prop === "clone") {
+          return () => {
+            return toWebResourceLike(toPipelineRequest(webResource, { originalRequest }), {
+              createProxy: true,
+              originalRequest
+            });
+          };
+        }
+        return Reflect.get(target, prop, receiver);
+      },
+      set(target, prop, value, receiver) {
+        if (prop === "keepAlive") {
+          request.disableKeepAlive = !value;
+        }
+        if (typeof prop === "string" && passThroughProps.has(prop)) {
+          request[prop] = value;
+        }
+        return Reflect.set(target, prop, value, receiver);
+      }
+    });
+  } else {
+    return webResource;
+  }
+}
+function toHttpHeadersLike2(headers) {
+  return new HttpHeaders(headers.toJSON({ preserveCase: true }));
+}
+function getHeaderKey(headerName) {
+  return headerName.toLowerCase();
+}
+var HttpHeaders = class _HttpHeaders {
+  _headersMap;
+  constructor(rawHeaders) {
+    this._headersMap = {};
+    if (rawHeaders) {
+      for (const headerName in rawHeaders) {
+        this.set(headerName, rawHeaders[headerName]);
+      }
+    }
+  }
+  /**
+   * Set a header in this collection with the provided name and value. The name is
+   * case-insensitive.
+   * @param headerName - The name of the header to set. This value is case-insensitive.
+   * @param headerValue - The value of the header to set.
+   */
+  set(headerName, headerValue) {
+    this._headersMap[getHeaderKey(headerName)] = {
+      name: headerName,
+      value: headerValue.toString()
+    };
+  }
+  /**
+   * Get the header value for the provided header name, or undefined if no header exists in this
+   * collection with the provided name.
+   * @param headerName - The name of the header.
+   */
+  get(headerName) {
+    const header = this._headersMap[getHeaderKey(headerName)];
+    return !header ? void 0 : header.value;
+  }
+  /**
+   * Get whether or not this header collection contains a header entry for the provided header name.
+   */
+  contains(headerName) {
+    return !!this._headersMap[getHeaderKey(headerName)];
+  }
+  /**
+   * Remove the header with the provided headerName. Return whether or not the header existed and
+   * was removed.
+   * @param headerName - The name of the header to remove.
+   */
+  remove(headerName) {
+    const result = this.contains(headerName);
+    delete this._headersMap[getHeaderKey(headerName)];
+    return result;
+  }
+  /**
+   * Get the headers that are contained this collection as an object.
+   */
+  rawHeaders() {
+    return this.toJson({ preserveCase: true });
+  }
+  /**
+   * Get the headers that are contained in this collection as an array.
+   */
+  headersArray() {
+    const headers = [];
+    for (const headerKey in this._headersMap) {
+      headers.push(this._headersMap[headerKey]);
+    }
+    return headers;
+  }
+  /**
+   * Get the header names that are contained in this collection.
+   */
+  headerNames() {
+    const headerNames = [];
+    const headers = this.headersArray();
+    for (let i = 0; i < headers.length; ++i) {
+      headerNames.push(headers[i].name);
+    }
+    return headerNames;
+  }
+  /**
+   * Get the header values that are contained in this collection.
+   */
+  headerValues() {
+    const headerValues = [];
+    const headers = this.headersArray();
+    for (let i = 0; i < headers.length; ++i) {
+      headerValues.push(headers[i].value);
+    }
+    return headerValues;
+  }
+  /**
+   * Get the JSON object representation of this HTTP header collection.
+   */
+  toJson(options = {}) {
+    const result = {};
+    if (options.preserveCase) {
+      for (const headerKey in this._headersMap) {
+        const header = this._headersMap[headerKey];
+        result[header.name] = header.value;
+      }
+    } else {
+      for (const headerKey in this._headersMap) {
+        const header = this._headersMap[headerKey];
+        result[getHeaderKey(header.name)] = header.value;
+      }
+    }
+    return result;
+  }
+  /**
+   * Get the string representation of this HTTP header collection.
+   */
+  toString() {
+    return JSON.stringify(this.toJson({ preserveCase: true }));
+  }
+  /**
+   * Create a deep clone/copy of this HttpHeaders collection.
+   */
+  clone() {
+    const resultPreservingCasing = {};
+    for (const headerKey in this._headersMap) {
+      const header = this._headersMap[headerKey];
+      resultPreservingCasing[header.name] = header.value;
+    }
+    return new _HttpHeaders(resultPreservingCasing);
+  }
+};
+
+// node_modules/@azure/core-http-compat/dist/esm/response.js
+var originalResponse = /* @__PURE__ */ Symbol("Original FullOperationResponse");
+function toCompatResponse2(response, options) {
+  let request = toWebResourceLike(response.request);
+  let headers = toHttpHeadersLike2(response.headers);
+  if (options?.createProxy) {
+    return new Proxy(response, {
+      get(target, prop, receiver) {
+        if (prop === "headers") {
+          return headers;
+        } else if (prop === "request") {
+          return request;
+        } else if (prop === originalResponse) {
+          return response;
+        }
+        return Reflect.get(target, prop, receiver);
+      },
+      set(target, prop, value, receiver) {
+        if (prop === "headers") {
+          headers = value;
+        } else if (prop === "request") {
+          request = value;
+        }
+        return Reflect.set(target, prop, value, receiver);
+      }
+    });
+  } else {
+    return {
+      ...response,
+      request,
+      headers
+    };
+  }
+}
+function toPipelineResponse2(compatResponse) {
+  const extendedCompatResponse = compatResponse;
+  const response = extendedCompatResponse[originalResponse];
+  const headers = createHttpHeaders3(compatResponse.headers.toJson({ preserveCase: true }));
+  if (response) {
+    response.headers = headers;
+    return response;
+  } else {
+    return {
+      ...compatResponse,
+      headers,
+      request: toPipelineRequest(compatResponse.request)
+    };
+  }
+}
+
+// node_modules/@azure/core-http-compat/dist/esm/policies/requestPolicyFactoryPolicy.js
+var HttpPipelineLogLevel2;
+(function(HttpPipelineLogLevel3) {
+  HttpPipelineLogLevel3[HttpPipelineLogLevel3["ERROR"] = 1] = "ERROR";
+  HttpPipelineLogLevel3[HttpPipelineLogLevel3["INFO"] = 3] = "INFO";
+  HttpPipelineLogLevel3[HttpPipelineLogLevel3["OFF"] = 0] = "OFF";
+  HttpPipelineLogLevel3[HttpPipelineLogLevel3["WARNING"] = 2] = "WARNING";
+})(HttpPipelineLogLevel2 || (HttpPipelineLogLevel2 = {}));
+var mockRequestPolicyOptions = {
+  log(_logLevel, _message) {
+  },
+  shouldLog(_logLevel) {
+    return false;
+  }
+};
+var requestPolicyFactoryPolicyName2 = "RequestPolicyFactoryPolicy";
+function createRequestPolicyFactoryPolicy2(factories) {
+  const orderedFactories = factories.slice().reverse();
+  return {
+    name: requestPolicyFactoryPolicyName2,
+    async sendRequest(request, next) {
+      let httpPipeline = {
+        async sendRequest(httpRequest) {
+          const response2 = await next(toPipelineRequest(httpRequest));
+          return toCompatResponse2(response2, { createProxy: true });
+        }
+      };
+      for (const factory of orderedFactories) {
+        httpPipeline = factory.create(httpPipeline, mockRequestPolicyOptions);
+      }
+      const webResourceLike = toWebResourceLike(request, { createProxy: true });
+      const response = await httpPipeline.sendRequest(webResourceLike);
+      return toPipelineResponse2(response);
+    }
+  };
+}
+
+// node_modules/@azure/core-http-compat/dist/esm/httpClientAdapter.js
+function convertHttpClient2(requestPolicyClient) {
+  return {
+    sendRequest: async (request) => {
+      const response = await requestPolicyClient.sendRequest(toWebResourceLike(request, { createProxy: true }));
+      return toPipelineResponse2(response);
+    }
+  };
+}
+
 // node_modules/@azure/storage-queue/dist/esm/utils/utils.common.js
-function appendToURLPath(url3, name3) {
-  const urlParsed = new URL(url3);
+function appendToURLPath(url2, name3) {
+  const urlParsed = new URL(url2);
   let path5 = urlParsed.pathname;
   path5 = path5 ? path5.endsWith("/") ? `${path5}${name3}` : `${path5}/${name3}` : name3;
   urlParsed.pathname = path5;
@@ -141679,8 +142821,8 @@ var accountNameSuffixes = [
   "-dualstack",
   "-secondary"
 ];
-function getAccountNameFromUrl2(url3) {
-  const parsedUrl = new URL(url3);
+function getAccountNameFromUrl2(url2) {
+  const parsedUrl = new URL(url2);
   let accountName;
   try {
     if (parsedUrl.hostname.split(".")[1] === "queue") {
@@ -141705,8 +142847,8 @@ function isIpEndpointStyle(parsedUrl) {
   const host = parsedUrl.host;
   return /^.*:.*:.*$|^(localhost|host.docker.internal)(:[0-9]+)?$|^(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])(\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])){3}(:[0-9]+)?$/.test(host) || Boolean(parsedUrl.port) && PathStylePorts.includes(parsedUrl.port);
 }
-function appendToURLQuery(url3, queryParts) {
-  const urlParsed = new URL(url3);
+function appendToURLQuery(url2, queryParts) {
+  const urlParsed = new URL(url2);
   let query = urlParsed.search;
   if (query) {
     query += "&" + queryParts;
@@ -141721,6 +142863,20 @@ function assertResponse(response) {
     return response;
   }
   throw new TypeError(`Unexpected response object ${response}`);
+}
+function adjustResponse(result) {
+  const compatResponse = toCompatResponse2(result._response.rawResponse);
+  compatResponse.parsedHeaders = { ...result._response.parsedHeaders };
+  if (result._response.parsedBody !== void 0) {
+    const { _response, ...rest } = result._response.parsedBody;
+    compatResponse.parsedBody = rest;
+  }
+  compatResponse.bodyAsText = result._response.rawResponse.bodyAsText;
+  Object.defineProperty(result, "_response", {
+    value: compatResponse,
+    enumerable: false
+  });
+  return result;
 }
 
 // node_modules/@azure/storage-queue/dist/esm/SASQueryParameters.js
@@ -141849,8 +143005,8 @@ var SASQueryParameters = class {
    * @param identifier - Representing the signed identifier (only for Service SAS)
    * @param resource - Representing the storage queue (only for Service SAS)
    */
-  constructor(version5, signature, permissions, services, resourceTypes, protocol, startsOn, expiresOn, ipRange, identifier, resource, userDelegationKey, delegatedUserObjectId) {
-    this.version = version5;
+  constructor(version4, signature, permissions, services, resourceTypes, protocol, startsOn, expiresOn, ipRange, identifier, resource, userDelegationKey, delegatedUserObjectId) {
+    this.version = version4;
     this.services = services;
     this.resourceTypes = resourceTypes;
     this.expiresOn = expiresOn;
@@ -144347,8 +145503,8 @@ var HeaderConstants3 = {
 };
 
 // node_modules/@azure/storage-common/dist/esm/utils/utils.common.js
-function setURLParameter(url3, name3, value) {
-  const urlParsed = new URL(url3);
+function setURLParameter(url2, name3, value) {
+  const urlParsed = new URL(url2);
   const encodedName = encodeURIComponent(name3);
   const encodedValue = value ? encodeURIComponent(value) : void 0;
   const searchString = urlParsed.search === "" ? "?" : urlParsed.search;
@@ -144367,21 +145523,21 @@ function setURLParameter(url3, name3, value) {
   urlParsed.search = searchPieces.length ? `?${searchPieces.join("&")}` : "";
   return urlParsed.toString();
 }
-function setURLHost(url3, host) {
-  const urlParsed = new URL(url3);
+function setURLHost(url2, host) {
+  const urlParsed = new URL(url2);
   urlParsed.hostname = host;
   return urlParsed.toString();
 }
-function getURLPath(url3) {
+function getURLPath(url2) {
   try {
-    const urlParsed = new URL(url3);
+    const urlParsed = new URL(url2);
     return urlParsed.pathname;
   } catch (e) {
     return void 0;
   }
 }
-function getURLQueries(url3) {
-  let queryString = new URL(url3).search;
+function getURLQueries(url2) {
+  let queryString = new URL(url2).search;
   if (!queryString) {
     return {};
   }
@@ -145523,397 +146679,6 @@ var UserDelegationKeyCredential = class {
   }
 };
 
-// node_modules/@azure/core-http-compat/dist/esm/policies/disableKeepAlivePolicy.js
-var disableKeepAlivePolicyName2 = "DisableKeepAlivePolicy";
-function createDisableKeepAlivePolicy() {
-  return {
-    name: disableKeepAlivePolicyName2,
-    sendRequest(request, next) {
-      request.disableKeepAlive = true;
-      return next(request);
-    }
-  };
-}
-function pipelineContainsDisableKeepAlivePolicy(pipeline) {
-  return pipeline.getOrderedPolicies().some((policy) => policy.name === disableKeepAlivePolicyName2);
-}
-
-// node_modules/@azure/core-http-compat/dist/esm/util.js
-var originalRequestSymbol2 = /* @__PURE__ */ Symbol("Original PipelineRequest");
-var originalClientRequestSymbol = /* @__PURE__ */ Symbol.for("@azure/core-client original request");
-var passThroughProps = /* @__PURE__ */ new Set([
-  "url",
-  "method",
-  "withCredentials",
-  "timeout",
-  "requestId",
-  "abortSignal",
-  "body",
-  "formData",
-  "onDownloadProgress",
-  "onUploadProgress",
-  "proxySettings",
-  "streamResponseStatusCodes",
-  "agent",
-  "requestOverrides"
-]);
-function toPipelineRequest(webResource, options = {}) {
-  const compatWebResource = webResource;
-  const request = compatWebResource[originalRequestSymbol2];
-  const headers = createHttpHeaders3(webResource.headers.toJson({ preserveCase: true }));
-  if (request) {
-    request.headers = headers;
-    return request;
-  } else {
-    const newRequest = createPipelineRequest3({
-      url: webResource.url,
-      method: webResource.method,
-      headers,
-      withCredentials: webResource.withCredentials,
-      timeout: webResource.timeout,
-      requestId: webResource.requestId,
-      abortSignal: webResource.abortSignal,
-      body: webResource.body,
-      formData: webResource.formData,
-      disableKeepAlive: !!webResource.keepAlive,
-      onDownloadProgress: webResource.onDownloadProgress,
-      onUploadProgress: webResource.onUploadProgress,
-      proxySettings: webResource.proxySettings,
-      streamResponseStatusCodes: webResource.streamResponseStatusCodes,
-      agent: webResource.agent,
-      requestOverrides: webResource.requestOverrides
-    });
-    if (options.originalRequest) {
-      newRequest[originalClientRequestSymbol] = options.originalRequest;
-    }
-    return newRequest;
-  }
-}
-function toWebResourceLike(request, options) {
-  const originalRequest = options?.originalRequest ?? request;
-  const webResource = {
-    url: request.url,
-    method: request.method,
-    headers: toHttpHeadersLike2(request.headers),
-    withCredentials: request.withCredentials,
-    timeout: request.timeout,
-    requestId: request.headers.get("x-ms-client-request-id") || request.requestId,
-    abortSignal: request.abortSignal,
-    body: request.body,
-    formData: request.formData,
-    keepAlive: !!request.disableKeepAlive,
-    onDownloadProgress: request.onDownloadProgress,
-    onUploadProgress: request.onUploadProgress,
-    proxySettings: request.proxySettings,
-    streamResponseStatusCodes: request.streamResponseStatusCodes,
-    agent: request.agent,
-    requestOverrides: request.requestOverrides,
-    clone() {
-      throw new Error("Cannot clone a non-proxied WebResourceLike");
-    },
-    prepare() {
-      throw new Error("WebResourceLike.prepare() is not supported by @azure/core-http-compat");
-    },
-    validateRequestProperties() {
-    }
-  };
-  if (options?.createProxy) {
-    return new Proxy(webResource, {
-      get(target, prop, receiver) {
-        if (prop === originalRequestSymbol2) {
-          return request;
-        } else if (prop === "clone") {
-          return () => {
-            return toWebResourceLike(toPipelineRequest(webResource, { originalRequest }), {
-              createProxy: true,
-              originalRequest
-            });
-          };
-        }
-        return Reflect.get(target, prop, receiver);
-      },
-      set(target, prop, value, receiver) {
-        if (prop === "keepAlive") {
-          request.disableKeepAlive = !value;
-        }
-        if (typeof prop === "string" && passThroughProps.has(prop)) {
-          request[prop] = value;
-        }
-        return Reflect.set(target, prop, value, receiver);
-      }
-    });
-  } else {
-    return webResource;
-  }
-}
-function toHttpHeadersLike2(headers) {
-  return new HttpHeaders(headers.toJSON({ preserveCase: true }));
-}
-function getHeaderKey(headerName) {
-  return headerName.toLowerCase();
-}
-var HttpHeaders = class _HttpHeaders {
-  _headersMap;
-  constructor(rawHeaders) {
-    this._headersMap = {};
-    if (rawHeaders) {
-      for (const headerName in rawHeaders) {
-        this.set(headerName, rawHeaders[headerName]);
-      }
-    }
-  }
-  /**
-   * Set a header in this collection with the provided name and value. The name is
-   * case-insensitive.
-   * @param headerName - The name of the header to set. This value is case-insensitive.
-   * @param headerValue - The value of the header to set.
-   */
-  set(headerName, headerValue) {
-    this._headersMap[getHeaderKey(headerName)] = {
-      name: headerName,
-      value: headerValue.toString()
-    };
-  }
-  /**
-   * Get the header value for the provided header name, or undefined if no header exists in this
-   * collection with the provided name.
-   * @param headerName - The name of the header.
-   */
-  get(headerName) {
-    const header = this._headersMap[getHeaderKey(headerName)];
-    return !header ? void 0 : header.value;
-  }
-  /**
-   * Get whether or not this header collection contains a header entry for the provided header name.
-   */
-  contains(headerName) {
-    return !!this._headersMap[getHeaderKey(headerName)];
-  }
-  /**
-   * Remove the header with the provided headerName. Return whether or not the header existed and
-   * was removed.
-   * @param headerName - The name of the header to remove.
-   */
-  remove(headerName) {
-    const result = this.contains(headerName);
-    delete this._headersMap[getHeaderKey(headerName)];
-    return result;
-  }
-  /**
-   * Get the headers that are contained this collection as an object.
-   */
-  rawHeaders() {
-    return this.toJson({ preserveCase: true });
-  }
-  /**
-   * Get the headers that are contained in this collection as an array.
-   */
-  headersArray() {
-    const headers = [];
-    for (const headerKey in this._headersMap) {
-      headers.push(this._headersMap[headerKey]);
-    }
-    return headers;
-  }
-  /**
-   * Get the header names that are contained in this collection.
-   */
-  headerNames() {
-    const headerNames = [];
-    const headers = this.headersArray();
-    for (let i = 0; i < headers.length; ++i) {
-      headerNames.push(headers[i].name);
-    }
-    return headerNames;
-  }
-  /**
-   * Get the header values that are contained in this collection.
-   */
-  headerValues() {
-    const headerValues = [];
-    const headers = this.headersArray();
-    for (let i = 0; i < headers.length; ++i) {
-      headerValues.push(headers[i].value);
-    }
-    return headerValues;
-  }
-  /**
-   * Get the JSON object representation of this HTTP header collection.
-   */
-  toJson(options = {}) {
-    const result = {};
-    if (options.preserveCase) {
-      for (const headerKey in this._headersMap) {
-        const header = this._headersMap[headerKey];
-        result[header.name] = header.value;
-      }
-    } else {
-      for (const headerKey in this._headersMap) {
-        const header = this._headersMap[headerKey];
-        result[getHeaderKey(header.name)] = header.value;
-      }
-    }
-    return result;
-  }
-  /**
-   * Get the string representation of this HTTP header collection.
-   */
-  toString() {
-    return JSON.stringify(this.toJson({ preserveCase: true }));
-  }
-  /**
-   * Create a deep clone/copy of this HttpHeaders collection.
-   */
-  clone() {
-    const resultPreservingCasing = {};
-    for (const headerKey in this._headersMap) {
-      const header = this._headersMap[headerKey];
-      resultPreservingCasing[header.name] = header.value;
-    }
-    return new _HttpHeaders(resultPreservingCasing);
-  }
-};
-
-// node_modules/@azure/core-http-compat/dist/esm/response.js
-var originalResponse = /* @__PURE__ */ Symbol("Original FullOperationResponse");
-function toCompatResponse2(response, options) {
-  let request = toWebResourceLike(response.request);
-  let headers = toHttpHeadersLike2(response.headers);
-  if (options?.createProxy) {
-    return new Proxy(response, {
-      get(target, prop, receiver) {
-        if (prop === "headers") {
-          return headers;
-        } else if (prop === "request") {
-          return request;
-        } else if (prop === originalResponse) {
-          return response;
-        }
-        return Reflect.get(target, prop, receiver);
-      },
-      set(target, prop, value, receiver) {
-        if (prop === "headers") {
-          headers = value;
-        } else if (prop === "request") {
-          request = value;
-        }
-        return Reflect.set(target, prop, value, receiver);
-      }
-    });
-  } else {
-    return {
-      ...response,
-      request,
-      headers
-    };
-  }
-}
-function toPipelineResponse(compatResponse) {
-  const extendedCompatResponse = compatResponse;
-  const response = extendedCompatResponse[originalResponse];
-  const headers = createHttpHeaders3(compatResponse.headers.toJson({ preserveCase: true }));
-  if (response) {
-    response.headers = headers;
-    return response;
-  } else {
-    return {
-      ...compatResponse,
-      headers,
-      request: toPipelineRequest(compatResponse.request)
-    };
-  }
-}
-
-// node_modules/@azure/core-http-compat/dist/esm/extendedClient.js
-var ExtendedServiceClient2 = class extends ServiceClient {
-  constructor(options) {
-    super(options);
-    if (options.keepAliveOptions?.enable === false && !pipelineContainsDisableKeepAlivePolicy(this.pipeline)) {
-      this.pipeline.addPolicy(createDisableKeepAlivePolicy());
-    }
-    if (options.redirectOptions?.handleRedirects === false) {
-      this.pipeline.removePolicy({
-        name: redirectPolicyName3
-      });
-    }
-  }
-  /**
-   * Compatible send operation request function.
-   *
-   * @param operationArguments - Operation arguments
-   * @param operationSpec - Operation Spec
-   * @returns
-   */
-  async sendOperationRequest(operationArguments, operationSpec) {
-    const userProvidedCallBack = operationArguments?.options?.onResponse;
-    let lastResponse;
-    function onResponse(rawResponse, flatResponse, error) {
-      lastResponse = rawResponse;
-      if (userProvidedCallBack) {
-        userProvidedCallBack(rawResponse, flatResponse, error);
-      }
-    }
-    operationArguments.options = {
-      ...operationArguments.options,
-      onResponse
-    };
-    const result = await super.sendOperationRequest(operationArguments, operationSpec);
-    if (lastResponse) {
-      Object.defineProperty(result, "_response", {
-        value: toCompatResponse2(lastResponse)
-      });
-    }
-    return result;
-  }
-};
-
-// node_modules/@azure/core-http-compat/dist/esm/policies/requestPolicyFactoryPolicy.js
-var HttpPipelineLogLevel2;
-(function(HttpPipelineLogLevel3) {
-  HttpPipelineLogLevel3[HttpPipelineLogLevel3["ERROR"] = 1] = "ERROR";
-  HttpPipelineLogLevel3[HttpPipelineLogLevel3["INFO"] = 3] = "INFO";
-  HttpPipelineLogLevel3[HttpPipelineLogLevel3["OFF"] = 0] = "OFF";
-  HttpPipelineLogLevel3[HttpPipelineLogLevel3["WARNING"] = 2] = "WARNING";
-})(HttpPipelineLogLevel2 || (HttpPipelineLogLevel2 = {}));
-var mockRequestPolicyOptions = {
-  log(_logLevel, _message) {
-  },
-  shouldLog(_logLevel) {
-    return false;
-  }
-};
-var requestPolicyFactoryPolicyName2 = "RequestPolicyFactoryPolicy";
-function createRequestPolicyFactoryPolicy2(factories) {
-  const orderedFactories = factories.slice().reverse();
-  return {
-    name: requestPolicyFactoryPolicyName2,
-    async sendRequest(request, next) {
-      let httpPipeline = {
-        async sendRequest(httpRequest) {
-          const response2 = await next(toPipelineRequest(httpRequest));
-          return toCompatResponse2(response2, { createProxy: true });
-        }
-      };
-      for (const factory of orderedFactories) {
-        httpPipeline = factory.create(httpPipeline, mockRequestPolicyOptions);
-      }
-      const webResourceLike = toWebResourceLike(request, { createProxy: true });
-      const response = await httpPipeline.sendRequest(webResourceLike);
-      return toPipelineResponse(response);
-    }
-  };
-}
-
-// node_modules/@azure/core-http-compat/dist/esm/httpClientAdapter.js
-function convertHttpClient2(requestPolicyClient) {
-  return {
-    sendRequest: async (request) => {
-      const response = await requestPolicyClient.sendRequest(toWebResourceLike(request, { createProxy: true }));
-      return toPipelineResponse(response);
-    }
-  };
-}
-
 // node_modules/@azure/storage-queue/dist/esm/log.js
 var logger30 = createClientLogger3("storage-queue");
 
@@ -145998,7 +146763,7 @@ function getCoreClientOptions(pipeline) {
   }
   let corePipeline = pipeline._corePipeline;
   if (!corePipeline) {
-    const packageDetails = `azsdk-js-azure-storage-blob/${SDK_VERSION4}`;
+    const packageDetails = `azsdk-js-storage-queue/${SDK_VERSION4}`;
     const userAgentPrefix = restOptions.userAgentOptions && restOptions.userAgentOptions.userAgentPrefix ? `${restOptions.userAgentOptions.userAgentPrefix} ${packageDetails}` : `${packageDetails}`;
     corePipeline = createClientPipeline({
       ...restOptions,
@@ -146009,30 +146774,12 @@ function getCoreClientOptions(pipeline) {
       },
       userAgentOptions: {
         userAgentPrefix
-      },
-      serializationOptions: {
-        stringifyXML,
-        serializerOptions: {
-          xml: {
-            // Use customized XML char key of "#" so we can deserialize metadata
-            // with "_" key
-            xmlCharKey: "#"
-          }
-        }
-      },
-      deserializationOptions: {
-        parseXML,
-        serializerOptions: {
-          xml: {
-            // Use customized XML char key of "#" so we can deserialize metadata
-            // with "_" key
-            xmlCharKey: "#"
-          }
-        }
       }
     });
     corePipeline.removePolicy({ phase: "Retry" });
     corePipeline.removePolicy({ name: decompressResponsePolicyName3 });
+    corePipeline.removePolicy({ name: "deserializationPolicy" });
+    corePipeline.removePolicy({ name: "serializationPolicy" });
     corePipeline.addPolicy(storageCorrectContentLengthPolicy());
     corePipeline.addPolicy(storageRetryPolicy(restOptions.retryOptions), { phase: "Retry" });
     corePipeline.addPolicy(storageRequestFailureDetailsParserPolicy());
@@ -146144,3097 +146891,2358 @@ function isCoreHttpPolicyFactory(factory) {
 }
 
 // node_modules/@azure/storage-queue/dist/esm/models.js
+var xMsMetaPrefix = "x-ms-meta-";
+function metadataToRawHeaders(metadata) {
+  const metadataHeaders = {};
+  if (metadata) {
+    for (const key of Object.keys(metadata)) {
+      metadataHeaders[`${xMsMetaPrefix}${key.toLowerCase()}`] = metadata[key];
+    }
+  }
+  return metadataHeaders;
+}
 var StorageQueueAudience;
 (function(StorageQueueAudience2) {
   StorageQueueAudience2["StorageOAuthScopes"] = "https://storage.azure.com/.default";
 })(StorageQueueAudience || (StorageQueueAudience = {}));
 
-// node_modules/@azure/storage-queue/dist/esm/generated/src/models/index.js
-var KnownStorageErrorCode;
-(function(KnownStorageErrorCode2) {
-  KnownStorageErrorCode2["AccountAlreadyExists"] = "AccountAlreadyExists";
-  KnownStorageErrorCode2["AccountBeingCreated"] = "AccountBeingCreated";
-  KnownStorageErrorCode2["AccountIsDisabled"] = "AccountIsDisabled";
-  KnownStorageErrorCode2["AuthenticationFailed"] = "AuthenticationFailed";
-  KnownStorageErrorCode2["AuthorizationFailure"] = "AuthorizationFailure";
-  KnownStorageErrorCode2["ConditionHeadersNotSupported"] = "ConditionHeadersNotSupported";
-  KnownStorageErrorCode2["ConditionNotMet"] = "ConditionNotMet";
-  KnownStorageErrorCode2["EmptyMetadataKey"] = "EmptyMetadataKey";
-  KnownStorageErrorCode2["InsufficientAccountPermissions"] = "InsufficientAccountPermissions";
-  KnownStorageErrorCode2["InternalError"] = "InternalError";
-  KnownStorageErrorCode2["InvalidAuthenticationInfo"] = "InvalidAuthenticationInfo";
-  KnownStorageErrorCode2["InvalidHeaderValue"] = "InvalidHeaderValue";
-  KnownStorageErrorCode2["InvalidHttpVerb"] = "InvalidHttpVerb";
-  KnownStorageErrorCode2["InvalidInput"] = "InvalidInput";
-  KnownStorageErrorCode2["InvalidMd5"] = "InvalidMd5";
-  KnownStorageErrorCode2["InvalidMetadata"] = "InvalidMetadata";
-  KnownStorageErrorCode2["InvalidQueryParameterValue"] = "InvalidQueryParameterValue";
-  KnownStorageErrorCode2["InvalidRange"] = "InvalidRange";
-  KnownStorageErrorCode2["InvalidResourceName"] = "InvalidResourceName";
-  KnownStorageErrorCode2["InvalidUri"] = "InvalidUri";
-  KnownStorageErrorCode2["InvalidXmlDocument"] = "InvalidXmlDocument";
-  KnownStorageErrorCode2["InvalidXmlNodeValue"] = "InvalidXmlNodeValue";
-  KnownStorageErrorCode2["Md5Mismatch"] = "Md5Mismatch";
-  KnownStorageErrorCode2["MetadataTooLarge"] = "MetadataTooLarge";
-  KnownStorageErrorCode2["MissingContentLengthHeader"] = "MissingContentLengthHeader";
-  KnownStorageErrorCode2["MissingRequiredQueryParameter"] = "MissingRequiredQueryParameter";
-  KnownStorageErrorCode2["MissingRequiredHeader"] = "MissingRequiredHeader";
-  KnownStorageErrorCode2["MissingRequiredXmlNode"] = "MissingRequiredXmlNode";
-  KnownStorageErrorCode2["MultipleConditionHeadersNotSupported"] = "MultipleConditionHeadersNotSupported";
-  KnownStorageErrorCode2["OperationTimedOut"] = "OperationTimedOut";
-  KnownStorageErrorCode2["OutOfRangeInput"] = "OutOfRangeInput";
-  KnownStorageErrorCode2["OutOfRangeQueryParameterValue"] = "OutOfRangeQueryParameterValue";
-  KnownStorageErrorCode2["RequestBodyTooLarge"] = "RequestBodyTooLarge";
-  KnownStorageErrorCode2["ResourceTypeMismatch"] = "ResourceTypeMismatch";
-  KnownStorageErrorCode2["RequestUrlFailedToParse"] = "RequestUrlFailedToParse";
-  KnownStorageErrorCode2["ResourceAlreadyExists"] = "ResourceAlreadyExists";
-  KnownStorageErrorCode2["ResourceNotFound"] = "ResourceNotFound";
-  KnownStorageErrorCode2["ServerBusy"] = "ServerBusy";
-  KnownStorageErrorCode2["UnsupportedHeader"] = "UnsupportedHeader";
-  KnownStorageErrorCode2["UnsupportedXmlNode"] = "UnsupportedXmlNode";
-  KnownStorageErrorCode2["UnsupportedQueryParameter"] = "UnsupportedQueryParameter";
-  KnownStorageErrorCode2["UnsupportedHttpVerb"] = "UnsupportedHttpVerb";
-  KnownStorageErrorCode2["InvalidMarker"] = "InvalidMarker";
-  KnownStorageErrorCode2["MessageNotFound"] = "MessageNotFound";
-  KnownStorageErrorCode2["MessageTooLarge"] = "MessageTooLarge";
-  KnownStorageErrorCode2["PopReceiptMismatch"] = "PopReceiptMismatch";
-  KnownStorageErrorCode2["QueueAlreadyExists"] = "QueueAlreadyExists";
-  KnownStorageErrorCode2["QueueBeingDeleted"] = "QueueBeingDeleted";
-  KnownStorageErrorCode2["QueueDisabled"] = "QueueDisabled";
-  KnownStorageErrorCode2["QueueNotEmpty"] = "QueueNotEmpty";
-  KnownStorageErrorCode2["QueueNotFound"] = "QueueNotFound";
-  KnownStorageErrorCode2["AuthorizationSourceIPMismatch"] = "AuthorizationSourceIPMismatch";
-  KnownStorageErrorCode2["AuthorizationProtocolMismatch"] = "AuthorizationProtocolMismatch";
-  KnownStorageErrorCode2["AuthorizationPermissionMismatch"] = "AuthorizationPermissionMismatch";
-  KnownStorageErrorCode2["AuthorizationServiceMismatch"] = "AuthorizationServiceMismatch";
-  KnownStorageErrorCode2["AuthorizationResourceTypeMismatch"] = "AuthorizationResourceTypeMismatch";
-  KnownStorageErrorCode2["FeatureVersionMismatch"] = "FeatureVersionMismatch";
-})(KnownStorageErrorCode || (KnownStorageErrorCode = {}));
+// node_modules/@azure/storage-queue/dist/esm/generated/logger.js
+var logger31 = createClientLogger3("storage-queue");
 
-// node_modules/@azure/storage-queue/dist/esm/generated/src/models/mappers.js
-var mappers_exports2 = {};
-__export(mappers_exports2, {
-  AccessPolicy: () => AccessPolicy2,
-  CorsRule: () => CorsRule2,
-  DequeuedMessageItem: () => DequeuedMessageItem,
-  EnqueuedMessage: () => EnqueuedMessage,
-  GeoReplication: () => GeoReplication2,
-  KeyInfo: () => KeyInfo,
-  ListQueuesSegmentResponse: () => ListQueuesSegmentResponse,
-  Logging: () => Logging2,
-  MessageIdDeleteExceptionHeaders: () => MessageIdDeleteExceptionHeaders,
-  MessageIdDeleteHeaders: () => MessageIdDeleteHeaders,
-  MessageIdUpdateExceptionHeaders: () => MessageIdUpdateExceptionHeaders,
-  MessageIdUpdateHeaders: () => MessageIdUpdateHeaders,
-  MessagesClearExceptionHeaders: () => MessagesClearExceptionHeaders,
-  MessagesClearHeaders: () => MessagesClearHeaders,
-  MessagesDequeueExceptionHeaders: () => MessagesDequeueExceptionHeaders,
-  MessagesDequeueHeaders: () => MessagesDequeueHeaders,
-  MessagesEnqueueExceptionHeaders: () => MessagesEnqueueExceptionHeaders,
-  MessagesEnqueueHeaders: () => MessagesEnqueueHeaders,
-  MessagesPeekExceptionHeaders: () => MessagesPeekExceptionHeaders,
-  MessagesPeekHeaders: () => MessagesPeekHeaders,
-  Metrics: () => Metrics2,
-  PeekedMessageItem: () => PeekedMessageItem,
-  QueueCreateExceptionHeaders: () => QueueCreateExceptionHeaders,
-  QueueCreateHeaders: () => QueueCreateHeaders,
-  QueueDeleteExceptionHeaders: () => QueueDeleteExceptionHeaders,
-  QueueDeleteHeaders: () => QueueDeleteHeaders,
-  QueueGetAccessPolicyExceptionHeaders: () => QueueGetAccessPolicyExceptionHeaders,
-  QueueGetAccessPolicyHeaders: () => QueueGetAccessPolicyHeaders,
-  QueueGetPropertiesExceptionHeaders: () => QueueGetPropertiesExceptionHeaders,
-  QueueGetPropertiesHeaders: () => QueueGetPropertiesHeaders,
-  QueueItem: () => QueueItem,
-  QueueMessage: () => QueueMessage,
-  QueueServiceProperties: () => QueueServiceProperties,
-  QueueServiceStatistics: () => QueueServiceStatistics,
-  QueueSetAccessPolicyExceptionHeaders: () => QueueSetAccessPolicyExceptionHeaders,
-  QueueSetAccessPolicyHeaders: () => QueueSetAccessPolicyHeaders,
-  QueueSetMetadataExceptionHeaders: () => QueueSetMetadataExceptionHeaders,
-  QueueSetMetadataHeaders: () => QueueSetMetadataHeaders,
-  RetentionPolicy: () => RetentionPolicy2,
-  ServiceGetPropertiesExceptionHeaders: () => ServiceGetPropertiesExceptionHeaders2,
-  ServiceGetPropertiesHeaders: () => ServiceGetPropertiesHeaders2,
-  ServiceGetStatisticsExceptionHeaders: () => ServiceGetStatisticsExceptionHeaders2,
-  ServiceGetStatisticsHeaders: () => ServiceGetStatisticsHeaders2,
-  ServiceGetUserDelegationKeyExceptionHeaders: () => ServiceGetUserDelegationKeyExceptionHeaders,
-  ServiceGetUserDelegationKeyHeaders: () => ServiceGetUserDelegationKeyHeaders,
-  ServiceListQueuesSegmentExceptionHeaders: () => ServiceListQueuesSegmentExceptionHeaders,
-  ServiceListQueuesSegmentHeaders: () => ServiceListQueuesSegmentHeaders,
-  ServiceSetPropertiesExceptionHeaders: () => ServiceSetPropertiesExceptionHeaders2,
-  ServiceSetPropertiesHeaders: () => ServiceSetPropertiesHeaders2,
-  SignedIdentifier: () => SignedIdentifier2,
-  StorageError: () => StorageError,
-  UserDelegationKey: () => UserDelegationKey
-});
-var QueueServiceProperties = {
-  serializedName: "QueueServiceProperties",
-  xmlName: "StorageServiceProperties",
-  type: {
-    name: "Composite",
-    className: "QueueServiceProperties",
-    modelProperties: {
-      queueAnalyticsLogging: {
-        serializedName: "Logging",
-        xmlName: "Logging",
-        type: {
-          name: "Composite",
-          className: "Logging"
-        }
-      },
-      hourMetrics: {
-        serializedName: "HourMetrics",
-        xmlName: "HourMetrics",
-        type: {
-          name: "Composite",
-          className: "Metrics"
-        }
-      },
-      minuteMetrics: {
-        serializedName: "MinuteMetrics",
-        xmlName: "MinuteMetrics",
-        type: {
-          name: "Composite",
-          className: "Metrics"
-        }
-      },
-      cors: {
-        serializedName: "Cors",
-        xmlName: "Cors",
-        xmlIsWrapped: true,
-        xmlElementName: "CorsRule",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "CorsRule"
-            }
-          }
-        }
-      }
-    }
+// node_modules/@azure-rest/core-client/dist/esm/restError.js
+function createRestError3(messageOrResponse, response) {
+  if (typeof messageOrResponse === "string") {
+    return createRestError2(messageOrResponse, response);
+  } else {
+    return createRestError2(messageOrResponse);
   }
-};
-var Logging2 = {
-  serializedName: "Logging",
-  type: {
-    name: "Composite",
-    className: "Logging",
-    modelProperties: {
-      version: {
-        serializedName: "Version",
-        required: true,
-        xmlName: "Version",
-        type: {
-          name: "String"
-        }
-      },
-      deleteProperty: {
-        serializedName: "Delete",
-        required: true,
-        xmlName: "Delete",
-        type: {
-          name: "Boolean"
-        }
-      },
-      read: {
-        serializedName: "Read",
-        required: true,
-        xmlName: "Read",
-        type: {
-          name: "Boolean"
-        }
-      },
-      write: {
-        serializedName: "Write",
-        required: true,
-        xmlName: "Write",
-        type: {
-          name: "Boolean"
-        }
-      },
-      retentionPolicy: {
-        serializedName: "RetentionPolicy",
-        xmlName: "RetentionPolicy",
-        type: {
-          name: "Composite",
-          className: "RetentionPolicy"
-        }
-      }
-    }
-  }
-};
-var RetentionPolicy2 = {
-  serializedName: "RetentionPolicy",
-  type: {
-    name: "Composite",
-    className: "RetentionPolicy",
-    modelProperties: {
-      enabled: {
-        serializedName: "Enabled",
-        required: true,
-        xmlName: "Enabled",
-        type: {
-          name: "Boolean"
-        }
-      },
-      days: {
-        constraints: {
-          InclusiveMinimum: 1
-        },
-        serializedName: "Days",
-        xmlName: "Days",
-        type: {
-          name: "Number"
-        }
-      }
-    }
-  }
-};
-var Metrics2 = {
-  serializedName: "Metrics",
-  type: {
-    name: "Composite",
-    className: "Metrics",
-    modelProperties: {
-      version: {
-        serializedName: "Version",
-        xmlName: "Version",
-        type: {
-          name: "String"
-        }
-      },
-      enabled: {
-        serializedName: "Enabled",
-        required: true,
-        xmlName: "Enabled",
-        type: {
-          name: "Boolean"
-        }
-      },
-      includeAPIs: {
-        serializedName: "IncludeAPIs",
-        xmlName: "IncludeAPIs",
-        type: {
-          name: "Boolean"
-        }
-      },
-      retentionPolicy: {
-        serializedName: "RetentionPolicy",
-        xmlName: "RetentionPolicy",
-        type: {
-          name: "Composite",
-          className: "RetentionPolicy"
-        }
-      }
-    }
-  }
-};
-var CorsRule2 = {
-  serializedName: "CorsRule",
-  type: {
-    name: "Composite",
-    className: "CorsRule",
-    modelProperties: {
-      allowedOrigins: {
-        serializedName: "AllowedOrigins",
-        required: true,
-        xmlName: "AllowedOrigins",
-        type: {
-          name: "String"
-        }
-      },
-      allowedMethods: {
-        serializedName: "AllowedMethods",
-        required: true,
-        xmlName: "AllowedMethods",
-        type: {
-          name: "String"
-        }
-      },
-      allowedHeaders: {
-        serializedName: "AllowedHeaders",
-        required: true,
-        xmlName: "AllowedHeaders",
-        type: {
-          name: "String"
-        }
-      },
-      exposedHeaders: {
-        serializedName: "ExposedHeaders",
-        required: true,
-        xmlName: "ExposedHeaders",
-        type: {
-          name: "String"
-        }
-      },
-      maxAgeInSeconds: {
-        constraints: {
-          InclusiveMinimum: 0
-        },
-        serializedName: "MaxAgeInSeconds",
-        required: true,
-        xmlName: "MaxAgeInSeconds",
-        type: {
-          name: "Number"
-        }
-      }
-    }
-  }
-};
-var StorageError = {
-  serializedName: "StorageError",
-  type: {
-    name: "Composite",
-    className: "StorageError",
-    modelProperties: {
-      message: {
-        serializedName: "Message",
-        xmlName: "Message",
-        type: {
-          name: "String"
-        }
-      },
-      code: {
-        serializedName: "Code",
-        xmlName: "Code",
-        type: {
-          name: "String"
-        }
-      },
-      authenticationErrorDetail: {
-        serializedName: "AuthenticationErrorDetail",
-        xmlName: "AuthenticationErrorDetail",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var QueueServiceStatistics = {
-  serializedName: "QueueServiceStatistics",
-  xmlName: "StorageServiceStats",
-  type: {
-    name: "Composite",
-    className: "QueueServiceStatistics",
-    modelProperties: {
-      geoReplication: {
-        serializedName: "GeoReplication",
-        xmlName: "GeoReplication",
-        type: {
-          name: "Composite",
-          className: "GeoReplication"
-        }
-      }
-    }
-  }
-};
-var GeoReplication2 = {
-  serializedName: "GeoReplication",
-  type: {
-    name: "Composite",
-    className: "GeoReplication",
-    modelProperties: {
-      status: {
-        serializedName: "Status",
-        required: true,
-        xmlName: "Status",
-        type: {
-          name: "Enum",
-          allowedValues: ["live", "bootstrap", "unavailable"]
-        }
-      },
-      lastSyncOn: {
-        serializedName: "LastSyncTime",
-        required: true,
-        xmlName: "LastSyncTime",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      }
-    }
-  }
-};
-var KeyInfo = {
-  serializedName: "KeyInfo",
-  type: {
-    name: "Composite",
-    className: "KeyInfo",
-    modelProperties: {
-      start: {
-        serializedName: "Start",
-        xmlName: "Start",
-        type: {
-          name: "String"
-        }
-      },
-      expiry: {
-        serializedName: "Expiry",
-        required: true,
-        xmlName: "Expiry",
-        type: {
-          name: "String"
-        }
-      },
-      delegatedUserTid: {
-        serializedName: "DelegatedUserTid",
-        xmlName: "DelegatedUserTid",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var UserDelegationKey = {
-  serializedName: "UserDelegationKey",
-  type: {
-    name: "Composite",
-    className: "UserDelegationKey",
-    modelProperties: {
-      signedObjectId: {
-        serializedName: "SignedOid",
-        required: true,
-        xmlName: "SignedOid",
-        type: {
-          name: "String"
-        }
-      },
-      signedTenantId: {
-        serializedName: "SignedTid",
-        required: true,
-        xmlName: "SignedTid",
-        type: {
-          name: "String"
-        }
-      },
-      signedStartsOn: {
-        serializedName: "SignedStart",
-        required: true,
-        xmlName: "SignedStart",
-        type: {
-          name: "DateTime"
-        }
-      },
-      signedExpiresOn: {
-        serializedName: "SignedExpiry",
-        required: true,
-        xmlName: "SignedExpiry",
-        type: {
-          name: "DateTime"
-        }
-      },
-      signedService: {
-        serializedName: "SignedService",
-        required: true,
-        xmlName: "SignedService",
-        type: {
-          name: "String"
-        }
-      },
-      signedVersion: {
-        serializedName: "SignedVersion",
-        required: true,
-        xmlName: "SignedVersion",
-        type: {
-          name: "String"
-        }
-      },
-      signedDelegatedUserTenantId: {
-        serializedName: "SignedDelegatedUserTid",
-        xmlName: "SignedDelegatedUserTid",
-        type: {
-          name: "String"
-        }
-      },
-      value: {
-        serializedName: "Value",
-        required: true,
-        xmlName: "Value",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var ListQueuesSegmentResponse = {
-  serializedName: "ListQueuesSegmentResponse",
-  xmlName: "EnumerationResults",
-  type: {
-    name: "Composite",
-    className: "ListQueuesSegmentResponse",
-    modelProperties: {
-      serviceEndpoint: {
-        serializedName: "ServiceEndpoint",
-        required: true,
-        xmlName: "ServiceEndpoint",
-        xmlIsAttribute: true,
-        type: {
-          name: "String"
-        }
-      },
-      prefix: {
-        serializedName: "Prefix",
-        required: true,
-        xmlName: "Prefix",
-        type: {
-          name: "String"
-        }
-      },
-      marker: {
-        serializedName: "Marker",
-        xmlName: "Marker",
-        type: {
-          name: "String"
-        }
-      },
-      maxPageSize: {
-        serializedName: "MaxResults",
-        required: true,
-        xmlName: "MaxResults",
-        type: {
-          name: "Number"
-        }
-      },
-      queueItems: {
-        serializedName: "QueueItems",
-        xmlName: "Queues",
-        xmlIsWrapped: true,
-        xmlElementName: "Queue",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "QueueItem"
-            }
-          }
-        }
-      },
-      continuationToken: {
-        serializedName: "NextMarker",
-        required: true,
-        xmlName: "NextMarker",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var QueueItem = {
-  serializedName: "QueueItem",
-  xmlName: "Queue",
-  type: {
-    name: "Composite",
-    className: "QueueItem",
-    modelProperties: {
-      name: {
-        serializedName: "Name",
-        required: true,
-        xmlName: "Name",
-        type: {
-          name: "String"
-        }
-      },
-      metadata: {
-        serializedName: "Metadata",
-        xmlName: "Metadata",
-        type: {
-          name: "Dictionary",
-          value: { type: { name: "String" } }
-        }
-      }
-    }
-  }
-};
-var SignedIdentifier2 = {
-  serializedName: "SignedIdentifier",
-  type: {
-    name: "Composite",
-    className: "SignedIdentifier",
-    modelProperties: {
-      id: {
-        serializedName: "Id",
-        required: true,
-        xmlName: "Id",
-        type: {
-          name: "String"
-        }
-      },
-      accessPolicy: {
-        serializedName: "AccessPolicy",
-        xmlName: "AccessPolicy",
-        type: {
-          name: "Composite",
-          className: "AccessPolicy"
-        }
-      }
-    }
-  }
-};
-var AccessPolicy2 = {
-  serializedName: "AccessPolicy",
-  type: {
-    name: "Composite",
-    className: "AccessPolicy",
-    modelProperties: {
-      startsOn: {
-        serializedName: "Start",
-        xmlName: "Start",
-        type: {
-          name: "String"
-        }
-      },
-      expiresOn: {
-        serializedName: "Expiry",
-        xmlName: "Expiry",
-        type: {
-          name: "String"
-        }
-      },
-      permissions: {
-        serializedName: "Permission",
-        xmlName: "Permission",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var DequeuedMessageItem = {
-  serializedName: "DequeuedMessageItem",
-  xmlName: "QueueMessage",
-  xmlIsWrapped: true,
-  type: {
-    name: "Composite",
-    className: "DequeuedMessageItem",
-    modelProperties: {
-      messageId: {
-        serializedName: "MessageId",
-        required: true,
-        xmlName: "MessageId",
-        type: {
-          name: "String"
-        }
-      },
-      insertedOn: {
-        serializedName: "InsertionTime",
-        required: true,
-        xmlName: "InsertionTime",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      expiresOn: {
-        serializedName: "ExpirationTime",
-        required: true,
-        xmlName: "ExpirationTime",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      popReceipt: {
-        serializedName: "PopReceipt",
-        required: true,
-        xmlName: "PopReceipt",
-        type: {
-          name: "String"
-        }
-      },
-      nextVisibleOn: {
-        serializedName: "TimeNextVisible",
-        required: true,
-        xmlName: "TimeNextVisible",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      dequeueCount: {
-        serializedName: "DequeueCount",
-        required: true,
-        xmlName: "DequeueCount",
-        type: {
-          name: "Number"
-        }
-      },
-      messageText: {
-        serializedName: "MessageText",
-        required: true,
-        xmlName: "MessageText",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var QueueMessage = {
-  serializedName: "QueueMessage",
-  type: {
-    name: "Composite",
-    className: "QueueMessage",
-    modelProperties: {
-      messageText: {
-        serializedName: "MessageText",
-        required: true,
-        xmlName: "MessageText",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var EnqueuedMessage = {
-  serializedName: "EnqueuedMessage",
-  xmlName: "QueueMessage",
-  xmlIsWrapped: true,
-  type: {
-    name: "Composite",
-    className: "EnqueuedMessage",
-    modelProperties: {
-      messageId: {
-        serializedName: "MessageId",
-        required: true,
-        xmlName: "MessageId",
-        type: {
-          name: "String"
-        }
-      },
-      insertedOn: {
-        serializedName: "InsertionTime",
-        required: true,
-        xmlName: "InsertionTime",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      expiresOn: {
-        serializedName: "ExpirationTime",
-        required: true,
-        xmlName: "ExpirationTime",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      popReceipt: {
-        serializedName: "PopReceipt",
-        required: true,
-        xmlName: "PopReceipt",
-        type: {
-          name: "String"
-        }
-      },
-      nextVisibleOn: {
-        serializedName: "TimeNextVisible",
-        required: true,
-        xmlName: "TimeNextVisible",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      }
-    }
-  }
-};
-var PeekedMessageItem = {
-  serializedName: "PeekedMessageItem",
-  xmlName: "QueueMessage",
-  xmlIsWrapped: true,
-  type: {
-    name: "Composite",
-    className: "PeekedMessageItem",
-    modelProperties: {
-      messageId: {
-        serializedName: "MessageId",
-        required: true,
-        xmlName: "MessageId",
-        type: {
-          name: "String"
-        }
-      },
-      insertedOn: {
-        serializedName: "InsertionTime",
-        required: true,
-        xmlName: "InsertionTime",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      expiresOn: {
-        serializedName: "ExpirationTime",
-        required: true,
-        xmlName: "ExpirationTime",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      dequeueCount: {
-        serializedName: "DequeueCount",
-        required: true,
-        xmlName: "DequeueCount",
-        type: {
-          name: "Number"
-        }
-      },
-      messageText: {
-        serializedName: "MessageText",
-        required: true,
-        xmlName: "MessageText",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var ServiceSetPropertiesHeaders2 = {
-  serializedName: "Service_setPropertiesHeaders",
-  type: {
-    name: "Composite",
-    className: "ServiceSetPropertiesHeaders",
-    modelProperties: {
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var ServiceSetPropertiesExceptionHeaders2 = {
-  serializedName: "Service_setPropertiesExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "ServiceSetPropertiesExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var ServiceGetPropertiesHeaders2 = {
-  serializedName: "Service_getPropertiesHeaders",
-  type: {
-    name: "Composite",
-    className: "ServiceGetPropertiesHeaders",
-    modelProperties: {
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var ServiceGetPropertiesExceptionHeaders2 = {
-  serializedName: "Service_getPropertiesExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "ServiceGetPropertiesExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var ServiceGetStatisticsHeaders2 = {
-  serializedName: "Service_getStatisticsHeaders",
-  type: {
-    name: "Composite",
-    className: "ServiceGetStatisticsHeaders",
-    modelProperties: {
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      date: {
-        serializedName: "date",
-        xmlName: "date",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var ServiceGetStatisticsExceptionHeaders2 = {
-  serializedName: "Service_getStatisticsExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "ServiceGetStatisticsExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var ServiceGetUserDelegationKeyHeaders = {
-  serializedName: "Service_getUserDelegationKeyHeaders",
-  type: {
-    name: "Composite",
-    className: "ServiceGetUserDelegationKeyHeaders",
-    modelProperties: {
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      date: {
-        serializedName: "date",
-        xmlName: "date",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      }
-    }
-  }
-};
-var ServiceGetUserDelegationKeyExceptionHeaders = {
-  serializedName: "Service_getUserDelegationKeyExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "ServiceGetUserDelegationKeyExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var ServiceListQueuesSegmentHeaders = {
-  serializedName: "Service_listQueuesSegmentHeaders",
-  type: {
-    name: "Composite",
-    className: "ServiceListQueuesSegmentHeaders",
-    modelProperties: {
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      date: {
-        serializedName: "date",
-        xmlName: "date",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var ServiceListQueuesSegmentExceptionHeaders = {
-  serializedName: "Service_listQueuesSegmentExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "ServiceListQueuesSegmentExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var QueueCreateHeaders = {
-  serializedName: "Queue_createHeaders",
-  type: {
-    name: "Composite",
-    className: "QueueCreateHeaders",
-    modelProperties: {
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      date: {
-        serializedName: "date",
-        xmlName: "date",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var QueueCreateExceptionHeaders = {
-  serializedName: "Queue_createExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "QueueCreateExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var QueueDeleteHeaders = {
-  serializedName: "Queue_deleteHeaders",
-  type: {
-    name: "Composite",
-    className: "QueueDeleteHeaders",
-    modelProperties: {
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      date: {
-        serializedName: "date",
-        xmlName: "date",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var QueueDeleteExceptionHeaders = {
-  serializedName: "Queue_deleteExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "QueueDeleteExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var QueueGetPropertiesHeaders = {
-  serializedName: "Queue_getPropertiesHeaders",
-  type: {
-    name: "Composite",
-    className: "QueueGetPropertiesHeaders",
-    modelProperties: {
-      metadata: {
-        serializedName: "x-ms-meta",
-        headerCollectionPrefix: "x-ms-meta-",
-        xmlName: "x-ms-meta",
-        type: {
-          name: "Dictionary",
-          value: { type: { name: "String" } }
-        }
-      },
-      approximateMessagesCount: {
-        serializedName: "x-ms-approximate-messages-count",
-        xmlName: "x-ms-approximate-messages-count",
-        type: {
-          name: "Number"
-        }
-      },
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      date: {
-        serializedName: "date",
-        xmlName: "date",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var QueueGetPropertiesExceptionHeaders = {
-  serializedName: "Queue_getPropertiesExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "QueueGetPropertiesExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var QueueSetMetadataHeaders = {
-  serializedName: "Queue_setMetadataHeaders",
-  type: {
-    name: "Composite",
-    className: "QueueSetMetadataHeaders",
-    modelProperties: {
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      date: {
-        serializedName: "date",
-        xmlName: "date",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var QueueSetMetadataExceptionHeaders = {
-  serializedName: "Queue_setMetadataExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "QueueSetMetadataExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var QueueGetAccessPolicyHeaders = {
-  serializedName: "Queue_getAccessPolicyHeaders",
-  type: {
-    name: "Composite",
-    className: "QueueGetAccessPolicyHeaders",
-    modelProperties: {
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      date: {
-        serializedName: "date",
-        xmlName: "date",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var QueueGetAccessPolicyExceptionHeaders = {
-  serializedName: "Queue_getAccessPolicyExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "QueueGetAccessPolicyExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var QueueSetAccessPolicyHeaders = {
-  serializedName: "Queue_setAccessPolicyHeaders",
-  type: {
-    name: "Composite",
-    className: "QueueSetAccessPolicyHeaders",
-    modelProperties: {
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      date: {
-        serializedName: "date",
-        xmlName: "date",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var QueueSetAccessPolicyExceptionHeaders = {
-  serializedName: "Queue_setAccessPolicyExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "QueueSetAccessPolicyExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var MessagesDequeueHeaders = {
-  serializedName: "Messages_dequeueHeaders",
-  type: {
-    name: "Composite",
-    className: "MessagesDequeueHeaders",
-    modelProperties: {
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      date: {
-        serializedName: "date",
-        xmlName: "date",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var MessagesDequeueExceptionHeaders = {
-  serializedName: "Messages_dequeueExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "MessagesDequeueExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var MessagesClearHeaders = {
-  serializedName: "Messages_clearHeaders",
-  type: {
-    name: "Composite",
-    className: "MessagesClearHeaders",
-    modelProperties: {
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      date: {
-        serializedName: "date",
-        xmlName: "date",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var MessagesClearExceptionHeaders = {
-  serializedName: "Messages_clearExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "MessagesClearExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var MessagesEnqueueHeaders = {
-  serializedName: "Messages_enqueueHeaders",
-  type: {
-    name: "Composite",
-    className: "MessagesEnqueueHeaders",
-    modelProperties: {
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      date: {
-        serializedName: "date",
-        xmlName: "date",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var MessagesEnqueueExceptionHeaders = {
-  serializedName: "Messages_enqueueExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "MessagesEnqueueExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var MessagesPeekHeaders = {
-  serializedName: "Messages_peekHeaders",
-  type: {
-    name: "Composite",
-    className: "MessagesPeekHeaders",
-    modelProperties: {
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      date: {
-        serializedName: "date",
-        xmlName: "date",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var MessagesPeekExceptionHeaders = {
-  serializedName: "Messages_peekExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "MessagesPeekExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var MessageIdUpdateHeaders = {
-  serializedName: "MessageId_updateHeaders",
-  type: {
-    name: "Composite",
-    className: "MessageIdUpdateHeaders",
-    modelProperties: {
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      date: {
-        serializedName: "date",
-        xmlName: "date",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      popReceipt: {
-        serializedName: "x-ms-popreceipt",
-        xmlName: "x-ms-popreceipt",
-        type: {
-          name: "String"
-        }
-      },
-      nextVisibleOn: {
-        serializedName: "x-ms-time-next-visible",
-        xmlName: "x-ms-time-next-visible",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var MessageIdUpdateExceptionHeaders = {
-  serializedName: "MessageId_updateExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "MessageIdUpdateExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var MessageIdDeleteHeaders = {
-  serializedName: "MessageId_deleteHeaders",
-  type: {
-    name: "Composite",
-    className: "MessageIdDeleteHeaders",
-    modelProperties: {
-      requestId: {
-        serializedName: "x-ms-request-id",
-        xmlName: "x-ms-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      version: {
-        serializedName: "x-ms-version",
-        xmlName: "x-ms-version",
-        type: {
-          name: "String"
-        }
-      },
-      date: {
-        serializedName: "date",
-        xmlName: "date",
-        type: {
-          name: "DateTimeRfc1123"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      },
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-var MessageIdDeleteExceptionHeaders = {
-  serializedName: "MessageId_deleteExceptionHeaders",
-  type: {
-    name: "Composite",
-    className: "MessageIdDeleteExceptionHeaders",
-    modelProperties: {
-      errorCode: {
-        serializedName: "x-ms-error-code",
-        xmlName: "x-ms-error-code",
-        type: {
-          name: "String"
-        }
-      },
-      clientRequestId: {
-        serializedName: "x-ms-client-request-id",
-        xmlName: "x-ms-client-request-id",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
+}
 
-// node_modules/@azure/storage-queue/dist/esm/generated/src/models/parameters.js
-var contentType3 = {
-  parameterPath: ["options", "contentType"],
-  mapper: {
-    defaultValue: "application/xml",
-    isConstant: true,
-    serializedName: "Content-Type",
-    type: {
-      name: "String"
-    }
-  }
-};
-var properties = {
-  parameterPath: "properties",
-  mapper: QueueServiceProperties
-};
-var accept4 = {
-  parameterPath: "accept",
-  mapper: {
-    defaultValue: "application/xml",
-    isConstant: true,
-    serializedName: "Accept",
-    type: {
-      name: "String"
-    }
-  }
-};
-var url2 = {
-  parameterPath: "url",
-  mapper: {
-    serializedName: "url",
-    required: true,
-    xmlName: "url",
-    type: {
-      name: "String"
-    }
-  },
-  skipEncoding: true
-};
-var restype2 = {
-  parameterPath: "restype",
-  mapper: {
-    defaultValue: "service",
-    isConstant: true,
-    serializedName: "restype",
-    type: {
-      name: "String"
-    }
-  }
-};
-var comp3 = {
-  parameterPath: "comp",
-  mapper: {
-    defaultValue: "properties",
-    isConstant: true,
-    serializedName: "comp",
-    type: {
-      name: "String"
-    }
-  }
-};
-var timeoutInSeconds = {
-  parameterPath: ["options", "timeoutInSeconds"],
-  mapper: {
-    constraints: {
-      InclusiveMinimum: 0
-    },
-    serializedName: "timeout",
-    xmlName: "timeout",
-    type: {
-      name: "Number"
-    }
-  }
-};
-var version4 = {
-  parameterPath: "version",
-  mapper: {
-    defaultValue: "2026-04-06",
-    isConstant: true,
-    serializedName: "x-ms-version",
-    type: {
-      name: "String"
-    }
-  }
-};
-var requestId2 = {
-  parameterPath: ["options", "requestId"],
-  mapper: {
-    serializedName: "x-ms-client-request-id",
-    xmlName: "x-ms-client-request-id",
-    type: {
-      name: "String"
-    }
-  }
-};
-var accept12 = {
-  parameterPath: "accept",
-  mapper: {
-    defaultValue: "application/xml",
-    isConstant: true,
-    serializedName: "Accept",
-    type: {
-      name: "String"
-    }
-  }
-};
-var comp12 = {
-  parameterPath: "comp",
-  mapper: {
-    defaultValue: "stats",
-    isConstant: true,
-    serializedName: "comp",
-    type: {
-      name: "String"
-    }
-  }
-};
-var keyInfo = {
-  parameterPath: "keyInfo",
-  mapper: KeyInfo
-};
-var comp22 = {
-  parameterPath: "comp",
-  mapper: {
-    defaultValue: "userdelegationkey",
-    isConstant: true,
-    serializedName: "comp",
-    type: {
-      name: "String"
-    }
-  }
-};
-var comp32 = {
-  parameterPath: "comp",
-  mapper: {
-    defaultValue: "list",
-    isConstant: true,
-    serializedName: "comp",
-    type: {
-      name: "String"
-    }
-  }
-};
-var prefix = {
-  parameterPath: ["options", "prefix"],
-  mapper: {
-    serializedName: "prefix",
-    xmlName: "prefix",
-    type: {
-      name: "String"
-    }
-  }
-};
-var marker = {
-  parameterPath: ["options", "marker"],
-  mapper: {
-    serializedName: "marker",
-    xmlName: "marker",
-    type: {
-      name: "String"
-    }
-  }
-};
-var maxPageSize = {
-  parameterPath: ["options", "maxPageSize"],
-  mapper: {
-    constraints: {
-      InclusiveMinimum: 1
-    },
-    serializedName: "maxresults",
-    xmlName: "maxresults",
-    type: {
-      name: "Number"
-    }
-  }
-};
-var include = {
-  parameterPath: ["options", "include"],
-  mapper: {
-    serializedName: "include",
-    xmlName: "include",
-    xmlElementName: "ListQueuesIncludeType",
-    type: {
-      name: "Sequence",
-      element: {
-        defaultValue: "metadata",
-        isConstant: true,
-        type: {
-          name: "String"
-        }
+// node_modules/@azure-rest/core-client/dist/esm/apiVersionPolicy.js
+var apiVersionPolicyName3 = "ApiVersionPolicy";
+function apiVersionPolicy3(options) {
+  return {
+    name: apiVersionPolicyName3,
+    sendRequest: (req, next) => {
+      const url2 = new URL(req.url);
+      if (!url2.searchParams.get("api-version") && options.apiVersion) {
+        req.url = `${req.url}${url2.searchParams.size > 0 ? "&" : "?"}api-version=${options.apiVersion}`;
       }
+      return next(req);
     }
-  },
-  collectionFormat: "CSV"
-};
-var metadata = {
-  parameterPath: ["options", "metadata"],
-  mapper: {
-    serializedName: "x-ms-meta",
-    xmlName: "x-ms-meta",
-    headerCollectionPrefix: "x-ms-meta-",
-    type: {
-      name: "Dictionary",
-      value: { type: { name: "String" } }
+  };
+}
+
+// node_modules/@azure-rest/core-client/dist/esm/keyCredentialAuthenticationPolicy.js
+var keyCredentialAuthenticationPolicyName = "keyCredentialAuthenticationPolicy";
+function keyCredentialAuthenticationPolicy(credential, apiKeyHeaderName) {
+  return {
+    name: keyCredentialAuthenticationPolicyName,
+    sendRequest(request, next) {
+      request.headers.set(apiKeyHeaderName, credential.key);
+      return next(request);
+    }
+  };
+}
+
+// node_modules/@azure-rest/core-client/dist/esm/clientHelpers.js
+function addCredentialPipelinePolicy(pipeline, endpoint, options = {}) {
+  const { credential, clientOptions } = options;
+  if (!credential) {
+    return;
+  }
+  if (isTokenCredential2(credential)) {
+    const tokenPolicy = bearerTokenAuthenticationPolicy2({
+      credential,
+      scopes: clientOptions?.credentials?.scopes ?? `${endpoint}/.default`
+    });
+    pipeline.addPolicy(tokenPolicy);
+  } else if (isKeyCredential3(credential)) {
+    if (!clientOptions?.credentials?.apiKeyHeaderName) {
+      throw new Error(`Missing API Key Header Name`);
+    }
+    const keyPolicy = keyCredentialAuthenticationPolicy(credential, clientOptions?.credentials?.apiKeyHeaderName);
+    pipeline.addPolicy(keyPolicy);
+  }
+}
+function createDefaultPipeline3(endpoint, credential, options = {}) {
+  const pipeline = createPipelineFromOptions3(options);
+  pipeline.addPolicy(apiVersionPolicy3(options));
+  addCredentialPipelinePolicy(pipeline, endpoint, { credential, clientOptions: options });
+  return pipeline;
+}
+function isKeyCredential3(credential) {
+  return typeof credential === "object" && credential !== null && "key" in credential && typeof credential.key === "string";
+}
+
+// node_modules/@azure-rest/core-client/dist/esm/operationOptionHelpers.js
+function operationOptionsToRequestParameters3(options) {
+  const compatibilityOptions = options;
+  const tspRequestParameters = operationOptionsToRequestParameters2(options);
+  return {
+    ...tspRequestParameters,
+    headers: mergeHeaders(compatibilityOptions.requestOptions?.customHeaders, tspRequestParameters.headers),
+    tracingOptions: options.tracingOptions
+  };
+}
+function mergeHeaders(...headerSets) {
+  const headers = /* @__PURE__ */ new Map();
+  for (const headerSet of headerSets) {
+    for (const [name3, value] of Object.entries(headerSet ?? {})) {
+      headers.set(name3.toLowerCase(), value);
     }
   }
-};
-var comp4 = {
-  parameterPath: "comp",
-  mapper: {
-    defaultValue: "metadata",
-    isConstant: true,
-    serializedName: "comp",
-    type: {
-      name: "String"
-    }
-  }
-};
-var comp5 = {
-  parameterPath: "comp",
-  mapper: {
-    defaultValue: "acl",
-    isConstant: true,
-    serializedName: "comp",
-    type: {
-      name: "String"
-    }
-  }
-};
-var queueAcl = {
-  parameterPath: ["options", "queueAcl"],
-  mapper: {
-    serializedName: "queueAcl",
-    xmlName: "SignedIdentifiers",
-    xmlIsWrapped: true,
-    xmlElementName: "SignedIdentifier",
-    type: {
-      name: "Sequence",
-      element: {
-        type: {
-          name: "Composite",
-          className: "SignedIdentifier"
-        }
+  return Object.fromEntries(headers);
+}
+
+// node_modules/@azure-rest/core-client/dist/esm/getClient.js
+function wrapRequestParameters(parameters) {
+  if (parameters.onResponse) {
+    return {
+      ...parameters,
+      onResponse(rawResponse, error) {
+        parameters.onResponse?.(rawResponse, error, error);
       }
-    }
-  }
-};
-var numberOfMessages = {
-  parameterPath: ["options", "numberOfMessages"],
-  mapper: {
-    constraints: {
-      InclusiveMinimum: 1
-    },
-    serializedName: "numofmessages",
-    xmlName: "numofmessages",
-    type: {
-      name: "Number"
-    }
-  }
-};
-var visibilityTimeout = {
-  parameterPath: ["options", "visibilityTimeout"],
-  mapper: {
-    constraints: {
-      InclusiveMaximum: 604800,
-      InclusiveMinimum: 0
-    },
-    serializedName: "visibilitytimeout",
-    xmlName: "visibilitytimeout",
-    type: {
-      name: "Number"
-    }
-  }
-};
-var queueMessage = {
-  parameterPath: "queueMessage",
-  mapper: QueueMessage
-};
-var messageTimeToLive = {
-  parameterPath: ["options", "messageTimeToLive"],
-  mapper: {
-    constraints: {
-      InclusiveMinimum: -1
-    },
-    serializedName: "messagettl",
-    xmlName: "messagettl",
-    type: {
-      name: "Number"
-    }
-  }
-};
-var peekonly = {
-  parameterPath: "peekonly",
-  mapper: {
-    defaultValue: "true",
-    isConstant: true,
-    serializedName: "peekonly",
-    type: {
-      name: "String"
-    }
-  }
-};
-var queueMessage1 = {
-  parameterPath: ["options", "queueMessage"],
-  mapper: QueueMessage
-};
-var popReceipt = {
-  parameterPath: "popReceipt",
-  mapper: {
-    serializedName: "popreceipt",
-    required: true,
-    xmlName: "popreceipt",
-    type: {
-      name: "String"
-    }
-  }
-};
-var visibilityTimeout1 = {
-  parameterPath: "visibilityTimeout",
-  mapper: {
-    constraints: {
-      InclusiveMaximum: 604800,
-      InclusiveMinimum: 0
-    },
-    serializedName: "visibilitytimeout",
-    required: true,
-    xmlName: "visibilitytimeout",
-    type: {
-      name: "Number"
-    }
-  }
-};
-
-// node_modules/@azure/storage-queue/dist/esm/generated/src/operations/service.js
-var ServiceImpl2 = class {
-  client;
-  /**
-   * Initialize a new instance of the class Service class.
-   * @param client Reference to the service client
-   */
-  constructor(client) {
-    this.client = client;
-  }
-  /**
-   * Sets properties for a storage account's Queue service endpoint, including properties for Storage
-   * Analytics and CORS (Cross-Origin Resource Sharing) rules
-   * @param properties The StorageService properties.
-   * @param options The options parameters.
-   */
-  setProperties(properties2, options) {
-    return this.client.sendOperationRequest({ properties: properties2, options }, setPropertiesOperationSpec2);
-  }
-  /**
-   * gets the properties of a storage account's Queue service, including properties for Storage Analytics
-   * and CORS (Cross-Origin Resource Sharing) rules.
-   * @param options The options parameters.
-   */
-  getProperties(options) {
-    return this.client.sendOperationRequest({ options }, getPropertiesOperationSpec2);
-  }
-  /**
-   * Retrieves statistics related to replication for the Queue service. It is only available on the
-   * secondary location endpoint when read-access geo-redundant replication is enabled for the storage
-   * account.
-   * @param options The options parameters.
-   */
-  getStatistics(options) {
-    return this.client.sendOperationRequest({ options }, getStatisticsOperationSpec2);
-  }
-  /**
-   * Retrieves a user delegation key for the Queue service. This is only a valid operation when using
-   * bearer token authentication.
-   * @param keyInfo Key information
-   * @param options The options parameters.
-   */
-  getUserDelegationKey(keyInfo2, options) {
-    return this.client.sendOperationRequest({ keyInfo: keyInfo2, options }, getUserDelegationKeyOperationSpec);
-  }
-  /**
-   * The List Queues Segment operation returns a list of the queues under the specified account
-   * @param options The options parameters.
-   */
-  listQueuesSegment(options) {
-    return this.client.sendOperationRequest({ options }, listQueuesSegmentOperationSpec);
-  }
-};
-var xmlSerializer3 = createSerializer(
-  mappers_exports2,
-  /* isXml */
-  true
-);
-var setPropertiesOperationSpec2 = {
-  path: "/",
-  httpMethod: "PUT",
-  responses: {
-    202: {
-      headersMapper: ServiceSetPropertiesHeaders2
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: ServiceSetPropertiesExceptionHeaders2
-    }
-  },
-  requestBody: properties,
-  queryParameters: [
-    restype2,
-    comp3,
-    timeoutInSeconds
-  ],
-  urlParameters: [url2],
-  headerParameters: [
-    contentType3,
-    accept4,
-    version4,
-    requestId2
-  ],
-  isXML: true,
-  contentType: "application/xml; charset=utf-8",
-  mediaType: "xml",
-  serializer: xmlSerializer3
-};
-var getPropertiesOperationSpec2 = {
-  path: "/",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: QueueServiceProperties,
-      headersMapper: ServiceGetPropertiesHeaders2
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: ServiceGetPropertiesExceptionHeaders2
-    }
-  },
-  queryParameters: [
-    restype2,
-    comp3,
-    timeoutInSeconds
-  ],
-  urlParameters: [url2],
-  headerParameters: [
-    version4,
-    requestId2,
-    accept12
-  ],
-  isXML: true,
-  serializer: xmlSerializer3
-};
-var getStatisticsOperationSpec2 = {
-  path: "/",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: QueueServiceStatistics,
-      headersMapper: ServiceGetStatisticsHeaders2
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: ServiceGetStatisticsExceptionHeaders2
-    }
-  },
-  queryParameters: [
-    restype2,
-    timeoutInSeconds,
-    comp12
-  ],
-  urlParameters: [url2],
-  headerParameters: [
-    version4,
-    requestId2,
-    accept12
-  ],
-  isXML: true,
-  serializer: xmlSerializer3
-};
-var getUserDelegationKeyOperationSpec = {
-  path: "/",
-  httpMethod: "POST",
-  responses: {
-    200: {
-      bodyMapper: UserDelegationKey,
-      headersMapper: ServiceGetUserDelegationKeyHeaders
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: ServiceGetUserDelegationKeyExceptionHeaders
-    }
-  },
-  requestBody: keyInfo,
-  queryParameters: [
-    restype2,
-    timeoutInSeconds,
-    comp22
-  ],
-  urlParameters: [url2],
-  headerParameters: [
-    contentType3,
-    accept4,
-    version4,
-    requestId2
-  ],
-  isXML: true,
-  contentType: "application/xml; charset=utf-8",
-  mediaType: "xml",
-  serializer: xmlSerializer3
-};
-var listQueuesSegmentOperationSpec = {
-  path: "/",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: ListQueuesSegmentResponse,
-      headersMapper: ServiceListQueuesSegmentHeaders
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: ServiceListQueuesSegmentExceptionHeaders
-    }
-  },
-  queryParameters: [
-    timeoutInSeconds,
-    comp32,
-    prefix,
-    marker,
-    maxPageSize,
-    include
-  ],
-  urlParameters: [url2],
-  headerParameters: [
-    version4,
-    requestId2,
-    accept12
-  ],
-  isXML: true,
-  serializer: xmlSerializer3
-};
-
-// node_modules/@azure/storage-queue/dist/esm/generated/src/operations/queue.js
-var QueueImpl = class {
-  client;
-  /**
-   * Initialize a new instance of the class Queue class.
-   * @param client Reference to the service client
-   */
-  constructor(client) {
-    this.client = client;
-  }
-  /**
-   * creates a new queue under the given account.
-   * @param options The options parameters.
-   */
-  create(options) {
-    return this.client.sendOperationRequest({ options }, createOperationSpec2);
-  }
-  /**
-   * operation permanently deletes the specified queue
-   * @param options The options parameters.
-   */
-  delete(options) {
-    return this.client.sendOperationRequest({ options }, deleteOperationSpec2);
-  }
-  /**
-   * Retrieves user-defined metadata and queue properties on the specified queue. Metadata is associated
-   * with the queue as name-values pairs.
-   * @param options The options parameters.
-   */
-  getProperties(options) {
-    return this.client.sendOperationRequest({ options }, getPropertiesOperationSpec3);
-  }
-  /**
-   * sets user-defined metadata on the specified queue. Metadata is associated with the queue as
-   * name-value pairs.
-   * @param options The options parameters.
-   */
-  setMetadata(options) {
-    return this.client.sendOperationRequest({ options }, setMetadataOperationSpec);
-  }
-  /**
-   * returns details about any stored access policies specified on the queue that may be used with Shared
-   * Access Signatures.
-   * @param options The options parameters.
-   */
-  getAccessPolicy(options) {
-    return this.client.sendOperationRequest({ options }, getAccessPolicyOperationSpec2);
-  }
-  /**
-   * sets stored access policies for the queue that may be used with Shared Access Signatures
-   * @param options The options parameters.
-   */
-  setAccessPolicy(options) {
-    return this.client.sendOperationRequest({ options }, setAccessPolicyOperationSpec2);
-  }
-};
-var xmlSerializer4 = createSerializer(
-  mappers_exports2,
-  /* isXml */
-  true
-);
-var createOperationSpec2 = {
-  path: "/{queueName}",
-  httpMethod: "PUT",
-  responses: {
-    201: {
-      headersMapper: QueueCreateHeaders
-    },
-    204: {
-      headersMapper: QueueCreateHeaders
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: QueueCreateExceptionHeaders
-    }
-  },
-  queryParameters: [timeoutInSeconds],
-  urlParameters: [url2],
-  headerParameters: [
-    version4,
-    requestId2,
-    accept12,
-    metadata
-  ],
-  isXML: true,
-  serializer: xmlSerializer4
-};
-var deleteOperationSpec2 = {
-  path: "/{queueName}",
-  httpMethod: "DELETE",
-  responses: {
-    204: {
-      headersMapper: QueueDeleteHeaders
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: QueueDeleteExceptionHeaders
-    }
-  },
-  queryParameters: [timeoutInSeconds],
-  urlParameters: [url2],
-  headerParameters: [
-    version4,
-    requestId2,
-    accept12
-  ],
-  isXML: true,
-  serializer: xmlSerializer4
-};
-var getPropertiesOperationSpec3 = {
-  path: "/{queueName}",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      headersMapper: QueueGetPropertiesHeaders
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: QueueGetPropertiesExceptionHeaders
-    }
-  },
-  queryParameters: [timeoutInSeconds, comp4],
-  urlParameters: [url2],
-  headerParameters: [
-    version4,
-    requestId2,
-    accept12
-  ],
-  isXML: true,
-  serializer: xmlSerializer4
-};
-var setMetadataOperationSpec = {
-  path: "/{queueName}",
-  httpMethod: "PUT",
-  responses: {
-    204: {
-      headersMapper: QueueSetMetadataHeaders
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: QueueSetMetadataExceptionHeaders
-    }
-  },
-  queryParameters: [timeoutInSeconds, comp4],
-  urlParameters: [url2],
-  headerParameters: [
-    version4,
-    requestId2,
-    accept12,
-    metadata
-  ],
-  isXML: true,
-  serializer: xmlSerializer4
-};
-var getAccessPolicyOperationSpec2 = {
-  path: "/{queueName}",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: {
-        type: {
-          name: "Sequence",
-          element: {
-            type: { name: "Composite", className: "SignedIdentifier" }
-          }
-        },
-        serializedName: "SignedIdentifiers",
-        xmlName: "SignedIdentifiers",
-        xmlIsWrapped: true,
-        xmlElementName: "SignedIdentifier"
-      },
-      headersMapper: QueueGetAccessPolicyHeaders
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: QueueGetAccessPolicyExceptionHeaders
-    }
-  },
-  queryParameters: [timeoutInSeconds, comp5],
-  urlParameters: [url2],
-  headerParameters: [
-    version4,
-    requestId2,
-    accept12
-  ],
-  isXML: true,
-  serializer: xmlSerializer4
-};
-var setAccessPolicyOperationSpec2 = {
-  path: "/{queueName}",
-  httpMethod: "PUT",
-  responses: {
-    204: {
-      headersMapper: QueueSetAccessPolicyHeaders
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: QueueSetAccessPolicyExceptionHeaders
-    }
-  },
-  requestBody: queueAcl,
-  queryParameters: [timeoutInSeconds, comp5],
-  urlParameters: [url2],
-  headerParameters: [
-    contentType3,
-    accept4,
-    version4,
-    requestId2
-  ],
-  isXML: true,
-  contentType: "application/xml; charset=utf-8",
-  mediaType: "xml",
-  serializer: xmlSerializer4
-};
-
-// node_modules/@azure/storage-queue/dist/esm/generated/src/operations/messages.js
-var MessagesImpl = class {
-  client;
-  /**
-   * Initialize a new instance of the class Messages class.
-   * @param client Reference to the service client
-   */
-  constructor(client) {
-    this.client = client;
-  }
-  /**
-   * The Dequeue operation retrieves one or more messages from the front of the queue.
-   * @param options The options parameters.
-   */
-  dequeue(options) {
-    return this.client.sendOperationRequest({ options }, dequeueOperationSpec);
-  }
-  /**
-   * The Clear operation deletes all messages from the specified queue.
-   * @param options The options parameters.
-   */
-  clear(options) {
-    return this.client.sendOperationRequest({ options }, clearOperationSpec);
-  }
-  /**
-   * The Enqueue operation adds a new message to the back of the message queue. A visibility timeout can
-   * also be specified to make the message invisible until the visibility timeout expires. A message must
-   * be in a format that can be included in an XML request with UTF-8 encoding. The encoded message can
-   * be up to 64 KB in size for versions 2011-08-18 and newer, or 8 KB in size for previous versions.
-   * @param queueMessage A Message object which can be stored in a Queue
-   * @param options The options parameters.
-   */
-  enqueue(queueMessage2, options) {
-    return this.client.sendOperationRequest({ queueMessage: queueMessage2, options }, enqueueOperationSpec);
-  }
-  /**
-   * The Peek operation retrieves one or more messages from the front of the queue, but does not alter
-   * the visibility of the message.
-   * @param options The options parameters.
-   */
-  peek(options) {
-    return this.client.sendOperationRequest({ options }, peekOperationSpec);
-  }
-};
-var xmlSerializer5 = createSerializer(
-  mappers_exports2,
-  /* isXml */
-  true
-);
-var dequeueOperationSpec = {
-  path: "/{queueName}/messages",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: {
-        type: {
-          name: "Sequence",
-          element: {
-            type: { name: "Composite", className: "DequeuedMessageItem" }
-          }
-        },
-        serializedName: "DequeuedMessagesList",
-        xmlName: "QueueMessagesList",
-        xmlIsWrapped: true,
-        xmlElementName: "QueueMessage"
-      },
-      headersMapper: MessagesDequeueHeaders
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: MessagesDequeueExceptionHeaders
-    }
-  },
-  queryParameters: [
-    timeoutInSeconds,
-    numberOfMessages,
-    visibilityTimeout
-  ],
-  urlParameters: [url2],
-  headerParameters: [
-    version4,
-    requestId2,
-    accept12
-  ],
-  isXML: true,
-  serializer: xmlSerializer5
-};
-var clearOperationSpec = {
-  path: "/{queueName}/messages",
-  httpMethod: "DELETE",
-  responses: {
-    204: {
-      headersMapper: MessagesClearHeaders
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: MessagesClearExceptionHeaders
-    }
-  },
-  queryParameters: [timeoutInSeconds],
-  urlParameters: [url2],
-  headerParameters: [
-    version4,
-    requestId2,
-    accept12
-  ],
-  isXML: true,
-  serializer: xmlSerializer5
-};
-var enqueueOperationSpec = {
-  path: "/{queueName}/messages",
-  httpMethod: "POST",
-  responses: {
-    201: {
-      bodyMapper: {
-        type: {
-          name: "Sequence",
-          element: {
-            type: { name: "Composite", className: "EnqueuedMessage" }
-          }
-        },
-        serializedName: "EnqueuedMessageList",
-        xmlName: "QueueMessagesList",
-        xmlIsWrapped: true,
-        xmlElementName: "QueueMessage"
-      },
-      headersMapper: MessagesEnqueueHeaders
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: MessagesEnqueueExceptionHeaders
-    }
-  },
-  requestBody: queueMessage,
-  queryParameters: [
-    timeoutInSeconds,
-    visibilityTimeout,
-    messageTimeToLive
-  ],
-  urlParameters: [url2],
-  headerParameters: [
-    contentType3,
-    accept4,
-    version4,
-    requestId2
-  ],
-  isXML: true,
-  contentType: "application/xml; charset=utf-8",
-  mediaType: "xml",
-  serializer: xmlSerializer5
-};
-var peekOperationSpec = {
-  path: "/{queueName}/messages",
-  httpMethod: "GET",
-  responses: {
-    200: {
-      bodyMapper: {
-        type: {
-          name: "Sequence",
-          element: {
-            type: { name: "Composite", className: "PeekedMessageItem" }
-          }
-        },
-        serializedName: "PeekedMessagesList",
-        xmlName: "QueueMessagesList",
-        xmlIsWrapped: true,
-        xmlElementName: "QueueMessage"
-      },
-      headersMapper: MessagesPeekHeaders
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: MessagesPeekExceptionHeaders
-    }
-  },
-  queryParameters: [
-    timeoutInSeconds,
-    numberOfMessages,
-    peekonly
-  ],
-  urlParameters: [url2],
-  headerParameters: [
-    version4,
-    requestId2,
-    accept12
-  ],
-  isXML: true,
-  serializer: xmlSerializer5
-};
-
-// node_modules/@azure/storage-queue/dist/esm/generated/src/operations/messageId.js
-var MessageIdImpl = class {
-  client;
-  /**
-   * Initialize a new instance of the class MessageId class.
-   * @param client Reference to the service client
-   */
-  constructor(client) {
-    this.client = client;
-  }
-  /**
-   * The Update operation was introduced with version 2011-08-18 of the Queue service API. The Update
-   * Message operation updates the visibility timeout of a message. You can also use this operation to
-   * update the contents of a message. A message must be in a format that can be included in an XML
-   * request with UTF-8 encoding, and the encoded message can be up to 64KB in size.
-   * @param popReceipt Required. Specifies the valid pop receipt value returned from an earlier call to
-   *                   the Get Messages or Update Message operation.
-   * @param visibilityTimeout Optional. Specifies the new visibility timeout value, in seconds, relative
-   *                          to server time. The default value is 30 seconds. A specified value must be larger than or equal to 1
-   *                          second, and cannot be larger than 7 days, or larger than 2 hours on REST protocol versions prior to
-   *                          version 2011-08-18. The visibility timeout of a message can be set to a value later than the expiry
-   *                          time.
-   * @param options The options parameters.
-   */
-  update(popReceipt2, visibilityTimeout2, options) {
-    return this.client.sendOperationRequest({ popReceipt: popReceipt2, visibilityTimeout: visibilityTimeout2, options }, updateOperationSpec);
-  }
-  /**
-   * The Delete operation deletes the specified message.
-   * @param popReceipt Required. Specifies the valid pop receipt value returned from an earlier call to
-   *                   the Get Messages or Update Message operation.
-   * @param options The options parameters.
-   */
-  delete(popReceipt2, options) {
-    return this.client.sendOperationRequest({ popReceipt: popReceipt2, options }, deleteOperationSpec3);
-  }
-};
-var xmlSerializer6 = createSerializer(
-  mappers_exports2,
-  /* isXml */
-  true
-);
-var updateOperationSpec = {
-  path: "/{queueName}/messages/{messageid}",
-  httpMethod: "PUT",
-  responses: {
-    204: {
-      headersMapper: MessageIdUpdateHeaders
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: MessageIdUpdateExceptionHeaders
-    }
-  },
-  requestBody: queueMessage1,
-  queryParameters: [
-    timeoutInSeconds,
-    popReceipt,
-    visibilityTimeout1
-  ],
-  urlParameters: [url2],
-  headerParameters: [
-    contentType3,
-    accept4,
-    version4,
-    requestId2
-  ],
-  isXML: true,
-  contentType: "application/xml; charset=utf-8",
-  mediaType: "xml",
-  serializer: xmlSerializer6
-};
-var deleteOperationSpec3 = {
-  path: "/{queueName}/messages/{messageid}",
-  httpMethod: "DELETE",
-  responses: {
-    204: {
-      headersMapper: MessageIdDeleteHeaders
-    },
-    default: {
-      bodyMapper: StorageError,
-      headersMapper: MessageIdDeleteExceptionHeaders
-    }
-  },
-  queryParameters: [timeoutInSeconds, popReceipt],
-  urlParameters: [url2],
-  headerParameters: [
-    version4,
-    requestId2,
-    accept12
-  ],
-  isXML: true,
-  serializer: xmlSerializer6
-};
-
-// node_modules/@azure/storage-queue/dist/esm/generated/src/storageClient.js
-var StorageClient = class extends ExtendedServiceClient2 {
-  url;
-  version;
-  /**
-   * Initializes a new instance of the StorageClient class.
-   * @param url The URL of the service account, queue or message that is the target of the desired
-   *            operation.
-   * @param options The parameter options
-   */
-  constructor(url3, options) {
-    if (url3 === void 0) {
-      throw new Error("'url' cannot be null");
-    }
-    if (!options) {
-      options = {};
-    }
-    const defaults2 = {
-      requestContentType: "application/json; charset=utf-8"
     };
-    const packageDetails = `azsdk-js-azure-storage-queue/12.31.0`;
-    const userAgentPrefix = options.userAgentOptions && options.userAgentOptions.userAgentPrefix ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}` : `${packageDetails}`;
-    const optionsWithDefaults = {
-      ...defaults2,
+  }
+  return parameters;
+}
+function getClient3(endpoint, credentialsOrPipelineOptions, clientOptions = {}) {
+  let credentials;
+  if (credentialsOrPipelineOptions) {
+    if (isCredential2(credentialsOrPipelineOptions)) {
+      credentials = credentialsOrPipelineOptions;
+    } else {
+      clientOptions = credentialsOrPipelineOptions ?? {};
+    }
+  }
+  const pipeline = clientOptions.pipeline ?? createDefaultPipeline3(endpoint, credentials, clientOptions);
+  const tspClient = getClient2(endpoint, {
+    ...clientOptions,
+    pipeline
+  });
+  const client = (path5, ...args) => {
+    return {
+      get: (requestOptions = {}) => {
+        return tspClient.path(path5, ...args).get(wrapRequestParameters(requestOptions));
+      },
+      post: (requestOptions = {}) => {
+        return tspClient.path(path5, ...args).post(wrapRequestParameters(requestOptions));
+      },
+      put: (requestOptions = {}) => {
+        return tspClient.path(path5, ...args).put(wrapRequestParameters(requestOptions));
+      },
+      patch: (requestOptions = {}) => {
+        return tspClient.path(path5, ...args).patch(wrapRequestParameters(requestOptions));
+      },
+      delete: (requestOptions = {}) => {
+        return tspClient.path(path5, ...args).delete(wrapRequestParameters(requestOptions));
+      },
+      head: (requestOptions = {}) => {
+        return tspClient.path(path5, ...args).head(wrapRequestParameters(requestOptions));
+      },
+      options: (requestOptions = {}) => {
+        return tspClient.path(path5, ...args).options(wrapRequestParameters(requestOptions));
+      },
+      trace: (requestOptions = {}) => {
+        return tspClient.path(path5, ...args).trace(wrapRequestParameters(requestOptions));
+      }
+    };
+  };
+  return {
+    path: client,
+    pathUnchecked: client,
+    pipeline: tspClient.pipeline
+  };
+}
+function isCredential2(param) {
+  return isKeyCredential2(param) || isTokenCredential2(param);
+}
+
+// node_modules/@azure/storage-queue/dist/esm/generated/api/queuesContext.js
+function createQueues(endpointParam, credential, options = {}) {
+  const endpointUrl = options.endpoint ?? String(endpointParam);
+  const prefixFromOptions = options?.userAgentOptions?.userAgentPrefix;
+  const userAgentInfo = `azsdk-js-storage-queue/12.32.0`;
+  const userAgentPrefix = prefixFromOptions ? `${prefixFromOptions} azsdk-js-api ${userAgentInfo}` : `azsdk-js-api ${userAgentInfo}`;
+  const { version: _, ...updatedOptions } = {
+    ...options,
+    userAgentOptions: { userAgentPrefix },
+    loggingOptions: { logger: options.loggingOptions?.logger ?? logger31.info },
+    credentials: { scopes: options.credentials?.scopes ?? ["https://storage.azure.com/.default"] }
+  };
+  const clientContext = getClient3(endpointUrl, credential, updatedOptions);
+  const version4 = options.version;
+  return { ...clientContext, version: version4 };
+}
+
+// node_modules/@azure/storage-queue/dist/esm/generated/static-helpers/serialization/xml-helpers.js
+var defaultParserOptions = {
+  ignoreAttributes: false,
+  attributeNamePrefix: "@_",
+  textNodeName: "#text",
+  parseTagValue: false,
+  parseAttributeValue: false,
+  trimValues: false,
+  // Preserve whitespace in text content
+  isArray: (_name, _jpath, isLeafNode, isAttribute2) => {
+    return !isAttribute2 && !isLeafNode;
+  }
+};
+var defaultBuilderOptions = {
+  ignoreAttributes: false,
+  attributeNamePrefix: "@_",
+  textNodeName: "#text",
+  format: false,
+  suppressEmptyNode: true
+};
+function getElementName(name3, ns) {
+  if (ns?.prefix) {
+    return `${ns.prefix}:${name3}`;
+  }
+  return name3;
+}
+function createNamespaceDeclarations(namespaces) {
+  const declarations = {};
+  for (const [prefix, namespace] of namespaces) {
+    if (prefix) {
+      declarations[`@_xmlns:${prefix}`] = namespace;
+    } else {
+      declarations["@_xmlns"] = namespace;
+    }
+  }
+  return declarations;
+}
+function collectNamespaces(properties, rootNs) {
+  const namespaces = /* @__PURE__ */ new Map();
+  if (rootNs) {
+    namespaces.set(rootNs.prefix, rootNs.namespace);
+  }
+  for (const prop of properties) {
+    if (prop.xmlOptions.ns) {
+      namespaces.set(prop.xmlOptions.ns.prefix, prop.xmlOptions.ns.namespace);
+    }
+    if (prop.xmlOptions.itemsNs) {
+      namespaces.set(prop.xmlOptions.itemsNs.prefix, prop.xmlOptions.itemsNs.namespace);
+    }
+  }
+  return namespaces;
+}
+function serializePrimitiveValue(value, type, dateEncoding, bytesEncoding) {
+  if (value === null || value === void 0) {
+    return "";
+  }
+  if (type === "date" && value instanceof Date) {
+    switch (dateEncoding) {
+      case "rfc7231":
+        return value.toUTCString();
+      case "unixTimestamp":
+        return Math.floor(value.getTime() / 1e3);
+      case "rfc3339":
+      default:
+        return value.toISOString();
+    }
+  }
+  if (type === "bytes" && value instanceof Uint8Array) {
+    return uint8ArrayToString3(value, bytesEncoding ?? "base64");
+  }
+  if (typeof value === "boolean" || typeof value === "number") {
+    return value;
+  }
+  return String(value);
+}
+function serializeArrayProperty(value, metadata) {
+  const { xmlOptions, serializer: serializer2 } = metadata;
+  const itemName = getElementName(xmlOptions.itemsName || xmlOptions.name, xmlOptions.itemsNs || xmlOptions.ns);
+  const serializedItems = value.map((item) => {
+    if (serializer2) {
+      return serializer2(item);
+    }
+    return serializePrimitiveValue(item, metadata.itemType ?? metadata.type, metadata.dateEncoding, metadata.bytesEncoding);
+  });
+  if (xmlOptions.unwrapped) {
+    return serializedItems;
+  } else {
+    const wrapperName = getElementName(xmlOptions.name, xmlOptions.ns);
+    return {
+      [wrapperName]: {
+        [itemName]: serializedItems
+      }
+    };
+  }
+}
+function serializeModelToXml(item, properties, rootName, rootNs, additionalPropertiesConfig) {
+  if (item === null || item === void 0) {
+    return {};
+  }
+  const result = {};
+  const attributes = {};
+  const namespaces = collectNamespaces(properties, rootNs);
+  const nsDeclarations = createNamespaceDeclarations(namespaces);
+  Object.assign(attributes, nsDeclarations);
+  for (const prop of properties) {
+    const value = item[prop.propertyName];
+    if (value === void 0) {
+      continue;
+    }
+    const { xmlOptions, serializer: serializer2, type } = prop;
+    const elementName = getElementName(xmlOptions.name, xmlOptions.ns);
+    if (xmlOptions.attribute) {
+      const attrName = xmlOptions.ns?.prefix ? `@_${xmlOptions.ns.prefix}:${xmlOptions.name}` : `@_${xmlOptions.name}`;
+      attributes[attrName] = serializePrimitiveValue(value, type, prop.dateEncoding, prop.bytesEncoding);
+    } else if (type === "dict" && value !== null && typeof value === "object") {
+      const dictContent = {};
+      for (const [key, val] of Object.entries(value)) {
+        dictContent[key] = String(val);
+      }
+      result[elementName] = dictContent;
+    } else if (Array.isArray(value)) {
+      const arrayResult = serializeArrayProperty(value, prop);
+      if (xmlOptions.unwrapped && Array.isArray(arrayResult)) {
+        const itemName = getElementName(xmlOptions.itemsName || xmlOptions.name, xmlOptions.itemsNs || xmlOptions.ns);
+        result[itemName] = arrayResult;
+      } else {
+        Object.assign(result, arrayResult);
+      }
+    } else if (value !== null && typeof value === "object" && serializer2) {
+      result[elementName] = serializer2(value);
+    } else if (xmlOptions.unwrapped && !Array.isArray(value)) {
+      result["#text"] = serializePrimitiveValue(value, type, prop.dateEncoding, prop.bytesEncoding);
+    } else {
+      result[elementName] = serializePrimitiveValue(value, type, prop.dateEncoding, prop.bytesEncoding);
+    }
+  }
+  if (additionalPropertiesConfig) {
+    const apValue = item[additionalPropertiesConfig.propertyName];
+    if (apValue && typeof apValue === "object") {
+      for (const [key, val] of Object.entries(apValue)) {
+        result[key] = additionalPropertiesConfig.deserializer ? additionalPropertiesConfig.deserializer(val) : String(val);
+      }
+    }
+  }
+  Object.assign(result, attributes);
+  const rootElementName = getElementName(rootName, rootNs);
+  return {
+    [rootElementName]: result
+  };
+}
+function xmlObjectToString(xmlObject, options) {
+  const builder = new json2xml_default({
+    ...defaultBuilderOptions,
+    ...options
+  });
+  const xmlData = builder.build(xmlObject);
+  if (!xmlData) {
+    return "";
+  }
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>${xmlData}`;
+}
+function serializeToXml(item, properties, rootName, rootNs, options, additionalPropertiesConfig) {
+  const xmlObject = serializeModelToXml(item, properties, rootName, rootNs, additionalPropertiesConfig);
+  return xmlObjectToString(xmlObject, options);
+}
+function parseXmlString(xmlString, options) {
+  const parser = new XMLParser({
+    ...defaultParserOptions,
+    ...options
+  });
+  return parser.parse(xmlString);
+}
+function deserializePrimitiveValue(value, type, dateEncoding, bytesEncoding, primitiveSubtype) {
+  if (value === null || value === void 0) {
+    return void 0;
+  }
+  if (value === "" && primitiveSubtype !== "string") {
+    return void 0;
+  }
+  if (type === "date") {
+    if (dateEncoding === "unixTimestamp") {
+      return new Date(Number(value) * 1e3);
+    }
+    return new Date(value);
+  }
+  if (type === "bytes" && typeof value === "string") {
+    return stringToUint8Array3(value, bytesEncoding ?? "base64");
+  }
+  if (primitiveSubtype === "boolean") {
+    return String(value).toLowerCase() === "true";
+  }
+  if (primitiveSubtype === "number") {
+    return Number(value);
+  }
+  return value;
+}
+function unwrapSingleElementArray(value) {
+  if (Array.isArray(value) && value.length === 1) {
+    return value[0];
+  }
+  return value;
+}
+function getElementValue(obj, xmlOptions) {
+  if (!obj) {
+    return void 0;
+  }
+  const { name: name3, ns, attribute } = xmlOptions;
+  if (attribute) {
+    const attrName = ns?.prefix ? `@_${ns.prefix}:${name3}` : `@_${name3}`;
+    return obj[attrName];
+  }
+  const elementName = ns?.prefix ? `${ns.prefix}:${name3}` : name3;
+  const value = obj[elementName] ?? obj[name3];
+  return unwrapSingleElementArray(value);
+}
+function deserializeArrayProperty(obj, metadata) {
+  const { xmlOptions, deserializer, type, dateEncoding } = metadata;
+  let arrayData;
+  if (xmlOptions.unwrapped) {
+    const itemName = getElementName(xmlOptions.itemsName || xmlOptions.name, xmlOptions.itemsNs || xmlOptions.ns);
+    arrayData = obj[itemName] ?? obj[xmlOptions.itemsName || xmlOptions.name];
+  } else {
+    const wrapperName = getElementName(xmlOptions.name, xmlOptions.ns);
+    let wrapper = obj[wrapperName] ?? obj[xmlOptions.name];
+    if (!wrapper) {
+      return [];
+    }
+    wrapper = unwrapSingleElementArray(wrapper);
+    const itemName = getElementName(xmlOptions.itemsName || xmlOptions.name, xmlOptions.itemsNs);
+    arrayData = wrapper[itemName] ?? wrapper[xmlOptions.itemsName || xmlOptions.name] ?? wrapper;
+  }
+  if (!arrayData) {
+    return [];
+  }
+  const items = Array.isArray(arrayData) ? arrayData : [arrayData];
+  return items.map((item) => {
+    const unwrappedItem = unwrapSingleElementArray(item);
+    if (deserializer) {
+      return deserializer(unwrappedItem);
+    }
+    return deserializePrimitiveValue(unwrappedItem, metadata.itemType ?? type, dateEncoding, metadata.bytesEncoding, metadata.primitiveSubtype);
+  });
+}
+function deserializeXmlToModel(xmlObject, properties, rootName, rootNs, additionalPropertiesConfig) {
+  if (!xmlObject) {
+    return {};
+  }
+  const rootElementName = getElementName(rootName, rootNs);
+  let content = xmlObject[rootElementName] ?? xmlObject[rootName] ?? xmlObject;
+  content = unwrapSingleElementArray(content);
+  return deserializeXmlObject(content, properties, additionalPropertiesConfig);
+}
+function deserializeFromXml(xmlString, properties, rootName, rootNs, parserOptions, additionalPropertiesConfig) {
+  if (!xmlString) {
+    return {};
+  }
+  const xmlObject = parseXmlString(xmlString, parserOptions);
+  return deserializeXmlToModel(xmlObject, properties, rootName, rootNs, additionalPropertiesConfig);
+}
+function deserializeXmlObject(xmlObject, properties, additionalPropertiesConfig) {
+  if (!xmlObject) {
+    return {};
+  }
+  const content = unwrapSingleElementArray(xmlObject);
+  const result = {};
+  for (const prop of properties) {
+    const { propertyName, xmlOptions, deserializer, type, dateEncoding, primitiveSubtype } = prop;
+    if (type === "array" || xmlOptions.itemsName) {
+      result[propertyName] = deserializeArrayProperty(content, prop);
+    } else if (type === "dict") {
+      const rawValue = getElementValue(content, xmlOptions);
+      if (rawValue !== void 0 && typeof rawValue === "object") {
+        const dict = {};
+        for (const [key, val] of Object.entries(rawValue)) {
+          if (!key.startsWith("@_") && key !== "#text") {
+            dict[key] = String(val);
+          }
+        }
+        result[propertyName] = dict;
+      }
+    } else if (xmlOptions.unwrapped && type !== "object") {
+      const rawValue = content["#text"];
+      if (rawValue !== void 0) {
+        result[propertyName] = deserializePrimitiveValue(rawValue, type, dateEncoding, prop.bytesEncoding, primitiveSubtype);
+      }
+    } else {
+      const rawValue = getElementValue(content, xmlOptions);
+      if (rawValue === void 0) {
+        continue;
+      }
+      if (deserializer) {
+        if (typeof rawValue === "object") {
+          result[propertyName] = deserializer(rawValue);
+        } else {
+          result[propertyName] = deserializer({ "#text": rawValue });
+        }
+      } else {
+        result[propertyName] = deserializePrimitiveValue(rawValue, type, dateEncoding, prop.bytesEncoding, primitiveSubtype);
+      }
+    }
+  }
+  if (additionalPropertiesConfig) {
+    const { propertyName, excludeNames, deserializer: apDeserializer } = additionalPropertiesConfig;
+    const additionalProps = {};
+    const excludeSet = new Set(excludeNames);
+    for (const [key, val] of Object.entries(content)) {
+      if (key.startsWith("@_") || key === "#text" || excludeSet.has(key)) {
+        continue;
+      }
+      additionalProps[key] = apDeserializer ? apDeserializer(val) : String(val);
+    }
+    result[propertyName] = additionalProps;
+  }
+  return result;
+}
+
+// node_modules/@azure/storage-queue/dist/esm/generated/models/models.js
+function queueServicePropertiesXmlSerializer(item) {
+  const properties = [
+    {
+      propertyName: "queueAnalyticsLogging",
+      xmlOptions: { name: "Logging" },
+      type: "object",
+      serializer: loggingXmlObjectSerializer
+    },
+    {
+      propertyName: "hourMetrics",
+      xmlOptions: { name: "HourMetrics" },
+      type: "object",
+      serializer: metricsXmlObjectSerializer
+    },
+    {
+      propertyName: "minuteMetrics",
+      xmlOptions: { name: "MinuteMetrics" },
+      type: "object",
+      serializer: metricsXmlObjectSerializer
+    },
+    {
+      propertyName: "cors",
+      xmlOptions: { name: "Cors", itemsName: "CorsRule" },
+      type: "array",
+      serializer: corsRuleXmlObjectSerializer
+    }
+  ];
+  return serializeToXml(item, properties, "StorageServiceProperties");
+}
+function queueServicePropertiesXmlDeserializer(xmlString) {
+  const properties = [
+    {
+      propertyName: "queueAnalyticsLogging",
+      xmlOptions: { name: "Logging" },
+      type: "object",
+      deserializer: loggingXmlObjectDeserializer
+    },
+    {
+      propertyName: "hourMetrics",
+      xmlOptions: { name: "HourMetrics" },
+      type: "object",
+      deserializer: metricsXmlObjectDeserializer
+    },
+    {
+      propertyName: "minuteMetrics",
+      xmlOptions: { name: "MinuteMetrics" },
+      type: "object",
+      deserializer: metricsXmlObjectDeserializer
+    },
+    {
+      propertyName: "cors",
+      xmlOptions: { name: "Cors", itemsName: "CorsRule" },
+      type: "array",
+      deserializer: corsRuleXmlObjectDeserializer
+    }
+  ];
+  return deserializeFromXml(xmlString, properties, "StorageServiceProperties");
+}
+function loggingXmlObjectSerializer(item) {
+  return {
+    Version: item["version"],
+    Delete: item["deleteProperty"],
+    Read: item["read"],
+    Write: item["write"],
+    RetentionPolicy: item["retentionPolicy"] !== void 0 ? retentionPolicyXmlObjectSerializer(item["retentionPolicy"]) : void 0
+  };
+}
+function loggingXmlObjectDeserializer(xmlObject) {
+  const properties = [
+    {
+      propertyName: "version",
+      xmlOptions: { name: "Version" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "deleteProperty",
+      xmlOptions: { name: "Delete" },
+      type: "primitive",
+      primitiveSubtype: "boolean"
+    },
+    {
+      propertyName: "read",
+      xmlOptions: { name: "Read" },
+      type: "primitive",
+      primitiveSubtype: "boolean"
+    },
+    {
+      propertyName: "write",
+      xmlOptions: { name: "Write" },
+      type: "primitive",
+      primitiveSubtype: "boolean"
+    },
+    {
+      propertyName: "retentionPolicy",
+      xmlOptions: { name: "RetentionPolicy" },
+      type: "object",
+      deserializer: retentionPolicyXmlObjectDeserializer
+    }
+  ];
+  return deserializeXmlObject(xmlObject, properties);
+}
+function retentionPolicyXmlObjectSerializer(item) {
+  return { Enabled: item["enabled"], Days: item["days"] };
+}
+function retentionPolicyXmlObjectDeserializer(xmlObject) {
+  const properties = [
+    {
+      propertyName: "enabled",
+      xmlOptions: { name: "Enabled" },
+      type: "primitive",
+      primitiveSubtype: "boolean"
+    },
+    {
+      propertyName: "days",
+      xmlOptions: { name: "Days" },
+      type: "primitive",
+      primitiveSubtype: "number"
+    }
+  ];
+  return deserializeXmlObject(xmlObject, properties);
+}
+function metricsXmlObjectSerializer(item) {
+  return {
+    Version: item["version"],
+    Enabled: item["enabled"],
+    IncludeAPIs: item["includeAPIs"],
+    RetentionPolicy: item["retentionPolicy"] !== void 0 ? retentionPolicyXmlObjectSerializer(item["retentionPolicy"]) : void 0
+  };
+}
+function metricsXmlObjectDeserializer(xmlObject) {
+  const properties = [
+    {
+      propertyName: "version",
+      xmlOptions: { name: "Version" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "enabled",
+      xmlOptions: { name: "Enabled" },
+      type: "primitive",
+      primitiveSubtype: "boolean"
+    },
+    {
+      propertyName: "includeAPIs",
+      xmlOptions: { name: "IncludeAPIs" },
+      type: "primitive",
+      primitiveSubtype: "boolean"
+    },
+    {
+      propertyName: "retentionPolicy",
+      xmlOptions: { name: "RetentionPolicy" },
+      type: "object",
+      deserializer: retentionPolicyXmlObjectDeserializer
+    }
+  ];
+  return deserializeXmlObject(xmlObject, properties);
+}
+function corsRuleXmlObjectSerializer(item) {
+  return {
+    AllowedOrigins: item["allowedOrigins"],
+    AllowedMethods: item["allowedMethods"],
+    AllowedHeaders: item["allowedHeaders"],
+    ExposedHeaders: item["exposedHeaders"],
+    MaxAgeInSeconds: item["maxAgeInSeconds"]
+  };
+}
+function corsRuleXmlObjectDeserializer(xmlObject) {
+  const properties = [
+    {
+      propertyName: "allowedOrigins",
+      xmlOptions: { name: "AllowedOrigins" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "allowedMethods",
+      xmlOptions: { name: "AllowedMethods" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "allowedHeaders",
+      xmlOptions: { name: "AllowedHeaders" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "exposedHeaders",
+      xmlOptions: { name: "ExposedHeaders" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "maxAgeInSeconds",
+      xmlOptions: { name: "MaxAgeInSeconds" },
+      type: "primitive",
+      primitiveSubtype: "number"
+    }
+  ];
+  return deserializeXmlObject(xmlObject, properties);
+}
+function errorXmlDeserializer(xmlString) {
+  const properties = [
+    {
+      propertyName: "code",
+      xmlOptions: { name: "Code" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "message",
+      xmlOptions: { name: "Message" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    }
+  ];
+  return deserializeFromXml(xmlString, properties, "Error", void 0, void 0, {
+    propertyName: "additionalProperties",
+    excludeNames: ["Code", "Message"]
+  });
+}
+function queueServiceStatsXmlDeserializer(xmlString) {
+  const properties = [
+    {
+      propertyName: "geoReplication",
+      xmlOptions: { name: "GeoReplication" },
+      type: "object",
+      deserializer: geoReplicationXmlObjectDeserializer
+    }
+  ];
+  return deserializeFromXml(xmlString, properties, "QueueServiceStats");
+}
+function geoReplicationXmlObjectDeserializer(xmlObject) {
+  const properties = [
+    {
+      propertyName: "status",
+      xmlOptions: { name: "Status" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "lastSyncOn",
+      xmlOptions: { name: "LastSyncTime" },
+      type: "date",
+      dateEncoding: "rfc7231"
+    }
+  ];
+  return deserializeXmlObject(xmlObject, properties);
+}
+function keyInfoXmlSerializer(item) {
+  const properties = [
+    { propertyName: "startsOn", xmlOptions: { name: "Start" }, type: "primitive" },
+    { propertyName: "expiresOn", xmlOptions: { name: "Expiry" }, type: "primitive" },
+    {
+      propertyName: "delegatedUserTid",
+      xmlOptions: { name: "DelegatedUserTid" },
+      type: "primitive"
+    }
+  ];
+  return serializeToXml(item, properties, "KeyInfo");
+}
+function userDelegationKeyXmlDeserializer(xmlString) {
+  const properties = [
+    {
+      propertyName: "signedObjectId",
+      xmlOptions: { name: "SignedOid" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "signedTenantId",
+      xmlOptions: { name: "SignedTid" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "signedStartsOn",
+      xmlOptions: { name: "SignedStart" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "signedExpiresOn",
+      xmlOptions: { name: "SignedExpiry" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "signedService",
+      xmlOptions: { name: "SignedService" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "signedVersion",
+      xmlOptions: { name: "SignedVersion" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "signedDelegatedUserTid",
+      xmlOptions: { name: "SignedDelegatedUserTid" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "value",
+      xmlOptions: { name: "Value" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    }
+  ];
+  return deserializeFromXml(xmlString, properties, "UserDelegationKey");
+}
+function listQueuesResponseXmlDeserializer(xmlString) {
+  const properties = [
+    {
+      propertyName: "serviceEndpoint",
+      xmlOptions: { name: "ServiceEndpoint", attribute: true },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "prefix",
+      xmlOptions: { name: "Prefix" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "marker",
+      xmlOptions: { name: "Marker" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "maxPageSize",
+      xmlOptions: { name: "MaxResults" },
+      type: "primitive",
+      primitiveSubtype: "number"
+    },
+    {
+      propertyName: "queueItems",
+      xmlOptions: { name: "Queues", itemsName: "Queue" },
+      type: "array",
+      deserializer: queueItemXmlObjectDeserializer
+    },
+    {
+      propertyName: "continuationToken",
+      xmlOptions: { name: "NextMarker" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    }
+  ];
+  return deserializeFromXml(xmlString, properties, "EnumerationResults");
+}
+function queueItemXmlObjectDeserializer(xmlObject) {
+  const properties = [
+    {
+      propertyName: "name",
+      xmlOptions: { name: "Name" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    { propertyName: "metadata", xmlOptions: { name: "Metadata" }, type: "dict" }
+  ];
+  return deserializeXmlObject(xmlObject, properties);
+}
+function signedIdentifiersXmlSerializer(item) {
+  const properties = [
+    {
+      propertyName: "items",
+      xmlOptions: { name: "SignedIdentifier", unwrapped: true, itemsName: "SignedIdentifier" },
+      type: "array",
+      serializer: signedIdentifierXmlObjectSerializer
+    }
+  ];
+  return serializeToXml(item, properties, "SignedIdentifiers");
+}
+function signedIdentifiersXmlDeserializer(xmlString) {
+  const properties = [
+    {
+      propertyName: "items",
+      xmlOptions: { name: "SignedIdentifier", unwrapped: true, itemsName: "SignedIdentifier" },
+      type: "array",
+      deserializer: signedIdentifierXmlObjectDeserializer
+    }
+  ];
+  return deserializeFromXml(xmlString, properties, "SignedIdentifiers");
+}
+function signedIdentifierXmlObjectSerializer(item) {
+  return {
+    Id: item["id"],
+    AccessPolicy: item["accessPolicy"] !== void 0 ? accessPolicyXmlObjectSerializer(item["accessPolicy"]) : void 0
+  };
+}
+function signedIdentifierXmlObjectDeserializer(xmlObject) {
+  const properties = [
+    {
+      propertyName: "id",
+      xmlOptions: { name: "Id" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "accessPolicy",
+      xmlOptions: { name: "AccessPolicy" },
+      type: "object",
+      deserializer: accessPolicyXmlObjectDeserializer
+    }
+  ];
+  return deserializeXmlObject(xmlObject, properties);
+}
+function accessPolicyXmlObjectSerializer(item) {
+  return { Start: item["startsOn"], Expiry: item["expiresOn"], Permission: item["permissions"] };
+}
+function accessPolicyXmlObjectDeserializer(xmlObject) {
+  const properties = [
+    {
+      propertyName: "startsOn",
+      xmlOptions: { name: "Start" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "expiresOn",
+      xmlOptions: { name: "Expiry" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "permissions",
+      xmlOptions: { name: "Permission" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    }
+  ];
+  return deserializeXmlObject(xmlObject, properties);
+}
+function receivedMessagesXmlDeserializer(xmlString) {
+  const properties = [
+    {
+      propertyName: "items",
+      xmlOptions: { name: "QueueMessage", unwrapped: true, itemsName: "QueueMessage" },
+      type: "array",
+      deserializer: receivedMessageXmlObjectDeserializer
+    }
+  ];
+  return deserializeFromXml(xmlString, properties, "QueueMessagesList");
+}
+function receivedMessageXmlObjectDeserializer(xmlObject) {
+  const properties = [
+    {
+      propertyName: "messageId",
+      xmlOptions: { name: "MessageId" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "insertedOn",
+      xmlOptions: { name: "InsertionTime" },
+      type: "date",
+      dateEncoding: "rfc7231"
+    },
+    {
+      propertyName: "expiresOn",
+      xmlOptions: { name: "ExpirationTime" },
+      type: "date",
+      dateEncoding: "rfc7231"
+    },
+    {
+      propertyName: "popReceipt",
+      xmlOptions: { name: "PopReceipt" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "nextVisibleOn",
+      xmlOptions: { name: "TimeNextVisible" },
+      type: "date",
+      dateEncoding: "rfc7231"
+    },
+    {
+      propertyName: "dequeueCount",
+      xmlOptions: { name: "DequeueCount" },
+      type: "primitive",
+      primitiveSubtype: "number"
+    },
+    {
+      propertyName: "messageText",
+      xmlOptions: { name: "MessageText" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    }
+  ];
+  return deserializeXmlObject(xmlObject, properties);
+}
+function queueMessageXmlSerializer(item) {
+  const properties = [
+    { propertyName: "messageText", xmlOptions: { name: "MessageText" }, type: "primitive" }
+  ];
+  return serializeToXml(item, properties, "QueueMessage");
+}
+function listOfSentMessageXmlDeserializer(xmlString) {
+  const properties = [
+    {
+      propertyName: "items",
+      xmlOptions: { name: "QueueMessage", unwrapped: true, itemsName: "QueueMessage" },
+      type: "array",
+      deserializer: sentMessageXmlObjectDeserializer
+    }
+  ];
+  return deserializeFromXml(xmlString, properties, "QueueMessagesList");
+}
+function sentMessageXmlObjectDeserializer(xmlObject) {
+  const properties = [
+    {
+      propertyName: "messageId",
+      xmlOptions: { name: "MessageId" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "insertedOn",
+      xmlOptions: { name: "InsertionTime" },
+      type: "date",
+      dateEncoding: "rfc7231"
+    },
+    {
+      propertyName: "expiresOn",
+      xmlOptions: { name: "ExpirationTime" },
+      type: "date",
+      dateEncoding: "rfc7231"
+    },
+    {
+      propertyName: "popReceipt",
+      xmlOptions: { name: "PopReceipt" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "nextVisibleOn",
+      xmlOptions: { name: "TimeNextVisible" },
+      type: "date",
+      dateEncoding: "rfc7231"
+    }
+  ];
+  return deserializeXmlObject(xmlObject, properties);
+}
+function peekedMessagesXmlDeserializer(xmlString) {
+  const properties = [
+    {
+      propertyName: "items",
+      xmlOptions: { name: "QueueMessage", unwrapped: true, itemsName: "QueueMessage" },
+      type: "array",
+      deserializer: peekedMessageXmlObjectDeserializer
+    }
+  ];
+  return deserializeFromXml(xmlString, properties, "QueueMessagesList");
+}
+function peekedMessageXmlObjectDeserializer(xmlObject) {
+  const properties = [
+    {
+      propertyName: "messageId",
+      xmlOptions: { name: "MessageId" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    },
+    {
+      propertyName: "insertedOn",
+      xmlOptions: { name: "InsertionTime" },
+      type: "date",
+      dateEncoding: "rfc7231"
+    },
+    {
+      propertyName: "expiresOn",
+      xmlOptions: { name: "ExpirationTime" },
+      type: "date",
+      dateEncoding: "rfc7231"
+    },
+    {
+      propertyName: "dequeueCount",
+      xmlOptions: { name: "DequeueCount" },
+      type: "primitive",
+      primitiveSubtype: "number"
+    },
+    {
+      propertyName: "messageText",
+      xmlOptions: { name: "MessageText" },
+      type: "primitive",
+      primitiveSubtype: "string"
+    }
+  ];
+  return deserializeXmlObject(xmlObject, properties);
+}
+var KnownVersions;
+(function(KnownVersions2) {
+  KnownVersions2["V20260406"] = "2026-04-06";
+})(KnownVersions || (KnownVersions = {}));
+
+// node_modules/@azure/storage-queue/dist/esm/generated/static-helpers/storageCompatResponse.js
+function createStorageCompatOnResponse(originalOnResponse) {
+  let captured;
+  return {
+    onResponse: (rawResponse, error) => {
+      captured = rawResponse;
+      originalOnResponse?.(rawResponse, error);
+    },
+    getRawResponse: () => captured
+  };
+}
+function addStorageCompatResponse(rawResponse, parsedBody, parsedHeaders) {
+  const base2 = parsedBody !== void 0 && parsedBody !== null ? parsedBody : {};
+  return Object.assign(base2, parsedHeaders, {
+    _response: {
+      rawResponse,
+      parsedBody,
+      parsedHeaders
+    }
+  });
+}
+
+// node_modules/@azure/storage-queue/dist/esm/generated/static-helpers/urlTemplate.js
+function encodeComponent(val, reserved, op) {
+  return (reserved ?? op === "+") || op === "#" ? encodeReservedComponent(val) : encodeRFC3986URIComponent(val);
+}
+function encodeReservedComponent(str) {
+  return str.split(/(%[0-9A-Fa-f]{2})/g).map((part) => !/%[0-9A-Fa-f]/.test(part) ? encodeURI(part) : part).join("");
+}
+function encodeRFC3986URIComponent(str) {
+  return encodeURIComponent(str).replace(/[!'()*]/g, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`);
+}
+function isDefined3(val) {
+  return val !== void 0 && val !== null;
+}
+function getNamedAndIfEmpty(op) {
+  return [!!op && [";", "?", "&"].includes(op), !!op && ["?", "&"].includes(op) ? "=" : ""];
+}
+function getFirstOrSep(op, isFirst = false) {
+  if (isFirst) {
+    return !op || op === "+" ? "" : op;
+  } else if (!op || op === "+" || op === "#") {
+    return ",";
+  } else if (op === "?") {
+    return "&";
+  } else {
+    return op;
+  }
+}
+function getExpandedValue(option) {
+  let isFirst = option.isFirst;
+  const { op, varName, varValue: value, reserved } = option;
+  const vals = [];
+  const [named, ifEmpty] = getNamedAndIfEmpty(op);
+  if (Array.isArray(value)) {
+    for (const val of value.filter(isDefined3)) {
+      vals.push(`${getFirstOrSep(op, isFirst)}`);
+      if (named && varName) {
+        vals.push(`${encodeURIComponent(varName)}`);
+        if (val === "") {
+          vals.push(ifEmpty);
+        } else {
+          vals.push("=");
+        }
+      }
+      vals.push(encodeComponent(val, reserved, op));
+      isFirst = false;
+    }
+  } else if (typeof value === "object") {
+    for (const key of Object.keys(value)) {
+      const val = value[key];
+      if (!isDefined3(val)) {
+        continue;
+      }
+      vals.push(`${getFirstOrSep(op, isFirst)}`);
+      if (key) {
+        vals.push(`${encodeURIComponent(key)}`);
+        if (named && val === "") {
+          vals.push(ifEmpty);
+        } else {
+          vals.push("=");
+        }
+      }
+      vals.push(encodeComponent(val, reserved, op));
+      isFirst = false;
+    }
+  }
+  return vals.join("");
+}
+function getNonExpandedValue(option) {
+  const { op, varName, varValue: value, isFirst, reserved } = option;
+  const vals = [];
+  const first = getFirstOrSep(op, isFirst);
+  const [named, ifEmpty] = getNamedAndIfEmpty(op);
+  if (named && varName) {
+    vals.push(encodeComponent(varName, reserved, op));
+    if (value === "") {
+      if (!ifEmpty) {
+        vals.push(ifEmpty);
+      }
+      return !vals.join("") ? void 0 : `${first}${vals.join("")}`;
+    }
+    vals.push("=");
+  }
+  const items = [];
+  if (Array.isArray(value)) {
+    for (const val of value.filter(isDefined3)) {
+      items.push(encodeComponent(val, reserved, op));
+    }
+  } else if (typeof value === "object") {
+    for (const key of Object.keys(value)) {
+      if (!isDefined3(value[key])) {
+        continue;
+      }
+      items.push(encodeRFC3986URIComponent(key));
+      items.push(encodeComponent(value[key], reserved, op));
+    }
+  }
+  vals.push(items.join(","));
+  return !vals.join(",") ? void 0 : `${first}${vals.join("")}`;
+}
+function getVarValue(option) {
+  const { op, varName, modifier, isFirst, reserved, varValue: value } = option;
+  if (!isDefined3(value)) {
+    return void 0;
+  } else if (["string", "number", "boolean"].includes(typeof value)) {
+    let val = value.toString();
+    const [named, ifEmpty] = getNamedAndIfEmpty(op);
+    const vals = [getFirstOrSep(op, isFirst)];
+    if (named && varName) {
+      vals.push(varName);
+      if (val === "") {
+        vals.push(ifEmpty);
+      } else {
+        vals.push("=");
+      }
+    }
+    if (modifier && modifier !== "*") {
+      val = val.substring(0, parseInt(modifier, 10));
+    }
+    vals.push(encodeComponent(val, reserved, op));
+    return vals.join("");
+  } else if (modifier === "*") {
+    return getExpandedValue(option);
+  } else {
+    return getNonExpandedValue(option);
+  }
+}
+function expandUrlTemplate(template, context3, option) {
+  const result = template.replace(/\{([^{}]+)\}|([^{}]+)/g, (_, expr, text) => {
+    if (!expr) {
+      return encodeReservedComponent(text);
+    }
+    let op;
+    if (["+", "#", ".", "/", ";", "?", "&"].includes(expr[0])) {
+      op = expr[0];
+      expr = expr.slice(1);
+    }
+    const varList = expr.split(/,/g);
+    const innerResult = [];
+    for (const varSpec of varList) {
+      const varMatch = /([^:*]*)(?::(\d+)|(\*))?/.exec(varSpec);
+      if (!varMatch || !varMatch[1]) {
+        continue;
+      }
+      const varValue = getVarValue({
+        isFirst: innerResult.length === 0,
+        op,
+        varValue: context3[varMatch[1]],
+        varName: varMatch[1],
+        modifier: varMatch[2] || varMatch[3],
+        reserved: option?.allowReserved
+      });
+      if (varValue) {
+        innerResult.push(varValue);
+      }
+    }
+    return innerResult.join("");
+  });
+  return normalizeUnreserved(result);
+}
+function normalizeUnreserved(uri) {
+  return uri.replace(/%([0-9A-Fa-f]{2})/g, (match, hex) => {
+    const char = String.fromCharCode(parseInt(hex, 16));
+    if (/[.~-]/.test(char)) {
+      return char;
+    }
+    return match;
+  });
+}
+
+// node_modules/@azure/storage-queue/dist/esm/generated/api/queue/operations.js
+function _deleteMessageSend(context3, messageId, popReceipt, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("messages/{messageId}{?popreceipt,timeout}", {
+    messageId,
+    popreceipt: popReceipt,
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).delete({
+    ...operationOptionsToRequestParameters3(options),
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      ...options.requestOptions?.headers
+    }
+  });
+}
+async function _deleteMessageDeserialize(result) {
+  const expectedStatuses = ["204"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = {
+      ...error.details,
+      ..._deleteMessageDeserializeExceptionHeaders(result)
+    };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return;
+}
+function _deleteMessageDeserializeHeaders(result) {
+  return {
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"])
+  };
+}
+function _deleteMessageDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function deleteMessage(context3, messageId, popReceipt, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _deleteMessageSend(context3, messageId, popReceipt, {
+    ...options,
+    onResponse: _storageCompat.onResponse
+  });
+  await _deleteMessageDeserialize(result);
+  const parsedHeaders = _deleteMessageDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
+}
+function _updateMessageSend(context3, messageId, popReceipt, visibilityTimeout, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("messages/{messageId}{?popreceipt,visibilitytimeout,timeout}", {
+    messageId,
+    popreceipt: popReceipt,
+    visibilitytimeout: visibilityTimeout,
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).put({
+    ...operationOptionsToRequestParameters3(options),
+    contentType: "application/xml",
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      ...options.requestOptions?.headers
+    },
+    body: !options?.queueMessage ? options?.queueMessage : queueMessageXmlSerializer(options?.queueMessage)
+  });
+}
+async function _updateMessageDeserialize(result) {
+  const expectedStatuses = ["204"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = {
+      ...error.details,
+      ..._updateMessageDeserializeExceptionHeaders(result)
+    };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return;
+}
+function _updateMessageDeserializeHeaders(result) {
+  return {
+    popReceipt: result.headers["x-ms-popreceipt"],
+    nextVisibleOn: new Date(result.headers["x-ms-time-next-visible"]),
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"])
+  };
+}
+function _updateMessageDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function updateMessage(context3, messageId, popReceipt, visibilityTimeout, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _updateMessageSend(context3, messageId, popReceipt, visibilityTimeout, {
+    ...options,
+    onResponse: _storageCompat.onResponse
+  });
+  await _updateMessageDeserialize(result);
+  const parsedHeaders = _updateMessageDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
+}
+function _peekMessagesSend(context3, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("messages?peekonly=true{?numofmessages,timeout}", {
+    numofmessages: options?.numberOfMessages,
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).get({
+    ...operationOptionsToRequestParameters3(options),
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      accept: "application/xml",
+      ...options.requestOptions?.headers
+    }
+  });
+}
+async function _peekMessagesDeserialize(result) {
+  const expectedStatuses = ["200"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = {
+      ...error.details,
+      ..._peekMessagesDeserializeExceptionHeaders(result)
+    };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return peekedMessagesXmlDeserializer(result.body);
+}
+function _peekMessagesDeserializeHeaders(result) {
+  return {
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"]),
+    contentType: result.headers["content-type"]
+  };
+}
+function _peekMessagesDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function peekMessages(context3, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _peekMessagesSend(context3, {
+    ...options,
+    onResponse: _storageCompat.onResponse
+  });
+  const parsedBody = await _peekMessagesDeserialize(result);
+  const parsedHeaders = _peekMessagesDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
+}
+function _sendMessageSend(context3, queueMessage, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("messages{?visibilitytimeout,messagettl,timeout}", {
+    visibilitytimeout: options?.visibilityTimeout,
+    messagettl: options?.messageTimeToLive,
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).post({
+    ...operationOptionsToRequestParameters3(options),
+    contentType: "application/xml",
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      accept: "application/xml",
+      ...options.requestOptions?.headers
+    },
+    body: queueMessageXmlSerializer(queueMessage)
+  });
+}
+async function _sendMessageDeserialize(result) {
+  const expectedStatuses = ["201"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = {
+      ...error.details,
+      ..._sendMessageDeserializeExceptionHeaders(result)
+    };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return listOfSentMessageXmlDeserializer(result.body);
+}
+function _sendMessageDeserializeHeaders(result) {
+  return {
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"]),
+    contentType: result.headers["content-type"]
+  };
+}
+function _sendMessageDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function sendMessage(context3, queueMessage, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _sendMessageSend(context3, queueMessage, {
+    ...options,
+    onResponse: _storageCompat.onResponse
+  });
+  const parsedBody = await _sendMessageDeserialize(result);
+  const parsedHeaders = _sendMessageDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
+}
+function _clearSend(context3, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("messages{?timeout}", {
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).delete({
+    ...operationOptionsToRequestParameters3(options),
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      ...options.requestOptions?.headers
+    }
+  });
+}
+async function _clearDeserialize(result) {
+  const expectedStatuses = ["204"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = { ...error.details, ..._clearDeserializeExceptionHeaders(result) };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return;
+}
+function _clearDeserializeHeaders(result) {
+  return {
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"])
+  };
+}
+function _clearDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function clear(context3, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _clearSend(context3, { ...options, onResponse: _storageCompat.onResponse });
+  await _clearDeserialize(result);
+  const parsedHeaders = _clearDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
+}
+function _receiveMessagesSend(context3, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("messages{?numofmessages,visibilitytimeout,timeout}", {
+    numofmessages: options?.numberOfMessages,
+    visibilitytimeout: options?.visibilityTimeout,
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).get({
+    ...operationOptionsToRequestParameters3(options),
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      accept: "application/xml",
+      ...options.requestOptions?.headers
+    }
+  });
+}
+async function _receiveMessagesDeserialize(result) {
+  const expectedStatuses = ["200"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = {
+      ...error.details,
+      ..._receiveMessagesDeserializeExceptionHeaders(result)
+    };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return receivedMessagesXmlDeserializer(result.body);
+}
+function _receiveMessagesDeserializeHeaders(result) {
+  return {
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"]),
+    contentType: result.headers["content-type"]
+  };
+}
+function _receiveMessagesDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function receiveMessages(context3, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _receiveMessagesSend(context3, {
+    ...options,
+    onResponse: _storageCompat.onResponse
+  });
+  const parsedBody = await _receiveMessagesDeserialize(result);
+  const parsedHeaders = _receiveMessagesDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
+}
+function _setAccessPolicySend(context3, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("?comp=acl{?timeout}", {
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).put({
+    ...operationOptionsToRequestParameters3(options),
+    contentType: "application/xml",
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      ...options.requestOptions?.headers
+    },
+    body: !options?.queueAcl ? options?.queueAcl : signedIdentifiersXmlSerializer(options?.queueAcl)
+  });
+}
+async function _setAccessPolicyDeserialize(result) {
+  const expectedStatuses = ["204"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = {
+      ...error.details,
+      ..._setAccessPolicyDeserializeExceptionHeaders(result)
+    };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return;
+}
+function _setAccessPolicyDeserializeHeaders(result) {
+  return {
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"])
+  };
+}
+function _setAccessPolicyDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function setAccessPolicy(context3, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _setAccessPolicySend(context3, {
+    ...options,
+    onResponse: _storageCompat.onResponse
+  });
+  await _setAccessPolicyDeserialize(result);
+  const parsedHeaders = _setAccessPolicyDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
+}
+function _getAccessPolicySend(context3, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("?comp=acl{?timeout}", {
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).get({
+    ...operationOptionsToRequestParameters3(options),
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      accept: "application/xml",
+      ...options.requestOptions?.headers
+    }
+  });
+}
+async function _getAccessPolicyDeserialize(result) {
+  const expectedStatuses = ["200"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = {
+      ...error.details,
+      ..._getAccessPolicyDeserializeExceptionHeaders(result)
+    };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return signedIdentifiersXmlDeserializer(result.body);
+}
+function _getAccessPolicyDeserializeHeaders(result) {
+  return {
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"]),
+    contentType: result.headers["content-type"]
+  };
+}
+function _getAccessPolicyDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function getAccessPolicy(context3, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _getAccessPolicySend(context3, {
+    ...options,
+    onResponse: _storageCompat.onResponse
+  });
+  const parsedBody = await _getAccessPolicyDeserialize(result);
+  const parsedHeaders = _getAccessPolicyDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
+}
+function _setMetadataSend(context3, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("?comp=metadata{?timeout}", {
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).put({
+    ...operationOptionsToRequestParameters3(options),
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      ...options.requestOptions?.headers
+    }
+  });
+}
+async function _setMetadataDeserialize(result) {
+  const expectedStatuses = ["204"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = {
+      ...error.details,
+      ..._setMetadataDeserializeExceptionHeaders(result)
+    };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return;
+}
+function _setMetadataDeserializeHeaders(result) {
+  return {
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"])
+  };
+}
+function _setMetadataDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function setMetadata(context3, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _setMetadataSend(context3, {
+    ...options,
+    onResponse: _storageCompat.onResponse
+  });
+  await _setMetadataDeserialize(result);
+  const parsedHeaders = _setMetadataDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
+}
+function _$deleteSend(context3, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("{?timeout}", {
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).delete({
+    ...operationOptionsToRequestParameters3(options),
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      ...options.requestOptions?.headers
+    }
+  });
+}
+async function _$deleteDeserialize(result) {
+  const expectedStatuses = ["204"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = { ...error.details, ..._$deleteDeserializeExceptionHeaders(result) };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return;
+}
+function _$deleteDeserializeHeaders(result) {
+  return {
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"])
+  };
+}
+function _$deleteDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function $delete(context3, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _$deleteSend(context3, { ...options, onResponse: _storageCompat.onResponse });
+  await _$deleteDeserialize(result);
+  const parsedHeaders = _$deleteDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
+}
+function _getPropertiesSend(context3, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("?comp=metadata{?timeout}", {
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).get({
+    ...operationOptionsToRequestParameters3(options),
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      ...options.requestOptions?.headers
+    }
+  });
+}
+async function _getPropertiesDeserialize(result) {
+  const expectedStatuses = ["200"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = {
+      ...error.details,
+      ..._getPropertiesDeserializeExceptionHeaders(result)
+    };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return;
+}
+function _getPropertiesDeserializeHeaders(result) {
+  return {
+    approximateMessagesCount: result.headers["x-ms-approximate-messages-count"] === void 0 || result.headers["x-ms-approximate-messages-count"] === null ? result.headers["x-ms-approximate-messages-count"] : Number(result.headers["x-ms-approximate-messages-count"]),
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"])
+  };
+}
+function _getPropertiesDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function getProperties(context3, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _getPropertiesSend(context3, {
+    ...options,
+    onResponse: _storageCompat.onResponse
+  });
+  await _getPropertiesDeserialize(result);
+  const parsedHeaders = _getPropertiesDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
+}
+function _createSend(context3, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("{?timeout}", {
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).put({
+    ...operationOptionsToRequestParameters3(options),
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      ...options.requestOptions?.headers
+    }
+  });
+}
+async function _createDeserialize(result) {
+  const expectedStatuses = ["201", "204"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = { ...error.details, ..._createDeserializeExceptionHeaders(result) };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return;
+}
+function _createDeserializeHeaders(result) {
+  return {
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"])
+  };
+}
+function _createDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function create(context3, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _createSend(context3, { ...options, onResponse: _storageCompat.onResponse });
+  await _createDeserialize(result);
+  const parsedHeaders = _createDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
+}
+
+// node_modules/@azure/storage-queue/dist/esm/generated/classic/queue/index.js
+function _getQueue(context3) {
+  return {
+    deleteMessage: (messageId, popReceipt, options) => deleteMessage(context3, messageId, popReceipt, options),
+    updateMessage: (messageId, popReceipt, visibilityTimeout, options) => updateMessage(context3, messageId, popReceipt, visibilityTimeout, options),
+    peekMessages: (options) => peekMessages(context3, options),
+    sendMessage: (queueMessage, options) => sendMessage(context3, queueMessage, options),
+    clear: (options) => clear(context3, options),
+    receiveMessages: (options) => receiveMessages(context3, options),
+    setAccessPolicy: (options) => setAccessPolicy(context3, options),
+    getAccessPolicy: (options) => getAccessPolicy(context3, options),
+    setMetadata: (options) => setMetadata(context3, options),
+    delete: (options) => $delete(context3, options),
+    getProperties: (options) => getProperties(context3, options),
+    create: (options) => create(context3, options)
+  };
+}
+function _getQueueOperations(context3) {
+  return {
+    ..._getQueue(context3)
+  };
+}
+
+// node_modules/@azure/storage-queue/dist/esm/generated/api/service/operations.js
+function _getQueuesSend(context3, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("?comp=list{?prefix,marker,maxresults,timeout,include}", {
+    prefix: options?.prefix,
+    marker: options?.marker,
+    maxresults: options?.maxresults,
+    timeout: options?.timeoutInSeconds,
+    include: !options?.include ? options?.include : options?.include.map((p) => {
+      return p;
+    })
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).get({
+    ...operationOptionsToRequestParameters3(options),
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      accept: "application/xml",
+      ...options.requestOptions?.headers
+    }
+  });
+}
+async function _getQueuesDeserialize(result) {
+  const expectedStatuses = ["200"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = { ...error.details, ..._getQueuesDeserializeExceptionHeaders(result) };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return listQueuesResponseXmlDeserializer(result.body);
+}
+function _getQueuesDeserializeHeaders(result) {
+  return {
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"]),
+    contentType: result.headers["content-type"]
+  };
+}
+function _getQueuesDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function getQueues(context3, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _getQueuesSend(context3, {
+    ...options,
+    onResponse: _storageCompat.onResponse
+  });
+  const parsedBody = await _getQueuesDeserialize(result);
+  const parsedHeaders = _getQueuesDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
+}
+function _getUserDelegationKeySend(context3, keyInfo, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("?restype=service&comp=userdelegationkey{?timeout}", {
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).post({
+    ...operationOptionsToRequestParameters3(options),
+    contentType: "application/xml",
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      accept: "application/xml",
+      ...options.requestOptions?.headers
+    },
+    body: keyInfoXmlSerializer(keyInfo)
+  });
+}
+async function _getUserDelegationKeyDeserialize(result) {
+  const expectedStatuses = ["200"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = {
+      ...error.details,
+      ..._getUserDelegationKeyDeserializeExceptionHeaders(result)
+    };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return userDelegationKeyXmlDeserializer(result.body);
+}
+function _getUserDelegationKeyDeserializeHeaders(result) {
+  return {
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"]),
+    contentType: result.headers["content-type"]
+  };
+}
+function _getUserDelegationKeyDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function getUserDelegationKey(context3, keyInfo, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _getUserDelegationKeySend(context3, keyInfo, {
+    ...options,
+    onResponse: _storageCompat.onResponse
+  });
+  const parsedBody = await _getUserDelegationKeyDeserialize(result);
+  const parsedHeaders = _getUserDelegationKeyDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
+}
+function _getStatisticsSend(context3, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("?restype=service&comp=stats{?timeout}", {
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).get({
+    ...operationOptionsToRequestParameters3(options),
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      accept: "application/xml",
+      ...options.requestOptions?.headers
+    }
+  });
+}
+async function _getStatisticsDeserialize(result) {
+  const expectedStatuses = ["200"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = {
+      ...error.details,
+      ..._getStatisticsDeserializeExceptionHeaders(result)
+    };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return queueServiceStatsXmlDeserializer(result.body);
+}
+function _getStatisticsDeserializeHeaders(result) {
+  return {
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"]),
+    contentType: result.headers["content-type"]
+  };
+}
+function _getStatisticsDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function getStatistics(context3, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _getStatisticsSend(context3, {
+    ...options,
+    onResponse: _storageCompat.onResponse
+  });
+  const parsedBody = await _getStatisticsDeserialize(result);
+  const parsedHeaders = _getStatisticsDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
+}
+function _getPropertiesSend2(context3, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("?restype=service&comp=properties{?timeout}", {
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).get({
+    ...operationOptionsToRequestParameters3(options),
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      accept: "application/xml",
+      ...options.requestOptions?.headers
+    }
+  });
+}
+async function _getPropertiesDeserialize2(result) {
+  const expectedStatuses = ["200"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = {
+      ...error.details,
+      ..._getPropertiesDeserializeExceptionHeaders2(result)
+    };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return queueServicePropertiesXmlDeserializer(result.body);
+}
+function _getPropertiesDeserializeHeaders2(result) {
+  return {
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"]),
+    contentType: result.headers["content-type"]
+  };
+}
+function _getPropertiesDeserializeExceptionHeaders2(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function getProperties2(context3, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _getPropertiesSend2(context3, {
+    ...options,
+    onResponse: _storageCompat.onResponse
+  });
+  const parsedBody = await _getPropertiesDeserialize2(result);
+  const parsedHeaders = _getPropertiesDeserializeHeaders2(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
+}
+function _setPropertiesSend(context3, queueServiceProperties, options = { requestOptions: {} }) {
+  const path5 = expandUrlTemplate("?restype=service&comp=properties{?timeout}", {
+    timeout: options?.timeoutInSeconds
+  }, {
+    allowReserved: options?.requestOptions?.skipUrlEncoding
+  });
+  return context3.path(path5).put({
+    ...operationOptionsToRequestParameters3(options),
+    contentType: "application/xml",
+    headers: {
+      "x-ms-version": context3.version ?? "2026-04-06",
+      ...options?.clientRequestId !== void 0 ? { "x-ms-client-request-id": options?.clientRequestId } : {},
+      ...options.requestOptions?.headers
+    },
+    body: queueServicePropertiesXmlSerializer(queueServiceProperties)
+  });
+}
+async function _setPropertiesDeserialize(result) {
+  const expectedStatuses = ["202"];
+  if (!expectedStatuses.includes(result.status)) {
+    const error = createRestError3(result);
+    error.details = errorXmlDeserializer(result.body);
+    error.details = {
+      ...error.details,
+      ..._setPropertiesDeserializeExceptionHeaders(result)
+    };
+    error.details = { ...error.details, errorCode: result.headers["x-ms-error-code"] };
+    const restErrorCodeValue = result.headers["x-ms-error-code"];
+    if (restErrorCodeValue !== void 0) {
+      error.code = restErrorCodeValue;
+    }
+    throw error;
+  }
+  return;
+}
+function _setPropertiesDeserializeHeaders(result) {
+  return {
+    version: result.headers["x-ms-version"],
+    requestId: result.headers["x-ms-request-id"] === void 0 || result.headers["x-ms-request-id"] === null ? result.headers["x-ms-request-id"] : result.headers["x-ms-request-id"],
+    clientRequestId: result.headers["x-ms-client-request-id"] === void 0 || result.headers["x-ms-client-request-id"] === null ? result.headers["x-ms-client-request-id"] : result.headers["x-ms-client-request-id"],
+    date: new Date(result.headers["date"])
+  };
+}
+function _setPropertiesDeserializeExceptionHeaders(result) {
+  return {
+    errorCode: result.headers["x-ms-error-code"] === void 0 || result.headers["x-ms-error-code"] === null ? result.headers["x-ms-error-code"] : result.headers["x-ms-error-code"]
+  };
+}
+async function setProperties(context3, queueServiceProperties, options = { requestOptions: {} }) {
+  const _storageCompat = createStorageCompatOnResponse(options.onResponse);
+  const result = await _setPropertiesSend(context3, queueServiceProperties, {
+    ...options,
+    onResponse: _storageCompat.onResponse
+  });
+  await _setPropertiesDeserialize(result);
+  const parsedHeaders = _setPropertiesDeserializeHeaders(result);
+  return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
+}
+
+// node_modules/@azure/storage-queue/dist/esm/generated/classic/service/index.js
+function _getService(context3) {
+  return {
+    getQueues: (options) => getQueues(context3, options),
+    getUserDelegationKey: (keyInfo, options) => getUserDelegationKey(context3, keyInfo, options),
+    getStatistics: (options) => getStatistics(context3, options),
+    getProperties: (options) => getProperties2(context3, options),
+    setProperties: (queueServiceProperties, options) => setProperties(context3, queueServiceProperties, options)
+  };
+}
+function _getServiceOperations(context3) {
+  return {
+    ..._getService(context3)
+  };
+}
+
+// node_modules/@azure/storage-queue/dist/esm/generated/queuesClient.js
+var QueuesClient = class {
+  _client;
+  /** The pipeline used by this client to make requests */
+  pipeline;
+  constructor(endpointParam, credential, options = {}) {
+    const prefixFromOptions = options?.userAgentOptions?.userAgentPrefix;
+    const userAgentPrefix = prefixFromOptions ? `${prefixFromOptions} azsdk-js-client` : `azsdk-js-client`;
+    this._client = createQueues(endpointParam, credential, {
       ...options,
-      userAgentOptions: {
-        userAgentPrefix
-      },
-      endpoint: options.endpoint ?? options.baseUri ?? "{url}"
-    };
-    super(optionsWithDefaults);
-    this.url = url3;
-    this.version = options.version || "2026-06-06";
-    this.service = new ServiceImpl2(this);
-    this.queue = new QueueImpl(this);
-    this.messages = new MessagesImpl(this);
-    this.messageId = new MessageIdImpl(this);
+      userAgentOptions: { userAgentPrefix }
+    });
+    this.pipeline = this._client.pipeline;
+    this.queue = _getQueueOperations(this._client);
+    this.service = _getServiceOperations(this._client);
   }
-  service;
+  /** The operation groups for queue */
   queue;
-  messages;
-  messageId;
-};
-
-// node_modules/@azure/storage-queue/dist/esm/StorageContextClient.js
-var StorageContextClient = class extends StorageClient {
-  async sendOperationRequest(operationArguments, operationSpec) {
-    const operationSpecToSend = { ...operationSpec };
-    if (operationSpecToSend.path === "/{queueName}" || operationSpecToSend.path === "/{queueName}/messages" || operationSpecToSend.path === "/{queueName}/messages/{messageid}") {
-      operationSpecToSend.path = "";
-    }
-    return super.sendOperationRequest(operationArguments, operationSpecToSend);
-  }
+  /** The operation groups for service */
+  service;
 };
 
 // node_modules/@azure/storage-queue/dist/esm/StorageClient.js
-var StorageClient2 = class {
+var StorageClientContext = class {
+  queuesClient;
+  service;
+  queue;
+  constructor(url2, options = {}) {
+    const placeholderCredential = {
+      async getToken() {
+        throw new Error("Placeholder TokenCredential was used. Authentication must be configured via the HTTP pipeline.");
+      }
+    };
+    this.queuesClient = new QueuesClient(url2, placeholderCredential, options);
+    this.service = this.queuesClient.service;
+    this.queue = this.queuesClient.queue;
+  }
+};
+var StorageClient = class {
   /**
    * URL string value.
    */
@@ -149263,25 +149271,41 @@ var StorageClient2 = class {
    * @param url -
    * @param pipeline -
    */
-  constructor(url3, pipeline) {
-    this.url = url3;
-    this.accountName = getAccountNameFromUrl2(url3);
+  constructor(url2, pipeline) {
+    this.url = url2;
+    this.accountName = getAccountNameFromUrl2(url2);
     this.pipeline = pipeline;
-    this.storageClientContext = getStorageClientContext(this.url, this.pipeline);
+    const pipelineOptions = pipeline.options;
+    if (pipelineOptions.retryOptions === void 0) {
+      pipelineOptions.retryOptions = {
+        tryTimeoutInMs: 30 * 1e3
+      };
+    } else if (pipelineOptions.retryOptions.tryTimeoutInMs === void 0) {
+      pipelineOptions.retryOptions.tryTimeoutInMs = 30 * 1e3;
+    }
+    const coreClientOptions = getCoreClientOptions(pipeline);
     this.credential = getCredentialFromPipeline(pipeline);
+    const { pipeline: _corePipeline, httpClient, ...rest } = coreClientOptions;
+    if (_corePipeline?.getOrderedPolicies().some((policy) => policy.name === "serializationPolicy")) {
+      const clonedCorePipeline = _corePipeline.clone();
+      clonedCorePipeline.removePolicy({ name: "deserializationPolicy" });
+      clonedCorePipeline.removePolicy({ name: "serializationPolicy" });
+      const clonedPipeline = new Pipeline(pipeline.factories);
+      clonedPipeline._corePipeline = clonedCorePipeline;
+      clonedPipeline._coreHttpClient = httpClient;
+      clonedPipeline._credential = pipeline._credential;
+      this.pipeline = clonedPipeline;
+      this.storageClientContext = new StorageClientContext(this.url, {
+        ...rest,
+        pipeline: clonedCorePipeline,
+        httpClient
+      });
+    } else {
+      this.pipeline = pipeline;
+      this.storageClientContext = new StorageClientContext(this.url, coreClientOptions);
+    }
   }
 };
-function getStorageClientContext(url3, pipeline) {
-  const pipelineOptions = pipeline.options;
-  if (pipelineOptions.retryOptions === void 0) {
-    pipelineOptions.retryOptions = {
-      tryTimeoutInMs: 30 * 1e3
-    };
-  } else if (pipelineOptions.retryOptions.tryTimeoutInMs === void 0) {
-    pipelineOptions.retryOptions.tryTimeoutInMs = 30 * 1e3;
-  }
-  return new StorageContextClient(url3, getCoreClientOptions(pipeline));
-}
 
 // node_modules/@azure/storage-queue/dist/esm/utils/tracing.js
 var tracingClient3 = createTracingClient({
@@ -149365,7 +149389,7 @@ function generateQueueSASQueryParameters(queueSASSignatureValues, sharedKeyCrede
   return generateQueueSASQueryParametersInternal(queueSASSignatureValues, sharedKeyCredentialOrUserDelegationKey, accountName).sasQueryParameters;
 }
 function generateQueueSASQueryParametersInternal(queueSASSignatureValues, sharedKeyCredentialOrUserDelegationKey, accountName) {
-  const version5 = queueSASSignatureValues.version ? queueSASSignatureValues.version : SERVICE_VERSION2;
+  const version4 = queueSASSignatureValues.version ? queueSASSignatureValues.version : SERVICE_VERSION2;
   const sharedKeyCredential = sharedKeyCredentialOrUserDelegationKey instanceof StorageSharedKeyCredential ? sharedKeyCredentialOrUserDelegationKey : void 0;
   let userDelegationKeyCredential;
   if (sharedKeyCredential === void 0 && accountName !== void 0) {
@@ -149374,7 +149398,7 @@ function generateQueueSASQueryParametersInternal(queueSASSignatureValues, shared
   if (sharedKeyCredential !== void 0) {
     return generateQueueSASQueryParametersDefault(queueSASSignatureValues, sharedKeyCredential);
   } else {
-    if (version5 >= "2025-07-05") {
+    if (version4 >= "2025-07-05") {
       return generateQueueSASQueryParametersUDK20250705(queueSASSignatureValues, userDelegationKeyCredential, accountName);
     } else {
       throw new RangeError("'version' must be >= '2025-07-05' when generating user delegation SAS using user delegation key.");
@@ -149385,7 +149409,7 @@ function generateQueueSASQueryParametersDefault(queueSASSignatureValues, sharedK
   if (!queueSASSignatureValues.identifier && !(queueSASSignatureValues.permissions && queueSASSignatureValues.expiresOn)) {
     throw new RangeError("Must provide 'permissions' and 'expiresOn' for Queue SAS generation when 'identifier' is not provided.");
   }
-  const version5 = queueSASSignatureValues.version ? queueSASSignatureValues.version : SERVICE_VERSION2;
+  const version4 = queueSASSignatureValues.version ? queueSASSignatureValues.version : SERVICE_VERSION2;
   let verifiedPermissions;
   if (queueSASSignatureValues.permissions) {
     verifiedPermissions = QueueSASPermissions.parse(queueSASSignatureValues.permissions.toString()).toString();
@@ -149398,11 +149422,11 @@ function generateQueueSASQueryParametersDefault(queueSASSignatureValues, sharedK
     queueSASSignatureValues.identifier,
     queueSASSignatureValues.ipRange ? ipRangeToString2(queueSASSignatureValues.ipRange) : "",
     queueSASSignatureValues.protocol ? queueSASSignatureValues.protocol : "",
-    version5
+    version4
   ].join("\n");
   const signature = sharedKeyCredential.computeHMACSHA256(stringToSign);
   return {
-    sasQueryParameters: new SASQueryParameters(version5, signature, verifiedPermissions, void 0, void 0, queueSASSignatureValues.protocol, queueSASSignatureValues.startsOn, queueSASSignatureValues.expiresOn, queueSASSignatureValues.ipRange, queueSASSignatureValues.identifier),
+    sasQueryParameters: new SASQueryParameters(version4, signature, verifiedPermissions, void 0, void 0, queueSASSignatureValues.protocol, queueSASSignatureValues.startsOn, queueSASSignatureValues.expiresOn, queueSASSignatureValues.ipRange, queueSASSignatureValues.identifier),
     stringToSign
   };
 }
@@ -149410,7 +149434,7 @@ function generateQueueSASQueryParametersUDK20250705(queueSASSignatureValues, use
   if (!(queueSASSignatureValues.permissions && queueSASSignatureValues.expiresOn)) {
     throw new RangeError("Must provide 'permissions' and 'expiresOn' for Queue SAS generation when generating user delegation SAS.");
   }
-  const version5 = queueSASSignatureValues.version ? queueSASSignatureValues.version : SERVICE_VERSION2;
+  const version4 = queueSASSignatureValues.version ? queueSASSignatureValues.version : SERVICE_VERSION2;
   let verifiedPermissions;
   if (queueSASSignatureValues.permissions) {
     verifiedPermissions = QueueSASPermissions.parse(queueSASSignatureValues.permissions.toString()).toString();
@@ -149432,11 +149456,11 @@ function generateQueueSASQueryParametersUDK20250705(queueSASSignatureValues, use
     queueSASSignatureValues.delegatedUserObjectId,
     queueSASSignatureValues.ipRange ? ipRangeToString2(queueSASSignatureValues.ipRange) : "",
     queueSASSignatureValues.protocol ? queueSASSignatureValues.protocol : "",
-    version5
+    version4
   ].join("\n");
   const signature = userDelegationKeyCredential.computeHMACSHA256(stringToSign);
   return {
-    sasQueryParameters: new SASQueryParameters(version5, signature, verifiedPermissions, void 0, void 0, queueSASSignatureValues.protocol, queueSASSignatureValues.startsOn, queueSASSignatureValues.expiresOn, queueSASSignatureValues.ipRange, queueSASSignatureValues.identifier, resource, userDelegationKeyCredential.userDelegationKey, queueSASSignatureValues.delegatedUserObjectId),
+    sasQueryParameters: new SASQueryParameters(version4, signature, verifiedPermissions, void 0, void 0, queueSASSignatureValues.protocol, queueSASSignatureValues.startsOn, queueSASSignatureValues.expiresOn, queueSASSignatureValues.ipRange, queueSASSignatureValues.identifier, resource, userDelegationKeyCredential.userDelegationKey, queueSASSignatureValues.delegatedUserObjectId),
     stringToSign
   };
 }
@@ -149445,17 +149469,8 @@ function getCanonicalName(accountName, queueName) {
 }
 
 // node_modules/@azure/storage-queue/dist/esm/QueueClient.js
-var QueueClient = class extends StorageClient2 {
-  /**
-   * messagesContext provided by protocol layer.
-   */
-  messagesContext;
-  /**
-   * queueContext provided by protocol layer.
-   */
-  queueContext;
+var QueueClient = class extends StorageClient {
   _name;
-  _messagesUrl;
   /**
    * The name of the queue.
    */
@@ -149465,15 +149480,15 @@ var QueueClient = class extends StorageClient2 {
   constructor(urlOrConnectionString, credentialOrPipelineOrQueueName, options) {
     options = options || {};
     let pipeline;
-    let url3;
+    let url2;
     if (isPipelineLike(credentialOrPipelineOrQueueName)) {
-      url3 = urlOrConnectionString;
+      url2 = urlOrConnectionString;
       pipeline = credentialOrPipelineOrQueueName;
     } else if (isNode && credentialOrPipelineOrQueueName instanceof StorageSharedKeyCredential || credentialOrPipelineOrQueueName instanceof AnonymousCredential || isTokenCredential2(credentialOrPipelineOrQueueName)) {
-      url3 = urlOrConnectionString;
+      url2 = urlOrConnectionString;
       pipeline = newPipeline(credentialOrPipelineOrQueueName, options);
     } else if (!credentialOrPipelineOrQueueName && typeof credentialOrPipelineOrQueueName !== "string") {
-      url3 = urlOrConnectionString;
+      url2 = urlOrConnectionString;
       pipeline = newPipeline(new AnonymousCredential(), options);
     } else if (credentialOrPipelineOrQueueName && typeof credentialOrPipelineOrQueueName === "string") {
       const extractedCreds = extractConnectionStringParts2(urlOrConnectionString);
@@ -149481,7 +149496,7 @@ var QueueClient = class extends StorageClient2 {
         if (isNode) {
           const queueName = credentialOrPipelineOrQueueName;
           const sharedKeyCredential = new StorageSharedKeyCredential(extractedCreds.accountName, extractedCreds.accountKey);
-          url3 = appendToURLPath(extractedCreds.url, queueName);
+          url2 = appendToURLPath(extractedCreds.url, queueName);
           if (!options.proxyOptions) {
             options.proxyOptions = getDefaultProxySettings3(extractedCreds.proxyUri);
           }
@@ -149491,7 +149506,7 @@ var QueueClient = class extends StorageClient2 {
         }
       } else if (extractedCreds.kind === "SASConnString") {
         const queueName = credentialOrPipelineOrQueueName;
-        url3 = appendToURLPath(extractedCreds.url, queueName) + "?" + extractedCreds.accountSas;
+        url2 = appendToURLPath(extractedCreds.url, queueName) + "?" + extractedCreds.accountSas;
         pipeline = newPipeline(new AnonymousCredential(), options);
       } else {
         throw new Error("Connection string must be either an Account connection string or a SAS connection string");
@@ -149499,17 +149514,8 @@ var QueueClient = class extends StorageClient2 {
     } else {
       throw new Error("Expecting non-empty strings for queueName parameter");
     }
-    super(url3, pipeline);
+    super(url2, pipeline);
     this._name = this.getQueueNameFromUrl();
-    this.queueContext = this.storageClientContext.queue;
-    const partsOfUrl = this.url.split("?");
-    this._messagesUrl = partsOfUrl[1] ? appendToURLPath(partsOfUrl[0], "messages") + "?" + partsOfUrl[1] : appendToURLPath(partsOfUrl[0], "messages");
-    this.messagesContext = getStorageClientContext(this._messagesUrl, this.pipeline).messages;
-  }
-  getMessageIdContext(messageId) {
-    const partsOfUrl = this._messagesUrl.split("?");
-    const urlWithMessageId = partsOfUrl[1] ? appendToURLPath(partsOfUrl[0], messageId) + "?" + partsOfUrl[1] : appendToURLPath(partsOfUrl[0], messageId);
-    return getStorageClientContext(urlWithMessageId, this.pipeline).messageId;
   }
   /**
    * Creates a new queue under the specified account.
@@ -149540,7 +149546,14 @@ var QueueClient = class extends StorageClient2 {
    */
   async create(options = {}) {
     return tracingClient3.withSpan("QueueClient-create", options, async (updatedOptions) => {
-      return assertResponse(await this.queueContext.create(updatedOptions));
+      const metadataHeaders = metadataToRawHeaders(options.metadata);
+      const { metadata: _metadata, ...restOptions } = updatedOptions;
+      return assertResponse(adjustResponse(await this.storageClientContext.queue.create({
+        ...restOptions,
+        requestOptions: {
+          headers: metadataHeaders
+        }
+      })));
     });
   }
   /**
@@ -149565,9 +149578,18 @@ var QueueClient = class extends StorageClient2 {
           ...response
         };
       } catch (e) {
+        if (e.statusCode === 204) {
+          return {
+            succeeded: false,
+            errorCode: e.details?.errorCode,
+            ...e.response?.parsedHeaders,
+            _response: e.response
+          };
+        }
         if (e.details?.errorCode === "QueueAlreadyExists") {
           return {
             succeeded: false,
+            errorCode: e.details?.errorCode,
             ...e.response?.parsedHeaders,
             _response: e.response
           };
@@ -149594,6 +149616,7 @@ var QueueClient = class extends StorageClient2 {
         if (e.details?.errorCode === "QueueNotFound") {
           return {
             succeeded: false,
+            errorCode: e.details?.errorCode,
             ...e.response?.parsedHeaders,
             _response: e.response
           };
@@ -149631,10 +149654,10 @@ var QueueClient = class extends StorageClient2 {
    */
   async delete(options = {}) {
     return tracingClient3.withSpan("QueueClient-delete", options, async (updatedOptions) => {
-      return assertResponse(await this.queueContext.delete({
+      return assertResponse(adjustResponse(await this.storageClientContext.queue.delete({
         abortSignal: options.abortSignal,
         tracingOptions: updatedOptions.tracingOptions
-      }));
+      })));
     });
   }
   /**
@@ -149674,7 +149697,19 @@ var QueueClient = class extends StorageClient2 {
    */
   async getProperties(options = {}) {
     return tracingClient3.withSpan("QueueClient-getProperties", options, async (updatedOptions) => {
-      return assertResponse(await this.queueContext.getProperties(updatedOptions));
+      const rawResult = await this.storageClientContext.queue.getProperties(updatedOptions);
+      const result = adjustResponse(rawResult);
+      const headers = result._response.headers;
+      const rawHeaders = typeof headers.rawHeaders === "function" ? headers.rawHeaders() : {};
+      const metadata = {};
+      for (const key of Object.keys(rawHeaders)) {
+        if (key.toLowerCase().startsWith("x-ms-meta-")) {
+          const metadataKey = key.substring("x-ms-meta-".length);
+          metadata[metadataKey] = rawHeaders[key];
+        }
+      }
+      result.metadata = Object.keys(metadata).length > 0 ? metadata : void 0;
+      return assertResponse(result);
     });
   }
   /**
@@ -149688,12 +149723,15 @@ var QueueClient = class extends StorageClient2 {
    * @param options - Options to Queue set metadata operation.
    * @returns Response data for the Queue set metadata operation.
    */
-  async setMetadata(metadata2, options = {}) {
+  async setMetadata(metadata, options = {}) {
     return tracingClient3.withSpan("QueueClient-setMetadata", options, async (updatedOptions) => {
-      return assertResponse(await this.queueContext.setMetadata({
+      const metadataHeaders = metadataToRawHeaders(metadata);
+      return assertResponse(adjustResponse(await this.storageClientContext.queue.setMetadata({
         ...updatedOptions,
-        metadata: metadata2
-      }));
+        requestOptions: {
+          headers: metadataHeaders
+        }
+      })));
     });
   }
   /**
@@ -149709,10 +149747,10 @@ var QueueClient = class extends StorageClient2 {
    */
   async getAccessPolicy(options = {}) {
     return tracingClient3.withSpan("QueueClient-getAccessPolicy", options, async (updatedOptions) => {
-      const response = assertResponse(await this.queueContext.getAccessPolicy({
+      const response = assertResponse(adjustResponse(await this.storageClientContext.queue.getAccessPolicy({
         abortSignal: options.abortSignal,
         tracingOptions: updatedOptions.tracingOptions
-      }));
+      })));
       const res = {
         _response: response._response,
         date: response.date,
@@ -149722,7 +149760,7 @@ var QueueClient = class extends StorageClient2 {
         version: response.version,
         errorCode: response.errorCode
       };
-      for (const identifier of response) {
+      for (const identifier of response.items || []) {
         let accessPolicy = void 0;
         if (identifier.accessPolicy) {
           accessPolicy = {
@@ -149751,10 +149789,10 @@ var QueueClient = class extends StorageClient2 {
    * @param options - Options to Queue set access policy operation.
    * @returns Response data for the Queue set access policy operation.
    */
-  async setAccessPolicy(queueAcl2, options = {}) {
+  async setAccessPolicy(queueAcl, options = {}) {
     return tracingClient3.withSpan("QueueClient-setAccessPolicy", options, async (updatedOptions) => {
       const acl = [];
-      for (const identifier of queueAcl2 || []) {
+      for (const identifier of queueAcl || []) {
         acl.push({
           accessPolicy: {
             expiresOn: identifier.accessPolicy.expiresOn ? truncatedISO8061Date2(identifier.accessPolicy.expiresOn) : void 0,
@@ -149764,10 +149802,10 @@ var QueueClient = class extends StorageClient2 {
           id: identifier.id
         });
       }
-      return assertResponse(await this.queueContext.setAccessPolicy({
+      return assertResponse(adjustResponse(await this.storageClientContext.queue.setAccessPolicy({
         ...updatedOptions,
-        queueAcl: acl
-      }));
+        queueAcl: { items: acl }
+      })));
     });
   }
   /**
@@ -149779,7 +149817,7 @@ var QueueClient = class extends StorageClient2 {
    */
   async clearMessages(options = {}) {
     return tracingClient3.withSpan("QueueClient-clearMessages", options, async (updatedOptions) => {
-      return assertResponse(await this.messagesContext.clear(updatedOptions));
+      return assertResponse(adjustResponse(await this.storageClientContext.queue.clear(updatedOptions)));
     });
   }
   /**
@@ -149816,10 +149854,11 @@ var QueueClient = class extends StorageClient2 {
    */
   async sendMessage(messageText, options = {}) {
     return tracingClient3.withSpan("QueueClient-sendMessage", options, async (updatedOptions) => {
-      const response = assertResponse(await this.messagesContext.enqueue({
+      const response = assertResponse(adjustResponse(await this.storageClientContext.queue.sendMessage({
         messageText
-      }, updatedOptions));
-      const item = response[0];
+      }, updatedOptions)));
+      const items = response.items || [];
+      const item = items[0] || {};
       return {
         _response: response._response,
         date: response.date,
@@ -149872,7 +149911,7 @@ var QueueClient = class extends StorageClient2 {
    */
   async receiveMessages(options = {}) {
     return tracingClient3.withSpan("QueueClient-receiveMessages", options, async (updatedOptions) => {
-      const response = assertResponse(await this.messagesContext.dequeue(updatedOptions));
+      const response = assertResponse(adjustResponse(await this.storageClientContext.queue.receiveMessages(updatedOptions)));
       const res = {
         _response: response._response,
         date: response.date,
@@ -149882,7 +149921,8 @@ var QueueClient = class extends StorageClient2 {
         version: response.version,
         errorCode: response.errorCode
       };
-      for (const item of response) {
+      const items = response.items || [];
+      for (const item of items) {
         res.receivedMessageItems.push(item);
       }
       return res;
@@ -149915,7 +149955,7 @@ var QueueClient = class extends StorageClient2 {
    */
   async peekMessages(options = {}) {
     return tracingClient3.withSpan("QueueClient-peekMessages", options, async (updatedOptions) => {
-      const response = assertResponse(await this.messagesContext.peek(updatedOptions));
+      const response = assertResponse(adjustResponse(await this.storageClientContext.queue.peekMessages(updatedOptions)));
       const res = {
         _response: response._response,
         date: response.date,
@@ -149925,7 +149965,8 @@ var QueueClient = class extends StorageClient2 {
         version: response.version,
         errorCode: response.errorCode
       };
-      for (const item of response) {
+      const items = response.items || [];
+      for (const item of items) {
         res.peekedMessageItems.push(item);
       }
       return res;
@@ -149940,9 +149981,9 @@ var QueueClient = class extends StorageClient2 {
    * @param options - Options to delete message operation.
    * @returns Response data for the delete message operation.
    */
-  async deleteMessage(messageId, popReceipt2, options = {}) {
+  async deleteMessage(messageId, popReceipt, options = {}) {
     return tracingClient3.withSpan("QueueClient-deleteMessage", options, async (updatedOptions) => {
-      return assertResponse(await this.getMessageIdContext(messageId).delete(popReceipt2, updatedOptions));
+      return assertResponse(adjustResponse(await this.storageClientContext.queue.deleteMessage(messageId, popReceipt, updatedOptions)));
     });
   }
   /**
@@ -149962,17 +150003,17 @@ var QueueClient = class extends StorageClient2 {
    * @param options - Options to update message operation.
    * @returns Response data for the update message operation.
    */
-  async updateMessage(messageId, popReceipt2, message, visibilityTimeout2, options = {}) {
+  async updateMessage(messageId, popReceipt, message, visibilityTimeout, options = {}) {
     return tracingClient3.withSpan("QueueClient-updateMessage", options, async (updatedOptions) => {
-      let queueMessage2 = void 0;
+      let queueMessage = void 0;
       if (message !== void 0) {
-        queueMessage2 = { messageText: message };
+        queueMessage = { messageText: message };
       }
-      return assertResponse(await this.getMessageIdContext(messageId).update(popReceipt2, visibilityTimeout2 || 0, {
+      return assertResponse(adjustResponse(await this.storageClientContext.queue.updateMessage(messageId, popReceipt, visibilityTimeout || 0, {
         abortSignal: options.abortSignal,
         tracingOptions: updatedOptions.tracingOptions,
-        queueMessage: queueMessage2
-      }));
+        queueMessage
+      })));
     });
   }
   getQueueNameFromUrl() {
@@ -150387,15 +150428,15 @@ var state4 = new AzureStateRepository({
   managedIdentityClientId: process.env.MANAGED_IDENTITY_CLIENT_ID
 });
 var graph = new GraphClient();
-var logger31 = (context3) => ({
-  info: (message, properties2) => context3.log(message, properties2 ?? {}),
-  warn: (message, properties2) => context3.warn(message, properties2 ?? {}),
-  error: (message, properties2) => context3.error(message, properties2 ?? {})
+var logger32 = (context3) => ({
+  info: (message, properties) => context3.log(message, properties ?? {}),
+  warn: (message, properties) => context3.warn(message, properties ?? {}),
+  error: (message, properties) => context3.error(message, properties ?? {})
 });
 var bot = new ManagedIdentityTeamsBot(required("TEAMS_BOT_APP_ID"), required("AZURE_TENANT_ID"), state4, {
-  info: (message, properties2) => console.info(JSON.stringify({ level: "info", message, ...properties2 })),
-  warn: (message, properties2) => console.warn(JSON.stringify({ level: "warn", message, ...properties2 })),
-  error: (message, properties2) => console.error(JSON.stringify({ level: "error", message, ...properties2 }))
+  info: (message, properties) => console.info(JSON.stringify({ level: "info", message, ...properties })),
+  warn: (message, properties) => console.warn(JSON.stringify({ level: "warn", message, ...properties })),
+  error: (message, properties) => console.error(JSON.stringify({ level: "error", message, ...properties }))
 });
 import_functions.app.timer("pollDirectoryAudits", {
   schedule: process.env.ENTRA_POLL_SCHEDULE ?? "0 */5 * * * *",
@@ -150404,7 +150445,7 @@ import_functions.app.timer("pollDirectoryAudits", {
     graph,
     watermarks: state4,
     outbox: state4,
-    logger: logger31(context3),
+    logger: logger32(context3),
     now: /* @__PURE__ */ new Date(),
     overlapMs: entraOverlapMs,
     enabled: collectionEnabled
@@ -150417,7 +150458,7 @@ import_functions.app.timer("pollManagedDevices", {
     graph,
     snapshots: state4,
     outbox: state4,
-    logger: logger31(context3),
+    logger: logger32(context3),
     now: /* @__PURE__ */ new Date(),
     enrollmentLookbackMs,
     enabled: collectionEnabled
@@ -150432,7 +150473,7 @@ import_functions.app.storageQueue("dispatchDeviceNotification", {
       graph,
       bot,
       history: state4,
-      logger: logger31(context3),
+      logger: logger32(context3),
       routing,
       adminEmails,
       webhookUrl,
@@ -150462,7 +150503,7 @@ import_functions.app.http("testNotificationDelivery", {
       graph,
       bot,
       history: state4,
-      logger: logger31(context3),
+      logger: logger32(context3),
       routing,
       adminEmails,
       webhookUrl,
