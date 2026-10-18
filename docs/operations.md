@@ -40,6 +40,13 @@ validation contract. The report is redacted and ignored by Git. Run
 authentication, Azure or Graph reads, the unauthenticated endpoint probe, or
 synthetic delivery.
 
+The validation engine is vendored from reviewed Reference commit
+`2b2e784ba11822272c0e4b8389976f95afafa9b9` as deployment-validation 2.0.0.
+It requires PowerShell 7.6 or newer. The lock records every file hash; validation
+does not fetch code from Reference at runtime. This adoption changes the module
+version and runtime floor only; the engine implementation and report schema are
+unchanged. Source adoption does not establish native delivery qualification.
+
 A complete default run tests `deviceRegistered`, `deviceEnrolled`, and `deviceNoncompliant`, then records `DEVICE_NOTIFICATION_DELIVERY_TESTED=true` plus a SHA-256 fingerprint of the exact routing and destinations. Testing only selected `-EventType` values is useful for diagnosis but does not record enablement proof.
 
 ### Teams Workflow
