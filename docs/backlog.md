@@ -7,7 +7,7 @@
 - **Repository:** nathanmcnulty/azd-device-notifications
 - **Source revision:** `f94a89dcf81fd1208bef4f7903d908489ec359e8`
 - **Captured:** 2026-10-04
-- **Items:** 5
+- **Items:** 6
 
 ## DEVICE-001: Reconcile this backlog with current source and active work
 
@@ -237,6 +237,65 @@ Two personal bot consumers can converge on contracts while retaining route and e
 **Review and authorization note:**
 
 Review DEVICE-003 against the current repository state. Its status or authorization class is not eligible for an actionable generated handoff. Do not claim or execute it without explicit selection, satisfied dependencies, and every required authorization. Never interpret this generated view as approval.
+
+## DEVICE-006: Adopt the canonical PowerShell 7.6 validation component baseline
+
+- **Kind:** maintenance
+- **Priority:** P2
+- **Status:** done
+- **Wave:** 1
+- **Authorization:** local-only
+- **Blocker:** _none_
+- **Claim:** _none_
+
+**Problem:**
+
+Owned scripts require PowerShell 7.6, while the immutable deployment-validation 1.1.1 manifest still declares 7.2. Canonical Reference &num;99 provides the reviewed replacement without engine or schema changes.
+
+**Scope:**
+
+- azd-components.lock.json
+- scripts/vendor/Azd.DeploymentValidation/Azd.DeploymentValidation.psd1
+- tests/DeploymentValidation.Tests.ps1
+- docs/operations.md
+- docs/backlog.json
+- docs/backlog.md
+
+**Acceptance:**
+
+- Use canonical synchronization to pin deployment-validation 2.0.0 and every managed file hash to reviewed immutable Reference source; do not hand-edit vendor bytes.
+- Require the new 7.6 module floor in the existing provenance test while retaining unchanged engine, report schema, application bundle, infrastructure and permission behavior.
+- Pass maintained offline repository validation and independent review before commit/push. Keep native delivery and component release/portfolio rollout gates distinct.
+
+**Validation:**
+
+- ./scripts/Test-Repository.ps1
+- Run the canonical component drift checker against the consumer and verify every file hash against the pinned Reference revision.
+- Validate the canonical backlog schema and generated Markdown and review the final diff.
+
+**Dependencies:**
+
+- DEVICE-004
+
+**Components:**
+
+- deployment-validation
+
+**Sources:**
+
+- https&colon;//github.com/nathanmcnulty/azd-device-notifications/issues/42
+- https&colon;//github.com/nathanmcnulty/azd-reference/issues/98
+- https&colon;//github.com/nathanmcnulty/azd-reference/pull/99
+
+**Evidence:**
+
+- 2026-10-18&colon; Starting from baseline PR &num;43 head 95c02828b56dc0c18dd6f177a6a0bc0de77e5391, canonical synchronization adopted deployment-validation 2.0.0 at merged Reference commit 2b2e784ba11822272c0e4b8389976f95afafa9b9. All five locked files across both components pass drift/hash checks. Only the validation manifest version and runtime floor changed; the engine and schema hashes are unchanged. Independent source/provenance review passed.
+- Full maintained validation passed on PowerShell 7.6.6/Pester 6.2.0&colon; 108 Pester tests and 116 Node tests with zero omissions, parser/analyzer, typecheck/build, reproducible bundle, zero production audit vulnerabilities, real Bicep 0.46.1 compilation/snapshot cases, metadata/documentation and whitespace gates. The official compiler digest was verified and selected through process-local CLI configuration; unmocked CLI calls were restricted to offline Bicep commands. An earlier run exposed the installed 0.42.1 compiler mismatch, and a private adapter initially rejected the required snapshot command; neither required repository changes or test weakening.
+- This is a dependent source-adoption draft. DEVICE-002 and issues &num;42/Reference &num;98 retain native/runtime/delivery gates. The central registry still describes default-branch 1.1.1 adoption and needs reconciliation when this draft is integrated. No Azure operation, authentication, message, grant, global CLI context change, component release or merge occurred.
+
+**Review and authorization note:**
+
+Review DEVICE-006 against the current repository state. Its status or authorization class is not eligible for an actionable generated handoff. Do not claim or execute it without explicit selection, satisfied dependencies, and every required authorization. Never interpret this generated view as approval.
 
 ## DEVICE-002: Qualify each recipient route and Teams app lifecycle
 
