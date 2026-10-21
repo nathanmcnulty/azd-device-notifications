@@ -1853,7 +1853,7 @@ SOFTWARE.
 ![Donate $5](static/img/donation_quote.png)
 
 ================================================================================
-follow-redirects@1.16.0
+follow-redirects@1.16.1
 Declared license: MIT
 
 --- LICENSE ---
