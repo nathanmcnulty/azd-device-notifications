@@ -7,7 +7,7 @@
 - **Repository:** nathanmcnulty/azd-device-notifications
 - **Source revision:** `f94a89dcf81fd1208bef4f7903d908489ec359e8`
 - **Captured:** 2026-10-04
-- **Items:** 6
+- **Items:** 7
 
 ## DEVICE-001: Reconcile this backlog with current source and active work
 
@@ -177,6 +177,67 @@ At initial capture the lock recorded deployment-validation 1.0.0; this packet ad
 **Review and authorization note:**
 
 Review DEVICE-004 against the current repository state. Its status or authorization class is not eligible for an actionable generated handoff. Do not claim or execute it without explicit selection, satisfied dependencies, and every required authorization. Never interpret this generated view as approval.
+
+## DEVICE-007: Reject omitted tests in maintained repository validation
+
+- **Kind:** maintenance
+- **Priority:** P1
+- **Status:** in-progress
+- **Wave:** 1
+- **Authorization:** local-only
+- **Blocker:** _none_
+- **Claim owner:** Codex portfolio coordinator
+- **Claim worktree:** codex/device-follow-redirects-patch
+- **Claim base revision:** `5995f33e1fd87700b609ca641f9d27fa85b59a09`
+- **Claim started:** 11/06/2026 00&colon;16&colon;44
+
+**Problem:**
+
+Pester 6.2 can report Passed for a suite containing skipped tests. The repository guard checked only Result and a nonzero TotalCount, allowing mixed or entirely skipped suites to proceed to dependency installation.
+
+**Scope:**
+
+- scripts/Test-Repository.ps1
+- tests/RepositoryOmissions.Tests.ps1
+- docs/operations.md
+- docs/backlog.json
+- docs/backlog.md
+
+**Acceptance:**
+
+- Require every discovered PowerShell test to pass, with no failed blocks, failed containers or not-run tests before any Node command.
+- Exercise the actual repository script with real child-process Pester suites&colon; fully passed, partly skipped, entirely skipped, empty and discovery failure. Reject incomplete cases before the npm tripwire.
+- Preserve the production dependency audit and existing component/runtime/native boundaries. Review the exact source before publication.
+
+**Validation:**
+
+- Run tests/RepositoryOmissions.Tests.ps1 with Pester 6.2.0; prove the skipped cases fail against the preceding guard and pass after the correction.
+- Run the maintained validator with the repository Node/Bicep versions; distinguish passed source/build gates from unresolved dependency audit findings.
+- Validate the canonical backlog and generated Markdown; parse/analyze changed PowerShell and run git diff --check.
+
+**Dependencies:**
+
+- DEVICE-006
+
+**Components:**
+
+- _none_
+
+**Sources:**
+
+- https&colon;//github.com/nathanmcnulty/azd-device-notifications/issues/42
+- https&colon;//github.com/nathanmcnulty/azd-device-notifications/pull/46
+- https&colon;//github.com/nathanmcnulty/azd-device-notifications/pull/48
+
+**Evidence:**
+
+- 2026-11-06&colon; Reconciled current PR46 and existing PR48 dependency ancestry; its canonical module adoption changes neither this repository runner nor omission handling. No vendored bytes or component pins are changed by this fix.
+- Corrected baseline using the actual script, real Pester 6.2.0 and an npm tripwire&colon; the fully passed, empty and discovery-failure cases behaved as expected; mixed-skipped and all-skipped cases incorrectly reached npm. Initial fixture-directory and marker-scope harness failures were preserved separately and were not counted as a defect reproduction.
+- The corrected guard passed all 113 discovered PowerShell tests with zero failures/skips/inconclusive/not-run results in maintained validation on PowerShell7.6.9/Pester6.2.0 and Bicep0.46.1. Remaining dependency-audit, exact final review, hosted and native gates stay separate.
+
+**Review and authorization note:**
+
+Review DEVICE-007 against the current repository state. Its status or authorization class is not eligible for an actionable generated handoff. Do not claim or execute it without explicit selection, satisfied dependencies, and every required authorization. Never interpret this generated view as approval.
 
 ## DEVICE-003: Compare retry/ambiguity taxonomy with authentication notifications
 

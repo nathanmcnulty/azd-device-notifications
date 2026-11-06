@@ -225,9 +225,13 @@
         "Run the canonical component drift checker against the consumer and verify every file hash against the pinned Reference revision.",
         "Validate the canonical backlog schema and generated Markdown and review the final diff."
       ],
-      "dependencies": ["DEVICE-004"],
+      "dependencies": [
+        "DEVICE-004"
+      ],
       "authorization": "local-only",
-      "components": ["deployment-validation"],
+      "components": [
+        "deployment-validation"
+      ],
       "sources": [
         "https://github.com/nathanmcnulty/azd-device-notifications/issues/42",
         "https://github.com/nathanmcnulty/azd-reference/issues/98",
@@ -240,6 +244,54 @@
       ],
       "blocker": null,
       "claim": null
+    },
+    {
+      "id": "DEVICE-007",
+      "title": "Reject omitted tests in maintained repository validation",
+      "kind": "maintenance",
+      "priority": "P1",
+      "status": "in-progress",
+      "wave": 1,
+      "problem": "Pester 6.2 can report Passed for a suite containing skipped tests. The repository guard checked only Result and a nonzero TotalCount, allowing mixed or entirely skipped suites to proceed to dependency installation.",
+      "scope": [
+        "scripts/Test-Repository.ps1",
+        "tests/RepositoryOmissions.Tests.ps1",
+        "docs/operations.md",
+        "docs/backlog.json",
+        "docs/backlog.md"
+      ],
+      "acceptance": [
+        "Require every discovered PowerShell test to pass, with no failed blocks, failed containers or not-run tests before any Node command.",
+        "Exercise the actual repository script with real child-process Pester suites: fully passed, partly skipped, entirely skipped, empty and discovery failure. Reject incomplete cases before the npm tripwire.",
+        "Preserve the production dependency audit and existing component/runtime/native boundaries. Review the exact source before publication."
+      ],
+      "validation": [
+        "Run tests/RepositoryOmissions.Tests.ps1 with Pester 6.2.0; prove the skipped cases fail against the preceding guard and pass after the correction.",
+        "Run the maintained validator with the repository Node/Bicep versions; distinguish passed source/build gates from unresolved dependency audit findings.",
+        "Validate the canonical backlog and generated Markdown; parse/analyze changed PowerShell and run git diff --check."
+      ],
+      "dependencies": [
+        "DEVICE-006"
+      ],
+      "authorization": "local-only",
+      "components": [],
+      "sources": [
+        "https://github.com/nathanmcnulty/azd-device-notifications/issues/42",
+        "https://github.com/nathanmcnulty/azd-device-notifications/pull/46",
+        "https://github.com/nathanmcnulty/azd-device-notifications/pull/48"
+      ],
+      "evidence": [
+        "2026-11-06: Reconciled current PR46 and existing PR48 dependency ancestry; its canonical module adoption changes neither this repository runner nor omission handling. No vendored bytes or component pins are changed by this fix.",
+        "Corrected baseline using the actual script, real Pester 6.2.0 and an npm tripwire: the fully passed, empty and discovery-failure cases behaved as expected; mixed-skipped and all-skipped cases incorrectly reached npm. Initial fixture-directory and marker-scope harness failures were preserved separately and were not counted as a defect reproduction.",
+        "The corrected guard passed all 113 discovered PowerShell tests with zero failures/skips/inconclusive/not-run results in maintained validation on PowerShell7.6.9/Pester6.2.0 and Bicep0.46.1. Remaining dependency-audit, exact final review, hosted and native gates stay separate."
+      ],
+      "blocker": null,
+      "claim": {
+        "owner": "Codex portfolio coordinator",
+        "worktree": "codex/device-follow-redirects-patch",
+        "baseRevision": "5995f33e1fd87700b609ca641f9d27fa85b59a09",
+        "startedAt": "2026-11-06T09:16:44.368192+00:00"
+      }
     }
   ]
 }

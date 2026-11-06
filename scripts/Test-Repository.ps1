@@ -80,8 +80,11 @@ try {
 finally {
     Set-StrictMode -Version Latest
 }
-if ($testResult.Result -ne 'Passed' -or $testResult.TotalCount -eq 0) {
-    throw "$($testResult.FailedCount) repository test(s) failed."
+if ($null -eq $testResult -or $testResult.Result -ne 'Passed' -or
+    $testResult.TotalCount -eq 0 -or $testResult.PassedCount -ne $testResult.TotalCount -or
+    $testResult.FailedCount -ne 0 -or $testResult.FailedBlocksCount -ne 0 -or
+    $testResult.FailedContainersCount -ne 0 -or $testResult.NotRunCount -ne 0) {
+    throw 'Repository validation must execute and pass every discovered PowerShell test.'
 }
 
 $sourceRoot = Join-Path $repositoryRoot 'src'
