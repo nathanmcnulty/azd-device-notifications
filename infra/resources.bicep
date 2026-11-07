@@ -169,6 +169,7 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
     siteConfig: {
       minTlsVersion: '1.2'
       appSettings: [
+        { name: 'FUNCTIONS_REQUEST_BODY_SIZE_LIMIT', value: '262144' }
         { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: insights.properties.ConnectionString }
         { name: 'APPLICATIONINSIGHTS_AUTHENTICATION_STRING', value: 'Authorization=AAD;ClientId=${identity.properties.clientId}' }
         { name: 'AzureWebJobsStorage__accountName', value: storage.name }

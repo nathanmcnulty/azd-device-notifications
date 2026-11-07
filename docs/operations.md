@@ -1,5 +1,14 @@
 # Operations
 
+## Repository validation
+
+Run `./scripts/Test-Repository.ps1` before proposing deployment changes. Its
+PowerShell gate requires a nonempty suite in which every discovered test passes.
+Skipped or inconclusive tests, discovery failures, and other incomplete execution
+stop validation before dependency installation or Node build commands. The
+production dependency audit remains a separate required gate; passing source
+tests does not establish native delivery or deployment acceptance.
+
 ## Deployment states
 
 Use these checkpoints when handing the solution to another administrator:

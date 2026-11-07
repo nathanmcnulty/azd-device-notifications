@@ -4520,8 +4520,8 @@ var require_parseUtil = __commonJS({
     var errors_js_1 = require_errors();
     var en_js_1 = __importDefault2(require_en());
     var makeIssue = (params) => {
-      const { data, path: path5, errorMaps, issueData } = params;
-      const fullPath = [...path5, ...issueData.path || []];
+      const { data, path: path6, errorMaps, issueData } = params;
+      const fullPath = [...path6, ...issueData.path || []];
       const fullIssue = {
         ...issueData,
         path: fullPath
@@ -4675,11 +4675,11 @@ var require_types = __commonJS({
     var parseUtil_js_1 = require_parseUtil();
     var util_js_1 = require_util();
     var ParseInputLazyPath = class {
-      constructor(parent, value, path5, key) {
+      constructor(parent, value, path6, key) {
         this._cachedPath = [];
         this.parent = parent;
         this.data = value;
-        this._path = path5;
+        this._path = path6;
         this._key = key;
       }
       get path() {
@@ -13292,10 +13292,10 @@ var require_log = __commonJS({
     });
     module2.exports = __toCommonJS2(log_exports);
     var import_node_os5 = require("node:os");
-    var import_node_util8 = __toESM2(require("node:util"));
-    var import_node_process12 = __toESM2(require("node:process"));
+    var import_node_util9 = __toESM2(require("node:util"));
+    var import_node_process13 = __toESM2(require("node:process"));
     function log2(message, ...args) {
-      import_node_process12.default.stderr.write(`${import_node_util8.default.format(message, ...args)}${import_node_os5.EOL}`);
+      import_node_process13.default.stderr.write(`${import_node_util9.default.format(message, ...args)}${import_node_os5.EOL}`);
     }
   }
 });
@@ -13343,17 +13343,17 @@ var require_env = __commonJS({
       isWebWorker: () => isWebWorker3
     });
     module2.exports = __toCommonJS2(env_exports);
-    var import_node_process12 = __toESM2(require("node:process"));
+    var import_node_process13 = __toESM2(require("node:process"));
     function getEnvironmentVariable2(name3) {
-      return import_node_process12.default.env[name3];
+      return import_node_process13.default.env[name3];
     }
     function emitNodeWarning2(warning) {
-      import_node_process12.default.emitWarning(warning);
+      import_node_process13.default.emitWarning(warning);
     }
     var isBrowser3 = false;
     var isWebWorker3 = false;
-    var isDeno3 = typeof import_node_process12.default.versions.deno === "string" && import_node_process12.default.versions.deno.length > 0;
-    var isBun3 = typeof import_node_process12.default.versions.bun === "string" && import_node_process12.default.versions.bun.length > 0;
+    var isDeno3 = typeof import_node_process13.default.versions.deno === "string" && import_node_process13.default.versions.deno.length > 0;
+    var isBun3 = typeof import_node_process13.default.versions.bun === "string" && import_node_process13.default.versions.bun.length > 0;
     var isNodeLike4 = true;
     var isNodeRuntime3 = !isBun3 && !isDeno3;
     var isReactNative3 = false;
@@ -14212,8 +14212,8 @@ var require_inspect = __commonJS({
       custom: () => custom2
     });
     module2.exports = __toCommonJS2(inspect_exports);
-    var import_node_util8 = require("node:util");
-    var custom2 = import_node_util8.inspect.custom;
+    var import_node_util9 = require("node:util");
+    var custom2 = import_node_util9.inspect.custom;
   }
 });
 
@@ -15018,19 +15018,19 @@ var require_userAgentPlatform = __commonJS({
     });
     module2.exports = __toCommonJS2(userAgentPlatform_exports);
     var import_node_os5 = __toESM2(require("node:os"));
-    var import_node_process12 = __toESM2(require("node:process"));
+    var import_node_process13 = __toESM2(require("node:process"));
     function getHeaderName3() {
       return "User-Agent";
     }
     async function setPlatformSpecificData4(map) {
-      if (import_node_process12.default && import_node_process12.default.versions) {
+      if (import_node_process13.default && import_node_process13.default.versions) {
         const osInfo = `${import_node_os5.default.type()} ${import_node_os5.default.release()}; ${import_node_os5.default.arch()}`;
-        if (import_node_process12.default.versions.bun) {
-          map.set("Bun", `${import_node_process12.default.versions.bun} (${osInfo})`);
-        } else if (import_node_process12.default.versions.deno) {
-          map.set("Deno", `${import_node_process12.default.versions.deno} (${osInfo})`);
-        } else if (import_node_process12.default.versions.node) {
-          map.set("Node", `${import_node_process12.default.versions.node} (${osInfo})`);
+        if (import_node_process13.default.versions.bun) {
+          map.set("Bun", `${import_node_process13.default.versions.bun} (${osInfo})`);
+        } else if (import_node_process13.default.versions.deno) {
+          map.set("Deno", `${import_node_process13.default.versions.deno} (${osInfo})`);
+        } else if (import_node_process13.default.versions.node) {
+          map.set("Node", `${import_node_process13.default.versions.node} (${osInfo})`);
         }
       }
     }
@@ -15096,7 +15096,7 @@ var require_userAgent = __commonJS({
     });
     module2.exports = __toCommonJS2(userAgent_exports);
     var import_userAgent4 = require_userAgentPlatform();
-    var import_constants37 = require_constants();
+    var import_constants38 = require_constants();
     function getUserAgentString3(telemetryInfo) {
       const parts = [];
       for (const [key, value] of telemetryInfo) {
@@ -15110,7 +15110,7 @@ var require_userAgent = __commonJS({
     }
     async function getUserAgentValue3(prefix) {
       const runtimeInfo = /* @__PURE__ */ new Map();
-      runtimeInfo.set("ts-http-runtime", import_constants37.SDK_VERSION);
+      runtimeInfo.set("ts-http-runtime", import_constants38.SDK_VERSION);
       await (0, import_userAgent4.setPlatformSpecificData)(runtimeInfo);
       const defaultAgent = getUserAgentString3(runtimeInfo);
       const userAgentValue = prefix ? `${prefix} ${defaultAgent}` : defaultAgent;
@@ -15469,10 +15469,10 @@ var require_retryPolicy = __commonJS({
     var import_restError12 = require_restError();
     var import_AbortError6 = require_AbortError();
     var import_logger19 = require_logger();
-    var import_constants37 = require_constants();
+    var import_constants38 = require_constants();
     var retryPolicyLogger3 = (0, import_logger19.createClientLogger)("ts-http-runtime retryPolicy");
     var retryPolicyName2 = "retryPolicy";
-    function retryPolicy4(strategies, options = { maxRetries: import_constants37.DEFAULT_RETRY_POLICY_COUNT }) {
+    function retryPolicy4(strategies, options = { maxRetries: import_constants38.DEFAULT_RETRY_POLICY_COUNT }) {
       const logger33 = options.logger || retryPolicyLogger3;
       return {
         name: retryPolicyName2,
@@ -15501,7 +15501,7 @@ var require_retryPolicy = __commonJS({
               const abortError = new import_AbortError6.AbortError();
               throw abortError;
             }
-            if (retryCount >= (options.maxRetries ?? import_constants37.DEFAULT_RETRY_POLICY_COUNT)) {
+            if (retryCount >= (options.maxRetries ?? import_constants38.DEFAULT_RETRY_POLICY_COUNT)) {
               logger33.info(
                 `Retry ${retryCount}: Maximum retries reached. Returning the last received response, or throwing the last received error.`
               );
@@ -15597,13 +15597,13 @@ var require_defaultRetryPolicy = __commonJS({
     var import_exponentialRetryStrategy4 = require_exponentialRetryStrategy();
     var import_throttlingRetryStrategy4 = require_throttlingRetryStrategy();
     var import_retryPolicy7 = require_retryPolicy();
-    var import_constants37 = require_constants();
+    var import_constants38 = require_constants();
     var defaultRetryPolicyName3 = "defaultRetryPolicy";
     function defaultRetryPolicy4(options = {}) {
       return {
         name: defaultRetryPolicyName3,
         sendRequest: (0, import_retryPolicy7.retryPolicy)([(0, import_throttlingRetryStrategy4.throttlingRetryStrategy)(), (0, import_exponentialRetryStrategy4.exponentialRetryStrategy)(options)], {
-          maxRetries: options.maxRetries ?? import_constants37.DEFAULT_RETRY_POLICY_COUNT
+          maxRetries: options.maxRetries ?? import_constants38.DEFAULT_RETRY_POLICY_COUNT
         }).sendRequest
       };
     }
@@ -18778,8 +18778,8 @@ var require_getClient = __commonJS({
       const noDefaultAcceptHeader = clientOptions.internal?.noDefaultAcceptHeader ?? false;
       const { allowInsecureConnection: allowInsecureConnection2, httpClient } = clientOptions;
       const endpointUrl = clientOptions.endpoint ?? endpoint;
-      const client = (path5, ...args) => {
-        const getUrl = (requestOptions) => (0, import_urlHelpers3.buildRequestUrl)(endpointUrl, path5, args, { allowInsecureConnection: allowInsecureConnection2, ...requestOptions });
+      const client = (path6, ...args) => {
+        const getUrl = (requestOptions) => (0, import_urlHelpers3.buildRequestUrl)(endpointUrl, path6, args, { allowInsecureConnection: allowInsecureConnection2, ...requestOptions });
         return {
           get: (requestOptions = {}) => {
             return buildOperation2(
@@ -19236,7 +19236,7 @@ var require_exponentialRetryPolicy = __commonJS({
     module2.exports = __toCommonJS2(exponentialRetryPolicy_exports);
     var import_exponentialRetryStrategy4 = require_exponentialRetryStrategy();
     var import_retryPolicy7 = require_retryPolicy();
-    var import_constants37 = require_constants();
+    var import_constants38 = require_constants();
     var exponentialRetryPolicyName4 = "exponentialRetryPolicy";
     function exponentialRetryPolicy4(options = {}) {
       return (0, import_retryPolicy7.retryPolicy)(
@@ -19247,7 +19247,7 @@ var require_exponentialRetryPolicy = __commonJS({
           })
         ],
         {
-          maxRetries: options.maxRetries ?? import_constants37.DEFAULT_RETRY_POLICY_COUNT
+          maxRetries: options.maxRetries ?? import_constants38.DEFAULT_RETRY_POLICY_COUNT
         }
       );
     }
@@ -19282,7 +19282,7 @@ var require_systemErrorRetryPolicy = __commonJS({
     module2.exports = __toCommonJS2(systemErrorRetryPolicy_exports);
     var import_exponentialRetryStrategy4 = require_exponentialRetryStrategy();
     var import_retryPolicy7 = require_retryPolicy();
-    var import_constants37 = require_constants();
+    var import_constants38 = require_constants();
     var systemErrorRetryPolicyName4 = "systemErrorRetryPolicy";
     function systemErrorRetryPolicy4(options = {}) {
       return {
@@ -19295,7 +19295,7 @@ var require_systemErrorRetryPolicy = __commonJS({
             })
           ],
           {
-            maxRetries: options.maxRetries ?? import_constants37.DEFAULT_RETRY_POLICY_COUNT
+            maxRetries: options.maxRetries ?? import_constants38.DEFAULT_RETRY_POLICY_COUNT
           }
         ).sendRequest
       };
@@ -19331,13 +19331,13 @@ var require_throttlingRetryPolicy = __commonJS({
     module2.exports = __toCommonJS2(throttlingRetryPolicy_exports);
     var import_throttlingRetryStrategy4 = require_throttlingRetryStrategy();
     var import_retryPolicy7 = require_retryPolicy();
-    var import_constants37 = require_constants();
+    var import_constants38 = require_constants();
     var throttlingRetryPolicyName4 = "throttlingRetryPolicy";
     function throttlingRetryPolicy4(options = {}) {
       return {
         name: throttlingRetryPolicyName4,
         sendRequest: (0, import_retryPolicy7.retryPolicy)([(0, import_throttlingRetryStrategy4.throttlingRetryStrategy)()], {
-          maxRetries: options.maxRetries ?? import_constants37.DEFAULT_RETRY_POLICY_COUNT
+          maxRetries: options.maxRetries ?? import_constants38.DEFAULT_RETRY_POLICY_COUNT
         }).sendRequest
       };
     }
@@ -19522,19 +19522,19 @@ var require_userAgentPlatform2 = __commonJS({
     });
     module2.exports = __toCommonJS2(userAgentPlatform_exports);
     var import_node_os5 = __toESM2(require("node:os"));
-    var import_node_process12 = __toESM2(require("node:process"));
+    var import_node_process13 = __toESM2(require("node:process"));
     function getHeaderName3() {
       return "User-Agent";
     }
     async function setPlatformSpecificData4(map) {
-      if (import_node_process12.default && import_node_process12.default.versions) {
+      if (import_node_process13.default && import_node_process13.default.versions) {
         const osInfo = `${import_node_os5.default.type()} ${import_node_os5.default.release()}; ${import_node_os5.default.arch()}`;
-        if (import_node_process12.default.versions.bun) {
-          map.set("Bun", `${import_node_process12.default.versions.bun} (${osInfo})`);
-        } else if (import_node_process12.default.versions.deno) {
-          map.set("Deno", `${import_node_process12.default.versions.deno} (${osInfo})`);
-        } else if (import_node_process12.default.versions.node) {
-          map.set("Node", `${import_node_process12.default.versions.node} (${osInfo})`);
+        if (import_node_process13.default.versions.bun) {
+          map.set("Bun", `${import_node_process13.default.versions.bun} (${osInfo})`);
+        } else if (import_node_process13.default.versions.deno) {
+          map.set("Deno", `${import_node_process13.default.versions.deno} (${osInfo})`);
+        } else if (import_node_process13.default.versions.node) {
+          map.set("Node", `${import_node_process13.default.versions.node} (${osInfo})`);
         }
       }
     }
@@ -19599,7 +19599,7 @@ var require_userAgent2 = __commonJS({
     });
     module2.exports = __toCommonJS2(userAgent_exports);
     var import_userAgent4 = require_userAgentPlatform2();
-    var import_constants37 = require_constants2();
+    var import_constants38 = require_constants2();
     function getUserAgentString3(telemetryInfo) {
       const parts = [];
       for (const [key, value] of telemetryInfo) {
@@ -19613,7 +19613,7 @@ var require_userAgent2 = __commonJS({
     }
     async function getUserAgentValue3(prefix) {
       const runtimeInfo = /* @__PURE__ */ new Map();
-      runtimeInfo.set("core-rest-pipeline", import_constants37.SDK_VERSION);
+      runtimeInfo.set("core-rest-pipeline", import_constants38.SDK_VERSION);
       await (0, import_userAgent4.setPlatformSpecificData)(runtimeInfo);
       const defaultAgent = getUserAgentString3(runtimeInfo);
       const userAgentValue = prefix ? `${prefix} ${defaultAgent}` : defaultAgent;
@@ -20854,10 +20854,10 @@ var require_tracingPolicy = __commonJS({
     });
     module2.exports = __toCommonJS2(tracingPolicy_exports);
     var import_core_tracing5 = require_commonjs5();
-    var import_constants37 = require_constants2();
+    var import_constants38 = require_constants2();
     var import_userAgent4 = require_userAgent2();
     var import_log18 = require_log3();
-    var import_core_util18 = require_commonjs4();
+    var import_core_util22 = require_commonjs4();
     var import_restError12 = require_restError3();
     var import_util12 = require_internal4();
     var tracingPolicyName3 = "tracingPolicy";
@@ -20903,10 +20903,10 @@ var require_tracingPolicy = __commonJS({
         return (0, import_core_tracing5.createTracingClient)({
           namespace: "",
           packageName: "@azure/core-rest-pipeline",
-          packageVersion: import_constants37.SDK_VERSION
+          packageVersion: import_constants38.SDK_VERSION
         });
       } catch (e) {
-        import_log18.logger.warning(`Error when creating the TracingClient: ${(0, import_core_util18.getErrorMessage)(e)}`);
+        import_log18.logger.warning(`Error when creating the TracingClient: ${(0, import_core_util22.getErrorMessage)(e)}`);
         return void 0;
       }
     }
@@ -20932,7 +20932,7 @@ var require_tracingPolicy = __commonJS({
         }
         return { span, tracingContext: updatedOptions.tracingOptions.tracingContext };
       } catch (e) {
-        import_log18.logger.warning(`Skipping creating a tracing span due to an error: ${(0, import_core_util18.getErrorMessage)(e)}`);
+        import_log18.logger.warning(`Skipping creating a tracing span due to an error: ${(0, import_core_util22.getErrorMessage)(e)}`);
         return void 0;
       }
     }
@@ -20940,14 +20940,14 @@ var require_tracingPolicy = __commonJS({
       try {
         span.setStatus({
           status: "error",
-          error: (0, import_core_util18.isError)(error) ? error : void 0
+          error: (0, import_core_util22.isError)(error) ? error : void 0
         });
         if ((0, import_restError12.isRestError)(error) && error.statusCode) {
           span.setAttribute("http.status_code", error.statusCode);
         }
         span.end();
       } catch (e) {
-        import_log18.logger.warning(`Skipping tracing span processing due to an error: ${(0, import_core_util18.getErrorMessage)(e)}`);
+        import_log18.logger.warning(`Skipping tracing span processing due to an error: ${(0, import_core_util22.getErrorMessage)(e)}`);
       }
     }
     function tryProcessResponse2(span, response) {
@@ -20964,7 +20964,7 @@ var require_tracingPolicy = __commonJS({
         }
         span.end();
       } catch (e) {
-        import_log18.logger.warning(`Skipping tracing span processing due to an error: ${(0, import_core_util18.getErrorMessage)(e)}`);
+        import_log18.logger.warning(`Skipping tracing span processing due to an error: ${(0, import_core_util22.getErrorMessage)(e)}`);
       }
     }
   }
@@ -21105,7 +21105,7 @@ var require_createPipelineFromOptions2 = __commonJS({
     var import_decompressResponsePolicy5 = require_decompressResponsePolicy2();
     var import_defaultRetryPolicy5 = require_defaultRetryPolicy2();
     var import_formDataPolicy5 = require_formDataPolicy2();
-    var import_core_util18 = require_commonjs4();
+    var import_core_util22 = require_commonjs4();
     var import_proxyPolicy5 = require_proxyPolicy2();
     var import_setClientRequestIdPolicy3 = require_setClientRequestIdPolicy();
     var import_agentPolicy5 = require_agentPolicy2();
@@ -21114,7 +21114,7 @@ var require_createPipelineFromOptions2 = __commonJS({
     var import_wrapAbortSignalLikePolicy2 = require_wrapAbortSignalLikePolicy();
     function createPipelineFromOptions4(options) {
       const pipeline = (0, import_pipeline7.createEmptyPipeline)();
-      if (import_core_util18.isNodeLike) {
+      if (import_core_util22.isNodeLike) {
         if (options.agent) {
           pipeline.addPolicy((0, import_agentPolicy5.agentPolicy)(options.agent));
         }
@@ -21133,7 +21133,7 @@ var require_createPipelineFromOptions2 = __commonJS({
       pipeline.addPolicy((0, import_tracingPolicy3.tracingPolicy)({ ...options.userAgentOptions, ...options.loggingOptions }), {
         afterPhase: "Retry"
       });
-      if (import_core_util18.isNodeLike) {
+      if (import_core_util22.isNodeLike) {
         pipeline.addPolicy((0, import_redirectPolicy5.redirectPolicy)(options.redirectOptions), { afterPhase: "Retry" });
       }
       pipeline.addPolicy((0, import_logPolicy5.logPolicy)(options.loggingOptions), { afterPhase: "Sign" });
@@ -21378,10 +21378,10 @@ var require_retryPolicy2 = __commonJS({
     });
     module2.exports = __toCommonJS2(retryPolicy_exports);
     var import_logger19 = require_commonjs2();
-    var import_constants37 = require_constants2();
+    var import_constants38 = require_constants2();
     var import_policies14 = require_internal3();
     var retryPolicyLogger3 = (0, import_logger19.createClientLogger)("core-rest-pipeline retryPolicy");
-    function retryPolicy4(strategies, options = { maxRetries: import_constants37.DEFAULT_RETRY_POLICY_COUNT }) {
+    function retryPolicy4(strategies, options = { maxRetries: import_constants38.DEFAULT_RETRY_POLICY_COUNT }) {
       return (0, import_policies14.retryPolicy)(strategies, {
         logger: retryPolicyLogger3,
         ...options
@@ -21416,7 +21416,7 @@ var require_tokenCycler = __commonJS({
       createTokenCycler: () => createTokenCycler2
     });
     module2.exports = __toCommonJS2(tokenCycler_exports);
-    var import_core_util18 = require_commonjs4();
+    var import_core_util22 = require_commonjs4();
     var DEFAULT_CYCLER_OPTIONS2 = {
       forcedRefreshWindowInMs: 1e3,
       // Force waiting for a refresh 1s before the token expires
@@ -21443,7 +21443,7 @@ var require_tokenCycler = __commonJS({
       }
       let token = await tryGetAccessToken();
       while (token === null) {
-        await (0, import_core_util18.delay)(retryIntervalInMs);
+        await (0, import_core_util22.delay)(retryIntervalInMs);
         token = await tryGetAccessToken();
       }
       return token;
@@ -22302,9 +22302,9 @@ var require_keyCredential = __commonJS({
       isKeyCredential: () => isKeyCredential4
     });
     module2.exports = __toCommonJS2(keyCredential_exports);
-    var import_core_util18 = require_commonjs4();
+    var import_core_util22 = require_commonjs4();
     function isKeyCredential4(credential) {
-      return (0, import_core_util18.isObjectWithProperties)(credential, ["key"]) && typeof credential.key === "string";
+      return (0, import_core_util22.isObjectWithProperties)(credential, ["key"]) && typeof credential.key === "string";
     }
   }
 });
@@ -22335,7 +22335,7 @@ var require_azureNamedKeyCredential = __commonJS({
       isNamedKeyCredential: () => isNamedKeyCredential3
     });
     module2.exports = __toCommonJS2(azureNamedKeyCredential_exports);
-    var import_core_util18 = require_commonjs4();
+    var import_core_util22 = require_commonjs4();
     var AzureNamedKeyCredential3 = class {
       _key;
       _name;
@@ -22383,7 +22383,7 @@ var require_azureNamedKeyCredential = __commonJS({
       }
     };
     function isNamedKeyCredential3(credential) {
-      return (0, import_core_util18.isObjectWithProperties)(credential, ["name", "key"]) && typeof credential.key === "string" && typeof credential.name === "string";
+      return (0, import_core_util22.isObjectWithProperties)(credential, ["name", "key"]) && typeof credential.key === "string" && typeof credential.name === "string";
     }
   }
 });
@@ -22414,7 +22414,7 @@ var require_azureSASCredential = __commonJS({
       isSASCredential: () => isSASCredential3
     });
     module2.exports = __toCommonJS2(azureSASCredential_exports);
-    var import_core_util18 = require_commonjs4();
+    var import_core_util22 = require_commonjs4();
     var AzureSASCredential3 = class {
       _signature;
       /**
@@ -22451,7 +22451,7 @@ var require_azureSASCredential = __commonJS({
       }
     };
     function isSASCredential3(credential) {
-      return (0, import_core_util18.isObjectWithProperties)(credential, ["signature"]) && typeof credential.signature === "string";
+      return (0, import_core_util22.isObjectWithProperties)(credential, ["signature"]) && typeof credential.signature === "string";
     }
   }
 });
@@ -22956,13 +22956,13 @@ function __disposeResources(env) {
   }
   return next();
 }
-function __rewriteRelativeImportExtension(path5, preserveJsx) {
-  if (typeof path5 === "string" && /^\.\.?\//.test(path5)) {
-    return path5.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function(m, tsx, d, ext, cm) {
+function __rewriteRelativeImportExtension(path6, preserveJsx) {
+  if (typeof path6 === "string" && /^\.\.?\//.test(path6)) {
+    return path6.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function(m, tsx, d, ext, cm) {
       return tsx ? preserveJsx ? ".jsx" : ".js" : d && (!ext || !cm) ? m : d + ext + "." + cm.toLowerCase() + "js";
     });
   }
-  return path5;
+  return path6;
 }
 var extendStatics, __assign, __createBinding, __setModuleDefault, ownKeys, _SuppressedError, tslib_es6_default;
 var init_tslib_es6 = __esm({
@@ -24464,15 +24464,15 @@ var require_urlHelpers2 = __commonJS({
       let isAbsolutePath = false;
       let requestUrl = replaceAll3(baseUri, urlReplacements);
       if (operationSpec.path) {
-        let path5 = replaceAll3(operationSpec.path, urlReplacements);
-        if (operationSpec.path === "/{nextLink}" && path5.startsWith("/")) {
-          path5 = path5.substring(1);
+        let path6 = replaceAll3(operationSpec.path, urlReplacements);
+        if (operationSpec.path === "/{nextLink}" && path6.startsWith("/")) {
+          path6 = path6.substring(1);
         }
-        if (isAbsoluteUrl2(path5)) {
-          requestUrl = path5;
+        if (isAbsoluteUrl2(path6)) {
+          requestUrl = path6;
           isAbsolutePath = true;
         } else {
-          requestUrl = appendPath3(requestUrl, path5);
+          requestUrl = appendPath3(requestUrl, path6);
         }
       }
       const { queryParams, sequenceParams } = calculateQueryParameters2(operationSpec, operationArguments, fallbackObject);
@@ -24518,9 +24518,9 @@ var require_urlHelpers2 = __commonJS({
       }
       const searchStart = pathToAppend.indexOf("?");
       if (searchStart !== -1) {
-        const path5 = pathToAppend.substring(0, searchStart);
+        const path6 = pathToAppend.substring(0, searchStart);
         const search = pathToAppend.substring(searchStart + 1);
-        newPath = newPath + path5;
+        newPath = newPath + path6;
         if (search) {
           parsedUrl.search = parsedUrl.search ? `${parsedUrl.search}&${search}` : search;
         }
@@ -25135,7 +25135,7 @@ var require_util3 = __commonJS({
       toWebResourceLike: () => toWebResourceLike2
     });
     module2.exports = __toCommonJS2(util_exports);
-    var import_core_rest_pipeline27 = require_commonjs6();
+    var import_core_rest_pipeline28 = require_commonjs6();
     var originalRequestSymbol3 = /* @__PURE__ */ Symbol("Original PipelineRequest");
     var originalClientRequestSymbol2 = /* @__PURE__ */ Symbol.for("@azure/core-client original request");
     var passThroughProps2 = /* @__PURE__ */ new Set([
@@ -25157,12 +25157,12 @@ var require_util3 = __commonJS({
     function toPipelineRequest2(webResource, options = {}) {
       const compatWebResource = webResource;
       const request = compatWebResource[originalRequestSymbol3];
-      const headers = (0, import_core_rest_pipeline27.createHttpHeaders)(webResource.headers.toJson({ preserveCase: true }));
+      const headers = (0, import_core_rest_pipeline28.createHttpHeaders)(webResource.headers.toJson({ preserveCase: true }));
       if (request) {
         request.headers = headers;
         return request;
       } else {
-        const newRequest = (0, import_core_rest_pipeline27.createPipelineRequest)({
+        const newRequest = (0, import_core_rest_pipeline28.createPipelineRequest)({
           url: webResource.url,
           method: webResource.method,
           headers,
@@ -25399,7 +25399,7 @@ var require_response = __commonJS({
       toPipelineResponse: () => toPipelineResponse3
     });
     module2.exports = __toCommonJS2(response_exports);
-    var import_core_rest_pipeline27 = require_commonjs6();
+    var import_core_rest_pipeline28 = require_commonjs6();
     var import_util12 = require_util3();
     var originalResponse2 = /* @__PURE__ */ Symbol("Original FullOperationResponse");
     function toCompatResponse3(response, options) {
@@ -25437,7 +25437,7 @@ var require_response = __commonJS({
     function toPipelineResponse3(compatResponse) {
       const extendedCompatResponse = compatResponse;
       const response = extendedCompatResponse[originalResponse2];
-      const headers = (0, import_core_rest_pipeline27.createHttpHeaders)(compatResponse.headers.toJson({ preserveCase: true }));
+      const headers = (0, import_core_rest_pipeline28.createHttpHeaders)(compatResponse.headers.toJson({ preserveCase: true }));
       if (response) {
         response.headers = headers;
         return response;
@@ -25478,7 +25478,7 @@ var require_extendedClient = __commonJS({
     });
     module2.exports = __toCommonJS2(extendedClient_exports);
     var import_disableKeepAlivePolicy3 = require_disableKeepAlivePolicy();
-    var import_core_rest_pipeline27 = require_commonjs6();
+    var import_core_rest_pipeline28 = require_commonjs6();
     var import_core_client9 = require_commonjs8();
     var import_response5 = require_response();
     var ExtendedServiceClient3 = class extends import_core_client9.ServiceClient {
@@ -25489,7 +25489,7 @@ var require_extendedClient = __commonJS({
         }
         if (options.redirectOptions?.handleRedirects === false) {
           this.pipeline.removePolicy({
-            name: import_core_rest_pipeline27.redirectPolicyName
+            name: import_core_rest_pipeline28.redirectPolicyName
           });
         }
       }
@@ -26066,9 +26066,9 @@ var require_stringify2 = __commonJS({
             return val;
           }
           if (key) {
-            const path5 = seen.get(val);
-            if (path5) {
-              return `[Circular *.${path5.join(".")}]`;
+            const path6 = seen.get(val);
+            if (path6) {
+              return `[Circular *.${path6.join(".")}]`;
             }
             const parent = (_a = seen.get(this)) !== null && _a !== void 0 ? _a : [];
             seen.set(val, [...parent, key]);
@@ -31474,14 +31474,14 @@ var require_url_state_machine = __commonJS({
       return url2.replace(/\u0009|\u000A|\u000D/g, "");
     }
     function shortenPath(url2) {
-      const path5 = url2.path;
-      if (path5.length === 0) {
+      const path6 = url2.path;
+      if (path6.length === 0) {
         return;
       }
-      if (url2.scheme === "file" && path5.length === 1 && isNormalizedWindowsDriveLetter(path5[0])) {
+      if (url2.scheme === "file" && path6.length === 1 && isNormalizedWindowsDriveLetter(path6[0])) {
         return;
       }
-      path5.pop();
+      path6.pop();
     }
     function includesCredentials(url2) {
       return url2.username !== "" || url2.password !== "";
@@ -47940,11 +47940,11 @@ var require_mime_types = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path5) {
-      if (!path5 || typeof path5 !== "string") {
+    function lookup(path6) {
+      if (!path6 || typeof path6 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path5).toLowerCase().substr(1);
+      var extension2 = extname("x." + path6).toLowerCase().substr(1);
       if (!extension2) {
         return false;
       }
@@ -49049,7 +49049,7 @@ var require_form_data = __commonJS({
     "use strict";
     var CombinedStream = require_combined_stream();
     var util2 = require("util");
-    var path5 = require("path");
+    var path6 = require("path");
     var http3 = require("http");
     var https2 = require("https");
     var parseUrl = require("url").parse;
@@ -49180,11 +49180,11 @@ var require_form_data = __commonJS({
     FormData2.prototype._getContentDisposition = function(value, options) {
       var filename;
       if (typeof options.filepath === "string") {
-        filename = path5.normalize(options.filepath).replace(/\\/g, "/");
+        filename = path6.normalize(options.filepath).replace(/\\/g, "/");
       } else if (options.filename || value && (value.name || value.path)) {
-        filename = path5.basename(options.filename || value && (value.name || value.path));
+        filename = path6.basename(options.filename || value && (value.name || value.path));
       } else if (value && value.readable && hasOwn(value, "httpVersion")) {
-        filename = path5.basename(value.client._httpMessage.path || "");
+        filename = path6.basename(value.client._httpMessage.path || "");
       }
       if (filename) {
         return 'filename="' + escapeHeaderParam(filename) + '"';
@@ -49370,7 +49370,7 @@ var require_promisify = __commonJS({
   "node_modules/axios/node_modules/agent-base/dist/src/promisify.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    function promisify6(fn) {
+    function promisify7(fn) {
       return function(req, opts) {
         return new Promise((resolve, reject) => {
           fn.call(this, req, opts, (err, rtn) => {
@@ -49383,7 +49383,7 @@ var require_promisify = __commonJS({
         });
       };
     }
-    exports2.default = promisify6;
+    exports2.default = promisify7;
   }
 });
 
@@ -50065,8 +50065,14 @@ var require_follow_redirects = __commonJS({
     RedirectableRequest.prototype._sanitizeOptions = function(options) {
       if (!options.headers) {
         options.headers = {};
+      } else if (Array.isArray(options.headers)) {
+        var headerList = options.headers;
+        options.headers = {};
+        for (var i = 0; i < headerList.length; i += 2) {
+          options.headers[headerList[i]] = headerList[i + 1];
+        }
       }
-      if (!isArray(options.sensitiveHeaders)) {
+      if (!Array.isArray(options.sensitiveHeaders)) {
         options.sensitiveHeaders = [];
       }
       if (options.host) {
@@ -50323,9 +50329,6 @@ var require_follow_redirects = __commonJS({
       var dot = subdomain.length - domain.length - 1;
       return dot > 0 && subdomain[dot] === "." && subdomain.endsWith(domain);
     }
-    function isArray(value) {
-      return value instanceof Array;
-    }
     function isString(value) {
       return typeof value === "string" || value instanceof String;
     }
@@ -50339,7 +50342,7 @@ var require_follow_redirects = __commonJS({
       return URL2 && value instanceof URL2;
     }
     function escapeRegex(regex) {
-      return regex.replace(/[\]\\/()*+?.$]/g, "\\$&");
+      return regex.replace(/[[\]\\/()*+?.^$|]/g, "\\$&");
     }
     module2.exports = wrap({ http: http3, https: https2 });
     module2.exports.wrap = wrap;
@@ -50358,7 +50361,7 @@ var require_axios = __commonJS({
     var https2 = require("https");
     var http22 = require("http2");
     var util2 = require("util");
-    var path5 = require("path");
+    var path6 = require("path");
     var followRedirects = require_follow_redirects();
     var zlib2 = require("zlib");
     var stream = require("stream");
@@ -51487,9 +51490,9 @@ var require_axios = __commonJS({
     function removeBrackets(key) {
       return utils$1.endsWith(key, "[]") ? key.slice(0, -2) : key;
     }
-    function renderKey(path6, key, dots) {
-      if (!path6) return key;
-      return path6.concat(key).map(function each(token, i) {
+    function renderKey(path7, key, dots) {
+      if (!path7) return key;
+      return path7.concat(key).map(function each(token, i) {
         token = removeBrackets(token);
         return !dots && i ? "[" + token + "]" : token;
       }).join(dots ? "." : "");
@@ -51564,13 +51567,13 @@ var require_axios = __commonJS({
           return currentValue;
         });
       }
-      function defaultVisitor(value, key, path6) {
+      function defaultVisitor(value, key, path7) {
         let arr = value;
         if (utils$1.isReactNative(formData) && utils$1.isReactNativeBlob(value)) {
-          formData.append(renderKey(path6, key, dots), convertValue(value));
+          formData.append(renderKey(path7, key, dots), convertValue(value));
           return false;
         }
-        if (value && !path6 && typeof value === "object") {
+        if (value && !path7 && typeof value === "object") {
           if (utils$1.endsWith(key, "{}")) {
             key = metaTokens ? key : key.slice(0, -2);
             value = stringifyWithDepthLimit(value, 1);
@@ -51589,7 +51592,7 @@ var require_axios = __commonJS({
         if (isVisitable(value)) {
           return true;
         }
-        formData.append(renderKey(path6, key, dots), convertValue(value));
+        formData.append(renderKey(path7, key, dots), convertValue(value));
         return false;
       }
       const exposedHelpers = Object.assign(predicates, {
@@ -51597,17 +51600,17 @@ var require_axios = __commonJS({
         convertValue,
         isVisitable
       });
-      function build(value, path6, depth = 0) {
+      function build(value, path7, depth = 0) {
         if (utils$1.isUndefined(value)) return;
         throwIfMaxDepthExceeded(depth);
         if (stack.indexOf(value) !== -1) {
-          throw new Error("Circular reference detected in " + path6.join("."));
+          throw new Error("Circular reference detected in " + path7.join("."));
         }
         stack.push(value);
         utils$1.forEach(value, function each(el, key) {
-          const result = !(utils$1.isUndefined(el) || el === null) && visitor.call(formData, el, utils$1.isString(key) ? key.trim() : key, path6, exposedHelpers);
+          const result = !(utils$1.isUndefined(el) || el === null) && visitor.call(formData, el, utils$1.isString(key) ? key.trim() : key, path7, exposedHelpers);
           if (result === true) {
-            build(el, path6 ? path6.concat(key) : [key], depth + 1);
+            build(el, path7 ? path7.concat(key) : [key], depth + 1);
           }
         });
         stack.pop();
@@ -51869,7 +51872,7 @@ var require_axios = __commonJS({
     };
     function toURLEncodedForm(data, options) {
       return toFormData(data, new platform2.classes.URLSearchParams(), {
-        visitor: function(value, key, path6, helpers) {
+        visitor: function(value, key, path7, helpers) {
           if (platform2.isNode && utils$1.isBuffer(value)) {
             this.append(key, value.toString("base64"));
             return false;
@@ -51886,14 +51889,14 @@ var require_axios = __commonJS({
       }
     }
     function parsePropPath(name3) {
-      const path6 = [];
+      const path7 = [];
       const pattern = /[^.[\]]+|\[([^.[\]]*)]/g;
       let match;
       while ((match = pattern.exec(name3)) !== null) {
-        throwIfDepthExceeded(path6.length);
-        path6.push(match[0] === "[]" ? "" : match[1] || match[0]);
+        throwIfDepthExceeded(path7.length);
+        path7.push(match[0] === "[]" ? "" : match[1] || match[0]);
       }
-      return path6;
+      return path7;
     }
     function arrayToObject(arr) {
       const obj = {};
@@ -51908,12 +51911,12 @@ var require_axios = __commonJS({
       return obj;
     }
     function formDataToJSON(formData) {
-      function buildPath(path6, value, target, index) {
+      function buildPath(path7, value, target, index) {
         throwIfDepthExceeded(index);
-        let name3 = path6[index++];
+        let name3 = path7[index++];
         if (name3 === "__proto__") return true;
         const isNumericKey = Number.isFinite(+name3);
-        const isLast = index >= path6.length;
+        const isLast = index >= path7.length;
         name3 = !name3 && utils$1.isArray(target) ? target.length : name3;
         if (isLast) {
           if (utils$1.hasOwnProp(target, name3)) {
@@ -51926,7 +51929,7 @@ var require_axios = __commonJS({
         if (!utils$1.hasOwnProp(target, name3) || !utils$1.isObject(target[name3])) {
           target[name3] = [];
         }
-        const result = buildPath(path6, value, target[name3], index);
+        const result = buildPath(path7, value, target[name3], index);
         if (result && utils$1.isArray(target[name3])) {
           target[name3] = arrayToObject(target[name3]);
         }
@@ -53706,8 +53709,8 @@ var require_axios = __commonJS({
           const allowedSocketPaths = own2("allowedSocketPaths");
           if (allowedSocketPaths != null) {
             const allowed = Array.isArray(allowedSocketPaths) ? allowedSocketPaths : [allowedSocketPaths];
-            const resolvedSocket = path5.resolve(socketPath);
-            const isAllowed = allowed.some((entry) => typeof entry === "string" && path5.resolve(entry) === resolvedSocket);
+            const resolvedSocket = path6.resolve(socketPath);
+            const isAllowed = allowed.some((entry) => typeof entry === "string" && path6.resolve(entry) === resolvedSocket);
             if (!isAllowed) {
               return reject(new AxiosError(`socketPath "${socketPath}" is not permitted by allowedSocketPaths`, AxiosError.ERR_BAD_OPTION_VALUE, config));
             }
@@ -54015,14 +54018,14 @@ var require_axios = __commonJS({
     var cookies = platform2.hasStandardBrowserEnv ? (
       // Standard browser envs support document.cookie
       {
-        write(name3, value, expires, path6, domain, secure, sameSite) {
+        write(name3, value, expires, path7, domain, secure, sameSite) {
           if (typeof document === "undefined") return;
           const cookie = [`${name3}=${encodeURIComponent(value)}`];
           if (utils$1.isNumber(expires)) {
             cookie.push(`expires=${new Date(expires).toUTCString()}`);
           }
-          if (utils$1.isString(path6)) {
-            cookie.push(`path=${path6}`);
+          if (utils$1.isString(path7)) {
+            cookie.push(`path=${path7}`);
           }
           if (utils$1.isString(domain)) {
             cookie.push(`domain=${domain}`);
@@ -57239,7 +57242,7 @@ var require_msal_node = __commonJS({
     var crypto3 = require("crypto");
     var jwt2 = require_jsonwebtoken();
     var fs6 = require("fs");
-    var path5 = require("path");
+    var path6 = require("path");
     var Serializer2 = class {
       /**
        * serialize the JSON blob
@@ -57432,7 +57435,7 @@ var require_msal_node = __commonJS({
       SHR_NONCE_VALIDITY: 240,
       INVALID_INSTANCE: "invalid_instance"
     };
-    var HttpStatus = {
+    var HttpStatus2 = {
       SUCCESS_RANGE_START: 200,
       SUCCESS_RANGE_END: 299,
       REDIRECT: 302,
@@ -57614,7 +57617,7 @@ var require_msal_node = __commonJS({
         desc: AuthErrorMessages[postRequestFailed2]
       }
     };
-    var AuthError2 = class _AuthError extends Error {
+    var AuthError3 = class _AuthError extends Error {
       constructor(errorCode, errorMessage, suberror) {
         const errorString = errorMessage ? `${errorCode}: ${errorMessage}` : errorCode;
         super(errorString);
@@ -57629,7 +57632,7 @@ var require_msal_node = __commonJS({
       }
     };
     function createAuthError2(code, additionalMessage) {
-      return new AuthError2(code, additionalMessage ? `${AuthErrorMessages[code]} ${additionalMessage}` : AuthErrorMessages[code]);
+      return new AuthError3(code, additionalMessage ? `${AuthErrorMessages[code]} ${additionalMessage}` : AuthErrorMessages[code]);
     }
     var clientInfoDecodingError2 = "client_info_decoding_error";
     var clientInfoEmptyError2 = "client_info_empty_error";
@@ -57942,7 +57945,7 @@ var require_msal_node = __commonJS({
         desc: ClientAuthErrorMessages[nestedAppAuthBridgeDisabled2]
       }
     };
-    var ClientAuthError2 = class _ClientAuthError extends AuthError2 {
+    var ClientAuthError2 = class _ClientAuthError extends AuthError3 {
       constructor(errorCode, additionalMessage) {
         super(errorCode, additionalMessage ? `${ClientAuthErrorMessages[errorCode]}: ${additionalMessage}` : ClientAuthErrorMessages[errorCode]);
         this.name = "ClientAuthError";
@@ -57985,12 +57988,12 @@ var require_msal_node = __commonJS({
       }
     };
     exports2.LogLevel = void 0;
-    (function(LogLevel2) {
-      LogLevel2[LogLevel2["Error"] = 0] = "Error";
-      LogLevel2[LogLevel2["Warning"] = 1] = "Warning";
-      LogLevel2[LogLevel2["Info"] = 2] = "Info";
-      LogLevel2[LogLevel2["Verbose"] = 3] = "Verbose";
-      LogLevel2[LogLevel2["Trace"] = 4] = "Trace";
+    (function(LogLevel3) {
+      LogLevel3[LogLevel3["Error"] = 0] = "Error";
+      LogLevel3[LogLevel3["Warning"] = 1] = "Warning";
+      LogLevel3[LogLevel3["Info"] = 2] = "Info";
+      LogLevel3[LogLevel3["Verbose"] = 3] = "Verbose";
+      LogLevel3[LogLevel3["Trace"] = 4] = "Trace";
     })(exports2.LogLevel || (exports2.LogLevel = {}));
     var Logger2 = class _Logger {
       constructor(loggerOptions, packageName, packageVersion) {
@@ -58555,7 +58558,7 @@ var require_msal_node = __commonJS({
         desc: ClientConfigurationErrorMessages[authorityMismatch2]
       }
     };
-    var ClientConfigurationError2 = class _ClientConfigurationError extends AuthError2 {
+    var ClientConfigurationError2 = class _ClientConfigurationError extends AuthError3 {
       constructor(errorCode) {
         super(errorCode, ClientConfigurationErrorMessages[errorCode]);
         this.name = "ClientConfigurationError";
@@ -59509,7 +59512,7 @@ var require_msal_node = __commonJS({
           }
         } catch (e) {
           this.commonLogger?.error(`CacheManager.saveCacheRecord: failed`);
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             throw e;
           } else {
             throw createCacheError2(e);
@@ -61911,7 +61914,7 @@ var require_msal_node = __commonJS({
           this.logger.verbose("Attempting to find a match between the developer's authority and the CloudInstanceDiscoveryMetadata returned from the network request.");
           match = getCloudDiscoveryMetadataFromNetworkResponse2(metadata, this.hostnameAndPort);
         } catch (error) {
-          if (error instanceof AuthError2) {
+          if (error instanceof AuthError3) {
             this.logger.error(`There was a network error while attempting to get the cloud discovery instance metadata.
 Error: ${error.errorCode}
 Error Description: ${error.errorMessage}`);
@@ -62105,7 +62108,7 @@ Error Description: ${typedError.message}`);
         throw createClientAuthError2(endpointResolutionError2);
       }
     }
-    var ServerError2 = class _ServerError extends AuthError2 {
+    var ServerError2 = class _ServerError extends AuthError3 {
       constructor(errorCode, errorMessage, subError, errorNo, status) {
         super(errorCode, errorMessage, subError);
         this.name = "ServerError";
@@ -62199,7 +62202,7 @@ Error Description: ${typedError.message}`);
         cacheManager.removeItem(key, request.correlationId);
       }
     };
-    var NetworkError2 = class _NetworkError extends AuthError2 {
+    var NetworkError2 = class _NetworkError extends AuthError3 {
       constructor(error, httpStatus, responseHeaders) {
         super(error.errorCode, error.errorMessage, error.subError);
         Object.setPrototypeOf(this, _NetworkError.prototype);
@@ -62292,7 +62295,7 @@ Error Description: ${typedError.message}`);
             }
             throw e.error;
           }
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             throw e;
           } else {
             throw createClientAuthError2(networkError2);
@@ -62331,7 +62334,7 @@ Error Description: ${typedError.message}`);
       }
     };
     var noTokensFound2 = "no_tokens_found";
-    var nativeAccountUnavailable2 = "native_account_unavailable";
+    var nativeAccountUnavailable = "native_account_unavailable";
     var refreshTokenExpired2 = "refresh_token_expired";
     var interactionRequired2 = "interaction_required";
     var consentRequired2 = "consent_required";
@@ -62343,7 +62346,7 @@ Error Description: ${typedError.message}`);
       consentRequired: consentRequired2,
       interactionRequired: interactionRequired2,
       loginRequired: loginRequired2,
-      nativeAccountUnavailable: nativeAccountUnavailable2,
+      nativeAccountUnavailable,
       noTokensFound: noTokensFound2,
       refreshTokenExpired: refreshTokenExpired2
     });
@@ -62363,7 +62366,7 @@ Error Description: ${typedError.message}`);
     ];
     var InteractionRequiredAuthErrorMessages = {
       [noTokensFound2]: "No refresh token found in the cache. Please sign-in.",
-      [nativeAccountUnavailable2]: "The requested account is not available in the native broker. It may have been deleted or logged out. Please sign-in again using an interactive API.",
+      [nativeAccountUnavailable]: "The requested account is not available in the native broker. It may have been deleted or logged out. Please sign-in again using an interactive API.",
       [refreshTokenExpired2]: "Refresh token has expired.",
       [badToken2]: "Identity provider returned bad_token due to an expired or invalid refresh token. Please invoke an interactive API to resolve."
     };
@@ -62373,15 +62376,15 @@ Error Description: ${typedError.message}`);
         desc: InteractionRequiredAuthErrorMessages[noTokensFound2]
       },
       native_account_unavailable: {
-        code: nativeAccountUnavailable2,
-        desc: InteractionRequiredAuthErrorMessages[nativeAccountUnavailable2]
+        code: nativeAccountUnavailable,
+        desc: InteractionRequiredAuthErrorMessages[nativeAccountUnavailable]
       },
       bad_token: {
         code: badToken2,
         desc: InteractionRequiredAuthErrorMessages[badToken2]
       }
     };
-    var InteractionRequiredAuthError2 = class _InteractionRequiredAuthError extends AuthError2 {
+    var InteractionRequiredAuthError2 = class _InteractionRequiredAuthError extends AuthError3 {
       constructor(errorCode, errorMessage, subError, timestamp, traceId, correlationId, claims, errorNo) {
         super(errorCode, errorMessage, subError);
         Object.setPrototypeOf(this, _InteractionRequiredAuthError.prototype);
@@ -62605,11 +62608,11 @@ Error Description: ${typedError.message}`);
           const errString = `Error(s): ${serverResponse.error_codes || Constants$1.NOT_AVAILABLE} - Timestamp: ${serverResponse.timestamp || Constants$1.NOT_AVAILABLE} - Description: ${serverResponse.error_description || Constants$1.NOT_AVAILABLE} - Correlation ID: ${serverResponse.correlation_id || Constants$1.NOT_AVAILABLE} - Trace ID: ${serverResponse.trace_id || Constants$1.NOT_AVAILABLE}`;
           const serverErrorNo = serverResponse.error_codes?.length ? serverResponse.error_codes[0] : void 0;
           const serverError = new ServerError2(serverResponse.error, errString, serverResponse.suberror, serverErrorNo, serverResponse.status);
-          if (refreshAccessToken && serverResponse.status && serverResponse.status >= HttpStatus.SERVER_ERROR_RANGE_START && serverResponse.status <= HttpStatus.SERVER_ERROR_RANGE_END) {
+          if (refreshAccessToken && serverResponse.status && serverResponse.status >= HttpStatus2.SERVER_ERROR_RANGE_START && serverResponse.status <= HttpStatus2.SERVER_ERROR_RANGE_END) {
             this.logger.warning(`executeTokenRequest:validateTokenResponse - AAD is currently unavailable and the access token is unable to be refreshed.
 ${serverError}`);
             return;
-          } else if (refreshAccessToken && serverResponse.status && serverResponse.status >= HttpStatus.CLIENT_ERROR_RANGE_START && serverResponse.status <= HttpStatus.CLIENT_ERROR_RANGE_END) {
+          } else if (refreshAccessToken && serverResponse.status && serverResponse.status >= HttpStatus2.CLIENT_ERROR_RANGE_START && serverResponse.status <= HttpStatus2.CLIENT_ERROR_RANGE_END) {
             this.logger.warning(`executeTokenRequest:validateTokenResponse - AAD is currently available but is unable to refresh the access token.
 ${serverError}`);
             return;
@@ -63595,7 +63598,7 @@ ${serverError}`);
         }
         lastRequests.failedRequests.push(this.apiId, this.correlationId);
         if (error instanceof Error && !!error && error.toString()) {
-          if (error instanceof AuthError2) {
+          if (error instanceof AuthError3) {
             if (error.subError) {
               lastRequests.errors.push(error.subError);
             } else if (error.errorCode) {
@@ -63910,9 +63913,9 @@ ${serverError}`);
       POST: "post"
     };
     var ProxyStatus = {
-      SUCCESS_RANGE_START: HttpStatus.SUCCESS_RANGE_START,
-      SUCCESS_RANGE_END: HttpStatus.SUCCESS_RANGE_END,
-      SERVER_ERROR: HttpStatus.SERVER_ERROR
+      SUCCESS_RANGE_START: HttpStatus2.SUCCESS_RANGE_START,
+      SUCCESS_RANGE_END: HttpStatus2.SUCCESS_RANGE_END,
+      SERVER_ERROR: HttpStatus2.SERVER_ERROR
     };
     var REGION_ENVIRONMENT_VARIABLE2 = "REGION_NAME";
     var MSAL_FORCE_REGION2 = "MSAL_FORCE_REGION";
@@ -63959,12 +63962,12 @@ ${serverError}`);
     var MANAGED_IDENTITY_MAX_RETRIES = 3;
     var MANAGED_IDENTITY_RETRY_DELAY = 1e3;
     var MANAGED_IDENTITY_HTTP_STATUS_CODES_TO_RETRY_ON = [
-      HttpStatus.NOT_FOUND,
-      HttpStatus.REQUEST_TIMEOUT,
-      HttpStatus.TOO_MANY_REQUESTS,
-      HttpStatus.SERVER_ERROR,
-      HttpStatus.SERVICE_UNAVAILABLE,
-      HttpStatus.GATEWAY_TIMEOUT
+      HttpStatus2.NOT_FOUND,
+      HttpStatus2.REQUEST_TIMEOUT,
+      HttpStatus2.TOO_MANY_REQUESTS,
+      HttpStatus2.SERVER_ERROR,
+      HttpStatus2.SERVICE_UNAVAILABLE,
+      HttpStatus2.GATEWAY_TIMEOUT
     ];
     var NetworkUtils = class {
       static getNetworkResponse(headers, body, statusCode) {
@@ -64103,7 +64106,7 @@ Connection: close\r
             const headers2 = Object.fromEntries(entries);
             const parsedHeaders = headers2;
             const networkResponse = NetworkUtils.getNetworkResponse(parsedHeaders, parseBody(httpStatusCode, statusMessage, parsedHeaders, body), httpStatusCode);
-            if ((httpStatusCode < HttpStatus.SUCCESS_RANGE_START || httpStatusCode > HttpStatus.SUCCESS_RANGE_END) && // do not destroy the request for the device code flow
+            if ((httpStatusCode < HttpStatus2.SUCCESS_RANGE_START || httpStatusCode > HttpStatus2.SUCCESS_RANGE_END) && // do not destroy the request for the device code flow
             networkResponse.body["error"] !== Constants3.AUTHORIZATION_PENDING) {
               request.destroy();
             }
@@ -64173,7 +64176,7 @@ Connection: close\r
             const body2 = Buffer.concat([...data]).toString();
             const parsedHeaders = headers2;
             const networkResponse = NetworkUtils.getNetworkResponse(parsedHeaders, parseBody(statusCode, statusMessage, parsedHeaders, body2), statusCode);
-            if ((statusCode < HttpStatus.SUCCESS_RANGE_START || statusCode > HttpStatus.SUCCESS_RANGE_END) && // do not destroy the request for the device code flow
+            if ((statusCode < HttpStatus2.SUCCESS_RANGE_START || statusCode > HttpStatus2.SUCCESS_RANGE_END) && // do not destroy the request for the device code flow
             networkResponse.body["error"] !== Constants3.AUTHORIZATION_PENDING) {
               request.destroy();
             }
@@ -64193,10 +64196,10 @@ Connection: close\r
       } catch (error) {
         let errorType;
         let errorDescriptionHelper;
-        if (statusCode >= HttpStatus.CLIENT_ERROR_RANGE_START && statusCode <= HttpStatus.CLIENT_ERROR_RANGE_END) {
+        if (statusCode >= HttpStatus2.CLIENT_ERROR_RANGE_START && statusCode <= HttpStatus2.CLIENT_ERROR_RANGE_END) {
           errorType = "client_error";
           errorDescriptionHelper = "A client";
-        } else if (statusCode >= HttpStatus.SERVER_ERROR_RANGE_START && statusCode <= HttpStatus.SERVER_ERROR_RANGE_END) {
+        } else if (statusCode >= HttpStatus2.SERVER_ERROR_RANGE_START && statusCode <= HttpStatus2.SERVER_ERROR_RANGE_END) {
           errorType = "server_error";
           errorDescriptionHelper = "A server";
         } else {
@@ -64253,7 +64256,7 @@ Headers: ${JSON.stringify(headers)}`
       [wwwAuthenticateHeaderMissing2]: "A 401 response was received form the Azure Arc Managed Identity, but the www-authenticate header is missing.",
       [wwwAuthenticateHeaderUnsupportedFormat2]: "A 401 response was received form the Azure Arc Managed Identity, but the www-authenticate header is in an unsupported format."
     };
-    var ManagedIdentityError2 = class _ManagedIdentityError extends AuthError2 {
+    var ManagedIdentityError2 = class _ManagedIdentityError extends AuthError3 {
       constructor(errorCode) {
         super(errorCode, ManagedIdentityErrorMessages2[errorCode]);
         this.name = "ManagedIdentityError";
@@ -64397,7 +64400,7 @@ Headers: ${JSON.stringify(headers)}`
         desc: "Client certificate does not contain a SHA-1 or SHA-256 thumbprint."
       }
     };
-    var NodeAuthError2 = class _NodeAuthError extends AuthError2 {
+    var NodeAuthError2 = class _NodeAuthError extends AuthError3 {
       constructor(errorCode, errorMessage) {
         super(errorCode, errorMessage);
         this.name = "NodeAuthError";
@@ -65595,7 +65598,7 @@ Headers: ${JSON.stringify(headers)}`
           this.logger.verbose("Auth code client created", validRequest.correlationId);
           return await authorizationCodeClient.acquireToken(validRequest, authCodePayLoad);
         } catch (e) {
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             e.setCorrelationId(validRequest.correlationId);
           }
           serverTelemetryManager.cacheFailedRequest(e);
@@ -65623,7 +65626,7 @@ Headers: ${JSON.stringify(headers)}`
           this.logger.verbose("Refresh token client created", validRequest.correlationId);
           return await refreshTokenClient.acquireToken(validRequest);
         } catch (e) {
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             e.setCorrelationId(validRequest.correlationId);
           }
           serverTelemetryManager.cacheFailedRequest(e);
@@ -65651,7 +65654,7 @@ Headers: ${JSON.stringify(headers)}`
           this.logger.verbose("Silent flow client created", validRequest.correlationId);
           return await silentFlowClient.acquireToken(validRequest);
         } catch (e) {
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             e.setCorrelationId(validRequest.correlationId);
           }
           serverTelemetryManager.cacheFailedRequest(e);
@@ -65681,7 +65684,7 @@ Headers: ${JSON.stringify(headers)}`
           this.logger.verbose("Username password client created", validRequest.correlationId);
           return await usernamePasswordClient.acquireToken(validRequest);
         } catch (e) {
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             e.setCorrelationId(validRequest.correlationId);
           }
           serverTelemetryManager.cacheFailedRequest(e);
@@ -65871,7 +65874,7 @@ Headers: ${JSON.stringify(headers)}`
             const parsedUrl = new URL(url2, redirectUri);
             const authCodeResponse = getDeserializedResponse2(parsedUrl.search) || {};
             if (authCodeResponse.code) {
-              res.writeHead(HttpStatus.REDIRECT, {
+              res.writeHead(HttpStatus2.REDIRECT, {
                 location: redirectUri
               });
               res.end();
@@ -66145,7 +66148,7 @@ Headers: ${JSON.stringify(headers)}`
           this.logger.verbose("Device code client created", validRequest.correlationId);
           return await deviceCodeClient.acquireToken(validRequest);
         } catch (e) {
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             e.setCorrelationId(validRequest.correlationId);
           }
           serverTelemetryManager.cacheFailedRequest(e);
@@ -66293,7 +66296,7 @@ Headers: ${JSON.stringify(headers)}`
               resolve(r);
               return;
             } catch (e) {
-              if (e instanceof AuthError2 && e.errorCode === NodeAuthErrorMessage2.noLoopbackServerExists.code) {
+              if (e instanceof AuthError3 && e.errorCode === NodeAuthErrorMessage2.noLoopbackServerExists.code) {
                 ticks++;
                 return;
               }
@@ -66728,7 +66731,7 @@ Headers: ${JSON.stringify(headers)}`
           this.logger.verbose("Client credential client created", validRequest.correlationId);
           return await clientCredentialClient.acquireToken(validRequest);
         } catch (e) {
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             e.setCorrelationId(validRequest.correlationId);
           }
           serverTelemetryManager.cacheFailedRequest(e);
@@ -66758,7 +66761,7 @@ Headers: ${JSON.stringify(headers)}`
           this.logger.verbose("On behalf of client created", validRequest.correlationId);
           return await oboClient.acquireToken(validRequest);
         } catch (e) {
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             e.setCorrelationId(validRequest.correlationId);
           }
           throw e;
@@ -66852,7 +66855,7 @@ Headers: ${JSON.stringify(headers)}`
             response = await this.networkClient.sendGetRequestAsync(networkRequest.computeUri(), networkRequestOptions);
           }
         } catch (error) {
-          if (error instanceof AuthError2) {
+          if (error instanceof AuthError3) {
             throw error;
           } else {
             throw createClientAuthError2(networkError2);
@@ -67002,7 +67005,7 @@ Headers: ${JSON.stringify(headers)}`
       }
       async getServerTokenResponseAsync(originalResponse2, networkClient, networkRequest, networkRequestOptions) {
         let retryResponse;
-        if (originalResponse2.status === HttpStatus.UNAUTHORIZED) {
+        if (originalResponse2.status === HttpStatus2.UNAUTHORIZED) {
           const wwwAuthHeader = originalResponse2.headers["www-authenticate"];
           if (!wwwAuthHeader) {
             throw createManagedIdentityError2(wwwAuthenticateHeaderMissing2);
@@ -67015,7 +67018,7 @@ Headers: ${JSON.stringify(headers)}`
             throw createManagedIdentityError2(platformNotSupported2);
           }
           const expectedSecretFilePath = SUPPORTED_AZURE_ARC_PLATFORMS2[process.platform];
-          const fileName = path5.basename(secretFilePath);
+          const fileName = path6.basename(secretFilePath);
           if (!fileName.endsWith(".key")) {
             throw createManagedIdentityError2(invalidFileExtension2);
           }
@@ -67043,7 +67046,7 @@ Headers: ${JSON.stringify(headers)}`
           try {
             retryResponse = await networkClient.sendGetRequestAsync(networkRequest.computeUri(), networkRequestOptions);
           } catch (error) {
-            if (error instanceof AuthError2) {
+            if (error instanceof AuthError3) {
               throw error;
             } else {
               throw createClientAuthError2(networkError2);
@@ -67298,7 +67301,7 @@ Headers: ${JSON.stringify(headers)}`
         }
       }
     };
-    exports2.AuthError = AuthError2;
+    exports2.AuthError = AuthError3;
     exports2.AuthErrorCodes = AuthErrorCodes;
     exports2.AuthErrorMessage = AuthErrorMessage;
     exports2.AzureCloudInstance = AzureCloudInstance2;
@@ -67965,7 +67968,7 @@ var require_constants4 = __commonJS({
       SDK_VERSION: () => SDK_VERSION5
     });
     module2.exports = __toCommonJS2(constants_exports);
-    var SDK_VERSION5 = `4.13.3`;
+    var SDK_VERSION5 = `4.14.1`;
     var DeveloperSignOnClientId2 = "04b07795-8ddb-461a-bbee-02f9e1bf7b46";
     var DefaultTenantId2 = "common";
     var AzureAuthorityHosts3 = /* @__PURE__ */ ((AzureAuthorityHosts22) => {
@@ -68018,7 +68021,7 @@ var require_msalPlugins = __commonJS({
       vsCodeBrokerInfo: () => vsCodeBrokerInfo2
     });
     module2.exports = __toCommonJS2(msalPlugins_exports);
-    var import_constants37 = require_constants4();
+    var import_constants38 = require_constants4();
     var persistenceProvider2 = void 0;
     var msalNodeFlowCacheControl2 = {
       setPersistence(pluginProvider) {
@@ -68042,8 +68045,8 @@ var require_msalPlugins = __commonJS({
       }
     };
     var msalNodeFlowVSCodeCredentialControl2 = {
-      setVSCodeAuthRecordPath(path5) {
-        vsCodeAuthRecordPath2 = path5;
+      setVSCodeAuthRecordPath(path6) {
+        vsCodeAuthRecordPath2 = path6;
       },
       setVSCodeBroker(broker) {
         vsCodeBrokerInfo2 = {
@@ -68071,13 +68074,13 @@ var require_msalPlugins = __commonJS({
             ].join(" ")
           );
         }
-        const cacheBaseName = options.tokenCachePersistenceOptions.name || import_constants37.DEFAULT_TOKEN_CACHE_NAME;
+        const cacheBaseName = options.tokenCachePersistenceOptions.name || import_constants38.DEFAULT_TOKEN_CACHE_NAME;
         config.cache.cachePlugin = persistenceProvider2({
-          name: `${cacheBaseName}.${import_constants37.CACHE_NON_CAE_SUFFIX}`,
+          name: `${cacheBaseName}.${import_constants38.CACHE_NON_CAE_SUFFIX}`,
           ...options.tokenCachePersistenceOptions
         });
         config.cache.cachePluginCae = persistenceProvider2({
-          name: `${cacheBaseName}.${import_constants37.CACHE_CAE_SUFFIX}`,
+          name: `${cacheBaseName}.${import_constants38.CACHE_CAE_SUFFIX}`,
           ...options.tokenCachePersistenceOptions
         });
       }
@@ -68429,12 +68432,12 @@ var require_tracing = __commonJS({
       tracingClient: () => tracingClient4
     });
     module2.exports = __toCommonJS2(tracing_exports);
-    var import_constants37 = require_constants4();
+    var import_constants38 = require_constants4();
     var import_core_tracing5 = require_commonjs5();
     var tracingClient4 = (0, import_core_tracing5.createTracingClient)({
       namespace: "Microsoft.AAD",
       packageName: "@azure/identity",
-      packageVersion: import_constants37.SDK_VERSION
+      packageVersion: import_constants38.SDK_VERSION
     });
   }
 });
@@ -68564,7 +68567,7 @@ var require_msal_node2 = __commonJS({
     var jwt2 = require_jsonwebtoken();
     var http3 = require("http");
     var fs6 = require("fs");
-    var path5 = require("path");
+    var path6 = require("path");
     var Serializer2 = class {
       /**
        * serialize the JSON blob
@@ -68750,6 +68753,7 @@ var require_msal_node2 = __commonJS({
     var USER_ID2 = "user_id";
     var FMI_PATH2 = "fmi_path";
     var ATTRIBUTE_TOKENS2 = "attribute_tokens";
+    var POPUP_ORIGIN_CHECK_DONE2 = "pocd";
     var SKU2 = "msal.js.common";
     var DEFAULT_AUTHORITY2 = "https://login.microsoftonline.com/common/";
     var DEFAULT_AUTHORITY_HOST2 = "login.microsoftonline.com";
@@ -68781,7 +68785,6 @@ var require_msal_node2 = __commonJS({
     ];
     var INVALID_INSTANCE2 = "invalid_instance";
     var HTTP_SUCCESS2 = 200;
-    var HTTP_REDIRECT2 = 302;
     var HTTP_CLIENT_ERROR_RANGE_START2 = 400;
     var HTTP_BAD_REQUEST2 = 400;
     var HTTP_UNAUTHORIZED2 = 401;
@@ -68938,7 +68941,7 @@ var require_msal_node2 = __commonJS({
     function getDefaultErrorMessage2(code) {
       return `See https://aka.ms/msal.js.errors#${code} for details`;
     }
-    var AuthError2 = class _AuthError extends Error {
+    var AuthError3 = class _AuthError extends Error {
       constructor(errorCode, correlationId, errorMessage, suberror) {
         const message = errorMessage || (errorCode ? getDefaultErrorMessage2(errorCode) : "");
         const errorString = message ? `${errorCode}: ${message}` : errorCode;
@@ -68952,9 +68955,9 @@ var require_msal_node2 = __commonJS({
       }
     };
     function createAuthError2(code, correlationId, additionalMessage) {
-      return new AuthError2(code, correlationId, additionalMessage || getDefaultErrorMessage2(code));
+      return new AuthError3(code, correlationId, additionalMessage || getDefaultErrorMessage2(code));
     }
-    var ClientAuthError2 = class _ClientAuthError extends AuthError2 {
+    var ClientAuthError2 = class _ClientAuthError extends AuthError3 {
       constructor(errorCode, correlationId, additionalMessage) {
         super(errorCode, correlationId, additionalMessage);
         this.name = "ClientAuthError";
@@ -69269,7 +69272,7 @@ var require_msal_node2 = __commonJS({
       postRequestFailed: postRequestFailed2,
       unexpectedError: unexpectedError2
     });
-    var ClientConfigurationError2 = class _ClientConfigurationError extends AuthError2 {
+    var ClientConfigurationError2 = class _ClientConfigurationError extends AuthError3 {
       constructor(errorCode, correlationId) {
         super(errorCode, correlationId);
         this.name = "ClientConfigurationError";
@@ -69278,6 +69281,29 @@ var require_msal_node2 = __commonJS({
     };
     function createClientConfigurationError2(errorCode, correlationId) {
       return new ClientConfigurationError2(errorCode, correlationId);
+    }
+    var normalizedHeaderRecords2 = /* @__PURE__ */ new WeakSet();
+    function normalizeResponseHeaders2(headers) {
+      if (normalizedHeaderRecords2.has(headers)) {
+        return headers;
+      }
+      const normalized = Object.fromEntries(Object.entries(headers).map(([name4, value]) => [
+        name4.toLowerCase(),
+        value
+      ]));
+      normalizedHeaderRecords2.add(normalized);
+      return normalized;
+    }
+    function getResponseHeader2(headers, name4) {
+      const key = name4.toLowerCase();
+      if (Object.prototype.hasOwnProperty.call(headers, key)) {
+        return headers[key];
+      }
+      if (normalizedHeaderRecords2.has(headers)) {
+        return void 0;
+      }
+      const headerName = Object.keys(headers).find((header) => header.toLowerCase() === key);
+      return headerName === void 0 ? void 0 : headers[headerName];
     }
     var redirectUriEmpty2 = "redirect_uri_empty";
     var claimsRequestParsingError2 = "claims_request_parsing_error";
@@ -70545,7 +70571,7 @@ var require_msal_node2 = __commonJS({
           this.logger.verbose("Attempting to find a match between the developer's authority and the CloudInstanceDiscoveryMetadata returned from the network request.", this.correlationId);
           match = getCloudDiscoveryMetadataFromNetworkResponse2(metadata, this.hostnameAndPort);
         } catch (error) {
-          if (error instanceof AuthError2) {
+          if (error instanceof AuthError3) {
             this.logger.error(`There was a network error while attempting to get the cloud discovery instance metadata.
 Error: '${error.errorCode}'
 Error Description: '${error.errorMessage}'`, this.correlationId);
@@ -71150,6 +71176,11 @@ Error Description: '${typedError.message}'`, this.correlationId);
         parameters.set(INSTANCE_AWARE2, "true");
       }
     }
+    function addPopupOriginCheckDone2(parameters) {
+      if (!parameters.has(POPUP_ORIGIN_CHECK_DONE2)) {
+        parameters.set(POPUP_ORIGIN_CHECK_DONE2, "1");
+      }
+    }
     function addExtraParameters2(parameters, extraParams) {
       Object.entries(extraParams).forEach(([key, value]) => {
         if (!parameters.has(key) && value) {
@@ -71278,6 +71309,9 @@ Error Description: '${typedError.message}'`, this.correlationId);
       }
       try {
         const normalizedResponse = stripLeadingHashOrQuery2(responseString);
+        if (!/^[^=&?#/]+(?:=|&|$)/.test(normalizedResponse)) {
+          return null;
+        }
         const deserializedHash = Object.fromEntries(new URLSearchParams(normalizedResponse));
         if (deserializedHash.code || deserializedHash.ear_jwe || deserializedHash.error || deserializedHash.error_description || deserializedHash.state) {
           return deserializedHash;
@@ -71339,12 +71373,12 @@ Error Description: '${typedError.message}'`, this.correlationId);
       }
     };
     exports2.LogLevel = void 0;
-    (function(LogLevel2) {
-      LogLevel2[LogLevel2["Error"] = 0] = "Error";
-      LogLevel2[LogLevel2["Warning"] = 1] = "Warning";
-      LogLevel2[LogLevel2["Info"] = 2] = "Info";
-      LogLevel2[LogLevel2["Verbose"] = 3] = "Verbose";
-      LogLevel2[LogLevel2["Trace"] = 4] = "Trace";
+    (function(LogLevel3) {
+      LogLevel3[LogLevel3["Error"] = 0] = "Error";
+      LogLevel3[LogLevel3["Warning"] = 1] = "Warning";
+      LogLevel3[LogLevel3["Info"] = 2] = "Info";
+      LogLevel3[LogLevel3["Verbose"] = 3] = "Verbose";
+      LogLevel3[LogLevel3["Trace"] = 4] = "Trace";
     })(exports2.LogLevel || (exports2.LogLevel = {}));
     var CACHE_CAPACITY2 = 50;
     var MAX_LOGS_PER_CORRELATION2 = 500;
@@ -71563,7 +71597,7 @@ Error Description: '${typedError.message}'`, this.correlationId);
       }
     };
     var name$1 = "@azure/msal-common";
-    var version$1 = "16.14.1";
+    var version$1 = "16.16.0";
     var cacheQuotaExceeded2 = "cache_quota_exceeded";
     var cacheErrorUnknown2 = "cache_error_unknown";
     var CacheError2 = class _CacheError extends Error {
@@ -71763,7 +71797,7 @@ Error Description: '${typedError.message}'`, this.correlationId);
           }
         } catch (e) {
           this.commonLogger?.error(`CacheManager.saveCacheRecord: failed`, correlationId);
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             throw e;
           } else {
             throw createCacheError2(e);
@@ -71791,6 +71825,7 @@ Error Description: '${typedError.message}'`, this.correlationId);
         };
         const tokenKeys = this.getTokenKeys();
         const currentScopes = ScopeSet2.fromString(credential.target, correlationId);
+        const accessTokenKeysToRemove = [];
         tokenKeys.accessToken.forEach((key) => {
           if (!this.accessTokenKeyMatchesFilter(key, accessTokenFilter, false)) {
             return;
@@ -71799,10 +71834,13 @@ Error Description: '${typedError.message}'`, this.correlationId);
           if (tokenEntity && this.credentialMatchesFilter(tokenEntity, accessTokenFilter, correlationId)) {
             const tokenScopeSet = ScopeSet2.fromString(tokenEntity.target, correlationId);
             if (tokenScopeSet.intersectingScopeSets(currentScopes)) {
-              this.removeAccessToken(key, correlationId);
+              accessTokenKeysToRemove.push(key);
             }
           }
         });
+        for (const key of accessTokenKeysToRemove) {
+          await this.removeAccessTokenAndTokenBindingKey(key, correlationId, credential.keyId);
+        }
         await this.setAccessTokenCredential(credential, correlationId, kmsi, additionalCacheKeyHash);
       }
       /**
@@ -72004,12 +72042,32 @@ Error Description: '${typedError.message}'`, this.correlationId);
        * @param correlationId
        */
       removeAccessToken(key, correlationId) {
+        const credential = this.removeAccessTokenCredential(key, correlationId);
+        if (credential) {
+          void this.removeTokenBindingKeyForCredential(credential, correlationId);
+        }
+      }
+      /**
+       * Removes an access token and waits for any unreferenced token-binding key
+       * cleanup. Internal callers that require deterministic cleanup should use
+       * this method instead of the synchronous public cache contract.
+       */
+      async removeAccessTokenAndTokenBindingKey(key, correlationId, preservedKeyId) {
+        const credential = this.removeAccessTokenCredential(key, correlationId);
+        if (credential) {
+          await this.removeTokenBindingKeyForCredential(credential, correlationId, preservedKeyId);
+        }
+      }
+      removeAccessTokenCredential(key, correlationId) {
         const credential = this.getAccessTokenCredential(key, correlationId);
         if (!credential) {
-          return;
+          return null;
         }
         this.removeItem(key, correlationId);
         this.performanceClient.incrementFields({ accessTokensRemoved: 1 }, correlationId);
+        return credential;
+      }
+      async removeTokenBindingKeyForCredential(credential, correlationId, preservedKeyId) {
         if (credential.credentialType.toLowerCase() === CredentialType2.ACCESS_TOKEN_WITH_AUTH_SCHEME.toLowerCase()) {
           const tokenType = credential.tokenType?.toLowerCase();
           switch (tokenType) {
@@ -72017,16 +72075,24 @@ Error Description: '${typedError.message}'`, this.correlationId);
             case AuthenticationScheme2.DPOP.toLowerCase(): {
               const accessTokenWithAuthSchemeEntity = credential;
               const kid = accessTokenWithAuthSchemeEntity.keyId;
-              if (kid) {
-                void this.tokenBindingKeyManager.removeTokenBindingKey(kid, correlationId).catch(() => {
+              if (kid && kid !== preservedKeyId && !this.isTokenBindingKeyReferenced(kid, correlationId)) {
+                try {
+                  await this.tokenBindingKeyManager.removeTokenBindingKey(kid, correlationId);
+                } catch {
                   this.commonLogger.error("Failed to remove token binding key", correlationId);
                   this.performanceClient?.incrementFields({ removeTokenBindingKeyFailure: 1 }, correlationId);
-                });
+                }
               }
               break;
             }
           }
         }
+      }
+      isTokenBindingKeyReferenced(keyId, correlationId) {
+        return this.getTokenKeys().accessToken.some((accessTokenKey) => {
+          const accessToken = this.getAccessTokenCredential(accessTokenKey, correlationId);
+          return accessToken?.keyId === keyId;
+        });
       }
       /**
        * Removes all app metadata objects from cache.
@@ -72156,6 +72222,7 @@ Error Description: '${typedError.message}'`, this.correlationId);
         this.commonLogger.trace("CacheManager - getAccessToken called", correlationId);
         const scopes = ScopeSet2.createSearchScopes(request.scopes, correlationId);
         const authScheme = request.authenticationScheme || AuthenticationScheme2.BEARER;
+        const normalizedAuthScheme = authScheme.toLowerCase();
         const credentialType = authScheme.toLowerCase() !== AuthenticationScheme2.BEARER.toLowerCase() ? CredentialType2.ACCESS_TOKEN_WITH_AUTH_SCHEME : CredentialType2.ACCESS_TOKEN;
         const attributeTokenPartition = serializeAttributeTokens2(request.attributeTokens);
         const additionalCacheKeyComponents = attributeTokenPartition ? {
@@ -72169,7 +72236,7 @@ Error Description: '${typedError.message}'`, this.correlationId);
           realm: targetRealm || account.tenantId,
           target: scopes,
           tokenType: authScheme,
-          keyId: authScheme === AuthenticationScheme2.SSH ? request.sshKid : void 0,
+          keyId: authScheme === AuthenticationScheme2.SSH ? request.sshKid : normalizedAuthScheme === AuthenticationScheme2.DPOP.toLowerCase() ? request.popKid || request.dpopJkt : void 0,
           additionalCacheKeyComponents
         };
         const accessTokenKeys = tokenKeys && tokenKeys.accessToken || this.getTokenKeys().accessToken;
@@ -72773,7 +72840,7 @@ Error Description: '${typedError.message}'`, this.correlationId);
         return this.cache;
       }
     };
-    var JoseHeaderError2 = class _JoseHeaderError extends AuthError2 {
+    var JoseHeaderError2 = class _JoseHeaderError extends AuthError3 {
       constructor(errorCode, correlationId, errorMessage) {
         super(errorCode, correlationId, errorMessage);
         this.name = "JoseHeaderError";
@@ -72977,6 +73044,12 @@ Error Description: '${typedError.message}'`, this.correlationId);
         throw createClientConfigurationError2(invalidDpopNonce2, correlationId);
       }
     }
+    function normalizeDpopResourceRequestContext2(context3, correlationId = "") {
+      return {
+        htm: normalizeHtm2(context3.htm, correlationId),
+        htu: normalizeHtu2(context3.htu, correlationId)
+      };
+    }
     var DpopProofGenerator2 = class {
       constructor(cryptoUtils, tokenBindingKeyManager) {
         this.cryptoUtils = cryptoUtils;
@@ -73027,10 +73100,11 @@ Error Description: '${typedError.message}'`, this.correlationId);
        */
       buildResourceProofClaims(params, correlationId = "") {
         validateDpopNonce2(params.nonce, correlationId);
+        const resourceContext = normalizeDpopResourceRequestContext2(params, correlationId);
         const claims = {
           jti: this.cryptoUtils.createNewGuid(),
-          htm: normalizeHtm2(params.htm, correlationId),
-          htu: normalizeHtu2(params.htu, correlationId),
+          htm: resourceContext.htm,
+          htu: resourceContext.htu,
           ath: params.ath,
           iat: nowSeconds2()
         };
@@ -73061,7 +73135,7 @@ Error Description: '${typedError.message}'`, this.correlationId);
       }
     };
     var noTokensFound2 = "no_tokens_found";
-    var nativeAccountUnavailable2 = "native_account_unavailable";
+    var nativeAccountUnavailable = "native_account_unavailable";
     var refreshTokenExpired2 = "refresh_token_expired";
     var uiNotAllowed2 = "ui_not_allowed";
     var interactionRequired2 = "interaction_required";
@@ -73076,7 +73150,7 @@ Error Description: '${typedError.message}'`, this.correlationId);
       interactionRequired: interactionRequired2,
       interruptedUser: interruptedUser2,
       loginRequired: loginRequired2,
-      nativeAccountUnavailable: nativeAccountUnavailable2,
+      nativeAccountUnavailable,
       noTokensFound: noTokensFound2,
       refreshTokenExpired: refreshTokenExpired2,
       uiNotAllowed: uiNotAllowed2
@@ -73099,7 +73173,7 @@ Error Description: '${typedError.message}'`, this.correlationId);
       "ui_not_allowed",
       "interrupted_user"
     ];
-    var InteractionRequiredAuthError2 = class _InteractionRequiredAuthError extends AuthError2 {
+    var InteractionRequiredAuthError2 = class _InteractionRequiredAuthError extends AuthError3 {
       constructor(errorCode, correlationId, errorMessage, subError, timestamp, traceId, claims, errorNo) {
         super(errorCode, correlationId, errorMessage, subError);
         Object.setPrototypeOf(this, _InteractionRequiredAuthError.prototype);
@@ -73121,7 +73195,7 @@ Error Description: '${typedError.message}'`, this.correlationId);
     function createInteractionRequiredAuthError2(errorCode, correlationId, errorMessage) {
       return new InteractionRequiredAuthError2(errorCode, correlationId, errorMessage);
     }
-    var ServerError2 = class _ServerError extends AuthError2 {
+    var ServerError2 = class _ServerError extends AuthError3 {
       constructor(errorCode, correlationId, errorMessage, subError, errorNo, status) {
         super(errorCode, correlationId, errorMessage, subError);
         this.name = "ServerError";
@@ -73130,6 +73204,20 @@ Error Description: '${typedError.message}'`, this.correlationId);
         Object.setPrototypeOf(this, _ServerError.prototype);
       }
     };
+    function setRequestState2(cryptoObj, userState, meta, correlationId) {
+      const libraryState = generateLibraryState2(cryptoObj, correlationId);
+      return userState ? `${libraryState}${RESOURCE_DELIM2}${userState}` : libraryState;
+    }
+    function generateLibraryState2(cryptoObj, correlationId, meta) {
+      if (!cryptoObj) {
+        throw createClientAuthError2(noCryptoObject2, correlationId);
+      }
+      const stateObj = {
+        id: cryptoObj.createNewGuid()
+      };
+      const stateString = JSON.stringify(stateObj);
+      return cryptoObj.base64Encode(stateString);
+    }
     function parseRequestState2(base64Decode2, state5, correlationId) {
       if (!base64Decode2) {
         throw createClientAuthError2(noCryptoObject2, correlationId);
@@ -73534,12 +73622,13 @@ ${serverError}`, correlationId);
        * Performs necessary throttling checks after a network request.
        * @param cacheManager
        * @param thumbprint
-       * @param response
+       * @param response - Token response with case-insensitive header names.
        */
       static postProcess(cacheManager, thumbprint, response, correlationId) {
-        if (_ThrottlingUtils.checkResponseStatus(response) || _ThrottlingUtils.checkResponseForRetryAfter(response)) {
+        const retryAfter = getRetryAfterHeader2(response);
+        if (_ThrottlingUtils.checkResponseStatus(response) || retryAfter !== void 0) {
           const thumbprintValue = {
-            throttleTime: _ThrottlingUtils.calculateThrottleTime(parseInt(response.headers[HeaderNames2.RETRY_AFTER])),
+            throttleTime: _ThrottlingUtils.calculateThrottleTime(parseInt(retryAfter || "")),
             error: response.body.error,
             errorCodes: response.body.error_codes,
             errorMessage: response.body.error_description,
@@ -73557,13 +73646,10 @@ ${serverError}`, correlationId);
       }
       /**
        * Checks a NetworkResponse object's RetryAfter header
-       * @param response
+       * @param response - Token response with case-insensitive header names.
        */
       static checkResponseForRetryAfter(response) {
-        if (response.headers) {
-          return response.headers.hasOwnProperty(HeaderNames2.RETRY_AFTER) && (response.status < 200 || response.status >= 300);
-        }
-        return false;
+        return getRetryAfterHeader2(response) !== void 0;
       }
       /**
        * Calculates the Unix-time value for a throttle to expire given throttleTime in seconds.
@@ -73580,7 +73666,13 @@ ${serverError}`, correlationId);
         cacheManager.removeItem(key, request.correlationId);
       }
     };
-    var NetworkError2 = class _NetworkError extends AuthError2 {
+    function getRetryAfterHeader2(response) {
+      if ((response.status < 200 || response.status >= 300) && response.headers) {
+        return getResponseHeader2(response.headers, HeaderNames2.RETRY_AFTER);
+      }
+      return void 0;
+    }
+    var NetworkError2 = class _NetworkError extends AuthError3 {
       constructor(error, httpStatus, responseHeaders) {
         super(error.errorCode, error.correlationId, error.errorMessage, error.subError);
         Object.setPrototypeOf(this, _NetworkError.prototype);
@@ -73651,7 +73743,8 @@ ${serverError}`, correlationId);
       let response;
       try {
         response = await invokeAsync2(networkClient.sendPostRequestAsync.bind(networkClient), NetworkClientSendPostRequestAsync2, logger33, performanceClient, correlationId)(tokenEndpoint, { ...options, correlationId, performanceClient });
-        const responseHeaders = response.headers || {};
+        const responseHeaders = normalizeResponseHeaders2(response.headers || {});
+        response = { ...response, headers: responseHeaders };
         performanceClient?.addFields({
           refreshTokenSize: response.body.refresh_token?.length || 0,
           httpVerToken: responseHeaders[HeaderNames2.X_MS_HTTP_VERSION] || "",
@@ -73659,19 +73752,19 @@ ${serverError}`, correlationId);
         }, correlationId);
       } catch (e) {
         if (e instanceof NetworkError2) {
-          const responseHeaders = e.responseHeaders;
+          const responseHeaders = e.responseHeaders ? normalizeResponseHeaders2(e.responseHeaders) : void 0;
           if (responseHeaders) {
             performanceClient?.addFields({
               httpVerToken: responseHeaders[HeaderNames2.X_MS_HTTP_VERSION] || "",
               requestId: responseHeaders[HeaderNames2.X_MS_REQUEST_ID] || "",
-              contentTypeHeader: responseHeaders[HeaderNames2.CONTENT_TYPE] || void 0,
-              contentLengthHeader: responseHeaders[HeaderNames2.CONTENT_LENGTH] || void 0,
+              contentTypeHeader: getResponseHeader2(responseHeaders, HeaderNames2.CONTENT_TYPE) || void 0,
+              contentLengthHeader: getResponseHeader2(responseHeaders, HeaderNames2.CONTENT_LENGTH) || void 0,
               httpStatus: e.httpStatus
             }, correlationId);
           }
           throw e.error;
         }
-        if (e instanceof AuthError2) {
+        if (e instanceof AuthError3) {
           throw e;
         } else {
           throw createClientAuthError2(networkError2, correlationId);
@@ -73874,6 +73967,9 @@ ${serverError}`, correlationId);
         if (request.logoutHint) {
           addLogoutHint2(parameters, request.logoutHint);
         }
+        if (request.popupOriginCheckDone) {
+          addPopupOriginCheckDone2(parameters);
+        }
         if (request.extraQueryParameters) {
           addExtraParameters2(parameters, request.extraQueryParameters);
         }
@@ -73977,6 +74073,9 @@ ${serverError}`, correlationId);
       addClaims2(parameters, request.correlationId, request.claims, authOptions.clientCapabilities, request.skipBrokerClaims);
       if (authOptions.instanceAware && (!request.extraQueryParameters || !Object.keys(request.extraQueryParameters).includes(INSTANCE_AWARE2))) {
         addInstanceAware2(parameters);
+      }
+      if (request.popupOriginCheckDone) {
+        addPopupOriginCheckDone2(parameters);
       }
       return parameters;
     }
@@ -74107,6 +74206,7 @@ ${serverError}`, correlationId);
           addRedirectUri2(parameters, request.redirectUri);
         }
         addScopes2(parameters, request.scopes, request.correlationId, true, this.config.authOptions.authority.options.OIDCOptions?.defaultScopes);
+        addResource2(parameters, request.resource);
         addGrantType2(parameters, GrantType2.REFRESH_TOKEN_GRANT);
         addClientInfo2(parameters);
         addLibraryInfo2(parameters, this.config.libraryInfo);
@@ -74276,7 +74376,7 @@ ${serverError}`, correlationId);
           }
           lastRequests.failedRequests.push(this.apiId, this.correlationId);
           if (error instanceof Error && !!error && error.toString()) {
-            if (error instanceof AuthError2) {
+            if (error instanceof AuthError3) {
               if (error.subError) {
                 lastRequests.errors.push(error.subError);
               } else if (error.errorCode) {
@@ -74931,7 +75031,7 @@ ${serverError}`, correlationId);
       [wwwAuthenticateHeaderMissing2]: "A 401 response was received from the Azure Arc Managed Identity, but the www-authenticate header is missing.",
       [wwwAuthenticateHeaderUnsupportedFormat2]: "A 401 response was received from the Azure Arc Managed Identity, but the www-authenticate header is in an unsupported format."
     };
-    var ManagedIdentityError2 = class _ManagedIdentityError extends AuthError2 {
+    var ManagedIdentityError2 = class _ManagedIdentityError extends AuthError3 {
       constructor(errorCode, correlationId) {
         super(errorCode, correlationId, ManagedIdentityErrorMessages2[errorCode]);
         this.name = "ManagedIdentityError";
@@ -75007,6 +75107,10 @@ ${serverError}`, correlationId);
         code: "loopback_server_timeout",
         desc: "Timed out waiting for auth code listener to be registered."
       },
+      loopbackServerQueryResponseNotSupported: {
+        code: "loopback_server_query_response_not_supported",
+        desc: "The loopback server received an OAuth response in the URL. Interactive authentication requires form_post."
+      },
       stateNotFoundError: {
         code: "state_not_found",
         desc: "State not found. Please verify that the request originated from msal."
@@ -75018,9 +75122,13 @@ ${serverError}`, correlationId);
       redirectUriNotSupported: {
         code: "redirect_uri_not_supported",
         desc: "RedirectUri is not supported in this scenario. Please remove redirectUri from the request."
+      },
+      unsupportedCcaInstanceAware: {
+        code: "unsupported_cca_instance_aware",
+        desc: "Instance-aware configuration is not supported by ConfidentialClientApplication."
       }
     };
-    var NodeAuthError2 = class _NodeAuthError extends AuthError2 {
+    var NodeAuthError2 = class _NodeAuthError extends AuthError3 {
       constructor(errorCode, correlationId, errorMessage) {
         super(errorCode, correlationId, errorMessage);
         this.name = "NodeAuthError";
@@ -75062,6 +75170,12 @@ ${serverError}`, correlationId);
         return new _NodeAuthError(NodeAuthErrorMessage2.loopbackServerTimeout.code, correlationId, `${NodeAuthErrorMessage2.loopbackServerTimeout.desc}`);
       }
       /**
+       * Creates an error thrown if the loopback server receives an OAuth response in a query string.
+       */
+      static createLoopbackServerQueryResponseNotSupportedError() {
+        return new _NodeAuthError(NodeAuthErrorMessage2.loopbackServerQueryResponseNotSupported.code, "", NodeAuthErrorMessage2.loopbackServerQueryResponseNotSupported.desc);
+      }
+      /**
        * Creates an error thrown when the state is not present.
        */
       static createStateNotFoundError(correlationId = "") {
@@ -75078,6 +75192,12 @@ ${serverError}`, correlationId);
        */
       static createRedirectUriNotSupportedError(correlationId = "") {
         return new _NodeAuthError(NodeAuthErrorMessage2.redirectUriNotSupported.code, correlationId, NodeAuthErrorMessage2.redirectUriNotSupported.desc);
+      }
+      /**
+       * Creates an error thrown when instance-aware behavior is requested for a confidential client.
+       */
+      static createUnsupportedCcaInstanceAwareError(correlationId = "") {
+        return new _NodeAuthError(NodeAuthErrorMessage2.unsupportedCcaInstanceAware.code, correlationId, NodeAuthErrorMessage2.unsupportedCcaInstanceAware.desc);
       }
     };
     var DEFAULT_AUTH_OPTIONS2 = {
@@ -76142,7 +76262,7 @@ ${serverError}`, correlationId);
       }
     };
     var name3 = "@azure/msal-node";
-    var version4 = "6.0.1";
+    var version4 = "7.2.0";
     var BaseClient2 = class {
       constructor(configuration) {
         this.config = buildClientConfiguration2(configuration);
@@ -76292,6 +76412,87 @@ ${serverError}`, correlationId);
       addExtraParameters2(parameters, request.extraQueryParameters || {});
       return getAuthorizeUrl2(authority, parameters);
     }
+    var activeSilentTokenRequests2 = /* @__PURE__ */ new WeakMap();
+    function acquireTokenSilentDeduped2(owner, logger33, silentRequestKey, correlationId, acquireToken) {
+      const existingRequests = activeSilentTokenRequests2.get(owner);
+      const activeRequests = existingRequests || /* @__PURE__ */ new Map();
+      if (!existingRequests) {
+        activeSilentTokenRequests2.set(owner, activeRequests);
+      }
+      const inProgressRequest = activeRequests.get(silentRequestKey);
+      if (inProgressRequest) {
+        logger33.verbose("acquireTokenSilent has been called previously, returning the result from the first call", correlationId);
+        return applyCallerCorrelationIdToResult2(inProgressRequest, correlationId);
+      }
+      logger33.verbose("acquireTokenSilent called for the first time, storing active request", correlationId);
+      const activeRequest = Promise.resolve().then(acquireToken).finally(() => {
+        activeRequests.delete(silentRequestKey);
+        if (activeRequests.size === 0) {
+          activeSilentTokenRequests2.delete(owner);
+        }
+      });
+      activeRequests.set(silentRequestKey, activeRequest);
+      return applyCallerCorrelationIdToResult2(activeRequest, correlationId);
+    }
+    function getSilentRequestKey2(input) {
+      const { request } = input;
+      const authority = input.requestType === "native" ? request.authority : input.authority;
+      const commonKeyFields = {
+        requestType: input.requestType,
+        clientId: input.requestType === "native" ? input.request.clientId : input.clientId,
+        authority,
+        scopes: canonicalizeRequestValues2(request.scopes),
+        claims: request.claims,
+        authenticationScheme: request.authenticationScheme,
+        resourceRequestMethod: request.resourceRequestMethod,
+        resourceRequestUri: request.resourceRequestUri,
+        forceRefresh: request.forceRefresh,
+        redirectUri: request.redirectUri || "",
+        resource: request.resource,
+        extraParameters: canonicalizeRequestValues2(request.extraParameters)
+      };
+      if (input.requestType === "native") {
+        return JSON.stringify({
+          ...commonKeyFields,
+          accountId: input.request.accountId,
+          shrNonce: input.request.shrNonce,
+          extraScopesToConsent: canonicalizeRequestValues2(input.request.extraScopesToConsent),
+          loginHint: input.request.loginHint,
+          prompt: input.request.prompt
+        });
+      }
+      const nonNativeRequest = input.request;
+      const thumbprint = getRequestThumbprint2(input.clientId, { ...nonNativeRequest, authority }, nonNativeRequest.account.homeAccountId);
+      return JSON.stringify({
+        ...thumbprint,
+        ...commonKeyFields,
+        accountTenantId: nonNativeRequest.account.tenantId,
+        accountEnvironment: nonNativeRequest.account.environment,
+        refreshTokenExpirationOffsetSeconds: nonNativeRequest.refreshTokenExpirationOffsetSeconds,
+        extraQueryParameters: canonicalizeRequestValues2(nonNativeRequest.extraQueryParameters),
+        skipBrokerClaims: thumbprint.embeddedClientId || nonNativeRequest.extraParameters?.[BROKER_CLIENT_ID2] ? nonNativeRequest.skipBrokerClaims : void 0
+      });
+    }
+    function snapshotNativeRequest2(request) {
+      return {
+        ...request,
+        scopes: [...request.scopes],
+        extraParameters: request.extraParameters ? { ...request.extraParameters } : void 0,
+        extraScopesToConsent: request.extraScopesToConsent ? [...request.extraScopesToConsent] : void 0
+      };
+    }
+    function canonicalizeRequestValues2(values) {
+      if (Array.isArray(values)) {
+        return Array.from(new Set(values.map((scope) => scope.trim()).filter((scope) => scope.length > 0))).sort();
+      }
+      return values ? Object.keys(values).sort().map((key) => [key, values[key]]) : void 0;
+    }
+    function applyCallerCorrelationIdToResult2(activeRequest, correlationId) {
+      return activeRequest.then((result) => ({
+        ...result,
+        correlationId
+      }));
+    }
     var ClientApplication2 = class {
       /**
        * Constructor for the ClientApplication
@@ -76363,7 +76564,7 @@ ${serverError}`, correlationId);
           this.logger.verbose("Auth code client created", validRequest.correlationId);
           return await authorizationCodeClient.acquireToken(validRequest, ApiId2.acquireTokenByCode, validatedAuthCodePayload);
         } catch (e) {
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             e.correlationId = validRequest.correlationId;
           }
           serverTelemetryManager.cacheFailedRequest(e);
@@ -76392,7 +76593,7 @@ ${serverError}`, correlationId);
           this.logger.verbose("Refresh token client created", validRequest.correlationId);
           return await refreshTokenClient.acquireToken(validRequest, ApiId2.acquireTokenByRefreshToken);
         } catch (e) {
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             e.correlationId = validRequest.correlationId;
           }
           serverTelemetryManager.cacheFailedRequest(e);
@@ -76404,6 +76605,7 @@ ${serverError}`, correlationId);
        *
        * This API expects the user to provide an account object and looks into the cache to retrieve the token if present.
        * There is also an optional "forceRefresh" boolean the user can send to bypass the cache for access_token and id_token.
+       * Concurrent requests with the same request thumbprint return the same in-progress result.
        * In case the refresh_token is expired or not found, an error is thrown
        * and the guidance is for the user to call any interactive token acquisition API (eg: `acquireTokenByCode()`).
        */
@@ -76413,9 +76615,22 @@ ${serverError}`, correlationId);
           ...await this.initializeBaseRequest(request),
           forceRefresh: request.forceRefresh || false
         };
+        if (!validRequest.account) {
+          return this.acquireTokenSilentAsync(validRequest, request.azureCloudOptions);
+        }
+        const authorityForThumbprint = Authority2.generateAuthority(validRequest.authority, request.azureCloudOptions || this.config.auth.azureCloudOptions);
+        const silentRequestKey = getSilentRequestKey2({
+          requestType: "non-native",
+          request: validRequest,
+          authority: authorityForThumbprint,
+          clientId: this.config.auth.clientId
+        });
+        return acquireTokenSilentDeduped2(this, this.logger, silentRequestKey, validRequest.correlationId, () => this.acquireTokenSilentAsync(validRequest, request.azureCloudOptions));
+      }
+      async acquireTokenSilentAsync(validRequest, azureCloudOptions) {
         const serverTelemetryManager = this.initializeServerTelemetryManager(ApiId2.acquireTokenSilent, validRequest.correlationId, validRequest.forceRefresh);
         try {
-          const discoveredAuthority = await this.createAuthority(validRequest.authority, validRequest.correlationId, void 0, request.azureCloudOptions);
+          const discoveredAuthority = await this.createAuthority(validRequest.authority, validRequest.correlationId, void 0, azureCloudOptions);
           const clientConfiguration = await this.buildOauthClientConfiguration(discoveredAuthority, validRequest.correlationId, validRequest.redirectUri || "", serverTelemetryManager);
           const silentFlowClient = new SilentFlowClient2(clientConfiguration, new StubPerformanceClient2());
           this.logger.verbose("Silent flow client created", validRequest.correlationId);
@@ -76430,7 +76645,7 @@ ${serverError}`, correlationId);
             throw error;
           }
         } catch (error) {
-          if (error instanceof AuthError2) {
+          if (error instanceof AuthError3) {
             error.correlationId = validRequest.correlationId;
           }
           serverTelemetryManager.cacheFailedRequest(error);
@@ -76477,7 +76692,7 @@ ${serverError}`, correlationId);
           this.logger.verbose("Username password client created", validRequest.correlationId);
           return await usernamePasswordClient.acquireToken(validRequest);
         } catch (e) {
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             e.correlationId = validRequest.correlationId;
           }
           serverTelemetryManager.cacheFailedRequest(e);
@@ -76639,13 +76854,17 @@ ${serverError}`, correlationId);
       }
       /**
        * Spins up a loopback server which returns the server response when the localhost redirectUri is hit
+       * @param expectedState - State sent in the authorization request
        * @param successTemplate
        * @param errorTemplate
        * @returns
        */
-      async listenForAuthCode(successTemplate, errorTemplate) {
+      async listenForAuthCode(expectedState, successTemplate, errorTemplate) {
         if (this.server) {
           throw NodeAuthError2.createLoopbackServerAlreadyExistsError();
+        }
+        if (!expectedState) {
+          throw NodeAuthError2.createStateNotFoundError("");
         }
         return new Promise((resolve, reject) => {
           this.server = http3.createServer((req, res) => {
@@ -76664,7 +76883,7 @@ ${serverError}`, correlationId);
               return;
             } else if (url2 === FORWARD_SLASH2) {
               if (method === "POST") {
-                this.handlePostRequest(req, res, resolve, successTemplate, errorTemplate);
+                this.handlePostRequest(req, res, resolve, expectedState, successTemplate, errorTemplate);
                 return;
               }
               res.end(successTemplate || "Auth code was successfully acquired. You can close this window now.");
@@ -76679,16 +76898,14 @@ ${serverError}`, correlationId);
                 res.end();
                 return;
               }
-              if (authCodeResponse.code) {
-                res.writeHead(HTTP_REDIRECT2, {
-                  location: redirectUri
-                });
-                res.end();
+              if (!this.isExpectedState(parsedUrl.searchParams, expectedState)) {
+                res.writeHead(400);
+                res.end("Invalid authorization response state.");
+                return;
               }
-              if (authCodeResponse.error) {
-                res.end(errorTemplate || `Error occurred: ${authCodeResponse.error}`);
-              }
-              resolve(authCodeResponse);
+              res.writeHead(400);
+              res.end("OAuth responses must use form_post and cannot be returned in the URL.");
+              reject(NodeAuthError2.createLoopbackServerQueryResponseNotSupportedError());
             } else {
               res.writeHead(200);
               res.end();
@@ -76708,7 +76925,7 @@ ${serverError}`, correlationId);
       /**
        * Handles POST requests for form_post response mode
        */
-      handlePostRequest(req, res, resolve, successTemplate, errorTemplate) {
+      handlePostRequest(req, res, resolve, expectedState, successTemplate, errorTemplate) {
         const contentType3 = req.headers["content-type"]?.split(";")[0]?.trim();
         if (contentType3 !== "application/x-www-form-urlencoded") {
           res.writeHead(415);
@@ -76732,6 +76949,11 @@ ${serverError}`, correlationId);
             res.end();
             return;
           }
+          if (!this.isExpectedState(new URLSearchParams(body), expectedState)) {
+            res.writeHead(400);
+            res.end("Invalid authorization response state.");
+            return;
+          }
           if (authCodeResponse.error) {
             res.writeHead(200);
             res.end(errorTemplate || `Error occurred: ${authCodeResponse.error}`);
@@ -76741,6 +76963,13 @@ ${serverError}`, correlationId);
           }
           resolve(authCodeResponse);
         });
+      }
+      /**
+       * Requires exactly one state value matching the pending authorization request.
+       */
+      isExpectedState(parameters, expectedState) {
+        const states = parameters.getAll("state");
+        return states.length === 1 && states[0] === expectedState;
       }
       /**
        * Get the port that the loopback server is running on
@@ -77006,7 +77235,7 @@ ${serverError}`, correlationId);
           this.logger.verbose("Device code client created", validRequest.correlationId);
           return await deviceCodeClient.acquireToken(validRequest);
         } catch (e) {
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             e.correlationId = validRequest.correlationId;
           }
           serverTelemetryManager.cacheFailedRequest(e);
@@ -77046,14 +77275,15 @@ ${serverError}`, correlationId);
         }
         const { verifier, challenge } = await this.cryptoProvider.generatePkceCodes();
         const loopbackClient = new LoopbackClient2(preferredPort);
-        const responseMode = remainingProperties.responseMode ?? ResponseMode$1.FORM_POST;
-        if (responseMode !== ResponseMode$1.QUERY && responseMode !== ResponseMode$1.FORM_POST) {
+        const responseMode = remainingProperties.responseMode;
+        if (responseMode !== void 0 && responseMode !== ResponseMode$1.FORM_POST) {
           throw createClientConfigurationError2(invalidResponseMode2, correlationId);
         }
+        const state5 = setRequestState2(this.cryptoProvider, remainingProperties.state ? this.cryptoProvider.base64Encode(remainingProperties.state) : remainingProperties.state, void 0, correlationId);
         let authCodeResponse = {};
         let authCodeListenerError = null;
         try {
-          const authCodeListener = loopbackClient.listenForAuthCode(successTemplate, errorTemplate).then((response) => {
+          const authCodeListener = loopbackClient.listenForAuthCode(state5, successTemplate, errorTemplate).then((response) => {
             authCodeResponse = response;
           }).catch((e) => {
             authCodeListenerError = e;
@@ -77064,9 +77294,10 @@ ${serverError}`, correlationId);
             correlationId,
             scopes: request.scopes || OIDC_DEFAULT_SCOPES2,
             redirectUri,
-            responseMode,
+            responseMode: ResponseMode$1.FORM_POST,
             codeChallenge: challenge,
-            codeChallengeMethod: CodeChallengeMethodValues2.S256
+            codeChallengeMethod: CodeChallengeMethodValues2.S256,
+            state: state5
           };
           const authCodeUrl = await this.getAuthCodeUrl(validRequest);
           await openBrowser(authCodeUrl);
@@ -77074,6 +77305,7 @@ ${serverError}`, correlationId);
           if (authCodeListenerError) {
             throw authCodeListenerError;
           }
+          this.validateState(state5, authCodeResponse.state || "", correlationId);
           if (authCodeResponse.error) {
             throw new ServerError2(authCodeResponse.error, correlationId, authCodeResponse.error_description, authCodeResponse.suberror);
           } else if (!authCodeResponse.code) {
@@ -77084,7 +77316,8 @@ ${serverError}`, correlationId);
             code: authCodeResponse.code,
             codeVerifier: verifier,
             clientInfo: clientInfo || "",
-            ...validRequest
+            ...validRequest,
+            state: remainingProperties.state
           };
           return await this.acquireTokenByCode(tokenRequest);
         } finally {
@@ -77101,7 +77334,8 @@ ${serverError}`, correlationId);
         this.logger.trace("acquireTokenSilent called", correlationId);
         enforceResourceParameter2(this.config.auth.isMcp, request);
         if (this.nativeBrokerPlugin) {
-          const brokerRequest = {
+          const nativeBrokerPlugin = this.nativeBrokerPlugin;
+          const brokerRequest = snapshotNativeRequest2({
             ...request,
             clientId: this.config.auth.clientId,
             scopes: request.scopes || OIDC_DEFAULT_SCOPES2,
@@ -77115,8 +77349,12 @@ ${serverError}`, correlationId);
             },
             accountId: request.account.nativeAccountId,
             forceRefresh: request.forceRefresh || false
-          };
-          return this.nativeBrokerPlugin.acquireTokenSilent(brokerRequest);
+          });
+          const silentRequestKey = getSilentRequestKey2({
+            requestType: "native",
+            request: brokerRequest
+          });
+          return acquireTokenSilentDeduped2(this, this.logger, silentRequestKey, correlationId, () => nativeBrokerPlugin.acquireTokenSilent(brokerRequest));
         }
         if (request.redirectUri) {
           if (!this.config.broker.nativeBrokerPlugin) {
@@ -77190,7 +77428,7 @@ ${serverError}`, correlationId);
               resolve(r);
               return;
             } catch (e) {
-              if (e instanceof AuthError2 && e.errorCode === NodeAuthErrorMessage2.noLoopbackServerExists.code) {
+              if (e instanceof AuthError3 && e.errorCode === NodeAuthErrorMessage2.noLoopbackServerExists.code) {
                 ticks++;
                 return;
               }
@@ -77713,6 +77951,9 @@ ${serverError}`, correlationId);
        * @param Configuration - configuration object for the MSAL ConfidentialClientApplication instance
        */
       constructor(configuration) {
+        if ("instanceAware" in configuration.auth && configuration.auth.instanceAware === true) {
+          throw NodeAuthError2.createUnsupportedCcaInstanceAwareError();
+        }
         super(configuration);
         const clientSecretNotEmpty = !!this.config.auth.clientSecret;
         const clientAssertionNotEmpty = !!this.config.auth.clientAssertion;
@@ -77742,6 +77983,26 @@ ${serverError}`, correlationId);
           );
         }
         this.appTokenProvider = void 0;
+      }
+      /**
+       * Creates the URL of the authorization request.
+       */
+      async getAuthCodeUrl(request) {
+        if (request.extraQueryParameters && Object.prototype.hasOwnProperty.call(request.extraQueryParameters, "instance_aware")) {
+          throw NodeAuthError2.createUnsupportedCcaInstanceAwareError(request.correlationId);
+        }
+        return super.getAuthCodeUrl(request);
+      }
+      /**
+       * Acquires a token by exchanging an authorization code.
+       */
+      async acquireTokenByCode(request, authCodePayload) {
+        const sanitizedAuthCodePayload = authCodePayload ? {
+          code: request.code,
+          state: authCodePayload.state,
+          nonce: request.nonce
+        } : void 0;
+        return super.acquireTokenByCode(request, sanitizedAuthCodePayload);
       }
       /**
        * This extensibility point only works for the client_credential flow, i.e. acquireTokenByClientCredential and
@@ -77804,7 +78065,7 @@ ${serverError}`, correlationId);
           this.logger.verbose("Client credential client created", validRequest.correlationId);
           return await clientCredentialClient.acquireToken(validRequest);
         } catch (e) {
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             e.correlationId = validRequest.correlationId;
           }
           serverTelemetryManager.cacheFailedRequest(e);
@@ -77835,7 +78096,7 @@ ${serverError}`, correlationId);
           this.logger.verbose("On behalf of client created", validRequest.correlationId);
           return await oboClient.acquireToken(validRequest);
         } catch (e) {
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             e.correlationId = validRequest.correlationId;
           }
           throw e;
@@ -77882,7 +78143,7 @@ ${serverError}`, correlationId);
           this.logger.verbose("UserFederatedIdentityCredential client created", validRequest.correlationId);
           return await ficClient.acquireToken(validRequest);
         } catch (e) {
-          if (e instanceof AuthError2) {
+          if (e instanceof AuthError3) {
             e.correlationId = validRequest.correlationId;
           }
           serverTelemetryManager.cacheFailedRequest(e);
@@ -78056,7 +78317,7 @@ ${serverError}`, correlationId);
             response = await networkClientHelper.sendGetRequestAsync(networkRequest.computeUri(), networkRequestOptions);
           }
         } catch (error) {
-          if (error instanceof AuthError2) {
+          if (error instanceof AuthError3) {
             throw error;
           } else {
             throw createClientAuthError2(networkError2, managedIdentityRequest.correlationId);
@@ -78447,7 +78708,7 @@ ${serverError}`, correlationId);
             throw createManagedIdentityError2(platformNotSupported2, "");
           }
           const expectedSecretFilePath = SUPPORTED_AZURE_ARC_PLATFORMS2[process.platform];
-          const fileName = path5.basename(secretFilePath);
+          const fileName = path6.basename(secretFilePath);
           if (!fileName.endsWith(".key")) {
             throw createManagedIdentityError2(invalidFileExtension2, "");
           }
@@ -78475,7 +78736,7 @@ ${serverError}`, correlationId);
           try {
             retryResponse = await networkClient.sendGetRequestAsync(networkRequest.computeUri(), networkRequestOptions);
           } catch (error) {
-            if (error instanceof AuthError2) {
+            if (error instanceof AuthError3) {
               throw error;
             } else {
               throw createClientAuthError2(networkError2, "");
@@ -79117,7 +79378,7 @@ ${serverError}`, correlationId);
     };
     var PromptValue3 = PromptValue$1;
     var ResponseMode3 = ResponseMode$1;
-    exports2.AuthError = AuthError2;
+    exports2.AuthError = AuthError3;
     exports2.AuthErrorCodes = AuthErrorCodes;
     exports2.AzureCloudInstance = AzureCloudInstance2;
     exports2.ClientAssertion = ClientAssertion2;
@@ -79148,11 +79409,9 @@ ${serverError}`, correlationId);
 // node_modules/@azure/identity/dist/commonjs/msal/msal.js
 var require_msal = __commonJS({
   "node_modules/@azure/identity/dist/commonjs/msal/msal.js"(exports2, module2) {
-    var __create2 = Object.create;
     var __defProp2 = Object.defineProperty;
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
-    var __getProtoOf2 = Object.getPrototypeOf;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
     var __export2 = (target, all) => {
       for (var name3 in all)
@@ -79166,21 +79425,14 @@ var require_msal = __commonJS({
       }
       return to;
     };
-    var __toESM2 = (mod, isNodeMode, target) => (target = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
-      // If the importer is in node compatibility mode or this is not an ESM
-      // file that has been converted to a CommonJS file using a Babel-
-      // compatible transform (i.e. "__esModule" has not been set), then set
-      // "default" to the CommonJS "module.exports" for node compatibility.
-      isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
-      mod
-    ));
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var msal_exports = {};
     __export2(msal_exports, {
-      msalCommon: () => msalCommon
+      AuthError: () => import_msal_node3.AuthError,
+      LogLevel: () => import_msal_node3.LogLevel
     });
     module2.exports = __toCommonJS2(msal_exports);
-    var msalCommon = __toESM2(require_msal_node2());
+    var import_msal_node3 = require_msal_node2();
   }
 });
 
@@ -79210,7 +79462,6 @@ var require_utils3 = __commonJS({
       deserializeAuthenticationRecord: () => deserializeAuthenticationRecord3,
       ensureValidMsalToken: () => ensureValidMsalToken2,
       getAuthority: () => getAuthority2,
-      getAuthorityHost: () => getAuthorityHost2,
       getKnownAuthorities: () => getKnownAuthorities2,
       getMSALLogLevel: () => getMSALLogLevel2,
       handleMsalError: () => handleMsalError2,
@@ -79222,8 +79473,8 @@ var require_utils3 = __commonJS({
     module2.exports = __toCommonJS2(utils_exports);
     var import_errors24 = require_errors2();
     var import_logging29 = require_logging();
-    var import_constants37 = require_constants4();
-    var import_core_util18 = require_commonjs4();
+    var import_constants38 = require_constants4();
+    var import_core_util22 = require_commonjs4();
     var import_abort_controller7 = require_commonjs3();
     var import_msal2 = require_msal();
     var logger33 = (0, import_logging29.credentialLogger)("IdentityUtils");
@@ -79247,16 +79498,9 @@ var require_utils3 = __commonJS({
         throw error(`Response had no "accessToken" property.`);
       }
     }
-    function getAuthorityHost2(options) {
-      let authorityHost = options?.authorityHost;
-      if (!authorityHost && import_core_util18.isNodeLike) {
-        authorityHost = process.env.AZURE_AUTHORITY_HOST;
-      }
-      return authorityHost ?? import_constants37.DefaultAuthorityHost;
-    }
     function getAuthority2(tenantId, host) {
       if (!host) {
-        host = import_constants37.DefaultAuthorityHost;
+        host = import_constants38.DefaultAuthorityHost;
       }
       if (new RegExp(`${tenantId}/?$`).test(host)) {
         return host;
@@ -79273,21 +79517,21 @@ var require_utils3 = __commonJS({
       }
       return [];
     }
-    var defaultLoggerCallback2 = (credLogger, platform2 = import_core_util18.isNode ? "Node" : "Browser") => (level, message, containsPii) => {
+    var defaultLoggerCallback2 = (credLogger, platform2 = import_core_util22.isNodeLike ? "Node" : "Browser") => (level, message, containsPii) => {
       if (containsPii) {
         return;
       }
       switch (level) {
-        case import_msal2.msalCommon.LogLevel.Error:
+        case import_msal2.LogLevel.Error:
           credLogger.info(`MSAL ${platform2} V2 error: ${message}`);
           return;
-        case import_msal2.msalCommon.LogLevel.Info:
+        case import_msal2.LogLevel.Info:
           credLogger.info(`MSAL ${platform2} V2 info message: ${message}`);
           return;
-        case import_msal2.msalCommon.LogLevel.Verbose:
+        case import_msal2.LogLevel.Verbose:
           credLogger.info(`MSAL ${platform2} V2 verbose message: ${message}`);
           return;
-        case import_msal2.msalCommon.LogLevel.Warning:
+        case import_msal2.LogLevel.Warning:
           credLogger.info(`MSAL ${platform2} V2 warning: ${message}`);
           return;
       }
@@ -79295,19 +79539,19 @@ var require_utils3 = __commonJS({
     function getMSALLogLevel2(logLevel) {
       switch (logLevel) {
         case "error":
-          return import_msal2.msalCommon.LogLevel.Error;
+          return import_msal2.LogLevel.Error;
         case "info":
-          return import_msal2.msalCommon.LogLevel.Info;
+          return import_msal2.LogLevel.Info;
         case "verbose":
-          return import_msal2.msalCommon.LogLevel.Verbose;
+          return import_msal2.LogLevel.Verbose;
         case "warning":
-          return import_msal2.msalCommon.LogLevel.Warning;
+          return import_msal2.LogLevel.Warning;
         default:
-          return import_msal2.msalCommon.LogLevel.Info;
+          return import_msal2.LogLevel.Info;
       }
     }
     function randomUUID6() {
-      return (0, import_core_util18.randomUUID)();
+      return (0, import_core_util22.randomUUID)();
     }
     function handleMsalError2(scopes, error, getTokenOptions) {
       if (error.name === "AuthError" || error.name === "ClientAuthError" || error.name === "BrowserAuthError") {
@@ -79342,7 +79586,12 @@ var require_utils3 = __commonJS({
         );
         return error;
       }
-      return new import_errors24.AuthenticationRequiredError({ scopes, getTokenOptions, message: error.message });
+      return new import_errors24.AuthenticationRequiredError({
+        scopes,
+        getTokenOptions,
+        message: error.message,
+        cause: error
+      });
     }
     function publicToMsal2(account) {
       return {
@@ -79355,9 +79604,9 @@ var require_utils3 = __commonJS({
     }
     function msalToPublic2(clientId, account) {
       const record = {
-        authority: account.environment ?? import_constants37.DefaultAuthority,
+        authority: account.environment ?? import_constants38.DefaultAuthority,
         homeAccountId: account.homeAccountId,
-        tenantId: account.tenantId || import_constants37.DefaultTenantId,
+        tenantId: account.tenantId || import_constants38.DefaultTenantId,
         username: account.username,
         clientId,
         version: LatestAuthenticationRecordVersion2
@@ -79501,6 +79750,43 @@ var require_utils4 = __commonJS({
   }
 });
 
+// node_modules/@azure/identity/dist/commonjs/util/authorityHost.js
+var require_authorityHost = __commonJS({
+  "node_modules/@azure/identity/dist/commonjs/util/authorityHost.js"(exports2, module2) {
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all) => {
+      for (var name3 in all)
+        __defProp2(target, name3, { get: all[name3], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var authorityHost_exports = {};
+    __export2(authorityHost_exports, {
+      getAuthorityHost: () => getAuthorityHost2
+    });
+    module2.exports = __toCommonJS2(authorityHost_exports);
+    var import_core_util22 = require_commonjs4();
+    var import_constants38 = require_constants4();
+    function getAuthorityHost2(options) {
+      let authorityHost = options?.authorityHost;
+      if (!authorityHost && import_core_util22.isNodeLike) {
+        authorityHost = process.env.AZURE_AUTHORITY_HOST;
+      }
+      return authorityHost ?? import_constants38.DefaultAuthorityHost;
+    }
+  }
+});
+
 // node_modules/@azure/identity/dist/commonjs/client/identityClient.js
 var require_identityClient = __commonJS({
   "node_modules/@azure/identity/dist/commonjs/client/identityClient.js"(exports2, module2) {
@@ -79523,27 +79809,26 @@ var require_identityClient = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var identityClient_exports = {};
     __export2(identityClient_exports, {
-      IdentityClient: () => IdentityClient2,
-      getIdentityClientAuthorityHost: () => getIdentityClientAuthorityHost2
+      IdentityClient: () => IdentityClient2
     });
     module2.exports = __toCommonJS2(identityClient_exports);
     var import_core_client9 = require_commonjs8();
-    var import_core_util18 = require_commonjs4();
-    var import_core_rest_pipeline27 = require_commonjs6();
+    var import_core_rest_pipeline28 = require_commonjs6();
+    var import_core_util22 = require_commonjs4();
     var import_errors24 = require_errors2();
     var import_identityTokenEndpoint2 = require_identityTokenEndpoint();
-    var import_constants37 = require_constants4();
+    var import_constants38 = require_constants4();
     var import_tracing23 = require_tracing();
     var import_logging29 = require_logging();
     var import_utils10 = require_utils4();
+    var import_authorityHost3 = require_authorityHost();
     var noCorrelationId2 = "noCorrelationId";
-    function getIdentityClientAuthorityHost2(options) {
-      let authorityHost = options?.authorityHost;
-      if (import_core_util18.isNode) {
-        authorityHost = authorityHost ?? process.env.AZURE_AUTHORITY_HOST;
-      }
-      return authorityHost ?? import_constants37.DefaultAuthorityHost;
-    }
+    var HttpStatus2 = {
+      CLIENT_ERROR_RANGE_START: 400,
+      CLIENT_ERROR_RANGE_END: 499,
+      SERVER_ERROR_RANGE_START: 500,
+      SERVER_ERROR_RANGE_END: 599
+    };
     var IdentityClient2 = class extends import_core_client9.ServiceClient {
       authorityHost;
       allowLoggingAccountIdentifiers;
@@ -79552,9 +79837,9 @@ var require_identityClient = __commonJS({
       // used for WorkloadIdentity
       tokenCredentialOptions;
       constructor(options) {
-        const packageDetails = `azsdk-js-identity/${import_constants37.SDK_VERSION}`;
+        const packageDetails = `azsdk-js-identity/${import_constants38.SDK_VERSION}`;
         const userAgentPrefix = options?.userAgentOptions?.userAgentPrefix ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}` : `${packageDetails}`;
-        const baseUri = getIdentityClientAuthorityHost2(options);
+        const baseUri = (0, import_authorityHost3.getAuthorityHost)(options);
         if (!baseUri.startsWith("https:")) {
           throw new Error("The authorityHost address must use the 'https' protocol.");
         }
@@ -79630,12 +79915,12 @@ var require_identityClient = __commonJS({
           async (updatedOptions) => {
             try {
               const urlSuffix = (0, import_identityTokenEndpoint2.getIdentityTokenEndpointSuffix)(tenantId);
-              const request = (0, import_core_rest_pipeline27.createPipelineRequest)({
+              const request = (0, import_core_rest_pipeline28.createPipelineRequest)({
                 url: `${this.authorityHost}/${tenantId}/${urlSuffix}`,
                 method: "POST",
                 body: query.toString(),
                 abortSignal: options.abortSignal,
-                headers: (0, import_core_rest_pipeline27.createHttpHeaders)({
+                headers: (0, import_core_rest_pipeline28.createHttpHeaders)({
                   Accept: "application/json",
                   "Content-Type": "application/x-www-form-urlencoded"
                 }),
@@ -79695,28 +79980,28 @@ var require_identityClient = __commonJS({
       }
       // The MSAL network module methods follow
       async sendGetRequestAsync(url2, options) {
-        const request = (0, import_core_rest_pipeline27.createPipelineRequest)({
+        const request = (0, import_core_rest_pipeline28.createPipelineRequest)({
           url: url2,
           method: "GET",
           body: options?.body,
           allowInsecureConnection: this.allowInsecureConnection,
-          headers: (0, import_core_rest_pipeline27.createHttpHeaders)(options?.headers),
+          headers: (0, import_core_rest_pipeline28.createHttpHeaders)(options?.headers),
           abortSignal: this.generateAbortSignal(noCorrelationId2)
         });
         const response = await this.sendRequest(request);
         this.logIdentifiers(response);
         return {
-          body: response.bodyAsText ? JSON.parse(response.bodyAsText) : void 0,
+          body: this.parseResponseBody(response),
           headers: response.headers.toJSON(),
           status: response.status
         };
       }
       async sendPostRequestAsync(url2, options) {
-        const request = (0, import_core_rest_pipeline27.createPipelineRequest)({
+        const request = (0, import_core_rest_pipeline28.createPipelineRequest)({
           url: url2,
           method: "POST",
           body: options?.body,
-          headers: (0, import_core_rest_pipeline27.createHttpHeaders)(options?.headers),
+          headers: (0, import_core_rest_pipeline28.createHttpHeaders)(options?.headers),
           allowInsecureConnection: this.allowInsecureConnection,
           // MSAL doesn't send the correlation ID on the get requests.
           abortSignal: this.generateAbortSignal(this.getCorrelationId(options))
@@ -79724,7 +80009,7 @@ var require_identityClient = __commonJS({
         const response = await this.sendRequest(request);
         this.logIdentifiers(response);
         return {
-          body: response.bodyAsText ? JSON.parse(response.bodyAsText) : void 0,
+          body: this.parseResponseBody(response),
           headers: response.headers.toJSON(),
           status: response.status
         };
@@ -79761,7 +80046,7 @@ var require_identityClient = __commonJS({
           }
           const base64Metadata = accessToken.split(".")[1];
           const { appid, upn, tid, oid } = JSON.parse(
-            Buffer.from(base64Metadata, "base64").toString("utf8")
+            (0, import_core_util22.uint8ArrayToString)((0, import_core_util22.stringToUint8Array)(base64Metadata, "base64url"), "utf-8")
           );
           import_logging29.logger.info(
             `[Authenticated account] Client ID: ${appid}. Tenant ID: ${tid}. User Principal Name: ${upn || unavailableUpn}. Object ID (user): ${oid}`
@@ -79772,6 +80057,41 @@ var require_identityClient = __commonJS({
             e.message
           );
         }
+      }
+      /**
+       * Parses the response body if possible. Add error properties if parsing fails.
+       * This follows MSAL INetworkModule behavior so the response is in expected format.
+       */
+      parseResponseBody(response) {
+        let parsedBody;
+        try {
+          parsedBody = JSON.parse(response.bodyAsText || "");
+        } catch (error) {
+          import_logging29.logger.info(`IdentityClient: Could not parse response body: ${error}`);
+          let errorType;
+          let errorDescriptionHelper;
+          if (response.status >= HttpStatus2.CLIENT_ERROR_RANGE_START && response.status <= HttpStatus2.CLIENT_ERROR_RANGE_END) {
+            errorType = "client_error";
+            errorDescriptionHelper = "A client";
+          } else if (response.status >= HttpStatus2.SERVER_ERROR_RANGE_START && response.status <= HttpStatus2.SERVER_ERROR_RANGE_END) {
+            errorType = "server_error";
+            errorDescriptionHelper = "A server";
+          } else {
+            errorType = "unknown_error";
+            errorDescriptionHelper = "An unknown";
+          }
+          const errorDescriptionLines = [
+            `${errorDescriptionHelper} error occured.`,
+            `Http status code: ${response.status}`,
+            `Http status message: ${response.bodyAsText || "Unknown"}`,
+            `Headers: ${JSON.stringify(response.headers)}`
+          ];
+          parsedBody = {
+            error: errorType,
+            error_description: errorDescriptionLines.join("\n")
+          };
+        }
+        return parsedBody;
       }
     };
   }
@@ -79948,7 +80268,7 @@ var require_tenantIdUtils = __commonJS({
       resolveTenantId: () => resolveTenantId2
     });
     module2.exports = __toCommonJS2(tenantIdUtils_exports);
-    var import_constants37 = require_constants4();
+    var import_constants38 = require_constants4();
     var import_logging29 = require_logging();
     var import_processMultiTenantRequest2 = require_processMultiTenantRequest();
     function checkTenantId2(logger33, tenantId) {
@@ -79966,9 +80286,9 @@ var require_tenantIdUtils = __commonJS({
         return tenantId;
       }
       if (!clientId) {
-        clientId = import_constants37.DeveloperSignOnClientId;
+        clientId = import_constants38.DeveloperSignOnClientId;
       }
-      if (clientId !== import_constants37.DeveloperSignOnClientId) {
+      if (clientId !== import_constants38.DeveloperSignOnClientId) {
         return "common";
       }
       return "organizations";
@@ -79978,7 +80298,7 @@ var require_tenantIdUtils = __commonJS({
         return [];
       }
       if (additionallyAllowedTenants.includes("*")) {
-        return import_constants37.ALL_TENANTS;
+        return import_constants38.ALL_TENANTS;
       }
       return additionallyAllowedTenants;
     }
@@ -80070,14 +80390,80 @@ var init_is_wsl = __esm({
   }
 });
 
+// node_modules/powershell-utils/index.js
+var import_node_process2, import_node_buffer, import_node_util, import_node_child_process, execFile2, powerShellPath, argumentsPrefix, encodeCommand, escapeArgument, createArguments, createExecFileOptions, executePowerShell;
+var init_powershell_utils = __esm({
+  "node_modules/powershell-utils/index.js"() {
+    import_node_process2 = __toESM(require("node:process"), 1);
+    import_node_buffer = require("node:buffer");
+    import_node_util = require("node:util");
+    import_node_child_process = __toESM(require("node:child_process"), 1);
+    execFile2 = (0, import_node_util.promisify)(import_node_child_process.default.execFile);
+    powerShellPath = () => `${import_node_process2.default.env.SYSTEMROOT || import_node_process2.default.env.windir || String.raw`C:\Windows`}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe`;
+    argumentsPrefix = [
+      "-NoProfile",
+      "-NonInteractive",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-EncodedCommand"
+    ];
+    encodeCommand = (command) => import_node_buffer.Buffer.from(command, "utf16le").toString("base64");
+    escapeArgument = (value) => `'${String(value).replaceAll(/['‘’‚‛]/g, (match) => match + match)}'`;
+    createArguments = (command) => [...argumentsPrefix, encodeCommand(command)];
+    createExecFileOptions = (options) => ({
+      encoding: "utf8",
+      ...options,
+      shell: false
+    });
+    executePowerShell = async (command, options = {}) => {
+      const {
+        powerShellPath: psPath,
+        ...execFileOptions
+      } = options;
+      return execFile2(
+        psPath ?? powerShellPath(),
+        createArguments(command),
+        createExecFileOptions(execFileOptions)
+      );
+    };
+    executePowerShell.argumentsPrefix = argumentsPrefix;
+    executePowerShell.encodeCommand = encodeCommand;
+    executePowerShell.escapeArgument = escapeArgument;
+    executePowerShell.createArguments = createArguments;
+  }
+});
+
+// node_modules/wsl-utils/utilities.js
+function parseMountPointFromConfig(content) {
+  for (const line of content.split("\n")) {
+    if (/^\s*#/.test(line)) {
+      continue;
+    }
+    const match = /^\s*root\s*=\s*(?<mountPoint>"[^"]*"|'[^']*'|[^#]*)/.exec(line);
+    if (!match) {
+      continue;
+    }
+    return match.groups.mountPoint.trim().replaceAll(/^["']|["']$/g, "");
+  }
+}
+var init_utilities = __esm({
+  "node_modules/wsl-utils/utilities.js"() {
+  }
+});
+
 // node_modules/wsl-utils/index.js
-var import_node_process2, import_promises, wslDrivesMountPoint, powerShellPathFromWsl, powerShellPath;
+var import_node_path, import_node_util2, import_node_child_process2, import_promises, execFile3, wslDrivesMountPoint, powerShellPathFromWsl, powerShellPath2, canAccessPowerShellPromise, canAccessPowerShell, wslDefaultBrowser, isUrl, convertPath, convertWslPathToWindows;
 var init_wsl_utils = __esm({
   "node_modules/wsl-utils/index.js"() {
-    import_node_process2 = __toESM(require("node:process"), 1);
+    import_node_path = __toESM(require("node:path"), 1);
+    import_node_util2 = require("node:util");
+    import_node_child_process2 = __toESM(require("node:child_process"), 1);
     import_promises = __toESM(require("node:fs/promises"), 1);
     init_is_wsl();
+    init_powershell_utils();
+    init_utilities();
     init_is_wsl();
+    execFile3 = (0, import_node_util2.promisify)(import_node_child_process2.default.execFile);
     wslDrivesMountPoint = /* @__PURE__ */ (() => {
       const defaultMountPoint = "/mnt/";
       let mountPoint;
@@ -80096,11 +80482,11 @@ var init_wsl_utils = __esm({
           return defaultMountPoint;
         }
         const configContent = await import_promises.default.readFile(configFilePath, { encoding: "utf8" });
-        const configMountPoint = /(?<!#.*)root\s*=\s*(?<mountPoint>.*)/g.exec(configContent);
-        if (!configMountPoint) {
+        const parsedMountPoint = parseMountPointFromConfig(configContent);
+        if (parsedMountPoint === void 0) {
           return defaultMountPoint;
         }
-        mountPoint = configMountPoint.groups.mountPoint.trim();
+        mountPoint = parsedMountPoint;
         mountPoint = mountPoint.endsWith("/") ? mountPoint : `${mountPoint}/`;
         return mountPoint;
       };
@@ -80109,11 +80495,43 @@ var init_wsl_utils = __esm({
       const mountPoint = await wslDrivesMountPoint();
       return `${mountPoint}c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe`;
     };
-    powerShellPath = async () => {
-      if (is_wsl_default) {
-        return powerShellPathFromWsl();
+    powerShellPath2 = is_wsl_default ? powerShellPathFromWsl : powerShellPath;
+    canAccessPowerShell = async () => {
+      canAccessPowerShellPromise ??= (async () => {
+        try {
+          const psPath = await powerShellPath2();
+          await import_promises.default.access(psPath, import_promises.constants.X_OK);
+          return true;
+        } catch {
+          return false;
+        }
+      })();
+      return canAccessPowerShellPromise;
+    };
+    wslDefaultBrowser = async () => {
+      const psPath = await powerShellPath2();
+      const command = String.raw`(Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice").ProgId`;
+      const { stdout } = await executePowerShell(command, {
+        powerShellPath: psPath,
+        cwd: import_node_path.default.dirname(psPath)
+      });
+      return stdout.trim();
+    };
+    isUrl = (path6) => /^[a-z]+:\/\//i.test(path6);
+    convertPath = async (flag, path6) => {
+      const wslpathArguments = path6.startsWith("-") ? [flag, "--", path6] : [flag, path6];
+      try {
+        const { stdout } = await execFile3("wslpath", wslpathArguments, { encoding: "utf8" });
+        return stdout.replace(/\r?\n$/, "") || path6;
+      } catch {
+        return path6;
       }
-      return `${import_node_process2.default.env.SYSTEMROOT || import_node_process2.default.env.windir || String.raw`C:\Windows`}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe`;
+    };
+    convertWslPathToWindows = async (paths) => {
+      const isBatch = Array.isArray(paths);
+      const pathArray = isBatch ? paths : [paths];
+      const results = await Promise.all(pathArray.map((path6) => isUrl(path6) ? path6 : convertPath("-aw", path6)));
+      return isBatch ? results : results[0];
     };
   }
 });
@@ -80153,13 +80571,13 @@ async function defaultBrowserId() {
   }
   return browserId;
 }
-var import_node_util, import_node_process3, import_node_child_process, execFileAsync;
+var import_node_util3, import_node_process3, import_node_child_process3, execFileAsync;
 var init_default_browser_id = __esm({
   "node_modules/default-browser-id/index.js"() {
-    import_node_util = require("node:util");
+    import_node_util3 = require("node:util");
     import_node_process3 = __toESM(require("node:process"), 1);
-    import_node_child_process = require("node:child_process");
-    execFileAsync = (0, import_node_util.promisify)(import_node_child_process.execFile);
+    import_node_child_process3 = require("node:child_process");
+    execFileAsync = (0, import_node_util3.promisify)(import_node_child_process3.execFile);
   }
 });
 
@@ -80176,24 +80594,32 @@ async function runAppleScript(script, { humanReadableOutput = true, signal } = {
   const { stdout } = await execFileAsync2("osascript", ["-e", script, outputArguments], execOptions);
   return stdout.trim();
 }
-var import_node_process4, import_node_util2, import_node_child_process2, execFileAsync2;
+var import_node_process4, import_node_util4, import_node_child_process4, execFileAsync2;
 var init_run_applescript = __esm({
   "node_modules/run-applescript/index.js"() {
     import_node_process4 = __toESM(require("node:process"), 1);
-    import_node_util2 = require("node:util");
-    import_node_child_process2 = require("node:child_process");
-    execFileAsync2 = (0, import_node_util2.promisify)(import_node_child_process2.execFile);
+    import_node_util4 = require("node:util");
+    import_node_child_process4 = require("node:child_process");
+    execFileAsync2 = (0, import_node_util4.promisify)(import_node_child_process4.execFile);
   }
 });
 
 // node_modules/bundle-name/index.js
 async function bundleName(bundleId) {
+  if (typeof bundleId !== "string") {
+    throw new TypeError("Expected a string bundle identifier");
+  }
+  if (!bundleIdentifierPattern.test(bundleId)) {
+    throw new TypeError(`Invalid bundle identifier: ${JSON.stringify(bundleId)}`);
+  }
   return runAppleScript(`tell application "Finder" to set app_path to application file id "${bundleId}" as string
 tell application "System Events" to get value of property list item "CFBundleName" of property list file (app_path & ":Contents:Info.plist")`);
 }
+var bundleIdentifierPattern;
 var init_bundle_name = __esm({
   "node_modules/bundle-name/index.js"() {
     init_run_applescript();
+    bundleIdentifierPattern = /^[^\n\r"\\]+$/u;
   }
 });
 
@@ -80217,13 +80643,13 @@ async function defaultBrowser(_execFileAsync = execFileAsync3) {
   const baseIdByHyphen = hyphenIndex === -1 ? void 0 : id.slice(0, hyphenIndex);
   return windowsBrowserProgIds[id] ?? windowsBrowserProgIds[baseIdByDot] ?? windowsBrowserProgIds[baseIdByHyphen] ?? { name: id, id };
 }
-var import_node_process5, import_node_util3, import_node_child_process3, execFileAsync3, windowsBrowserProgIds, _windowsBrowserProgIdMap, UnknownBrowserError;
+var import_node_process5, import_node_util5, import_node_child_process5, execFileAsync3, windowsBrowserProgIds, _windowsBrowserProgIdMap, UnknownBrowserError;
 var init_windows = __esm({
   "node_modules/default-browser/windows.js"() {
     import_node_process5 = __toESM(require("node:process"), 1);
-    import_node_util3 = require("node:util");
-    import_node_child_process3 = require("node:child_process");
-    execFileAsync3 = (0, import_node_util3.promisify)(import_node_child_process3.execFile);
+    import_node_util5 = require("node:util");
+    import_node_child_process5 = require("node:child_process");
+    execFileAsync3 = (0, import_node_util5.promisify)(import_node_child_process5.execFile);
     windowsBrowserProgIds = {
       MSEdgeHTM: { name: "Edge", id: "com.microsoft.edge" },
       // The missing `L` is correct.
@@ -80267,17 +80693,28 @@ async function defaultBrowser2() {
   }
   throw new Error("Only macOS, Linux, and Windows are supported");
 }
-var import_node_util4, import_node_process6, import_node_child_process4, execFileAsync4, titleize;
+var import_node_util6, import_node_process6, import_node_child_process6, execFileAsync4, titleize;
 var init_default_browser = __esm({
   "node_modules/default-browser/index.js"() {
-    import_node_util4 = require("node:util");
+    import_node_util6 = require("node:util");
     import_node_process6 = __toESM(require("node:process"), 1);
-    import_node_child_process4 = require("node:child_process");
+    import_node_child_process6 = require("node:child_process");
     init_default_browser_id();
     init_bundle_name();
     init_windows();
-    execFileAsync4 = (0, import_node_util4.promisify)(import_node_child_process4.execFile);
+    init_windows();
+    execFileAsync4 = (0, import_node_util6.promisify)(import_node_child_process6.execFile);
     titleize = (string) => string.toLowerCase().replaceAll(/(?:^|\s|-)\S/g, (x) => x.toUpperCase());
+  }
+});
+
+// node_modules/is-in-ssh/index.js
+var import_node_process7, isInSsh, is_in_ssh_default;
+var init_is_in_ssh = __esm({
+  "node_modules/is-in-ssh/index.js"() {
+    import_node_process7 = __toESM(require("node:process"), 1);
+    isInSsh = Boolean(import_node_process7.default.env.SSH_CONNECTION || import_node_process7.default.env.SSH_CLIENT || import_node_process7.default.env.SSH_TTY);
+    is_in_ssh_default = isInSsh;
   }
 });
 
@@ -80288,31 +80725,6 @@ __export(open_exports, {
   default: () => open_default,
   openApp: () => openApp
 });
-async function getWindowsDefaultBrowserFromWsl() {
-  const powershellPath = await powerShellPath();
-  const rawCommand = String.raw`(Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice").ProgId`;
-  const encodedCommand = import_node_buffer.Buffer.from(rawCommand, "utf16le").toString("base64");
-  const { stdout } = await execFile6(
-    powershellPath,
-    [
-      "-NoProfile",
-      "-NonInteractive",
-      "-ExecutionPolicy",
-      "Bypass",
-      "-EncodedCommand",
-      encodedCommand
-    ],
-    { encoding: "utf8" }
-  );
-  const progId = stdout.trim();
-  const browserMap = {
-    ChromeHTML: "com.google.chrome",
-    BraveHTML: "com.brave.Browser",
-    MSEdgeHTM: "com.microsoft.edge",
-    FirefoxURL: "org.mozilla.firefox"
-  };
-  return browserMap[progId] ? { id: browserMap[progId] } : {};
-}
 function detectArchBinary(binary) {
   if (typeof binary === "string" || Array.isArray(binary)) {
     return binary;
@@ -80323,7 +80735,7 @@ function detectArchBinary(binary) {
   }
   return archBinary;
 }
-function detectPlatformBinary({ [platform]: platformBinary }, { wsl }) {
+function detectPlatformBinary({ [platform]: platformBinary }, { wsl } = {}) {
   if (wsl && is_wsl_default) {
     return detectArchBinary(wsl);
   }
@@ -80332,35 +80744,38 @@ function detectPlatformBinary({ [platform]: platformBinary }, { wsl }) {
   }
   return detectArchBinary(platformBinary);
 }
-var import_node_process7, import_node_buffer, import_node_path, import_node_url, import_node_util5, import_node_child_process5, import_promises2, import_meta, execFile6, __dirname, localXdgOpenPath, platform, arch, pTryEach, baseOpen, open, openApp, apps, open_default;
+var import_node_process8, import_node_path2, import_node_url, import_node_child_process7, import_promises2, import_meta, fallbackAttemptSymbol, __dirname, localXdgOpenPath, platform, arch, tryEachApp, baseOpen, open, openApp, apps, open_default;
 var init_open = __esm({
   "node_modules/open/index.js"() {
-    import_node_process7 = __toESM(require("node:process"), 1);
-    import_node_buffer = require("node:buffer");
-    import_node_path = __toESM(require("node:path"), 1);
+    import_node_process8 = __toESM(require("node:process"), 1);
+    import_node_path2 = __toESM(require("node:path"), 1);
     import_node_url = require("node:url");
-    import_node_util5 = require("node:util");
-    import_node_child_process5 = __toESM(require("node:child_process"), 1);
+    import_node_child_process7 = __toESM(require("node:child_process"), 1);
     import_promises2 = __toESM(require("node:fs/promises"), 1);
     init_wsl_utils();
+    init_powershell_utils();
     init_define_lazy_prop();
     init_default_browser();
     init_is_inside_container();
+    init_is_in_ssh();
     import_meta = {};
-    execFile6 = (0, import_node_util5.promisify)(import_node_child_process5.default.execFile);
-    __dirname = import_node_path.default.dirname((0, import_node_url.fileURLToPath)(import_meta.url));
-    localXdgOpenPath = import_node_path.default.join(__dirname, "xdg-open");
-    ({ platform, arch } = import_node_process7.default);
-    pTryEach = async (array, mapper) => {
-      let latestError;
-      for (const item of array) {
+    fallbackAttemptSymbol = /* @__PURE__ */ Symbol("fallbackAttempt");
+    __dirname = import_meta.url ? import_node_path2.default.dirname((0, import_node_url.fileURLToPath)(import_meta.url)) : "";
+    localXdgOpenPath = import_node_path2.default.join(__dirname, "xdg-open");
+    ({ platform, arch } = import_node_process8.default);
+    tryEachApp = async (apps2, opener) => {
+      if (apps2.length === 0) {
+        return;
+      }
+      const errors = [];
+      for (const app2 of apps2) {
         try {
-          return await mapper(item);
+          return await opener(app2);
         } catch (error) {
-          latestError = error;
+          errors.push(error);
         }
       }
-      throw latestError;
+      throw new AggregateError(errors, "Failed to open in all supported apps");
     };
     baseOpen = async (options) => {
       options = {
@@ -80370,45 +80785,62 @@ var init_open = __esm({
         allowNonzeroExitCode: false,
         ...options
       };
+      const isFallbackAttempt = options[fallbackAttemptSymbol] === true;
+      delete options[fallbackAttemptSymbol];
       if (Array.isArray(options.app)) {
-        return pTryEach(options.app, (singleApp) => baseOpen({
+        return tryEachApp(options.app, (singleApp) => baseOpen({
           ...options,
-          app: singleApp
+          app: singleApp,
+          [fallbackAttemptSymbol]: true
         }));
       }
       let { name: app2, arguments: appArguments = [] } = options.app ?? {};
       appArguments = [...appArguments];
       if (Array.isArray(app2)) {
-        return pTryEach(app2, (appName) => baseOpen({
+        return tryEachApp(app2, (appName) => baseOpen({
           ...options,
           app: {
             name: appName,
             arguments: appArguments
-          }
+          },
+          [fallbackAttemptSymbol]: true
         }));
       }
       if (app2 === "browser" || app2 === "browserPrivate") {
         const ids = {
           "com.google.chrome": "chrome",
           "google-chrome.desktop": "chrome",
-          "com.brave.Browser": "brave",
+          "com.brave.browser": "brave",
           "org.mozilla.firefox": "firefox",
           "firefox.desktop": "firefox",
           "com.microsoft.msedge": "edge",
           "com.microsoft.edge": "edge",
           "com.microsoft.edgemac": "edge",
-          "microsoft-edge.desktop": "edge"
+          "microsoft-edge.desktop": "edge",
+          "com.apple.safari": "safari"
         };
         const flags = {
           chrome: "--incognito",
           brave: "--incognito",
           firefox: "--private-window",
           edge: "--inPrivate"
+          // Safari doesn't support private mode via command line
         };
-        const browser = is_wsl_default ? await getWindowsDefaultBrowserFromWsl() : await defaultBrowser2();
-        if (browser.id in ids) {
-          const browserName = ids[browser.id];
+        let browser;
+        if (is_wsl_default) {
+          const progId = await wslDefaultBrowser();
+          const browserInfo = _windowsBrowserProgIdMap.get(progId);
+          browser = browserInfo ?? {};
+        } else {
+          browser = await defaultBrowser2();
+        }
+        const browserId = browser.id?.toLowerCase();
+        if (Object.hasOwn(ids, browserId)) {
+          const browserName = ids[browserId];
           if (app2 === "browserPrivate") {
+            if (browserName === "safari") {
+              throw new Error("Safari doesn't support opening in private mode via command line");
+            }
             appArguments.push(flags[browserName]);
           }
           return baseOpen({
@@ -80424,6 +80856,10 @@ var init_open = __esm({
       let command;
       const cliArguments = [];
       const childProcessOptions = {};
+      let shouldUseWindowsInWsl = false;
+      if (is_wsl_default && !isInsideContainer() && !is_in_ssh_default && !app2) {
+        shouldUseWindowsInWsl = await canAccessPowerShell();
+      }
       if (platform === "darwin") {
         command = "open";
         if (options.wait) {
@@ -80438,35 +80874,38 @@ var init_open = __esm({
         if (app2) {
           cliArguments.push("-a", app2);
         }
-      } else if (platform === "win32" || is_wsl_default && !isInsideContainer() && !app2) {
-        command = await powerShellPath();
-        cliArguments.push(
-          "-NoProfile",
-          "-NonInteractive",
-          "-ExecutionPolicy",
-          "Bypass",
-          "-EncodedCommand"
-        );
+      } else if (platform === "win32" || shouldUseWindowsInWsl) {
+        command = await powerShellPath2();
+        cliArguments.push(...executePowerShell.argumentsPrefix);
         if (!is_wsl_default) {
           childProcessOptions.windowsVerbatimArguments = true;
         }
-        const encodedArguments = ["Start"];
+        if (is_wsl_default && options.target) {
+          options.target = await convertWslPathToWindows(options.target);
+        }
+        const encodedArguments = ["$ProgressPreference = 'SilentlyContinue';", "Start"];
         if (options.wait) {
           encodedArguments.push("-Wait");
         }
         if (app2) {
-          encodedArguments.push(`"\`"${app2}\`""`);
+          encodedArguments.push(executePowerShell.escapeArgument(app2));
           if (options.target) {
             appArguments.push(options.target);
           }
         } else if (options.target) {
-          encodedArguments.push(`"${options.target}"`);
+          encodedArguments.push(executePowerShell.escapeArgument(options.target));
         }
         if (appArguments.length > 0) {
-          appArguments = appArguments.map((argument) => `"\`"${argument}\`""`);
+          appArguments = appArguments.map((argument) => executePowerShell.escapeArgument(argument));
           encodedArguments.push("-ArgumentList", appArguments.join(","));
         }
-        options.target = import_node_buffer.Buffer.from(encodedArguments.join(" "), "utf16le").toString("base64");
+        options.target = executePowerShell.encodeCommand(encodedArguments.join(" "));
+        if (!options.wait) {
+          childProcessOptions.stdio = "ignore";
+        }
+        if (is_wsl_default) {
+          childProcessOptions.cwd = import_node_path2.default.dirname(command);
+        }
       } else {
         if (app2) {
           command = app2;
@@ -80478,7 +80917,7 @@ var init_open = __esm({
             exeLocalXdgOpen = true;
           } catch {
           }
-          const useSystemXdgOpen = import_node_process7.default.versions.electron ?? (platform === "android" || isBundled || !exeLocalXdgOpen);
+          const useSystemXdgOpen = import_node_process8.default.versions.electron ?? (platform === "android" || isBundled || !exeLocalXdgOpen);
           command = useSystemXdgOpen ? "xdg-open" : localXdgOpenPath;
         }
         if (appArguments.length > 0) {
@@ -80495,12 +80934,12 @@ var init_open = __esm({
       if (options.target) {
         cliArguments.push(options.target);
       }
-      const subprocess = import_node_child_process5.default.spawn(command, cliArguments, childProcessOptions);
+      const subprocess = import_node_child_process7.default.spawn(command, cliArguments, childProcessOptions);
       if (options.wait) {
         return new Promise((resolve, reject) => {
           subprocess.once("error", reject);
           subprocess.once("close", (exitCode) => {
-            if (!options.allowNonzeroExitCode && exitCode > 0) {
+            if (!options.allowNonzeroExitCode && exitCode !== 0) {
               reject(new Error(`Exited with code ${exitCode}`));
               return;
             }
@@ -80508,8 +80947,30 @@ var init_open = __esm({
           });
         });
       }
+      if (isFallbackAttempt || platform === "win32" || shouldUseWindowsInWsl) {
+        return new Promise((resolve, reject) => {
+          subprocess.once("error", reject);
+          subprocess.once("spawn", () => {
+            subprocess.once("close", (exitCode) => {
+              subprocess.off("error", reject);
+              if (isFallbackAttempt && exitCode !== 0) {
+                reject(new Error(`Exited with code ${exitCode}`));
+                return;
+              }
+              subprocess.unref();
+              resolve(subprocess);
+            });
+          });
+        });
+      }
       subprocess.unref();
-      return subprocess;
+      return new Promise((resolve, reject) => {
+        subprocess.once("error", reject);
+        subprocess.once("spawn", () => {
+          subprocess.off("error", reject);
+          resolve(subprocess);
+        });
+      });
     };
     open = (target, options) => {
       if (typeof target !== "string") {
@@ -80536,11 +80997,15 @@ var init_open = __esm({
         }
       });
     };
-    apps = {};
+    apps = {
+      browser: "browser",
+      browserPrivate: "browserPrivate"
+    };
     defineLazyProperty(apps, "chrome", () => detectPlatformBinary({
       darwin: "google chrome",
       win32: "chrome",
-      linux: ["google-chrome", "google-chrome-stable", "chromium"]
+      // `chromium-browser` is the older deb package name used by Ubuntu/Debian before snap.
+      linux: ["google-chrome", "google-chrome-stable", "chromium", "chromium-browser"]
     }, {
       wsl: {
         ia32: "/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe",
@@ -80571,8 +81036,9 @@ var init_open = __esm({
     }, {
       wsl: "/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
     }));
-    defineLazyProperty(apps, "browser", () => "browser");
-    defineLazyProperty(apps, "browserPrivate", () => "browserPrivate");
+    defineLazyProperty(apps, "safari", () => detectPlatformBinary({
+      darwin: "Safari"
+    }));
     open_default = open;
   }
 });
@@ -80622,6 +81088,7 @@ var require_msalClient = __commonJS({
     var import_regionalAuthority2 = require_regionalAuthority();
     var import_logger19 = require_commonjs2();
     var import_tenantIdUtils20 = require_tenantIdUtils();
+    var import_authorityHost3 = require_authorityHost();
     var msalLogger2 = (0, import_logging29.credentialLogger)("MsalClient");
     function generateMsalConfiguration2(clientId, tenantId, msalClientOptions = {}) {
       const resolvedTenant = (0, import_tenantIdUtils20.resolveTenantId)(
@@ -80629,9 +81096,9 @@ var require_msalClient = __commonJS({
         tenantId,
         clientId
       );
-      const authority = (0, import_utils10.getAuthority)(resolvedTenant, (0, import_utils10.getAuthorityHost)(msalClientOptions));
+      const authority = (0, import_utils10.getAuthority)(resolvedTenant, (0, import_authorityHost3.getAuthorityHost)(msalClientOptions));
       const httpClient = new import_identityClient4.IdentityClient({
-        ...msalClientOptions.tokenCredentialOptions,
+        ...msalClientOptions,
         authorityHost: authority,
         loggingOptions: msalClientOptions.loggingOptions
       });
@@ -80741,7 +81208,7 @@ var require_msalClient = __commonJS({
       }
       function calculateRequestAuthority(options) {
         if (options?.tenantId) {
-          return (0, import_utils10.getAuthority)(options.tenantId, (0, import_utils10.getAuthorityHost)(createMsalClientOptions));
+          return (0, import_utils10.getAuthority)(options.tenantId, (0, import_authorityHost3.getAuthorityHost)(createMsalClientOptions));
         }
         return state5.msalConfig.auth.authority;
       }
@@ -81052,6 +81519,66 @@ var require_msalClient = __commonJS({
   }
 });
 
+// node_modules/@azure/identity/dist/commonjs/util/certificatesUtils.js
+var require_certificatesUtils = __commonJS({
+  "node_modules/@azure/identity/dist/commonjs/util/certificatesUtils.js"(exports2, module2) {
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all) => {
+      for (var name3 in all)
+        __defProp2(target, name3, { get: all[name3], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var certificatesUtils_exports = {};
+    __export2(certificatesUtils_exports, {
+      canParseAsX509Certificate: () => canParseAsX509Certificate2,
+      extractPemCertificateKeys: () => extractPemCertificateKeys2
+    });
+    module2.exports = __toCommonJS2(certificatesUtils_exports);
+    var import_crypto5 = require("crypto");
+    function extractPemCertificateKeys2(pemContent) {
+      const certificatePattern = /(-+BEGIN CERTIFICATE-+)(\n\r?|\r\n?)([A-Za-z0-9+/\n\r]+=*)(\n\r?|\r\n?)(-+END CERTIFICATE-+)/g;
+      const publicKeys = [];
+      let match;
+      do {
+        match = certificatePattern.exec(pemContent);
+        if (match) {
+          publicKeys.push(match[3]);
+        }
+      } while (match);
+      if (publicKeys.length === 0) {
+        throw new Error("The file at the specified path does not contain a PEM-encoded certificate.");
+      }
+      return publicKeys;
+    }
+    function canParseAsX509Certificate2(pemCert) {
+      try {
+        const pemContents = extractPemCertificateKeys2(pemCert);
+        for (let i = 0; i < pemContents.length; i++) {
+          const pemContent = pemContents[i];
+          const fullPemCertificate = `-----BEGIN CERTIFICATE-----
+${pemContent}
+-----END CERTIFICATE-----`;
+          new import_crypto5.X509Certificate(fullPemCertificate);
+        }
+        return true;
+      } catch (extractError) {
+        return false;
+      }
+    }
+  }
+});
+
 // node_modules/@azure/identity/dist/commonjs/credentials/clientCertificateCredential.js
 var require_clientCertificateCredential = __commonJS({
   "node_modules/@azure/identity/dist/commonjs/credentials/clientCertificateCredential.js"(exports2, module2) {
@@ -81084,6 +81611,7 @@ var require_clientCertificateCredential = __commonJS({
     var import_logging29 = require_logging();
     var import_promises6 = require("node:fs/promises");
     var import_tracing23 = require_tracing();
+    var import_certificatesUtils3 = require_certificatesUtils();
     var credentialName6 = "ClientCertificateCredential";
     var logger33 = (0, import_logging29.credentialLogger)(credentialName6);
     var ClientCertificateCredential3 = class {
@@ -81120,8 +81648,7 @@ var require_clientCertificateCredential = __commonJS({
         }
         this.msalClient = (0, import_msalClient11.createMsalClient)(clientId, tenantId, {
           ...options,
-          logger: logger33,
-          tokenCredentialOptions: options
+          logger: logger33
         });
       }
       /**
@@ -81176,18 +81703,7 @@ var require_clientCertificateCredential = __commonJS({
       const certificatePath = certificateConfiguration.certificatePath;
       const certificateContents = certificate || await (0, import_promises6.readFile)(certificatePath, "utf8");
       const x5c = sendCertificateChain ? certificateContents : void 0;
-      const certificatePattern = /(-+BEGIN CERTIFICATE-+)(\n\r?|\r\n?)([A-Za-z0-9+/\n\r]+=*)(\n\r?|\r\n?)(-+END CERTIFICATE-+)/g;
-      const publicKeys = [];
-      let match;
-      do {
-        match = certificatePattern.exec(certificateContents);
-        if (match) {
-          publicKeys.push(match[3]);
-        }
-      } while (match);
-      if (publicKeys.length === 0) {
-        throw new Error("The file at the specified path does not contain a PEM-encoded certificate.");
-      }
+      const publicKeys = (0, import_certificatesUtils3.extractPemCertificateKeys)(certificateContents);
       const thumbprint = (0, import_node_crypto11.createHash)("sha1").update(Buffer.from(publicKeys[0], "base64")).digest("hex").toUpperCase();
       const thumbprintSha256 = (0, import_node_crypto11.createHash)("sha256").update(Buffer.from(publicKeys[0], "base64")).digest("hex").toUpperCase();
       return {
@@ -81314,8 +81830,7 @@ var require_clientSecretCredential = __commonJS({
         );
         this.msalClient = (0, import_msalClient11.createMsalClient)(clientId, tenantId, {
           ...options,
-          logger: logger33,
-          tokenCredentialOptions: options
+          logger: logger33
         });
       }
       /**
@@ -81423,8 +81938,7 @@ var require_usernamePasswordCredential = __commonJS({
         this.username = username;
         this.password = password;
         this.msalClient = (0, import_msalClient11.createMsalClient)(clientId, this.tenantId, {
-          ...options,
-          tokenCredentialOptions: options ?? {}
+          ...options
         });
       }
       /**
@@ -81510,8 +82024,8 @@ var require_environmentCredential = __commonJS({
       "AZURE_CLIENT_SEND_CERTIFICATE_CHAIN"
     ];
     function getAdditionallyAllowedTenants2() {
-      const additionallyAllowedValues = process.env.AZURE_ADDITIONALLY_ALLOWED_TENANTS ?? "";
-      return additionallyAllowedValues.split(";");
+      const additionallyAllowedValues = process.env.AZURE_ADDITIONALLY_ALLOWED_TENANTS;
+      return additionallyAllowedValues ? additionallyAllowedValues.split(";") : void 0;
     }
     var credentialName6 = "EnvironmentCredential";
     var logger33 = (0, import_logging29.credentialLogger)(credentialName6);
@@ -81554,9 +82068,13 @@ var require_environmentCredential = __commonJS({
         const assigned = (0, import_logging29.processEnvVars)(AllSupportedEnvironmentVariables2).assigned.join(", ");
         logger33.info(`Found the following environment variables: ${assigned}`);
         const tenantId = process.env.AZURE_TENANT_ID, clientId = process.env.AZURE_CLIENT_ID, clientSecret = process.env.AZURE_CLIENT_SECRET;
-        const additionallyAllowedTenantIds = getAdditionallyAllowedTenants2();
+        const additionallyAllowedTenants = options?.additionallyAllowedTenants ?? getAdditionallyAllowedTenants2();
         const sendCertificateChain = getSendCertificateChain2();
-        const newOptions = { ...options, additionallyAllowedTenantIds, sendCertificateChain };
+        const newOptions = {
+          ...options,
+          additionallyAllowedTenants,
+          sendCertificateChain
+        };
         if (tenantId) {
           (0, import_tenantIdUtils20.checkTenantId)(logger33, tenantId);
         }
@@ -81655,12 +82173,12 @@ var require_imdsRetryPolicy = __commonJS({
       imdsRetryPolicy: () => imdsRetryPolicy2
     });
     module2.exports = __toCommonJS2(imdsRetryPolicy_exports);
-    var import_core_rest_pipeline27 = require_commonjs6();
-    var import_core_util18 = require_commonjs4();
+    var import_core_rest_pipeline28 = require_commonjs6();
+    var import_core_util22 = require_commonjs4();
     var DEFAULT_CLIENT_MAX_RETRY_INTERVAL3 = 1e3 * 64;
     var MIN_DELAY_FOR_410_MS2 = 3e3;
     function imdsRetryPolicy2(msiRetryConfig) {
-      return (0, import_core_rest_pipeline27.retryPolicy)(
+      return (0, import_core_rest_pipeline28.retryPolicy)(
         [
           {
             name: "imdsRetryPolicy",
@@ -81669,7 +82187,7 @@ var require_imdsRetryPolicy = __commonJS({
                 return { skipStrategy: true };
               }
               const initialDelayMs = response?.status === 410 ? Math.max(MIN_DELAY_FOR_410_MS2, msiRetryConfig.startDelayInMs) : msiRetryConfig.startDelayInMs;
-              return (0, import_core_util18.calculateRetryDelay)(retryCount, {
+              return (0, import_core_util22.calculateRetryDelay)(retryCount, {
                 retryDelayInMs: initialDelayMs,
                 maxRetryDelayInMs: DEFAULT_CLIENT_MAX_RETRY_INTERVAL3
               });
@@ -81709,8 +82227,8 @@ var require_imdsMsi = __commonJS({
       imdsMsi: () => imdsMsi2
     });
     module2.exports = __toCommonJS2(imdsMsi_exports);
-    var import_core_rest_pipeline27 = require_commonjs6();
-    var import_core_util18 = require_commonjs4();
+    var import_core_rest_pipeline28 = require_commonjs6();
+    var import_core_util22 = require_commonjs4();
     var import_logging29 = require_logging();
     var import_utils10 = require_utils4();
     var import_tracing23 = require_tracing();
@@ -81732,7 +82250,7 @@ var require_imdsMsi = __commonJS({
         // intentionally not including any query
         url: `${url2}`,
         method: "GET",
-        headers: (0, import_core_rest_pipeline27.createHttpHeaders)(rawHeaders)
+        headers: (0, import_core_rest_pipeline28.createHttpHeaders)(rawHeaders)
       };
     }
     var imdsMsi2 = {
@@ -81756,7 +82274,7 @@ var require_imdsMsi = __commonJS({
           getTokenOptions ?? {},
           async (updatedOptions) => {
             requestOptions.tracingOptions = updatedOptions.tracingOptions;
-            const request = (0, import_core_rest_pipeline27.createPipelineRequest)(requestOptions);
+            const request = (0, import_core_rest_pipeline28.createPipelineRequest)(requestOptions);
             request.timeout = updatedOptions.requestOptions?.timeout || 1e3;
             request.allowInsecureConnection = true;
             let response;
@@ -81764,7 +82282,7 @@ var require_imdsMsi = __commonJS({
               logger33.info(`${msiName3}: Pinging the Azure IMDS endpoint`);
               response = await identityClient.sendRequest(request);
             } catch (err) {
-              if ((0, import_core_util18.isError)(err)) {
+              if ((0, import_core_util22.isError)(err)) {
                 logger33.verbose(`${msiName3}: Caught error ${err.name}: ${err.message}`);
               }
               logger33.info(`${msiName3}: The Azure IMDS endpoint is unavailable`);
@@ -81856,9 +82374,8 @@ var require_clientAssertionCredential = __commonJS({
         this.options = options;
         this.getAssertion = getAssertion;
         this.msalClient = (0, import_msalClient11.createMsalClient)(clientId, tenantId, {
-          ...options,
-          logger: logger33,
-          tokenCredentialOptions: this.options
+          ...this.options,
+          logger: logger33
         });
       }
       /**
@@ -81916,7 +82433,8 @@ var require_workloadIdentityCredential = __commonJS({
     var workloadIdentityCredential_exports = {};
     __export2(workloadIdentityCredential_exports, {
       SupportedWorkloadEnvironmentVariables: () => SupportedWorkloadEnvironmentVariables2,
-      WorkloadIdentityCredential: () => WorkloadIdentityCredential3
+      WorkloadIdentityCredential: () => WorkloadIdentityCredential3,
+      parseAndValidateCustomTokenProxy: () => parseAndValidateCustomTokenProxy2
     });
     module2.exports = __toCommonJS2(workloadIdentityCredential_exports);
     var import_logging29 = require_logging();
@@ -81924,6 +82442,9 @@ var require_workloadIdentityCredential = __commonJS({
     var import_errors24 = require_errors2();
     var import_tenantIdUtils20 = require_tenantIdUtils();
     var import_promises6 = require("node:fs/promises");
+    var import_core_rest_pipeline28 = require_commonjs6();
+    var import_certificatesUtils3 = require_certificatesUtils();
+    var import_node_fs6 = require("node:fs");
     var credentialName6 = "WorkloadIdentityCredential";
     var SupportedWorkloadEnvironmentVariables2 = [
       "AZURE_TENANT_ID",
@@ -81931,11 +82452,77 @@ var require_workloadIdentityCredential = __commonJS({
       "AZURE_FEDERATED_TOKEN_FILE"
     ];
     var logger33 = (0, import_logging29.credentialLogger)(credentialName6);
+    var ErrorMessages2 = {
+      FAILED_TO_PARSE_TOKEN_PROXY: (endpoint, error) => `Failed to parse custom token proxy URL "${endpoint}": ${error}`,
+      INVALID_HTTPS_SCHEME: (protocol) => `Custom token endpoint must use https scheme, got "${protocol}"`,
+      TOKEN_ENDPOINT_NO_USER_INFO: (url2) => `Custom token endpoint URL "${url2}" must not contain user info`,
+      TOKEN_ENDPOINT_NO_QUERY: (url2) => `Custom token endpoint URL "${url2}" must not contain a query`,
+      TOKEN_ENDPOINT_NO_FRAGMENT: (url2) => `Custom token endpoint URL "${url2}" must not contain a fragment`,
+      CA_FILE_EMPTY: (file) => `CA certificate file is empty: ${file}`,
+      FAILED_TO_READ_CA_FILE: (file, error) => `Failed to read CA certificate file: ${file}. ${error}`,
+      INVALID_CA_CERTIFICATES: `Invalid CA certificate data: no valid PEM certificates found`,
+      INVALID_FILE_PATH: (path6) => `Invalid file path provided ${path6}.`,
+      NO_FILE_CONTENT: (path6) => `No content on the file ${path6}.`,
+      NO_CA_SOURCE: `No CA certificate source specified.`,
+      CLIENT_ID_REQUIRED: `clientId is a required parameter. In DefaultAzureCredential and ManagedIdentityCredential, this can be provided as an environment variable - "AZURE_CLIENT_ID".
+        See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`,
+      TENANT_ID_REQUIRED: `tenantId is a required parameter. In DefaultAzureCredential and ManagedIdentityCredential, this can be provided as an environment variable - "AZURE_TENANT_ID".
+        See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`,
+      TOKEN_FILE_PATH_REQUIRED: `federatedTokenFilePath is a required parameter. In DefaultAzureCredential and ManagedIdentityCredential, this can be provided as an environment variable - "AZURE_FEDERATED_TOKEN_FILE".
+        See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`,
+      TOKEN_PROXY_NOT_SET: `AZURE_KUBERNETES_TOKEN_PROXY is not set but other custom endpoint-related environment variables are present`,
+      CA_FILE_AND_DATA_EXCLUSIVE: `AZURE_KUBERNETES_CA_FILE and AZURE_KUBERNETES_CA_DATA are mutually exclusive. Specify only one.`,
+      MISSING_ENV_VARS: `tenantId, clientId, and federatedTokenFilePath are required parameters. 
+      In DefaultAzureCredential and ManagedIdentityCredential, these can be provided as environment variables - 
+      "AZURE_TENANT_ID",
+      "AZURE_CLIENT_ID",
+      "AZURE_FEDERATED_TOKEN_FILE". See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`
+    };
+    function parseAndValidateCustomTokenProxy2(endpoint) {
+      let tokenProxy;
+      try {
+        tokenProxy = new URL(endpoint);
+      } catch (error) {
+        throw new import_errors24.CredentialUnavailableError(
+          `${credentialName6}: is unavailable. ${ErrorMessages2.FAILED_TO_PARSE_TOKEN_PROXY(endpoint, error)}`
+        );
+      }
+      if (tokenProxy.protocol !== "https:") {
+        throw new import_errors24.CredentialUnavailableError(
+          `${credentialName6}: is unavailable. ${ErrorMessages2.INVALID_HTTPS_SCHEME(tokenProxy.protocol)}`
+        );
+      }
+      if (tokenProxy.username || tokenProxy.password) {
+        throw new import_errors24.CredentialUnavailableError(
+          `${credentialName6}: is unavailable. ${ErrorMessages2.TOKEN_ENDPOINT_NO_USER_INFO(tokenProxy.toString())}`
+        );
+      }
+      if (tokenProxy.search) {
+        throw new import_errors24.CredentialUnavailableError(
+          `${credentialName6}: is unavailable. ${ErrorMessages2.TOKEN_ENDPOINT_NO_QUERY(tokenProxy.toString())}`
+        );
+      }
+      if (tokenProxy.hash) {
+        throw new import_errors24.CredentialUnavailableError(
+          `${credentialName6}: is unavailable. ${ErrorMessages2.TOKEN_ENDPOINT_NO_FRAGMENT(tokenProxy.toString())}`
+        );
+      }
+      if (!tokenProxy.pathname || tokenProxy.pathname === "") {
+        tokenProxy.pathname = "/";
+      }
+      return tokenProxy.toString();
+    }
     var WorkloadIdentityCredential3 = class {
       client;
       azureFederatedTokenFileContent = void 0;
       cacheDate = void 0;
       federatedTokenFilePath;
+      // AKS proxy CA caching - persists across token requests
+      cachedTlsSettings;
+      cachedCaData;
+      caData;
+      caFile;
+      sniName;
       /**
        * WorkloadIdentityCredential supports Microsoft Entra Workload ID on Kubernetes.
        *
@@ -81953,21 +82540,47 @@ var require_workloadIdentityCredential = __commonJS({
         }
         if (!clientId) {
           throw new import_errors24.CredentialUnavailableError(
-            `${credentialName6}: is unavailable. clientId is a required parameter. In DefaultAzureCredential and ManagedIdentityCredential, this can be provided as an environment variable - "AZURE_CLIENT_ID".
-        See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`
+            `${credentialName6}: is unavailable. ${ErrorMessages2.CLIENT_ID_REQUIRED}`
           );
         }
         if (!tenantId) {
           throw new import_errors24.CredentialUnavailableError(
-            `${credentialName6}: is unavailable. tenantId is a required parameter. In DefaultAzureCredential and ManagedIdentityCredential, this can be provided as an environment variable - "AZURE_TENANT_ID".
-        See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`
+            `${credentialName6}: is unavailable. ${ErrorMessages2.TENANT_ID_REQUIRED}`
           );
         }
         if (!this.federatedTokenFilePath) {
           throw new import_errors24.CredentialUnavailableError(
-            `${credentialName6}: is unavailable. federatedTokenFilePath is a required parameter. In DefaultAzureCredential and ManagedIdentityCredential, this can be provided as an environment variable - "AZURE_FEDERATED_TOKEN_FILE".
-        See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`
+            `${credentialName6}: is unavailable. ${ErrorMessages2.TOKEN_FILE_PATH_REQUIRED}`
           );
+        }
+        if (workloadIdentityCredentialOptions.enableAzureProxy) {
+          const kubernetesTokenProxy = process.env.AZURE_KUBERNETES_TOKEN_PROXY;
+          const kubernetesSNIName = process.env.AZURE_KUBERNETES_SNI_NAME;
+          const kubernetesCAFile = process.env.AZURE_KUBERNETES_CA_FILE;
+          const kubernetesCAData = process.env.AZURE_KUBERNETES_CA_DATA;
+          if (!kubernetesTokenProxy) {
+            if (kubernetesSNIName || kubernetesCAFile || kubernetesCAData) {
+              throw new import_errors24.CredentialUnavailableError(
+                `${credentialName6}: is unavailable. ${ErrorMessages2.TOKEN_PROXY_NOT_SET}`
+              );
+            }
+            logger33.info(
+              `enableAzureProxy is true but AZURE_KUBERNETES_TOKEN_PROXY is not set, using normal authentication flow`
+            );
+          } else {
+            const tokenProxy = parseAndValidateCustomTokenProxy2(kubernetesTokenProxy);
+            if (kubernetesCAFile && kubernetesCAData) {
+              throw new import_errors24.CredentialUnavailableError(
+                `${credentialName6}: is unavailable. ${ErrorMessages2.CA_FILE_AND_DATA_EXCLUSIVE}`
+              );
+            }
+            this.caData = kubernetesCAData;
+            this.caFile = kubernetesCAFile;
+            this.sniName = kubernetesSNIName;
+            const proxyClient = this.createAksProxyClient(tokenProxy);
+            workloadIdentityCredentialOptions.httpClient = proxyClient;
+            logger33.info(`${credentialName6}: Using proxy client for token requests`);
+          }
         }
         logger33.info(
           `Invoking ClientAssertionCredential with tenant ID: ${tenantId}, clientId: ${workloadIdentityCredentialOptions.clientId} and federated token path: [REDACTED]`
@@ -81976,8 +82589,89 @@ var require_workloadIdentityCredential = __commonJS({
           tenantId,
           clientId,
           this.readFileContents.bind(this),
-          options
+          workloadIdentityCredentialOptions
         );
+      }
+      /**
+       * Creates a proxy HttpClient that intercepts token requests and redirects them to the Kubernetes endpoint
+       * Caching is handled at the credential level to persist across token requests
+       */
+      createAksProxyClient(tokenEndpoint) {
+        const defaultClient = (0, import_core_rest_pipeline28.createDefaultHttpClient)();
+        this.cachedTlsSettings = this.getTlsSettings();
+        return {
+          sendRequest: async (request) => {
+            const requestUrl = new URL(request.url);
+            logger33.info(
+              `${credentialName6}: Redirecting request to Kubernetes endpoint: ${tokenEndpoint}`
+            );
+            const proxyUrl = new URL(tokenEndpoint);
+            const requestPath = requestUrl.pathname.replace(/^\//, "");
+            const combinedPath = proxyUrl.pathname.endsWith("/") ? proxyUrl.pathname + requestPath : proxyUrl.pathname + "/" + requestPath;
+            const newUrl = new URL(proxyUrl.origin);
+            newUrl.pathname = combinedPath;
+            newUrl.search = requestUrl.search;
+            newUrl.hash = requestUrl.hash;
+            request.url = newUrl.toString();
+            request.tlsSettings = this.getTlsSettings();
+            logger33.info(`${credentialName6}: Sending request to ${request.url}`);
+            return defaultClient.sendRequest(request);
+          }
+        };
+      }
+      /**
+       * Gets TLS settings for the request.
+       * Handles a few scenarios with CA data or CA file provided.
+       */
+      getTlsSettings() {
+        if (!this.caData && !this.caFile) {
+          if (!this.cachedTlsSettings) {
+            this.cachedTlsSettings = this.sniName ? { servername: this.sniName } : {};
+          }
+          return this.cachedTlsSettings;
+        }
+        if (!this.caFile) {
+          if (!this.cachedTlsSettings) {
+            if (!(0, import_certificatesUtils3.canParseAsX509Certificate)(this.caData)) {
+              throw new import_errors24.CredentialUnavailableError(
+                `${credentialName6}: is unavailable. ${ErrorMessages2.INVALID_CA_CERTIFICATES}`
+              );
+            }
+            this.cachedTlsSettings = this.sniName ? { servername: this.sniName } : {};
+            this.cachedTlsSettings.ca = this.caData;
+          }
+          return this.cachedTlsSettings;
+        }
+        let fileContent;
+        try {
+          fileContent = (0, import_node_fs6.readFileSync)(this.caFile);
+        } catch (error) {
+          throw new import_errors24.CredentialUnavailableError(
+            `${credentialName6}: is unavailable. ${ErrorMessages2.FAILED_TO_READ_CA_FILE(this.caFile, error)}`
+          );
+        }
+        if (fileContent.length === 0) {
+          if (!this.cachedTlsSettings) {
+            throw new import_errors24.CredentialUnavailableError(
+              `${credentialName6}: is unavailable. ${ErrorMessages2.CA_FILE_EMPTY(this.caFile)}`
+            );
+          }
+          return this.cachedTlsSettings;
+        }
+        if (!this.cachedCaData || !fileContent.equals(this.cachedCaData)) {
+          const caDataString = fileContent.toString("utf8");
+          if (!(0, import_certificatesUtils3.canParseAsX509Certificate)(caDataString)) {
+            throw new import_errors24.CredentialUnavailableError(
+              `${credentialName6}: is unavailable. ${ErrorMessages2.INVALID_CA_CERTIFICATES}`
+            );
+          }
+          this.cachedTlsSettings = {
+            ca: caDataString,
+            ...this.sniName && { servername: this.sniName }
+          };
+          this.cachedCaData = fileContent;
+        }
+        return this.cachedTlsSettings;
       }
       /**
        * Authenticates with Microsoft Entra ID and returns an access token if successful.
@@ -81989,11 +82683,7 @@ var require_workloadIdentityCredential = __commonJS({
        */
       async getToken(scopes, options) {
         if (!this.client) {
-          const errorMessage = `${credentialName6}: is unavailable. tenantId, clientId, and federatedTokenFilePath are required parameters. 
-      In DefaultAzureCredential and ManagedIdentityCredential, these can be provided as environment variables - 
-      "AZURE_TENANT_ID",
-      "AZURE_CLIENT_ID",
-      "AZURE_FEDERATED_TOKEN_FILE". See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`;
+          const errorMessage = `${credentialName6}: is unavailable. ${ErrorMessages2.MISSING_ENV_VARS}`;
           logger33.info(errorMessage);
           throw new import_errors24.CredentialUnavailableError(errorMessage);
         }
@@ -82006,7 +82696,7 @@ var require_workloadIdentityCredential = __commonJS({
         }
         if (!this.federatedTokenFilePath) {
           throw new import_errors24.CredentialUnavailableError(
-            `${credentialName6}: is unavailable. Invalid file path provided ${this.federatedTokenFilePath}.`
+            `${credentialName6}: is unavailable. ${ErrorMessages2.INVALID_FILE_PATH(this.federatedTokenFilePath)}`
           );
         }
         if (!this.azureFederatedTokenFileContent) {
@@ -82014,7 +82704,7 @@ var require_workloadIdentityCredential = __commonJS({
           const value = file.trim();
           if (!value) {
             throw new import_errors24.CredentialUnavailableError(
-              `${credentialName6}: is unavailable. No content on the file ${this.federatedTokenFilePath}.`
+              `${credentialName6}: is unavailable. ${ErrorMessages2.NO_FILE_CONTENT(this.federatedTokenFilePath)}`
             );
           } else {
             this.azureFederatedTokenFileContent = value;
@@ -82112,7 +82802,7 @@ var require_managedIdentityCredential = __commonJS({
     });
     module2.exports = __toCommonJS2(managedIdentityCredential_exports);
     var import_logger19 = require_commonjs2();
-    var import_msal_node2 = require_msal_node2();
+    var import_msal_node3 = require_msal_node2();
     var import_identityClient4 = require_identityClient();
     var import_errors24 = require_errors2();
     var import_utils10 = require_utils3();
@@ -82172,7 +82862,7 @@ var require_managedIdentityCredential = __commonJS({
           ..._options,
           additionalPolicies: [{ policy: (0, import_imdsRetryPolicy2.imdsRetryPolicy)(this.msiRetryConfig), position: "perCall" }]
         });
-        this.managedIdentityApp = new import_msal_node2.ManagedIdentityApplication({
+        this.managedIdentityApp = new import_msal_node3.ManagedIdentityApplication({
           managedIdentityIdParams: {
             userAssignedClientId: this.clientId,
             userAssignedResourceId: this.resourceId,
@@ -82503,8 +83193,8 @@ var require_resolveExecutable = __commonJS({
       resolveWindowsCommandInterpreter: () => resolveWindowsCommandInterpreter2
     });
     module2.exports = __toCommonJS2(resolveExecutable_exports);
-    var import_node_fs5 = require("node:fs");
-    var import_node_path4 = __toESM2(require("node:path"));
+    var import_node_fs6 = require("node:fs");
+    var import_node_path5 = __toESM2(require("node:path"));
     var import_node_url3 = require("node:url");
     var import_errors24 = require_errors3();
     var WINDOWS_NATIVE_EXTENSIONS2 = [".exe", ".com"];
@@ -82552,7 +83242,7 @@ var require_resolveExecutable = __commonJS({
     }
     function normalizeCwd2(cwd) {
       const cwdPath = cwd instanceof URL ? (0, import_node_url3.fileURLToPath)(cwd) : cwd;
-      return import_node_path4.default.resolve(cwdPath ?? process.cwd());
+      return import_node_path5.default.resolve(cwdPath ?? process.cwd());
     }
     function createProcessContext2(options = {}) {
       if (options.allowWindowsBatchFiles !== void 0 && typeof options.allowWindowsBatchFiles !== "boolean") {
@@ -82568,11 +83258,11 @@ var require_resolveExecutable = __commonJS({
     }
     function isExecutableFile2(filePath) {
       try {
-        if (!(0, import_node_fs5.statSync)(filePath).isFile()) {
+        if (!(0, import_node_fs6.statSync)(filePath).isFile()) {
           return false;
         }
         if (process.platform !== "win32") {
-          (0, import_node_fs5.accessSync)(filePath, import_node_fs5.constants.X_OK);
+          (0, import_node_fs6.accessSync)(filePath, import_node_fs6.constants.X_OK);
         }
         return true;
       } catch {
@@ -82586,7 +83276,7 @@ var require_resolveExecutable = __commonJS({
       return WINDOWS_BATCH_EXTENSIONS2.some((candidate) => candidate === extension);
     }
     function resolveWindowsCandidate2(candidate, allowWindowsBatchFiles) {
-      const extension = import_node_path4.default.extname(candidate).toLowerCase();
+      const extension = import_node_path5.default.extname(candidate).toLowerCase();
       if (extension) {
         if (!isNativeExtension2(extension) && !(allowWindowsBatchFiles && isBatchExtension2(extension))) {
           return void 0;
@@ -82613,7 +83303,7 @@ var require_resolveExecutable = __commonJS({
       const pathValue = getEnvironmentValue3(context3.env, "PATH") ?? "";
       const paths = [];
       const seen = /* @__PURE__ */ new Set();
-      for (const entry of pathValue.split(import_node_path4.default.delimiter)) {
+      for (const entry of pathValue.split(import_node_path5.default.delimiter)) {
         let candidate = entry;
         if (process.platform === "win32") {
           candidate = candidate.trim();
@@ -82621,10 +83311,10 @@ var require_resolveExecutable = __commonJS({
             candidate = candidate.slice(1, -1);
           }
         }
-        if (!candidate || !import_node_path4.default.isAbsolute(candidate)) {
+        if (!candidate || !import_node_path5.default.isAbsolute(candidate)) {
           continue;
         }
-        const normalized = import_node_path4.default.resolve(candidate);
+        const normalized = import_node_path5.default.resolve(candidate);
         const key = process.platform === "win32" ? normalized.toLowerCase() : normalized;
         if (!seen.has(key)) {
           seen.add(key);
@@ -82650,8 +83340,8 @@ var require_resolveExecutable = __commonJS({
     }
     function resolveExecutableWithContext2(command, context3) {
       validateCommand2(command);
-      if (hasPathSeparator2(command) || import_node_path4.default.isAbsolute(command)) {
-        const candidate = import_node_path4.default.resolve(context3.cwd, command);
+      if (hasPathSeparator2(command) || import_node_path5.default.isAbsolute(command)) {
+        const candidate = import_node_path5.default.resolve(context3.cwd, command);
         if (process.platform === "win32") {
           return resolveWindowsCandidate2(candidate, context3.allowWindowsBatchFiles);
         }
@@ -82660,20 +83350,20 @@ var require_resolveExecutable = __commonJS({
       const searchPaths = getSearchPaths2(context3);
       if (process.platform !== "win32") {
         for (const searchPath of searchPaths) {
-          const candidate = import_node_path4.default.join(searchPath, command);
+          const candidate = import_node_path5.default.join(searchPath, command);
           if (isExecutableFile2(candidate)) {
             return candidate;
           }
         }
         return void 0;
       }
-      const extension = import_node_path4.default.extname(command).toLowerCase();
+      const extension = import_node_path5.default.extname(command).toLowerCase();
       if (extension) {
         if (!isNativeExtension2(extension) && !(context3.allowWindowsBatchFiles && isBatchExtension2(extension))) {
           return void 0;
         }
         for (const searchPath of searchPaths) {
-          const candidate = import_node_path4.default.join(searchPath, command);
+          const candidate = import_node_path5.default.join(searchPath, command);
           if (isExecutableFile2(candidate)) {
             return candidate;
           }
@@ -82682,7 +83372,7 @@ var require_resolveExecutable = __commonJS({
       }
       for (const searchPath of searchPaths) {
         for (const nativeExtension of WINDOWS_NATIVE_EXTENSIONS2) {
-          const candidate = import_node_path4.default.join(searchPath, command + nativeExtension);
+          const candidate = import_node_path5.default.join(searchPath, command + nativeExtension);
           if (isExecutableFile2(candidate)) {
             return candidate;
           }
@@ -82691,7 +83381,7 @@ var require_resolveExecutable = __commonJS({
       if (context3.allowWindowsBatchFiles) {
         for (const searchPath of searchPaths) {
           for (const batchExtension of WINDOWS_BATCH_EXTENSIONS2) {
-            const candidate = import_node_path4.default.join(searchPath, command + batchExtension);
+            const candidate = import_node_path5.default.join(searchPath, command + batchExtension);
             if (isExecutableFile2(candidate)) {
               return candidate;
             }
@@ -82705,9 +83395,9 @@ var require_resolveExecutable = __commonJS({
     }
     function canonicalizeWindowsPath2(filePath) {
       try {
-        return import_node_fs5.realpathSync.native(filePath).toLowerCase();
+        return import_node_fs6.realpathSync.native(filePath).toLowerCase();
       } catch {
-        return import_node_path4.default.resolve(filePath).toLowerCase();
+        return import_node_path5.default.resolve(filePath).toLowerCase();
       }
     }
     function isWindowsDriveAbsolutePath2(filePath) {
@@ -82721,7 +83411,7 @@ var require_resolveExecutable = __commonJS({
           code: "ERR_UNTRUSTED_COMMAND_INTERPRETER"
         });
       }
-      const executablePath = import_node_path4.default.join(systemRoot, "System32", "cmd.exe");
+      const executablePath = import_node_path5.default.join(systemRoot, "System32", "cmd.exe");
       if (!isExecutableFile2(executablePath)) {
         throw new import_errors24.ProcessError("The Windows command interpreter could not be found.", {
           code: "ERR_UNTRUSTED_COMMAND_INTERPRETER"
@@ -82787,7 +83477,7 @@ var require_normalizeCommand = __commonJS({
       normalizeCommand: () => normalizeCommand2
     });
     module2.exports = __toCommonJS2(normalizeCommand_exports);
-    var import_node_path4 = __toESM2(require("node:path"));
+    var import_node_path5 = __toESM2(require("node:path"));
     var import_errors24 = require_errors3();
     var import_resolveExecutable4 = require_resolveExecutable();
     var UNSAFE_BATCH_ARGUMENT2 = /[%!^&|<>()]/;
@@ -82851,7 +83541,7 @@ var require_normalizeCommand = __commonJS({
           windowsVerbatimArguments: false
         };
       }
-      const extension = import_node_path4.default.extname(resolvedPath).toLowerCase();
+      const extension = import_node_path5.default.extname(resolvedPath).toLowerCase();
       if (extension === ".exe" || extension === ".com") {
         return {
           executable: resolvedPath,
@@ -82925,12 +83615,12 @@ var require_process = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var process_exports = {};
     __export2(process_exports, {
-      execFile: () => execFile9,
+      execFile: () => execFile10,
       spawn: () => spawn4,
       spawnSync: () => spawnSync4
     });
     module2.exports = __toCommonJS2(process_exports);
-    var childProcess3 = __toESM2(require("node:child_process"));
+    var childProcess5 = __toESM2(require("node:child_process"));
     var import_errors24 = require_errors3();
     var import_normalizeCommand2 = require_normalizeCommand();
     var import_resolveExecutable4 = require_resolveExecutable();
@@ -83013,7 +83703,7 @@ var require_process = __commonJS({
     function spawn4(command, args = [], options = {}) {
       const prepared = prepareProcess2(command, args, options, spawnOptionNames2);
       const child = callWithSanitizedChildProcessErrors2(
-        () => childProcess3.spawn(prepared.command.executable, prepared.command.args, {
+        () => childProcess5.spawn(prepared.command.executable, prepared.command.args, {
           ...prepared.nodeOptions,
           cwd: prepared.command.cwd,
           env: prepared.command.env,
@@ -83026,7 +83716,7 @@ var require_process = __commonJS({
     function spawnSync4(command, args = [], options = {}) {
       const prepared = prepareProcess2(command, args, options, spawnSyncOptionNames2);
       const result = callWithSanitizedChildProcessErrors2(
-        () => childProcess3.spawnSync(prepared.command.executable, prepared.command.args, {
+        () => childProcess5.spawnSync(prepared.command.executable, prepared.command.args, {
           ...prepared.nodeOptions,
           cwd: prepared.command.cwd,
           env: prepared.command.env,
@@ -83042,11 +83732,11 @@ var require_process = __commonJS({
       }
       return result;
     }
-    async function execFile9(command, args = [], options = {}) {
+    async function execFile10(command, args = [], options = {}) {
       const prepared = prepareProcess2(command, args, options, execFileOptionNames2);
       return new Promise((resolve, reject) => {
         callWithSanitizedChildProcessErrors2(
-          () => childProcess3.execFile(
+          () => childProcess5.execFile(
             prepared.command.executable,
             prepared.command.args,
             {
@@ -83208,6 +83898,7 @@ var require_azureDeveloperCliCredential = __commonJS({
     var import_tenantIdUtils20 = require_tenantIdUtils();
     var import_tracing23 = require_tracing();
     var import_scopeUtils12 = require_scopeUtils();
+    var import_core_util22 = require_commonjs4();
     var import_processUtils4 = require_processUtils();
     var logger33 = (0, import_logging29.credentialLogger)("AzureDeveloperCliCredential");
     var azureDeveloperCliPublicErrorMessages2 = {
@@ -83217,6 +83908,51 @@ var require_azureDeveloperCliCredential = __commonJS({
       claim: "This credential doesn't support claims challenges. To authenticate with the required claims, please run the following command:"
     };
     var developerCliCredentialInternals2 = {
+      /**
+       * Parses azd stderr JSON output to extract a human-readable error message.
+       *
+       * Three formats are supported across azd versions:
+       * - pre-v1.23.7: `{"type":"consoleMessage","data":{"message":"..."}}`
+       * - v1.23.7 - v1.23.15: an empty `consoleMessage` line followed by `{"error":"...","message":"...","suggestion":"..."}`
+       * - v1.24.0+: `{"error":"...","message":"...","suggestion":"..."}`
+       *
+       * The structured `error` field is preferred. If absent, falls back to the
+       * first non-empty `data.message` from a legacy `consoleMessage` line. If
+       * neither is found, the raw stderr is returned unchanged so plain-text and
+       * malformed output continue to surface to callers.
+       *
+       * @param stderr - The stderr output from azd command
+       * @returns The parsed error message or raw stderr
+       * @internal
+       */
+      parseAzdStderr(stderr) {
+        if (!stderr?.trim()) {
+          return stderr;
+        }
+        let fallback;
+        for (const rawLine of stderr.split("\n")) {
+          const line = rawLine.trim();
+          if (!line.startsWith("{")) {
+            continue;
+          }
+          let parsed;
+          try {
+            parsed = JSON.parse(line);
+          } catch {
+            continue;
+          }
+          if (typeof parsed?.error === "string" && parsed.error.trim()) {
+            return parsed.error.trim();
+          }
+          if (fallback === void 0) {
+            const message = parsed?.data?.message;
+            if (typeof message === "string" && message.trim()) {
+              fallback = message.trim();
+            }
+          }
+        }
+        return fallback ?? stderr;
+      },
       /**
        * @internal
        */
@@ -83246,7 +83982,7 @@ var require_azureDeveloperCliCredential = __commonJS({
         }
         let claimsSections = [];
         if (claims) {
-          const encodedClaims = btoa(claims);
+          const encodedClaims = (0, import_core_util22.uint8ArrayToString)((0, import_core_util22.stringToUint8Array)(claims, "utf-8"), "base64");
           claimsSections = ["--claims", encodedClaims];
         }
         const args = [
@@ -83358,7 +84094,8 @@ var require_azureDeveloperCliCredential = __commonJS({
               };
             } catch (e) {
               if (obj.stderr) {
-                throw new import_errors24.CredentialUnavailableError(obj.stderr);
+                const errorMessage = developerCliCredentialInternals2.parseAzdStderr(obj.stderr);
+                throw new import_errors24.CredentialUnavailableError(errorMessage);
               }
               throw e;
             }
@@ -83444,6 +84181,7 @@ var require_azureCliCredential = __commonJS({
     var import_logging29 = require_logging();
     var import_scopeUtils12 = require_scopeUtils();
     var import_errors24 = require_errors2();
+    var import_core_util22 = require_commonjs4();
     var import_tracing23 = require_tracing();
     var import_subscriptionUtils2 = require_subscriptionUtils();
     var import_processUtils4 = require_processUtils();
@@ -83545,7 +84283,7 @@ var require_azureCliCredential = __commonJS({
         const scope = typeof scopes === "string" ? scopes : scopes[0];
         const claimsValue = options.claims;
         if (claimsValue && claimsValue.trim()) {
-          const encodedClaims = btoa(claimsValue);
+          const encodedClaims = (0, import_core_util22.uint8ArrayToString)((0, import_core_util22.stringToUint8Array)(claimsValue, "utf-8"), "base64");
           let loginCmd = `az login --claims-challenge ${encodedClaims} --scope ${scope}`;
           const tenantIdFromOptions = options.tenantId;
           if (tenantIdFromOptions) {
@@ -83687,6 +84425,7 @@ var require_azurePowerShellCredential = __commonJS({
     var import_errors24 = require_errors2();
     var import_processUtils4 = require_processUtils();
     var import_tracing23 = require_tracing();
+    var import_core_util22 = require_commonjs4();
     var logger33 = (0, import_logging29.credentialLogger)("AzurePowerShellCredential");
     var isWindows2 = process.platform === "win32";
     var powerShellResourceEnvironmentVariable2 = "AZURE_IDENTITY_POWERSHELL_RESOURCE";
@@ -83851,7 +84590,10 @@ var require_azurePowerShellCredential = __commonJS({
           const scope = typeof scopes === "string" ? scopes : scopes[0];
           const claimsValue = options.claims;
           if (claimsValue && claimsValue.trim()) {
-            const encodedClaims = btoa(claimsValue);
+            const encodedClaims = (0, import_core_util22.uint8ArrayToString)(
+              (0, import_core_util22.stringToUint8Array)(claimsValue, "utf-8"),
+              "base64"
+            );
             let loginCmd = `Connect-AzAccount -ClaimsChallenge ${encodedClaims}`;
             const tenantIdFromOptions = options.tenantId;
             if (tenantIdFromOptions) {
@@ -84120,7 +84862,7 @@ var require_brokerCredential = __commonJS({
     var import_scopeUtils12 = require_scopeUtils();
     var import_tracing23 = require_tracing();
     var import_msalClient11 = require_msalClient();
-    var import_constants37 = require_constants4();
+    var import_constants38 = require_constants4();
     var import_errors24 = require_errors2();
     var logger33 = (0, import_logging29.credentialLogger)("BrokerCredential");
     var BrokerCredential2 = class {
@@ -84142,7 +84884,6 @@ var require_brokerCredential = __commonJS({
         );
         const msalClientOptions = {
           ...options,
-          tokenCredentialOptions: options,
           logger: logger33,
           brokerOptions: {
             enabled: true,
@@ -84151,7 +84892,7 @@ var require_brokerCredential = __commonJS({
           }
         };
         this.brokerMsalClient = (0, import_msalClient11.createMsalClient)(
-          import_constants37.DeveloperSignOnClientId,
+          import_constants38.DeveloperSignOnClientId,
           this.brokerTenantId,
           msalClientOptions
         );
@@ -84480,7 +85221,7 @@ var require_interactiveBrowserCredential = __commonJS({
     var import_scopeUtils12 = require_scopeUtils();
     var import_tracing23 = require_tracing();
     var import_msalClient11 = require_msalClient();
-    var import_constants37 = require_constants4();
+    var import_constants38 = require_constants4();
     var logger33 = (0, import_logging29.credentialLogger)("InteractiveBrowserCredential");
     var InteractiveBrowserCredential3 = class {
       tenantId;
@@ -84508,7 +85249,6 @@ var require_interactiveBrowserCredential = __commonJS({
         );
         const msalClientOptions = {
           ...options,
-          tokenCredentialOptions: options,
           logger: logger33
         };
         const ibcNodeOptions = options;
@@ -84529,7 +85269,7 @@ var require_interactiveBrowserCredential = __commonJS({
           }
         }
         this.msalClient = (0, import_msalClient11.createMsalClient)(
-          options.clientId ?? import_constants37.DeveloperSignOnClientId,
+          options.clientId ?? import_constants38.DeveloperSignOnClientId,
           this.tenantId,
           msalClientOptions
         );
@@ -84633,7 +85373,7 @@ var require_deviceCodeCredential = __commonJS({
     var import_scopeUtils12 = require_scopeUtils();
     var import_tracing23 = require_tracing();
     var import_msalClient11 = require_msalClient();
-    var import_constants37 = require_constants4();
+    var import_constants38 = require_constants4();
     var logger33 = (0, import_logging29.credentialLogger)("DeviceCodeCredential");
     function defaultDeviceCodePromptCallback(deviceCodeInfo) {
       console.log(deviceCodeInfo.message);
@@ -84671,13 +85411,12 @@ var require_deviceCodeCredential = __commonJS({
         this.additionallyAllowedTenantIds = (0, import_tenantIdUtils20.resolveAdditionallyAllowedTenantIds)(
           options?.additionallyAllowedTenants
         );
-        const clientId = options?.clientId ?? import_constants37.DeveloperSignOnClientId;
+        const clientId = options?.clientId ?? import_constants38.DeveloperSignOnClientId;
         const tenantId = (0, import_tenantIdUtils20.resolveTenantId)(logger33, options?.tenantId, clientId);
         this.userPromptCallback = options?.userPromptCallback ?? defaultDeviceCodePromptCallback;
         this.msalClient = (0, import_msalClient11.createMsalClient)(clientId, tenantId, {
           ...options,
-          logger: logger33,
-          tokenCredentialOptions: options || {}
+          logger: logger33
         });
         this.disableAutomaticAuthentication = options?.disableAutomaticAuthentication;
       }
@@ -84768,7 +85507,7 @@ var require_azurePipelinesCredential = __commonJS({
     });
     module2.exports = __toCommonJS2(azurePipelinesCredential_exports);
     var import_errors24 = require_errors2();
-    var import_core_rest_pipeline27 = require_commonjs6();
+    var import_core_rest_pipeline28 = require_commonjs6();
     var import_clientAssertionCredential4 = require_clientAssertionCredential();
     var import_identityClient4 = require_identityClient();
     var import_tenantIdUtils20 = require_tenantIdUtils();
@@ -84869,10 +85608,10 @@ var require_azurePipelinesCredential = __commonJS({
       async requestOidcToken(oidcRequestUrl, systemAccessToken) {
         logger33.info("Requesting OIDC token from Azure Pipelines...");
         logger33.info(oidcRequestUrl);
-        const request = (0, import_core_rest_pipeline27.createPipelineRequest)({
+        const request = (0, import_core_rest_pipeline28.createPipelineRequest)({
           url: oidcRequestUrl,
           method: "POST",
-          headers: (0, import_core_rest_pipeline27.createHttpHeaders)({
+          headers: (0, import_core_rest_pipeline28.createHttpHeaders)({
             "Content-Type": "application/json",
             Authorization: `Bearer ${systemAccessToken}`,
             // Prevents the service from responding with a redirect HTTP status code (useful for automation).
@@ -84997,8 +85736,7 @@ var require_authorizationCodeCredential = __commonJS({
         );
         this.msalClient = (0, import_msalClient11.createMsalClient)(clientId, tenantId, {
           ...options,
-          logger: logger33,
-          tokenCredentialOptions: options ?? {}
+          logger: logger33
         });
       }
       /**
@@ -85123,8 +85861,7 @@ var require_onBehalfOfCredential = __commonJS({
         );
         this.msalClient = (0, import_msalClient11.createMsalClient)(clientId, this.tenantId, {
           ...options,
-          logger: logger33,
-          tokenCredentialOptions: options
+          logger: logger33
         });
       }
       /**
@@ -85240,11 +85977,11 @@ var require_tokenProvider = __commonJS({
       getBearerTokenProvider: () => getBearerTokenProvider3
     });
     module2.exports = __toCommonJS2(tokenProvider_exports);
-    var import_core_rest_pipeline27 = require_commonjs6();
+    var import_core_rest_pipeline28 = require_commonjs6();
     function getBearerTokenProvider3(credential, scopes, options) {
       const { abortSignal, tracingOptions } = options || {};
-      const pipeline = (0, import_core_rest_pipeline27.createEmptyPipeline)();
-      pipeline.addPolicy((0, import_core_rest_pipeline27.bearerTokenAuthenticationPolicy)({ credential, scopes }));
+      const pipeline = (0, import_core_rest_pipeline28.createEmptyPipeline)();
+      pipeline.addPolicy((0, import_core_rest_pipeline28.bearerTokenAuthenticationPolicy)({ credential, scopes }));
       async function getRefreshedToken() {
         const res = await pipeline.sendRequest(
           {
@@ -85254,7 +85991,7 @@ var require_tokenProvider = __commonJS({
               headers: request.headers
             })
           },
-          (0, import_core_rest_pipeline27.createPipelineRequest)({
+          (0, import_core_rest_pipeline28.createPipelineRequest)({
             url: "https://example.com",
             abortSignal,
             tracingOptions
@@ -85300,7 +86037,7 @@ var require_commonjs11 = __commonJS({
       AuthenticationErrorName: () => import_errors24.AuthenticationErrorName,
       AuthenticationRequiredError: () => import_errors24.AuthenticationRequiredError,
       AuthorizationCodeCredential: () => import_authorizationCodeCredential2.AuthorizationCodeCredential,
-      AzureAuthorityHosts: () => import_constants37.AzureAuthorityHosts,
+      AzureAuthorityHosts: () => import_constants38.AzureAuthorityHosts,
       AzureCliCredential: () => import_azureCliCredential3.AzureCliCredential,
       AzureDeveloperCliCredential: () => import_azureDeveloperCliCredential3.AzureDeveloperCliCredential,
       AzurePipelinesCredential: () => import_azurePipelinesCredential2.AzurePipelinesCredential,
@@ -85350,7 +86087,7 @@ var require_commonjs11 = __commonJS({
     var import_onBehalfOfCredential2 = require_onBehalfOfCredential();
     var import_workloadIdentityCredential4 = require_workloadIdentityCredential();
     var import_logging29 = require_logging();
-    var import_constants37 = require_constants4();
+    var import_constants38 = require_constants4();
     var import_tokenProvider2 = require_tokenProvider();
     function getDefaultAzureCredential() {
       return new import_defaultAzureCredential3.DefaultAzureCredential();
@@ -92979,14 +93716,14 @@ var require_polyfills = __commonJS({
       fs6.fstatSync = statFixSync(fs6.fstatSync);
       fs6.lstatSync = statFixSync(fs6.lstatSync);
       if (fs6.chmod && !fs6.lchmod) {
-        fs6.lchmod = function(path5, mode, cb) {
+        fs6.lchmod = function(path6, mode, cb) {
           if (cb) process.nextTick(cb);
         };
         fs6.lchmodSync = function() {
         };
       }
       if (fs6.chown && !fs6.lchown) {
-        fs6.lchown = function(path5, uid, gid, cb) {
+        fs6.lchown = function(path6, uid, gid, cb) {
           if (cb) process.nextTick(cb);
         };
         fs6.lchownSync = function() {
@@ -93053,9 +93790,9 @@ var require_polyfills = __commonJS({
         };
       })(fs6.readSync);
       function patchLchmod(fs7) {
-        fs7.lchmod = function(path5, mode, callback) {
+        fs7.lchmod = function(path6, mode, callback) {
           fs7.open(
-            path5,
+            path6,
             constants3.O_WRONLY | constants3.O_SYMLINK,
             mode,
             function(err, fd) {
@@ -93071,8 +93808,8 @@ var require_polyfills = __commonJS({
             }
           );
         };
-        fs7.lchmodSync = function(path5, mode) {
-          var fd = fs7.openSync(path5, constants3.O_WRONLY | constants3.O_SYMLINK, mode);
+        fs7.lchmodSync = function(path6, mode) {
+          var fd = fs7.openSync(path6, constants3.O_WRONLY | constants3.O_SYMLINK, mode);
           var threw = true;
           var ret;
           try {
@@ -93093,8 +93830,8 @@ var require_polyfills = __commonJS({
       }
       function patchLutimes(fs7) {
         if (constants3.hasOwnProperty("O_SYMLINK") && fs7.futimes) {
-          fs7.lutimes = function(path5, at, mt, cb) {
-            fs7.open(path5, constants3.O_SYMLINK, function(er, fd) {
+          fs7.lutimes = function(path6, at, mt, cb) {
+            fs7.open(path6, constants3.O_SYMLINK, function(er, fd) {
               if (er) {
                 if (cb) cb(er);
                 return;
@@ -93106,8 +93843,8 @@ var require_polyfills = __commonJS({
               });
             });
           };
-          fs7.lutimesSync = function(path5, at, mt) {
-            var fd = fs7.openSync(path5, constants3.O_SYMLINK);
+          fs7.lutimesSync = function(path6, at, mt) {
+            var fd = fs7.openSync(path6, constants3.O_SYMLINK);
             var ret;
             var threw = true;
             try {
@@ -93225,11 +93962,11 @@ var require_legacy_streams = __commonJS({
         ReadStream,
         WriteStream
       };
-      function ReadStream(path5, options) {
-        if (!(this instanceof ReadStream)) return new ReadStream(path5, options);
+      function ReadStream(path6, options) {
+        if (!(this instanceof ReadStream)) return new ReadStream(path6, options);
         Stream.call(this);
         var self2 = this;
-        this.path = path5;
+        this.path = path6;
         this.fd = null;
         this.readable = true;
         this.paused = false;
@@ -93274,10 +94011,10 @@ var require_legacy_streams = __commonJS({
           self2._read();
         });
       }
-      function WriteStream(path5, options) {
-        if (!(this instanceof WriteStream)) return new WriteStream(path5, options);
+      function WriteStream(path6, options) {
+        if (!(this instanceof WriteStream)) return new WriteStream(path6, options);
         Stream.call(this);
-        this.path = path5;
+        this.path = path6;
         this.fd = null;
         this.writable = true;
         this.flags = "w";
@@ -93420,14 +94157,14 @@ var require_graceful_fs = __commonJS({
       fs7.createWriteStream = createWriteStream;
       var fs$readFile = fs7.readFile;
       fs7.readFile = readFile4;
-      function readFile4(path5, options, cb) {
+      function readFile4(path6, options, cb) {
         if (typeof options === "function")
           cb = options, options = null;
-        return go$readFile(path5, options, cb);
-        function go$readFile(path6, options2, cb2, startTime) {
-          return fs$readFile(path6, options2, function(err) {
+        return go$readFile(path6, options, cb);
+        function go$readFile(path7, options2, cb2, startTime) {
+          return fs$readFile(path7, options2, function(err) {
             if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
-              enqueue([go$readFile, [path6, options2, cb2], err, startTime || Date.now(), Date.now()]);
+              enqueue([go$readFile, [path7, options2, cb2], err, startTime || Date.now(), Date.now()]);
             else {
               if (typeof cb2 === "function")
                 cb2.apply(this, arguments);
@@ -93437,14 +94174,14 @@ var require_graceful_fs = __commonJS({
       }
       var fs$writeFile = fs7.writeFile;
       fs7.writeFile = writeFile;
-      function writeFile(path5, data, options, cb) {
+      function writeFile(path6, data, options, cb) {
         if (typeof options === "function")
           cb = options, options = null;
-        return go$writeFile(path5, data, options, cb);
-        function go$writeFile(path6, data2, options2, cb2, startTime) {
-          return fs$writeFile(path6, data2, options2, function(err) {
+        return go$writeFile(path6, data, options, cb);
+        function go$writeFile(path7, data2, options2, cb2, startTime) {
+          return fs$writeFile(path7, data2, options2, function(err) {
             if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
-              enqueue([go$writeFile, [path6, data2, options2, cb2], err, startTime || Date.now(), Date.now()]);
+              enqueue([go$writeFile, [path7, data2, options2, cb2], err, startTime || Date.now(), Date.now()]);
             else {
               if (typeof cb2 === "function")
                 cb2.apply(this, arguments);
@@ -93455,14 +94192,14 @@ var require_graceful_fs = __commonJS({
       var fs$appendFile = fs7.appendFile;
       if (fs$appendFile)
         fs7.appendFile = appendFile;
-      function appendFile(path5, data, options, cb) {
+      function appendFile(path6, data, options, cb) {
         if (typeof options === "function")
           cb = options, options = null;
-        return go$appendFile(path5, data, options, cb);
-        function go$appendFile(path6, data2, options2, cb2, startTime) {
-          return fs$appendFile(path6, data2, options2, function(err) {
+        return go$appendFile(path6, data, options, cb);
+        function go$appendFile(path7, data2, options2, cb2, startTime) {
+          return fs$appendFile(path7, data2, options2, function(err) {
             if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
-              enqueue([go$appendFile, [path6, data2, options2, cb2], err, startTime || Date.now(), Date.now()]);
+              enqueue([go$appendFile, [path7, data2, options2, cb2], err, startTime || Date.now(), Date.now()]);
             else {
               if (typeof cb2 === "function")
                 cb2.apply(this, arguments);
@@ -93493,31 +94230,31 @@ var require_graceful_fs = __commonJS({
       var fs$readdir = fs7.readdir;
       fs7.readdir = readdir;
       var noReaddirOptionVersions = /^v[0-5]\./;
-      function readdir(path5, options, cb) {
+      function readdir(path6, options, cb) {
         if (typeof options === "function")
           cb = options, options = null;
-        var go$readdir = noReaddirOptionVersions.test(process.version) ? function go$readdir2(path6, options2, cb2, startTime) {
-          return fs$readdir(path6, fs$readdirCallback(
-            path6,
+        var go$readdir = noReaddirOptionVersions.test(process.version) ? function go$readdir2(path7, options2, cb2, startTime) {
+          return fs$readdir(path7, fs$readdirCallback(
+            path7,
             options2,
             cb2,
             startTime
           ));
-        } : function go$readdir2(path6, options2, cb2, startTime) {
-          return fs$readdir(path6, options2, fs$readdirCallback(
-            path6,
+        } : function go$readdir2(path7, options2, cb2, startTime) {
+          return fs$readdir(path7, options2, fs$readdirCallback(
+            path7,
             options2,
             cb2,
             startTime
           ));
         };
-        return go$readdir(path5, options, cb);
-        function fs$readdirCallback(path6, options2, cb2, startTime) {
+        return go$readdir(path6, options, cb);
+        function fs$readdirCallback(path7, options2, cb2, startTime) {
           return function(err, files) {
             if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
               enqueue([
                 go$readdir,
-                [path6, options2, cb2],
+                [path7, options2, cb2],
                 err,
                 startTime || Date.now(),
                 Date.now()
@@ -93588,7 +94325,7 @@ var require_graceful_fs = __commonJS({
         enumerable: true,
         configurable: true
       });
-      function ReadStream(path5, options) {
+      function ReadStream(path6, options) {
         if (this instanceof ReadStream)
           return fs$ReadStream.apply(this, arguments), this;
         else
@@ -93608,7 +94345,7 @@ var require_graceful_fs = __commonJS({
           }
         });
       }
-      function WriteStream(path5, options) {
+      function WriteStream(path6, options) {
         if (this instanceof WriteStream)
           return fs$WriteStream.apply(this, arguments), this;
         else
@@ -93626,22 +94363,22 @@ var require_graceful_fs = __commonJS({
           }
         });
       }
-      function createReadStream(path5, options) {
-        return new fs7.ReadStream(path5, options);
+      function createReadStream(path6, options) {
+        return new fs7.ReadStream(path6, options);
       }
-      function createWriteStream(path5, options) {
-        return new fs7.WriteStream(path5, options);
+      function createWriteStream(path6, options) {
+        return new fs7.WriteStream(path6, options);
       }
       var fs$open = fs7.open;
       fs7.open = open2;
-      function open2(path5, flags, mode, cb) {
+      function open2(path6, flags, mode, cb) {
         if (typeof mode === "function")
           cb = mode, mode = null;
-        return go$open(path5, flags, mode, cb);
-        function go$open(path6, flags2, mode2, cb2, startTime) {
-          return fs$open(path6, flags2, mode2, function(err, fd) {
+        return go$open(path6, flags, mode, cb);
+        function go$open(path7, flags2, mode2, cb2, startTime) {
+          return fs$open(path7, flags2, mode2, function(err, fd) {
             if (err && (err.code === "EMFILE" || err.code === "ENFILE"))
-              enqueue([go$open, [path6, flags2, mode2, cb2], err, startTime || Date.now(), Date.now()]);
+              enqueue([go$open, [path7, flags2, mode2, cb2], err, startTime || Date.now(), Date.now()]);
             else {
               if (typeof cb2 === "function")
                 cb2.apply(this, arguments);
@@ -93824,10 +94561,10 @@ var require_fs = __commonJS({
 var require_utils5 = __commonJS({
   "node_modules/fs-extra/lib/mkdirs/utils.js"(exports2, module2) {
     "use strict";
-    var path5 = require("path");
+    var path6 = require("path");
     module2.exports.checkPath = function checkPath(pth) {
       if (process.platform === "win32") {
-        const pathHasInvalidWinCharacters = /[<>:"|?*]/.test(pth.replace(path5.parse(pth).root, ""));
+        const pathHasInvalidWinCharacters = /[<>:"|?*]/.test(pth.replace(path6.parse(pth).root, ""));
         if (pathHasInvalidWinCharacters) {
           const error = new Error(`Path contains invalid characters: ${pth}`);
           error.code = "EINVAL";
@@ -93891,8 +94628,8 @@ var require_path_exists = __commonJS({
     "use strict";
     var u = require_universalify().fromPromise;
     var fs6 = require_fs();
-    function pathExists(path5) {
-      return fs6.access(path5).then(() => true).catch(() => false);
+    function pathExists(path6) {
+      return fs6.access(path6).then(() => true).catch(() => false);
     }
     module2.exports = {
       pathExists: u(pathExists),
@@ -93907,8 +94644,8 @@ var require_utimes = __commonJS({
     "use strict";
     var fs6 = require_fs();
     var u = require_universalify().fromPromise;
-    async function utimesMillis(path5, atime, mtime) {
-      const fd = await fs6.open(path5, "r+");
+    async function utimesMillis(path6, atime, mtime) {
+      const fd = await fs6.open(path6, "r+");
       let error = null;
       try {
         await fs6.futimes(fd, atime, mtime);
@@ -93925,8 +94662,8 @@ var require_utimes = __commonJS({
         throw error;
       }
     }
-    function utimesMillisSync(path5, atime, mtime) {
-      const fd = fs6.openSync(path5, "r+");
+    function utimesMillisSync(path6, atime, mtime) {
+      const fd = fs6.openSync(path6, "r+");
       let error = null;
       try {
         fs6.futimesSync(fd, atime, mtime);
@@ -93955,7 +94692,7 @@ var require_stat = __commonJS({
   "node_modules/fs-extra/lib/util/stat.js"(exports2, module2) {
     "use strict";
     var fs6 = require_fs();
-    var path5 = require("path");
+    var path6 = require("path");
     var u = require_universalify().fromPromise;
     function getStats(src, dest, opts) {
       const statFunc = opts.dereference ? (file) => fs6.stat(file, { bigint: true }) : (file) => fs6.lstat(file, { bigint: true });
@@ -93983,8 +94720,8 @@ var require_stat = __commonJS({
       const { srcStat, destStat } = await getStats(src, dest, opts);
       if (destStat) {
         if (areIdentical(srcStat, destStat)) {
-          const srcBaseName = path5.basename(src);
-          const destBaseName = path5.basename(dest);
+          const srcBaseName = path6.basename(src);
+          const destBaseName = path6.basename(dest);
           if (funcName === "move" && srcBaseName !== destBaseName && srcBaseName.toLowerCase() === destBaseName.toLowerCase()) {
             return { srcStat, destStat, isChangingCase: true };
           }
@@ -94006,8 +94743,8 @@ var require_stat = __commonJS({
       const { srcStat, destStat } = getStatsSync(src, dest, opts);
       if (destStat) {
         if (areIdentical(srcStat, destStat)) {
-          const srcBaseName = path5.basename(src);
-          const destBaseName = path5.basename(dest);
+          const srcBaseName = path6.basename(src);
+          const destBaseName = path6.basename(dest);
           if (funcName === "move" && srcBaseName !== destBaseName && srcBaseName.toLowerCase() === destBaseName.toLowerCase()) {
             return { srcStat, destStat, isChangingCase: true };
           }
@@ -94026,9 +94763,9 @@ var require_stat = __commonJS({
       return { srcStat, destStat };
     }
     async function checkParentPaths(src, srcStat, dest, funcName) {
-      const srcParent = path5.resolve(path5.dirname(src));
-      const destParent = path5.resolve(path5.dirname(dest));
-      if (destParent === srcParent || destParent === path5.parse(destParent).root) return;
+      const srcParent = path6.resolve(path6.dirname(src));
+      const destParent = path6.resolve(path6.dirname(dest));
+      if (destParent === srcParent || destParent === path6.parse(destParent).root) return;
       let destStat;
       try {
         destStat = await fs6.stat(destParent, { bigint: true });
@@ -94042,9 +94779,9 @@ var require_stat = __commonJS({
       return checkParentPaths(src, srcStat, destParent, funcName);
     }
     function checkParentPathsSync(src, srcStat, dest, funcName) {
-      const srcParent = path5.resolve(path5.dirname(src));
-      const destParent = path5.resolve(path5.dirname(dest));
-      if (destParent === srcParent || destParent === path5.parse(destParent).root) return;
+      const srcParent = path6.resolve(path6.dirname(src));
+      const destParent = path6.resolve(path6.dirname(dest));
+      if (destParent === srcParent || destParent === path6.parse(destParent).root) return;
       let destStat;
       try {
         destStat = fs6.statSync(destParent, { bigint: true });
@@ -94061,8 +94798,8 @@ var require_stat = __commonJS({
       return destStat.ino !== void 0 && destStat.dev !== void 0 && destStat.ino === srcStat.ino && destStat.dev === srcStat.dev;
     }
     function isSrcSubdir(src, dest) {
-      const srcArr = path5.resolve(src).split(path5.sep).filter((i) => i);
-      const destArr = path5.resolve(dest).split(path5.sep).filter((i) => i);
+      const srcArr = path6.resolve(src).split(path6.sep).filter((i) => i);
+      const destArr = path6.resolve(dest).split(path6.sep).filter((i) => i);
       return srcArr.every((cur, i) => destArr[i] === cur);
     }
     function errMsg(src, dest, funcName) {
@@ -94115,7 +94852,7 @@ var require_copy = __commonJS({
   "node_modules/fs-extra/lib/copy/copy.js"(exports2, module2) {
     "use strict";
     var fs6 = require_fs();
-    var path5 = require("path");
+    var path6 = require("path");
     var { mkdirs } = require_mkdirs();
     var { pathExists } = require_path_exists();
     var { utimesMillis } = require_utimes();
@@ -94138,7 +94875,7 @@ var require_copy = __commonJS({
       await stat.checkParentPaths(src, srcStat, dest, "copy");
       const include = await runFilter(src, dest, opts);
       if (!include) return;
-      const destParent = path5.dirname(dest);
+      const destParent = path6.dirname(dest);
       const dirExists = await pathExists(destParent);
       if (!dirExists) {
         await mkdirs(destParent);
@@ -94191,8 +94928,8 @@ var require_copy = __commonJS({
         await fs6.mkdir(dest);
       }
       await asyncIteratorConcurrentProcess(await fs6.opendir(src), async (item) => {
-        const srcItem = path5.join(src, item.name);
-        const destItem = path5.join(dest, item.name);
+        const srcItem = path6.join(src, item.name);
+        const destItem = path6.join(dest, item.name);
         const include = await runFilter(srcItem, destItem, opts);
         if (include) {
           const { destStat: destStat2 } = await stat.checkPaths(srcItem, destItem, "copy", opts);
@@ -94206,7 +94943,7 @@ var require_copy = __commonJS({
     async function onLink(destStat, src, dest, opts) {
       let resolvedSrc = await fs6.readlink(src);
       if (opts.dereference) {
-        resolvedSrc = path5.resolve(process.cwd(), resolvedSrc);
+        resolvedSrc = path6.resolve(process.cwd(), resolvedSrc);
       }
       if (!destStat) {
         return fs6.symlink(resolvedSrc, dest);
@@ -94219,7 +94956,7 @@ var require_copy = __commonJS({
         throw e;
       }
       if (opts.dereference) {
-        resolvedDest = path5.resolve(process.cwd(), resolvedDest);
+        resolvedDest = path6.resolve(process.cwd(), resolvedDest);
       }
       if (resolvedSrc !== resolvedDest) {
         if (stat.isSrcSubdir(resolvedSrc, resolvedDest)) {
@@ -94241,7 +94978,7 @@ var require_copy_sync = __commonJS({
   "node_modules/fs-extra/lib/copy/copy-sync.js"(exports2, module2) {
     "use strict";
     var fs6 = require_graceful_fs();
-    var path5 = require("path");
+    var path6 = require("path");
     var mkdirsSync = require_mkdirs().mkdirsSync;
     var utimesMillisSync = require_utimes().utimesMillisSync;
     var stat = require_stat();
@@ -94262,7 +94999,7 @@ var require_copy_sync = __commonJS({
       const { srcStat, destStat } = stat.checkPathsSync(src, dest, "copy", opts);
       stat.checkParentPathsSync(src, srcStat, dest, "copy");
       if (opts.filter && !opts.filter(src, dest)) return;
-      const destParent = path5.dirname(dest);
+      const destParent = path6.dirname(dest);
       if (!fs6.existsSync(destParent)) mkdirsSync(destParent);
       return getStats(destStat, src, dest, opts);
     }
@@ -94331,8 +95068,8 @@ var require_copy_sync = __commonJS({
       }
     }
     function copyDirItem(item, src, dest, opts) {
-      const srcItem = path5.join(src, item);
-      const destItem = path5.join(dest, item);
+      const srcItem = path6.join(src, item);
+      const destItem = path6.join(dest, item);
       if (opts.filter && !opts.filter(srcItem, destItem)) return;
       const { destStat } = stat.checkPathsSync(srcItem, destItem, "copy", opts);
       return getStats(destStat, srcItem, destItem, opts);
@@ -94340,7 +95077,7 @@ var require_copy_sync = __commonJS({
     function onLink(destStat, src, dest, opts) {
       let resolvedSrc = fs6.readlinkSync(src);
       if (opts.dereference) {
-        resolvedSrc = path5.resolve(process.cwd(), resolvedSrc);
+        resolvedSrc = path6.resolve(process.cwd(), resolvedSrc);
       }
       if (!destStat) {
         return fs6.symlinkSync(resolvedSrc, dest);
@@ -94353,7 +95090,7 @@ var require_copy_sync = __commonJS({
           throw err;
         }
         if (opts.dereference) {
-          resolvedDest = path5.resolve(process.cwd(), resolvedDest);
+          resolvedDest = path6.resolve(process.cwd(), resolvedDest);
         }
         if (resolvedSrc !== resolvedDest) {
           if (stat.isSrcSubdir(resolvedSrc, resolvedDest)) {
@@ -94392,11 +95129,11 @@ var require_remove = __commonJS({
     "use strict";
     var fs6 = require_graceful_fs();
     var u = require_universalify().fromCallback;
-    function remove(path5, callback) {
-      fs6.rm(path5, { recursive: true, force: true }, callback);
+    function remove(path6, callback) {
+      fs6.rm(path6, { recursive: true, force: true }, callback);
     }
-    function removeSync(path5) {
-      fs6.rmSync(path5, { recursive: true, force: true });
+    function removeSync(path6) {
+      fs6.rmSync(path6, { recursive: true, force: true });
     }
     module2.exports = {
       remove: u(remove),
@@ -94411,7 +95148,7 @@ var require_empty = __commonJS({
     "use strict";
     var u = require_universalify().fromPromise;
     var fs6 = require_fs();
-    var path5 = require("path");
+    var path6 = require("path");
     var mkdir = require_mkdirs();
     var remove = require_remove();
     var emptyDir = u(async function emptyDir2(dir) {
@@ -94421,7 +95158,7 @@ var require_empty = __commonJS({
       } catch {
         return mkdir.mkdirs(dir);
       }
-      return Promise.all(items.map((item) => remove.remove(path5.join(dir, item))));
+      return Promise.all(items.map((item) => remove.remove(path6.join(dir, item))));
     });
     function emptyDirSync(dir) {
       let items;
@@ -94431,7 +95168,7 @@ var require_empty = __commonJS({
         return mkdir.mkdirsSync(dir);
       }
       items.forEach((item) => {
-        item = path5.join(dir, item);
+        item = path6.join(dir, item);
         remove.removeSync(item);
       });
     }
@@ -94449,7 +95186,7 @@ var require_file2 = __commonJS({
   "node_modules/fs-extra/lib/ensure/file.js"(exports2, module2) {
     "use strict";
     var u = require_universalify().fromPromise;
-    var path5 = require("path");
+    var path6 = require("path");
     var fs6 = require_fs();
     var mkdir = require_mkdirs();
     async function createFile3(file) {
@@ -94459,7 +95196,7 @@ var require_file2 = __commonJS({
       } catch {
       }
       if (stats && stats.isFile()) return;
-      const dir = path5.dirname(file);
+      const dir = path6.dirname(file);
       let dirStats = null;
       try {
         dirStats = await fs6.stat(dir);
@@ -94485,7 +95222,7 @@ var require_file2 = __commonJS({
       } catch {
       }
       if (stats && stats.isFile()) return;
-      const dir = path5.dirname(file);
+      const dir = path6.dirname(file);
       try {
         if (!fs6.statSync(dir).isDirectory()) {
           fs6.readdirSync(dir);
@@ -94508,7 +95245,7 @@ var require_link = __commonJS({
   "node_modules/fs-extra/lib/ensure/link.js"(exports2, module2) {
     "use strict";
     var u = require_universalify().fromPromise;
-    var path5 = require("path");
+    var path6 = require("path");
     var fs6 = require_fs();
     var mkdir = require_mkdirs();
     var { pathExists } = require_path_exists();
@@ -94527,7 +95264,7 @@ var require_link = __commonJS({
         throw err;
       }
       if (dstStat && areIdentical(srcStat, dstStat)) return;
-      const dir = path5.dirname(dstpath);
+      const dir = path6.dirname(dstpath);
       const dirExists = await pathExists(dir);
       if (!dirExists) {
         await mkdir.mkdirs(dir);
@@ -94547,7 +95284,7 @@ var require_link = __commonJS({
         err.message = err.message.replace("lstat", "ensureLink");
         throw err;
       }
-      const dir = path5.dirname(dstpath);
+      const dir = path6.dirname(dstpath);
       const dirExists = fs6.existsSync(dir);
       if (dirExists) return fs6.linkSync(srcpath, dstpath);
       mkdir.mkdirsSync(dir);
@@ -94564,12 +95301,12 @@ var require_link = __commonJS({
 var require_symlink_paths = __commonJS({
   "node_modules/fs-extra/lib/ensure/symlink-paths.js"(exports2, module2) {
     "use strict";
-    var path5 = require("path");
+    var path6 = require("path");
     var fs6 = require_fs();
     var { pathExists } = require_path_exists();
     var u = require_universalify().fromPromise;
     async function symlinkPaths(srcpath, dstpath) {
-      if (path5.isAbsolute(srcpath)) {
+      if (path6.isAbsolute(srcpath)) {
         try {
           await fs6.lstat(srcpath);
         } catch (err) {
@@ -94581,8 +95318,8 @@ var require_symlink_paths = __commonJS({
           toDst: srcpath
         };
       }
-      const dstdir = path5.dirname(dstpath);
-      const relativeToDst = path5.join(dstdir, srcpath);
+      const dstdir = path6.dirname(dstpath);
+      const relativeToDst = path6.join(dstdir, srcpath);
       const exists = await pathExists(relativeToDst);
       if (exists) {
         return {
@@ -94598,11 +95335,11 @@ var require_symlink_paths = __commonJS({
       }
       return {
         toCwd: srcpath,
-        toDst: path5.relative(dstdir, srcpath)
+        toDst: path6.relative(dstdir, srcpath)
       };
     }
     function symlinkPathsSync(srcpath, dstpath) {
-      if (path5.isAbsolute(srcpath)) {
+      if (path6.isAbsolute(srcpath)) {
         const exists2 = fs6.existsSync(srcpath);
         if (!exists2) throw new Error("absolute srcpath does not exist");
         return {
@@ -94610,8 +95347,8 @@ var require_symlink_paths = __commonJS({
           toDst: srcpath
         };
       }
-      const dstdir = path5.dirname(dstpath);
-      const relativeToDst = path5.join(dstdir, srcpath);
+      const dstdir = path6.dirname(dstpath);
+      const relativeToDst = path6.join(dstdir, srcpath);
       const exists = fs6.existsSync(relativeToDst);
       if (exists) {
         return {
@@ -94623,7 +95360,7 @@ var require_symlink_paths = __commonJS({
       if (!srcExists) throw new Error("relative srcpath does not exist");
       return {
         toCwd: srcpath,
-        toDst: path5.relative(dstdir, srcpath)
+        toDst: path6.relative(dstdir, srcpath)
       };
     }
     module2.exports = {
@@ -94671,7 +95408,7 @@ var require_symlink = __commonJS({
   "node_modules/fs-extra/lib/ensure/symlink.js"(exports2, module2) {
     "use strict";
     var u = require_universalify().fromPromise;
-    var path5 = require("path");
+    var path6 = require("path");
     var fs6 = require_fs();
     var { mkdirs, mkdirsSync } = require_mkdirs();
     var { symlinkPaths, symlinkPathsSync } = require_symlink_paths();
@@ -94686,11 +95423,11 @@ var require_symlink = __commonJS({
       }
       if (stats && stats.isSymbolicLink()) {
         let srcStat;
-        if (path5.isAbsolute(srcpath)) {
+        if (path6.isAbsolute(srcpath)) {
           srcStat = await fs6.stat(srcpath, { bigint: true });
         } else {
-          const dstdir = path5.dirname(dstpath);
-          const relativeToDst = path5.join(dstdir, srcpath);
+          const dstdir = path6.dirname(dstpath);
+          const relativeToDst = path6.join(dstdir, srcpath);
           try {
             srcStat = await fs6.stat(relativeToDst, { bigint: true });
           } catch {
@@ -94708,7 +95445,7 @@ var require_symlink = __commonJS({
       const relative = await symlinkPaths(srcpath, dstpath);
       srcpath = relative.toDst;
       const toType = await symlinkType(relative.toCwd, type);
-      const dir = path5.dirname(dstpath);
+      const dir = path6.dirname(dstpath);
       if (!await pathExists(dir)) {
         await mkdirs(dir);
       }
@@ -94722,11 +95459,11 @@ var require_symlink = __commonJS({
       }
       if (stats && stats.isSymbolicLink()) {
         let srcStat;
-        if (path5.isAbsolute(srcpath)) {
+        if (path6.isAbsolute(srcpath)) {
           srcStat = fs6.statSync(srcpath, { bigint: true });
         } else {
-          const dstdir = path5.dirname(dstpath);
-          const relativeToDst = path5.join(dstdir, srcpath);
+          const dstdir = path6.dirname(dstpath);
+          const relativeToDst = path6.join(dstdir, srcpath);
           try {
             srcStat = fs6.statSync(relativeToDst, { bigint: true });
           } catch {
@@ -94744,7 +95481,7 @@ var require_symlink = __commonJS({
       const relative = symlinkPathsSync(srcpath, dstpath);
       srcpath = relative.toDst;
       type = symlinkTypeSync(relative.toCwd, type);
-      const dir = path5.dirname(dstpath);
+      const dir = path6.dirname(dstpath);
       const exists = fs6.existsSync(dir);
       if (exists) return fs6.symlinkSync(srcpath, dstpath, type);
       mkdirsSync(dir);
@@ -94836,7 +95573,7 @@ var require_jsonfile = __commonJS({
       return obj;
     }
     var readFile4 = universalify.fromPromise(_readFile);
-    function readFileSync2(file, options = {}) {
+    function readFileSync3(file, options = {}) {
       if (typeof options === "string") {
         options = { encoding: options };
       }
@@ -94868,7 +95605,7 @@ var require_jsonfile = __commonJS({
     }
     module2.exports = {
       readFile: readFile4,
-      readFileSync: readFileSync2,
+      readFileSync: readFileSync3,
       writeFile,
       writeFileSync
     };
@@ -94896,18 +95633,18 @@ var require_output_file = __commonJS({
     "use strict";
     var u = require_universalify().fromPromise;
     var fs6 = require_fs();
-    var path5 = require("path");
+    var path6 = require("path");
     var mkdir = require_mkdirs();
     var pathExists = require_path_exists().pathExists;
     async function outputFile(file, data, encoding = "utf-8") {
-      const dir = path5.dirname(file);
+      const dir = path6.dirname(file);
       if (!await pathExists(dir)) {
         await mkdir.mkdirs(dir);
       }
       return fs6.writeFile(file, data, encoding);
     }
     function outputFileSync(file, ...args) {
-      const dir = path5.dirname(file);
+      const dir = path6.dirname(file);
       if (!fs6.existsSync(dir)) {
         mkdir.mkdirsSync(dir);
       }
@@ -94971,7 +95708,7 @@ var require_move = __commonJS({
   "node_modules/fs-extra/lib/move/move.js"(exports2, module2) {
     "use strict";
     var fs6 = require_fs();
-    var path5 = require("path");
+    var path6 = require("path");
     var { copy } = require_copy2();
     var { remove } = require_remove();
     var { mkdirp } = require_mkdirs();
@@ -94981,8 +95718,8 @@ var require_move = __commonJS({
       const overwrite = opts.overwrite || opts.clobber || false;
       const { srcStat, isChangingCase = false } = await stat.checkPaths(src, dest, "move", opts);
       await stat.checkParentPaths(src, srcStat, dest, "move");
-      const destParent = path5.dirname(dest);
-      const parsedParentPath = path5.parse(destParent);
+      const destParent = path6.dirname(dest);
+      const parsedParentPath = path6.parse(destParent);
       if (parsedParentPath.root !== destParent) {
         await mkdirp(destParent);
       }
@@ -95023,7 +95760,7 @@ var require_move_sync = __commonJS({
   "node_modules/fs-extra/lib/move/move-sync.js"(exports2, module2) {
     "use strict";
     var fs6 = require_graceful_fs();
-    var path5 = require("path");
+    var path6 = require("path");
     var copySync = require_copy2().copySync;
     var removeSync = require_remove().removeSync;
     var mkdirpSync = require_mkdirs().mkdirpSync;
@@ -95033,12 +95770,12 @@ var require_move_sync = __commonJS({
       const overwrite = opts.overwrite || opts.clobber || false;
       const { srcStat, isChangingCase = false } = stat.checkPathsSync(src, dest, "move", opts);
       stat.checkParentPathsSync(src, srcStat, dest, "move");
-      if (!isParentRoot(dest)) mkdirpSync(path5.dirname(dest));
+      if (!isParentRoot(dest)) mkdirpSync(path6.dirname(dest));
       return doRename(src, dest, overwrite, isChangingCase);
     }
     function isParentRoot(dest) {
-      const parent = path5.dirname(dest);
-      const parsedPath = path5.parse(parent);
+      const parent = path6.dirname(dest);
+      const parsedPath = path6.parse(parent);
       return parsedPath.root === parent;
     }
     function doRename(src, dest, overwrite, isChangingCase) {
@@ -95190,10 +95927,10 @@ var require_filenamify = __commonJS({
       }
       return string;
     }
-    var import_node_path4 = __toESM2(require("path"), 1);
+    var import_node_path5 = __toESM2(require("path"), 1);
     function filenamifyPath(filePath, options) {
-      filePath = import_node_path4.default.resolve(filePath);
-      return import_node_path4.default.join(import_node_path4.default.dirname(filePath), filenamify(import_node_path4.default.basename(filePath), options));
+      filePath = import_node_path5.default.resolve(filePath);
+      return import_node_path5.default.join(import_node_path5.default.dirname(filePath), filenamify(import_node_path5.default.basename(filePath), options));
     }
   }
 });
@@ -102842,10 +103579,10 @@ var require_streamingRequest = __commonJS({
        * @param body Optional body to send to the remote server.
        * @returns On success returns a streaming request with appropriate status code and body.
        */
-      static create(method, path5, body) {
+      static create(method, path6, body) {
         const request = new _StreamingRequest();
         request.verb = method;
-        request.path = path5;
+        request.path = path6;
         if (body) {
           request.setBody(body);
         }
@@ -109414,8 +110151,8 @@ var require_cloudAdapter = __commonJS({
       }
       createStreamingRequest(httpRequest) {
         const verb = httpRequest.method.toString();
-        const path5 = httpRequest.url.slice(httpRequest.url.indexOf("/v3"));
-        const request = botframework_streaming_1.StreamingRequest.create(verb, path5);
+        const path6 = httpRequest.url.slice(httpRequest.url.indexOf("/v3"));
+        const request = botframework_streaming_1.StreamingRequest.create(verb, path6);
         request.setBody(httpRequest.body);
         return request;
       }
@@ -112413,12 +113150,61 @@ var ProviderRequestError = class extends Error {
   operationId;
 };
 
+// http-body.ts
+var MAX_HTTP_BODY_BYTES = 256 * 1024;
+async function readBoundedJsonObject(request) {
+  const invalid = () => ({ response: { status: 400, jsonBody: { success: false, status: "invalid", message: "Request body must be a valid JSON object." } } });
+  const oversized = () => ({ response: { status: 413, jsonBody: { success: false, status: "invalid", message: "Request body exceeds 256 KiB." } } });
+  const length = request.headers.get("content-length");
+  if (length !== null && (!/^\d+$/.test(length) || !Number.isSafeInteger(Number(length)))) return invalid();
+  if (length !== null && Number(length) > MAX_HTTP_BODY_BYTES) {
+    void request.body?.cancel().catch(() => {
+    });
+    return oversized();
+  }
+  if (!request.body) return invalid();
+  const reader = request.body.getReader();
+  const chunks = [];
+  let bytes = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (!(value instanceof Uint8Array)) return invalid();
+      bytes += value.byteLength;
+      if (bytes > MAX_HTTP_BODY_BYTES) {
+        void reader.cancel().catch(() => {
+        });
+        return oversized();
+      }
+      chunks.push(Buffer.from(value));
+    }
+    const parsed = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(Buffer.concat(chunks, bytes)));
+    if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) return invalid();
+    return { body: parsed };
+  } catch {
+    return invalid();
+  } finally {
+    reader.releaseLock();
+  }
+}
+
 // bot.ts
+var UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function normalizedUuid(value) {
+  return typeof value === "string" && UUID.test(value) ? value.toLowerCase() : void 0;
+}
+function nonemptyString(value) {
+  return typeof value === "string" && value.trim().length > 0;
+}
 var ManagedIdentityTeamsBot = class {
   constructor(appId, tenantId, conversations, logger33) {
     this.appId = appId;
     this.conversations = conversations;
     this.logger = logger33;
+    this.tenantId = normalizedUuid(tenantId) ?? (() => {
+      throw Error("TeamsBotTenantIdInvalid");
+    })();
     const authentication = new import_botbuilder.ConfigurationBotFrameworkAuthentication({
       MicrosoftAppType: "UserAssignedMSI",
       MicrosoftAppId: appId,
@@ -112434,15 +113220,22 @@ var ManagedIdentityTeamsBot = class {
   conversations;
   logger;
   adapter;
+  tenantId;
   async sendToEntraUser(ownerObjectId, card) {
-    const reference = await this.conversations.getConversation(ownerObjectId);
-    if (!reference?.serviceUrl || !reference.conversation) throw new PermanentDeliveryError("Teams bot installation conversation unavailable");
+    const owner = normalizedUuid(ownerObjectId);
+    if (!owner) throw new PermanentDeliveryError("Teams bot installation conversation unavailable");
+    const reference = await this.conversations.getConversation(owner);
+    if (!reference || !nonemptyString(reference.serviceUrl) || reference.channelId !== "msteams" || reference.conversation?.conversationType !== "personal" || reference.conversation.isGroup === true || !nonemptyString(reference.conversation.id) || normalizedUuid(reference.conversation.tenantId) !== this.tenantId || normalizedUuid(reference.user?.aadObjectId) !== owner || !nonemptyString(reference.user?.id)) {
+      throw new PermanentDeliveryError("Teams bot installation conversation unavailable");
+    }
     await this.adapter.continueConversationAsync(this.appId, reference, async (context3) => {
       await context3.sendActivity({ attachments: [{ contentType: "application/vnd.microsoft.card.adaptive", content: card }] });
     });
   }
   async handle(request) {
-    const body = await request.json();
+    const parsed = await readBoundedJsonObject(request);
+    if (parsed.response) return parsed.response;
+    const body = parsed.body;
     const response = {
       statusCode: 200,
       headers: {},
@@ -112470,13 +113263,21 @@ var ManagedIdentityTeamsBot = class {
     });
     const webRequest = { method: request.method, headers, body };
     await this.adapter.process(webRequest, response, async (context3) => {
-      const ownerObjectId = context3.activity.from?.aadObjectId;
+      const conversation = context3.activity.conversation;
+      if (context3.activity.channelId !== "msteams" || normalizedUuid(context3.activity.channelData?.tenant?.id) !== this.tenantId || conversation?.conversationType !== "personal" || conversation.isGroup === true || conversation.tenantId !== void 0 && normalizedUuid(conversation.tenantId) !== this.tenantId) return;
+      const ownerObjectId = normalizedUuid(context3.activity.from?.aadObjectId);
       if (ownerObjectId) {
         const installationAction = context3.activity.action;
         if (context3.activity.type === "installationUpdate" && installationAction === "remove") {
           await this.conversations.deleteConversation(ownerObjectId);
         } else {
-          await this.conversations.putConversation(ownerObjectId, import_botbuilder.TurnContext.getConversationReference(context3.activity));
+          if (!nonemptyString(conversation.id) || !nonemptyString(context3.activity.from?.id) || !nonemptyString(context3.activity.serviceUrl)) return;
+          const reference = import_botbuilder.TurnContext.getConversationReference(context3.activity);
+          await this.conversations.putConversation(ownerObjectId, {
+            ...reference,
+            user: { ...reference.user, aadObjectId: ownerObjectId },
+            conversation: { ...reference.conversation, tenantId: this.tenantId }
+          });
         }
       }
     });
@@ -113067,7 +113868,7 @@ async function dispatchEvent(event, dependencies) {
 }
 
 // node_modules/@azure/identity/dist/esm/constants.js
-var SDK_VERSION = `4.13.3`;
+var SDK_VERSION = `4.14.1`;
 var DeveloperSignOnClientId = "04b07795-8ddb-461a-bbee-02f9e1bf7b46";
 var DefaultTenantId = "common";
 var AzureAuthorityHosts2;
@@ -113275,22 +114076,22 @@ var AuthenticationRequiredError2 = class extends Error {
 
 // node_modules/@typespec/ts-http-runtime/dist/esm/logger/log.js
 var import_node_os2 = require("node:os");
-var import_node_util6 = __toESM(require("node:util"), 1);
-var import_node_process8 = __toESM(require("node:process"), 1);
+var import_node_util7 = __toESM(require("node:util"), 1);
+var import_node_process9 = __toESM(require("node:process"), 1);
 function log(message, ...args) {
-  import_node_process8.default.stderr.write(`${import_node_util6.default.format(message, ...args)}${import_node_os2.EOL}`);
+  import_node_process9.default.stderr.write(`${import_node_util7.default.format(message, ...args)}${import_node_os2.EOL}`);
 }
 
 // node_modules/@typespec/ts-http-runtime/dist/esm/env.js
-var import_node_process9 = __toESM(require("node:process"), 1);
+var import_node_process10 = __toESM(require("node:process"), 1);
 function getEnvironmentVariable(name3) {
-  return import_node_process9.default.env[name3];
+  return import_node_process10.default.env[name3];
 }
 function emitNodeWarning(warning) {
-  import_node_process9.default.emitWarning(warning);
+  import_node_process10.default.emitWarning(warning);
 }
-var isDeno2 = typeof import_node_process9.default.versions.deno === "string" && import_node_process9.default.versions.deno.length > 0;
-var isBun2 = typeof import_node_process9.default.versions.bun === "string" && import_node_process9.default.versions.bun.length > 0;
+var isDeno2 = typeof import_node_process10.default.versions.deno === "string" && import_node_process10.default.versions.deno.length > 0;
+var isBun2 = typeof import_node_process10.default.versions.bun === "string" && import_node_process10.default.versions.bun.length > 0;
 var isNodeLike2 = true;
 
 // node_modules/@typespec/ts-http-runtime/dist/esm/logger/debug.js
@@ -113826,44 +114627,6 @@ var ChainedTokenCredential2 = class {
   }
 };
 
-// node_modules/@azure/msal-node/dist/index.mjs
-var dist_exports = {};
-__export(dist_exports, {
-  AuthError: () => AuthError,
-  AuthErrorCodes: () => AuthErrorCodes_exports,
-  AzureCloudInstance: () => AzureCloudInstance,
-  ClientAssertion: () => ClientAssertion,
-  ClientAuthError: () => ClientAuthError,
-  ClientAuthErrorCodes: () => ClientAuthErrorCodes_exports,
-  ClientConfigurationError: () => ClientConfigurationError,
-  ClientConfigurationErrorCodes: () => ClientConfigurationErrorCodes_exports,
-  ConfidentialClientApplication: () => ConfidentialClientApplication,
-  CryptoProvider: () => CryptoProvider,
-  DistributedCachePlugin: () => DistributedCachePlugin,
-  InteractionRequiredAuthError: () => InteractionRequiredAuthError,
-  InteractionRequiredAuthErrorCodes: () => InteractionRequiredAuthErrorCodes_exports,
-  LogLevel: () => LogLevel,
-  Logger: () => Logger,
-  ManagedIdentityApplication: () => ManagedIdentityApplication,
-  ManagedIdentitySourceNames: () => ManagedIdentitySourceNames,
-  PromptValue: () => PromptValue2,
-  ProtocolMode: () => ProtocolMode,
-  PublicClientApplication: () => PublicClientApplication,
-  ResponseMode: () => ResponseMode2,
-  ServerError: () => ServerError,
-  TokenCache: () => TokenCache,
-  TokenCacheContext: () => TokenCacheContext,
-  internals: () => internals_exports,
-  version: () => version2
-});
-
-// node_modules/@azure/msal-node/dist/internals.mjs
-var internals_exports = {};
-__export(internals_exports, {
-  Deserializer: () => Deserializer,
-  Serializer: () => Serializer
-});
-
 // node_modules/@azure/msal-node/dist/cache/serializer/Serializer.mjs
 var Serializer = class {
   /**
@@ -114039,6 +114802,7 @@ __export(AADServerParamKeys_exports, {
   NONCE: () => NONCE,
   OBO_ASSERTION: () => OBO_ASSERTION,
   ON_BEHALF_OF: () => ON_BEHALF_OF,
+  POPUP_ORIGIN_CHECK_DONE: () => POPUP_ORIGIN_CHECK_DONE,
   POST_LOGOUT_URI: () => POST_LOGOUT_URI,
   PROMPT: () => PROMPT,
   REDIRECT_URI: () => REDIRECT_URI,
@@ -114135,6 +114899,7 @@ var USERNAME = "username";
 var USER_ID = "user_id";
 var FMI_PATH = "fmi_path";
 var ATTRIBUTE_TOKENS = "attribute_tokens";
+var POPUP_ORIGIN_CHECK_DONE = "pocd";
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/cache/utils/AccountEntityUtils.mjs
 var AccountEntityUtils_exports = {};
@@ -114477,7 +115242,7 @@ var EncodingTypes = {
 function getDefaultErrorMessage(code) {
   return `See https://aka.ms/msal.js.errors#${code} for details`;
 }
-var AuthError = class _AuthError extends Error {
+var AuthError2 = class _AuthError extends Error {
   constructor(errorCode, correlationId, errorMessage, suberror) {
     const message = errorMessage || (errorCode ? getDefaultErrorMessage(errorCode) : "");
     const errorString = message ? `${errorCode}: ${message}` : errorCode;
@@ -114491,11 +115256,11 @@ var AuthError = class _AuthError extends Error {
   }
 };
 function createAuthError(code, correlationId, additionalMessage) {
-  return new AuthError(code, correlationId, additionalMessage || getDefaultErrorMessage(code));
+  return new AuthError2(code, correlationId, additionalMessage || getDefaultErrorMessage(code));
 }
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/error/ClientAuthError.mjs
-var ClientAuthError = class _ClientAuthError extends AuthError {
+var ClientAuthError = class _ClientAuthError extends AuthError2 {
   constructor(errorCode, correlationId, additionalMessage) {
     super(errorCode, correlationId, additionalMessage);
     this.name = "ClientAuthError";
@@ -114872,7 +115637,7 @@ var unexpectedError = "unexpected_error";
 var postRequestFailed = "post_request_failed";
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/error/ClientConfigurationError.mjs
-var ClientConfigurationError = class _ClientConfigurationError extends AuthError {
+var ClientConfigurationError = class _ClientConfigurationError extends AuthError2 {
   constructor(errorCode, correlationId) {
     super(errorCode, correlationId);
     this.name = "ClientConfigurationError";
@@ -114881,6 +115646,31 @@ var ClientConfigurationError = class _ClientConfigurationError extends AuthError
 };
 function createClientConfigurationError(errorCode, correlationId) {
   return new ClientConfigurationError(errorCode, correlationId);
+}
+
+// node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/network/ResponseHeaders.mjs
+var normalizedHeaderRecords = /* @__PURE__ */ new WeakSet();
+function normalizeResponseHeaders(headers) {
+  if (normalizedHeaderRecords.has(headers)) {
+    return headers;
+  }
+  const normalized = Object.fromEntries(Object.entries(headers).map(([name3, value]) => [
+    name3.toLowerCase(),
+    value
+  ]));
+  normalizedHeaderRecords.add(normalized);
+  return normalized;
+}
+function getResponseHeader(headers, name3) {
+  const key = name3.toLowerCase();
+  if (Object.prototype.hasOwnProperty.call(headers, key)) {
+    return headers[key];
+  }
+  if (normalizedHeaderRecords.has(headers)) {
+    return void 0;
+  }
+  const headerName = Object.keys(headers).find((header) => header.toLowerCase() === key);
+  return headerName === void 0 ? void 0 : headers[headerName];
 }
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/error/ClientConfigurationErrorCodes.mjs
@@ -116215,7 +117005,7 @@ var Authority = class _Authority {
       this.logger.verbose("Attempting to find a match between the developer's authority and the CloudInstanceDiscoveryMetadata returned from the network request.", this.correlationId);
       match = getCloudDiscoveryMetadataFromNetworkResponse(metadata, this.hostnameAndPort);
     } catch (error) {
-      if (error instanceof AuthError) {
+      if (error instanceof AuthError2) {
         this.logger.error(`There was a network error while attempting to get the cloud discovery instance metadata.
 Error: '${error.errorCode}'
 Error Description: '${error.errorMessage}'`, this.correlationId);
@@ -116550,6 +117340,7 @@ __export(RequestParameterBuilder_exports, {
   addOboAssertion: () => addOboAssertion,
   addPassword: () => addPassword,
   addPopToken: () => addPopToken,
+  addPopupOriginCheckDone: () => addPopupOriginCheckDone,
   addPostLogoutRedirectUri: () => addPostLogoutRedirectUri,
   addPrompt: () => addPrompt,
   addRedirectUri: () => addRedirectUri,
@@ -116886,6 +117677,11 @@ function addInstanceAware(parameters) {
     parameters.set(INSTANCE_AWARE, "true");
   }
 }
+function addPopupOriginCheckDone(parameters) {
+  if (!parameters.has(POPUP_ORIGIN_CHECK_DONE)) {
+    parameters.set(POPUP_ORIGIN_CHECK_DONE, "1");
+  }
+}
 function addExtraParameters(parameters, extraParams) {
   Object.entries(extraParams).forEach(([key, value]) => {
     if (!parameters.has(key) && value) {
@@ -117029,6 +117825,9 @@ function getDeserializedResponse(responseString) {
   }
   try {
     const normalizedResponse = stripLeadingHashOrQuery(responseString);
+    if (!/^[^=&?#/]+(?:=|&|$)/.test(normalizedResponse)) {
+      return null;
+    }
     const deserializedHash = Object.fromEntries(new URLSearchParams(normalizedResponse));
     if (deserializedHash.code || deserializedHash.ear_jwe || deserializedHash.error || deserializedHash.error_description || deserializedHash.state) {
       return deserializedHash;
@@ -117132,14 +117931,14 @@ var DEFAULT_TOKEN_BINDING_KEY_MANAGER = {
 };
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/logger/Logger.mjs
-var LogLevel;
-(function(LogLevel2) {
-  LogLevel2[LogLevel2["Error"] = 0] = "Error";
-  LogLevel2[LogLevel2["Warning"] = 1] = "Warning";
-  LogLevel2[LogLevel2["Info"] = 2] = "Info";
-  LogLevel2[LogLevel2["Verbose"] = 3] = "Verbose";
-  LogLevel2[LogLevel2["Trace"] = 4] = "Trace";
-})(LogLevel || (LogLevel = {}));
+var LogLevel2;
+(function(LogLevel3) {
+  LogLevel3[LogLevel3["Error"] = 0] = "Error";
+  LogLevel3[LogLevel3["Warning"] = 1] = "Warning";
+  LogLevel3[LogLevel3["Info"] = 2] = "Info";
+  LogLevel3[LogLevel3["Verbose"] = 3] = "Verbose";
+  LogLevel3[LogLevel3["Trace"] = 4] = "Trace";
+})(LogLevel2 || (LogLevel2 = {}));
 var CACHE_CAPACITY = 50;
 var MAX_LOGS_PER_CORRELATION = 500;
 var correlationCache = /* @__PURE__ */ new Map();
@@ -117188,14 +117987,14 @@ function getMessageHash(str) {
 }
 var Logger = class _Logger {
   constructor(loggerOptions, packageName, packageVersion) {
-    this.level = LogLevel.Info;
+    this.level = LogLevel2.Info;
     const defaultLoggerCallback2 = () => {
       return;
     };
     const setLoggerOptions = loggerOptions || _Logger.createDefaultLoggerOptions();
     this.localCallback = setLoggerOptions.loggerCallback || defaultLoggerCallback2;
     this.piiLoggingEnabled = setLoggerOptions.piiLoggingEnabled || false;
-    this.level = typeof setLoggerOptions.logLevel === "number" ? setLoggerOptions.logLevel : LogLevel.Info;
+    this.level = typeof setLoggerOptions.logLevel === "number" ? setLoggerOptions.logLevel : LogLevel2.Info;
     this.packageName = packageName || "";
     this.packageVersion = packageVersion || "";
   }
@@ -117204,7 +118003,7 @@ var Logger = class _Logger {
       loggerCallback: () => {
       },
       piiLoggingEnabled: false,
-      logLevel: LogLevel.Info
+      logLevel: LogLevel2.Info
     };
   }
   /**
@@ -117238,7 +118037,7 @@ var Logger = class _Logger {
     }
     const timestamp = (/* @__PURE__ */ new Date()).toUTCString();
     const logHeader = `[${timestamp}] : [${correlationId}]`;
-    const log2 = `${logHeader} : ${this.packageName}@${this.packageVersion} : ${LogLevel[options.logLevel]} - ${logMessage}`;
+    const log2 = `${logHeader} : ${this.packageName}@${this.packageVersion} : ${LogLevel2[options.logLevel]} - ${logMessage}`;
     this.executeCallback(options.logLevel, log2, options.containsPii || false);
   }
   /**
@@ -117254,7 +118053,7 @@ var Logger = class _Logger {
    */
   error(message, correlationId) {
     this.logMessage(message, {
-      logLevel: LogLevel.Error,
+      logLevel: LogLevel2.Error,
       containsPii: false,
       correlationId
     });
@@ -117264,7 +118063,7 @@ var Logger = class _Logger {
    */
   errorPii(message, correlationId) {
     this.logMessage(message, {
-      logLevel: LogLevel.Error,
+      logLevel: LogLevel2.Error,
       containsPii: true,
       correlationId
     });
@@ -117274,7 +118073,7 @@ var Logger = class _Logger {
    */
   warning(message, correlationId) {
     this.logMessage(message, {
-      logLevel: LogLevel.Warning,
+      logLevel: LogLevel2.Warning,
       containsPii: false,
       correlationId
     });
@@ -117284,7 +118083,7 @@ var Logger = class _Logger {
    */
   warningPii(message, correlationId) {
     this.logMessage(message, {
-      logLevel: LogLevel.Warning,
+      logLevel: LogLevel2.Warning,
       containsPii: true,
       correlationId
     });
@@ -117294,7 +118093,7 @@ var Logger = class _Logger {
    */
   info(message, correlationId) {
     this.logMessage(message, {
-      logLevel: LogLevel.Info,
+      logLevel: LogLevel2.Info,
       containsPii: false,
       correlationId
     });
@@ -117304,7 +118103,7 @@ var Logger = class _Logger {
    */
   infoPii(message, correlationId) {
     this.logMessage(message, {
-      logLevel: LogLevel.Info,
+      logLevel: LogLevel2.Info,
       containsPii: true,
       correlationId
     });
@@ -117314,7 +118113,7 @@ var Logger = class _Logger {
    */
   verbose(message, correlationId) {
     this.logMessage(message, {
-      logLevel: LogLevel.Verbose,
+      logLevel: LogLevel2.Verbose,
       containsPii: false,
       correlationId
     });
@@ -117324,7 +118123,7 @@ var Logger = class _Logger {
    */
   verbosePii(message, correlationId) {
     this.logMessage(message, {
-      logLevel: LogLevel.Verbose,
+      logLevel: LogLevel2.Verbose,
       containsPii: true,
       correlationId
     });
@@ -117334,7 +118133,7 @@ var Logger = class _Logger {
    */
   trace(message, correlationId) {
     this.logMessage(message, {
-      logLevel: LogLevel.Trace,
+      logLevel: LogLevel2.Trace,
       containsPii: false,
       correlationId
     });
@@ -117344,7 +118143,7 @@ var Logger = class _Logger {
    */
   tracePii(message, correlationId) {
     this.logMessage(message, {
-      logLevel: LogLevel.Trace,
+      logLevel: LogLevel2.Trace,
       containsPii: true,
       correlationId
     });
@@ -117359,7 +118158,7 @@ var Logger = class _Logger {
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/packageMetadata.mjs
 var name = "@azure/msal-common";
-var version = "16.14.1";
+var version = "16.16.0";
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/error/CacheErrorCodes.mjs
 var cacheQuotaExceeded = "cache_quota_exceeded";
@@ -117565,7 +118364,7 @@ var CacheManager = class {
       }
     } catch (e) {
       this.commonLogger?.error(`CacheManager.saveCacheRecord: failed`, correlationId);
-      if (e instanceof AuthError) {
+      if (e instanceof AuthError2) {
         throw e;
       } else {
         throw createCacheError(e);
@@ -117593,6 +118392,7 @@ var CacheManager = class {
     };
     const tokenKeys = this.getTokenKeys();
     const currentScopes = ScopeSet.fromString(credential.target, correlationId);
+    const accessTokenKeysToRemove = [];
     tokenKeys.accessToken.forEach((key) => {
       if (!this.accessTokenKeyMatchesFilter(key, accessTokenFilter, false)) {
         return;
@@ -117601,10 +118401,13 @@ var CacheManager = class {
       if (tokenEntity && this.credentialMatchesFilter(tokenEntity, accessTokenFilter, correlationId)) {
         const tokenScopeSet = ScopeSet.fromString(tokenEntity.target, correlationId);
         if (tokenScopeSet.intersectingScopeSets(currentScopes)) {
-          this.removeAccessToken(key, correlationId);
+          accessTokenKeysToRemove.push(key);
         }
       }
     });
+    for (const key of accessTokenKeysToRemove) {
+      await this.removeAccessTokenAndTokenBindingKey(key, correlationId, credential.keyId);
+    }
     await this.setAccessTokenCredential(credential, correlationId, kmsi, additionalCacheKeyHash);
   }
   /**
@@ -117806,12 +118609,32 @@ var CacheManager = class {
    * @param correlationId
    */
   removeAccessToken(key, correlationId) {
+    const credential = this.removeAccessTokenCredential(key, correlationId);
+    if (credential) {
+      void this.removeTokenBindingKeyForCredential(credential, correlationId);
+    }
+  }
+  /**
+   * Removes an access token and waits for any unreferenced token-binding key
+   * cleanup. Internal callers that require deterministic cleanup should use
+   * this method instead of the synchronous public cache contract.
+   */
+  async removeAccessTokenAndTokenBindingKey(key, correlationId, preservedKeyId) {
+    const credential = this.removeAccessTokenCredential(key, correlationId);
+    if (credential) {
+      await this.removeTokenBindingKeyForCredential(credential, correlationId, preservedKeyId);
+    }
+  }
+  removeAccessTokenCredential(key, correlationId) {
     const credential = this.getAccessTokenCredential(key, correlationId);
     if (!credential) {
-      return;
+      return null;
     }
     this.removeItem(key, correlationId);
     this.performanceClient.incrementFields({ accessTokensRemoved: 1 }, correlationId);
+    return credential;
+  }
+  async removeTokenBindingKeyForCredential(credential, correlationId, preservedKeyId) {
     if (credential.credentialType.toLowerCase() === CredentialType.ACCESS_TOKEN_WITH_AUTH_SCHEME.toLowerCase()) {
       const tokenType = credential.tokenType?.toLowerCase();
       switch (tokenType) {
@@ -117819,16 +118642,24 @@ var CacheManager = class {
         case AuthenticationScheme.DPOP.toLowerCase(): {
           const accessTokenWithAuthSchemeEntity = credential;
           const kid = accessTokenWithAuthSchemeEntity.keyId;
-          if (kid) {
-            void this.tokenBindingKeyManager.removeTokenBindingKey(kid, correlationId).catch(() => {
+          if (kid && kid !== preservedKeyId && !this.isTokenBindingKeyReferenced(kid, correlationId)) {
+            try {
+              await this.tokenBindingKeyManager.removeTokenBindingKey(kid, correlationId);
+            } catch {
               this.commonLogger.error("Failed to remove token binding key", correlationId);
               this.performanceClient?.incrementFields({ removeTokenBindingKeyFailure: 1 }, correlationId);
-            });
+            }
           }
           break;
         }
       }
     }
+  }
+  isTokenBindingKeyReferenced(keyId, correlationId) {
+    return this.getTokenKeys().accessToken.some((accessTokenKey) => {
+      const accessToken = this.getAccessTokenCredential(accessTokenKey, correlationId);
+      return accessToken?.keyId === keyId;
+    });
   }
   /**
    * Removes all app metadata objects from cache.
@@ -117958,6 +118789,7 @@ var CacheManager = class {
     this.commonLogger.trace("CacheManager - getAccessToken called", correlationId);
     const scopes = ScopeSet.createSearchScopes(request.scopes, correlationId);
     const authScheme = request.authenticationScheme || AuthenticationScheme.BEARER;
+    const normalizedAuthScheme = authScheme.toLowerCase();
     const credentialType = authScheme && authScheme.toLowerCase() !== AuthenticationScheme.BEARER.toLowerCase() ? CredentialType.ACCESS_TOKEN_WITH_AUTH_SCHEME : CredentialType.ACCESS_TOKEN;
     const attributeTokenPartition = serializeAttributeTokens(request.attributeTokens);
     const additionalCacheKeyComponents = attributeTokenPartition ? {
@@ -117971,7 +118803,7 @@ var CacheManager = class {
       realm: targetRealm || account.tenantId,
       target: scopes,
       tokenType: authScheme,
-      keyId: authScheme === AuthenticationScheme.SSH ? request.sshKid : void 0,
+      keyId: authScheme === AuthenticationScheme.SSH ? request.sshKid : normalizedAuthScheme === AuthenticationScheme.DPOP.toLowerCase() ? request.popKid || request.dpopJkt : void 0,
       additionalCacheKeyComponents
     };
     const accessTokenKeys = tokenKeys && tokenKeys.accessToken || this.getTokenKeys().accessToken;
@@ -118500,7 +119332,7 @@ var DEFAULT_LOGGER_IMPLEMENTATION = {
   loggerCallback: () => {
   },
   piiLoggingEnabled: false,
-  logLevel: LogLevel.Info,
+  logLevel: LogLevel2.Info,
   correlationId: ""
 };
 var DEFAULT_NETWORK_IMPLEMENTATION = {
@@ -118587,7 +119419,7 @@ var TokenCacheContext = class {
 };
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/error/JoseHeaderError.mjs
-var JoseHeaderError = class _JoseHeaderError extends AuthError {
+var JoseHeaderError = class _JoseHeaderError extends AuthError2 {
   constructor(errorCode, correlationId, errorMessage) {
     super(errorCode, correlationId, errorMessage);
     this.name = "JoseHeaderError";
@@ -118801,6 +119633,12 @@ function validateDpopNonce(nonce, correlationId) {
     throw createClientConfigurationError(invalidDpopNonce, correlationId);
   }
 }
+function normalizeDpopResourceRequestContext(context3, correlationId = "") {
+  return {
+    htm: normalizeHtm(context3.htm, correlationId),
+    htu: normalizeHtu(context3.htu, correlationId)
+  };
+}
 var DpopProofGenerator = class {
   constructor(cryptoUtils, tokenBindingKeyManager) {
     this.cryptoUtils = cryptoUtils;
@@ -118851,10 +119689,11 @@ var DpopProofGenerator = class {
    */
   buildResourceProofClaims(params, correlationId = "") {
     validateDpopNonce(params.nonce, correlationId);
+    const resourceContext = normalizeDpopResourceRequestContext(params, correlationId);
     const claims = {
       jti: this.cryptoUtils.createNewGuid(),
-      htm: normalizeHtm(params.htm, correlationId),
-      htu: normalizeHtu(params.htu, correlationId),
+      htm: resourceContext.htm,
+      htu: resourceContext.htu,
       ath: params.ath,
       iat: nowSeconds()
     };
@@ -118886,20 +119725,7 @@ var DpopProofGenerator = class {
 };
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/error/InteractionRequiredAuthErrorCodes.mjs
-var InteractionRequiredAuthErrorCodes_exports = {};
-__export(InteractionRequiredAuthErrorCodes_exports, {
-  badToken: () => badToken,
-  consentRequired: () => consentRequired,
-  interactionRequired: () => interactionRequired,
-  interruptedUser: () => interruptedUser,
-  loginRequired: () => loginRequired,
-  nativeAccountUnavailable: () => nativeAccountUnavailable,
-  noTokensFound: () => noTokensFound,
-  refreshTokenExpired: () => refreshTokenExpired,
-  uiNotAllowed: () => uiNotAllowed
-});
 var noTokensFound = "no_tokens_found";
-var nativeAccountUnavailable = "native_account_unavailable";
 var refreshTokenExpired = "refresh_token_expired";
 var uiNotAllowed = "ui_not_allowed";
 var interactionRequired = "interaction_required";
@@ -118927,7 +119753,7 @@ var InteractionRequiredAuthSubErrorMessage = [
   "ui_not_allowed",
   "interrupted_user"
 ];
-var InteractionRequiredAuthError = class _InteractionRequiredAuthError extends AuthError {
+var InteractionRequiredAuthError = class _InteractionRequiredAuthError extends AuthError2 {
   constructor(errorCode, correlationId, errorMessage, subError, timestamp, traceId, claims, errorNo) {
     super(errorCode, correlationId, errorMessage, subError);
     Object.setPrototypeOf(this, _InteractionRequiredAuthError.prototype);
@@ -118951,7 +119777,7 @@ function createInteractionRequiredAuthError(errorCode, correlationId, errorMessa
 }
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/error/ServerError.mjs
-var ServerError = class _ServerError extends AuthError {
+var ServerError = class _ServerError extends AuthError2 {
   constructor(errorCode, correlationId, errorMessage, subError, errorNo, status) {
     super(errorCode, correlationId, errorMessage, subError);
     this.name = "ServerError";
@@ -118962,6 +119788,29 @@ var ServerError = class _ServerError extends AuthError {
 };
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/utils/ProtocolUtils.mjs
+var ProtocolUtils_exports = {};
+__export(ProtocolUtils_exports, {
+  generateLibraryState: () => generateLibraryState,
+  parseRequestState: () => parseRequestState,
+  setRequestState: () => setRequestState
+});
+function setRequestState(cryptoObj, userState, meta, correlationId) {
+  const libraryState = generateLibraryState(cryptoObj, correlationId, meta);
+  return userState ? `${libraryState}${RESOURCE_DELIM}${userState}` : libraryState;
+}
+function generateLibraryState(cryptoObj, correlationId, meta) {
+  if (!cryptoObj) {
+    throw createClientAuthError(noCryptoObject, correlationId);
+  }
+  const stateObj = {
+    id: cryptoObj.createNewGuid()
+  };
+  if (meta) {
+    stateObj.meta = meta;
+  }
+  const stateString = JSON.stringify(stateObj);
+  return cryptoObj.base64Encode(stateString);
+}
 function parseRequestState(base64Decode2, state5, correlationId) {
   if (!base64Decode2) {
     throw createClientAuthError(noCryptoObject, correlationId);
@@ -119386,12 +120235,13 @@ var ThrottlingUtils = class _ThrottlingUtils {
    * Performs necessary throttling checks after a network request.
    * @param cacheManager
    * @param thumbprint
-   * @param response
+   * @param response - Token response with case-insensitive header names.
    */
   static postProcess(cacheManager, thumbprint, response, correlationId) {
-    if (_ThrottlingUtils.checkResponseStatus(response) || _ThrottlingUtils.checkResponseForRetryAfter(response)) {
+    const retryAfter = getRetryAfterHeader(response);
+    if (_ThrottlingUtils.checkResponseStatus(response) || retryAfter !== void 0) {
       const thumbprintValue = {
-        throttleTime: _ThrottlingUtils.calculateThrottleTime(parseInt(response.headers[HeaderNames.RETRY_AFTER])),
+        throttleTime: _ThrottlingUtils.calculateThrottleTime(parseInt(retryAfter || "")),
         error: response.body.error,
         errorCodes: response.body.error_codes,
         errorMessage: response.body.error_description,
@@ -119409,13 +120259,10 @@ var ThrottlingUtils = class _ThrottlingUtils {
   }
   /**
    * Checks a NetworkResponse object's RetryAfter header
-   * @param response
+   * @param response - Token response with case-insensitive header names.
    */
   static checkResponseForRetryAfter(response) {
-    if (response.headers) {
-      return response.headers.hasOwnProperty(HeaderNames.RETRY_AFTER) && (response.status < 200 || response.status >= 300);
-    }
-    return false;
+    return getRetryAfterHeader(response) !== void 0;
   }
   /**
    * Calculates the Unix-time value for a throttle to expire given throttleTime in seconds.
@@ -119432,9 +120279,15 @@ var ThrottlingUtils = class _ThrottlingUtils {
     cacheManager.removeItem(key, request.correlationId);
   }
 };
+function getRetryAfterHeader(response) {
+  if ((response.status < 200 || response.status >= 300) && response.headers) {
+    return getResponseHeader(response.headers, HeaderNames.RETRY_AFTER);
+  }
+  return void 0;
+}
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/error/NetworkError.mjs
-var NetworkError = class _NetworkError extends AuthError {
+var NetworkError = class _NetworkError extends AuthError2 {
   constructor(error, httpStatus, responseHeaders) {
     super(error.errorCode, error.correlationId, error.errorMessage, error.subError);
     Object.setPrototypeOf(this, _NetworkError.prototype);
@@ -119507,7 +120360,8 @@ async function sendPostRequest(thumbprint, tokenEndpoint, options, correlationId
   let response;
   try {
     response = await invokeAsync(networkClient.sendPostRequestAsync.bind(networkClient), NetworkClientSendPostRequestAsync, logger33, performanceClient, correlationId)(tokenEndpoint, { ...options, correlationId, performanceClient });
-    const responseHeaders = response.headers || {};
+    const responseHeaders = normalizeResponseHeaders(response.headers || {});
+    response = { ...response, headers: responseHeaders };
     performanceClient?.addFields({
       refreshTokenSize: response.body.refresh_token?.length || 0,
       httpVerToken: responseHeaders[HeaderNames.X_MS_HTTP_VERSION] || "",
@@ -119515,19 +120369,19 @@ async function sendPostRequest(thumbprint, tokenEndpoint, options, correlationId
     }, correlationId);
   } catch (e) {
     if (e instanceof NetworkError) {
-      const responseHeaders = e.responseHeaders;
+      const responseHeaders = e.responseHeaders ? normalizeResponseHeaders(e.responseHeaders) : void 0;
       if (responseHeaders) {
         performanceClient?.addFields({
           httpVerToken: responseHeaders[HeaderNames.X_MS_HTTP_VERSION] || "",
           requestId: responseHeaders[HeaderNames.X_MS_REQUEST_ID] || "",
-          contentTypeHeader: responseHeaders[HeaderNames.CONTENT_TYPE] || void 0,
-          contentLengthHeader: responseHeaders[HeaderNames.CONTENT_LENGTH] || void 0,
+          contentTypeHeader: getResponseHeader(responseHeaders, HeaderNames.CONTENT_TYPE) || void 0,
+          contentLengthHeader: getResponseHeader(responseHeaders, HeaderNames.CONTENT_LENGTH) || void 0,
           httpStatus: e.httpStatus
         }, correlationId);
       }
       throw e.error;
     }
-    if (e instanceof AuthError) {
+    if (e instanceof AuthError2) {
       throw e;
     } else {
       throw createClientAuthError(networkError, correlationId);
@@ -119732,6 +120586,9 @@ var AuthorizationCodeClient = class {
     if (request.logoutHint) {
       addLogoutHint(parameters, request.logoutHint);
     }
+    if (request.popupOriginCheckDone) {
+      addPopupOriginCheckDone(parameters);
+    }
     if (request.extraQueryParameters) {
       addExtraParameters(parameters, request.extraQueryParameters);
     }
@@ -119852,6 +120709,9 @@ function getStandardAuthorizeRequestParameters(authOptions, request, logger33, p
   addClaims(parameters, request.correlationId, request.claims, authOptions.clientCapabilities, request.skipBrokerClaims);
   if (authOptions.instanceAware && (!request.extraQueryParameters || !Object.keys(request.extraQueryParameters).includes(INSTANCE_AWARE))) {
     addInstanceAware(parameters);
+  }
+  if (request.popupOriginCheckDone) {
+    addPopupOriginCheckDone(parameters);
   }
   return parameters;
 }
@@ -120023,6 +120883,7 @@ var RefreshTokenClient = class {
       addRedirectUri(parameters, request.redirectUri);
     }
     addScopes(parameters, request.scopes, request.correlationId, true, this.config.authOptions.authority.options.OIDCOptions?.defaultScopes);
+    addResource(parameters, request.resource);
     addGrantType(parameters, GrantType.REFRESH_TOKEN_GRANT);
     addClientInfo(parameters);
     addLibraryInfo(parameters, this.config.libraryInfo);
@@ -120194,7 +121055,7 @@ var ServerTelemetryManager = class _ServerTelemetryManager {
       }
       lastRequests.failedRequests.push(this.apiId, this.correlationId);
       if (error instanceof Error && !!error && error.toString()) {
-        if (error instanceof AuthError) {
+        if (error instanceof AuthError2) {
           if (error.subError) {
             lastRequests.errors.push(error.subError);
           } else if (error.errorCode) {
@@ -120858,7 +121719,7 @@ var ManagedIdentityErrorMessages = {
   [wwwAuthenticateHeaderMissing]: "A 401 response was received from the Azure Arc Managed Identity, but the www-authenticate header is missing.",
   [wwwAuthenticateHeaderUnsupportedFormat]: "A 401 response was received from the Azure Arc Managed Identity, but the www-authenticate header is in an unsupported format."
 };
-var ManagedIdentityError = class _ManagedIdentityError extends AuthError {
+var ManagedIdentityError = class _ManagedIdentityError extends AuthError2 {
   constructor(errorCode, correlationId) {
     super(errorCode, correlationId, ManagedIdentityErrorMessages[errorCode]);
     this.name = "ManagedIdentityError";
@@ -120938,6 +121799,10 @@ var NodeAuthErrorMessage = {
     code: "loopback_server_timeout",
     desc: "Timed out waiting for auth code listener to be registered."
   },
+  loopbackServerQueryResponseNotSupported: {
+    code: "loopback_server_query_response_not_supported",
+    desc: "The loopback server received an OAuth response in the URL. Interactive authentication requires form_post."
+  },
   stateNotFoundError: {
     code: "state_not_found",
     desc: "State not found. Please verify that the request originated from msal."
@@ -120949,9 +121814,13 @@ var NodeAuthErrorMessage = {
   redirectUriNotSupported: {
     code: "redirect_uri_not_supported",
     desc: "RedirectUri is not supported in this scenario. Please remove redirectUri from the request."
+  },
+  unsupportedCcaInstanceAware: {
+    code: "unsupported_cca_instance_aware",
+    desc: "Instance-aware configuration is not supported by ConfidentialClientApplication."
   }
 };
-var NodeAuthError = class _NodeAuthError extends AuthError {
+var NodeAuthError = class _NodeAuthError extends AuthError2 {
   constructor(errorCode, correlationId, errorMessage) {
     super(errorCode, correlationId, errorMessage);
     this.name = "NodeAuthError";
@@ -120993,6 +121862,12 @@ var NodeAuthError = class _NodeAuthError extends AuthError {
     return new _NodeAuthError(NodeAuthErrorMessage.loopbackServerTimeout.code, correlationId, `${NodeAuthErrorMessage.loopbackServerTimeout.desc}`);
   }
   /**
+   * Creates an error thrown if the loopback server receives an OAuth response in a query string.
+   */
+  static createLoopbackServerQueryResponseNotSupportedError() {
+    return new _NodeAuthError(NodeAuthErrorMessage.loopbackServerQueryResponseNotSupported.code, "", NodeAuthErrorMessage.loopbackServerQueryResponseNotSupported.desc);
+  }
+  /**
    * Creates an error thrown when the state is not present.
    */
   static createStateNotFoundError(correlationId = "") {
@@ -121009,6 +121884,12 @@ var NodeAuthError = class _NodeAuthError extends AuthError {
    */
   static createRedirectUriNotSupportedError(correlationId = "") {
     return new _NodeAuthError(NodeAuthErrorMessage.redirectUriNotSupported.code, correlationId, NodeAuthErrorMessage.redirectUriNotSupported.desc);
+  }
+  /**
+   * Creates an error thrown when instance-aware behavior is requested for a confidential client.
+   */
+  static createUnsupportedCcaInstanceAwareError(correlationId = "") {
+    return new _NodeAuthError(NodeAuthErrorMessage.unsupportedCcaInstanceAware.code, correlationId, NodeAuthErrorMessage.unsupportedCcaInstanceAware.desc);
   }
 };
 
@@ -121038,7 +121919,7 @@ var DEFAULT_LOGGER_OPTIONS = {
   loggerCallback: () => {
   },
   piiLoggingEnabled: false,
-  logLevel: LogLevel.Info
+  logLevel: LogLevel2.Info
 };
 var DEFAULT_SYSTEM_OPTIONS2 = {
   loggerOptions: DEFAULT_LOGGER_OPTIONS,
@@ -122104,7 +122985,7 @@ var ClientAssertion = class _ClientAssertion {
 
 // node_modules/@azure/msal-node/dist/packageMetadata.mjs
 var name2 = "@azure/msal-node";
-var version2 = "6.0.1";
+var version2 = "7.2.0";
 
 // node_modules/@azure/msal-node/dist/client/BaseClient.mjs
 var BaseClient = class {
@@ -122261,6 +123142,89 @@ function getAuthCodeRequestUrl(config, authority, request, logger33) {
   return Authorize_exports.getAuthorizeUrl(authority, parameters);
 }
 
+// node_modules/@azure/msal-node/dist/client/SilentRequestCoalescer.mjs
+var activeSilentTokenRequests = /* @__PURE__ */ new WeakMap();
+function acquireTokenSilentDeduped(owner, logger33, silentRequestKey, correlationId, acquireToken) {
+  const existingRequests = activeSilentTokenRequests.get(owner);
+  const activeRequests = existingRequests || /* @__PURE__ */ new Map();
+  if (!existingRequests) {
+    activeSilentTokenRequests.set(owner, activeRequests);
+  }
+  const inProgressRequest = activeRequests.get(silentRequestKey);
+  if (inProgressRequest) {
+    logger33.verbose("acquireTokenSilent has been called previously, returning the result from the first call", correlationId);
+    return applyCallerCorrelationIdToResult(inProgressRequest, correlationId);
+  }
+  logger33.verbose("acquireTokenSilent called for the first time, storing active request", correlationId);
+  const activeRequest = Promise.resolve().then(acquireToken).finally(() => {
+    activeRequests.delete(silentRequestKey);
+    if (activeRequests.size === 0) {
+      activeSilentTokenRequests.delete(owner);
+    }
+  });
+  activeRequests.set(silentRequestKey, activeRequest);
+  return applyCallerCorrelationIdToResult(activeRequest, correlationId);
+}
+function getSilentRequestKey(input) {
+  const { request } = input;
+  const authority = input.requestType === "native" ? request.authority : input.authority;
+  const commonKeyFields = {
+    requestType: input.requestType,
+    clientId: input.requestType === "native" ? input.request.clientId : input.clientId,
+    authority,
+    scopes: canonicalizeRequestValues(request.scopes),
+    claims: request.claims,
+    authenticationScheme: request.authenticationScheme,
+    resourceRequestMethod: request.resourceRequestMethod,
+    resourceRequestUri: request.resourceRequestUri,
+    forceRefresh: request.forceRefresh,
+    redirectUri: request.redirectUri || "",
+    resource: request.resource,
+    extraParameters: canonicalizeRequestValues(request.extraParameters)
+  };
+  if (input.requestType === "native") {
+    return JSON.stringify({
+      ...commonKeyFields,
+      accountId: input.request.accountId,
+      shrNonce: input.request.shrNonce,
+      extraScopesToConsent: canonicalizeRequestValues(input.request.extraScopesToConsent),
+      loginHint: input.request.loginHint,
+      prompt: input.request.prompt
+    });
+  }
+  const nonNativeRequest = input.request;
+  const thumbprint = getRequestThumbprint(input.clientId, { ...nonNativeRequest, authority }, nonNativeRequest.account.homeAccountId);
+  return JSON.stringify({
+    ...thumbprint,
+    ...commonKeyFields,
+    accountTenantId: nonNativeRequest.account.tenantId,
+    accountEnvironment: nonNativeRequest.account.environment,
+    refreshTokenExpirationOffsetSeconds: nonNativeRequest.refreshTokenExpirationOffsetSeconds,
+    extraQueryParameters: canonicalizeRequestValues(nonNativeRequest.extraQueryParameters),
+    skipBrokerClaims: thumbprint.embeddedClientId || nonNativeRequest.extraParameters?.[AADServerParamKeys_exports.BROKER_CLIENT_ID] ? nonNativeRequest.skipBrokerClaims : void 0
+  });
+}
+function snapshotNativeRequest(request) {
+  return {
+    ...request,
+    scopes: [...request.scopes],
+    extraParameters: request.extraParameters ? { ...request.extraParameters } : void 0,
+    extraScopesToConsent: request.extraScopesToConsent ? [...request.extraScopesToConsent] : void 0
+  };
+}
+function canonicalizeRequestValues(values) {
+  if (Array.isArray(values)) {
+    return Array.from(new Set(values.map((scope) => scope.trim()).filter((scope) => scope.length > 0))).sort();
+  }
+  return values ? Object.keys(values).sort().map((key) => [key, values[key]]) : void 0;
+}
+function applyCallerCorrelationIdToResult(activeRequest, correlationId) {
+  return activeRequest.then((result) => ({
+    ...result,
+    correlationId
+  }));
+}
+
 // node_modules/@azure/msal-node/dist/client/ClientApplication.mjs
 var ClientApplication = class {
   /**
@@ -122333,7 +123297,7 @@ var ClientApplication = class {
       this.logger.verbose("Auth code client created", validRequest.correlationId);
       return await authorizationCodeClient.acquireToken(validRequest, ApiId.acquireTokenByCode, validatedAuthCodePayload);
     } catch (e) {
-      if (e instanceof AuthError) {
+      if (e instanceof AuthError2) {
         e.correlationId = validRequest.correlationId;
       }
       serverTelemetryManager.cacheFailedRequest(e);
@@ -122362,7 +123326,7 @@ var ClientApplication = class {
       this.logger.verbose("Refresh token client created", validRequest.correlationId);
       return await refreshTokenClient.acquireToken(validRequest, ApiId.acquireTokenByRefreshToken);
     } catch (e) {
-      if (e instanceof AuthError) {
+      if (e instanceof AuthError2) {
         e.correlationId = validRequest.correlationId;
       }
       serverTelemetryManager.cacheFailedRequest(e);
@@ -122374,6 +123338,7 @@ var ClientApplication = class {
    *
    * This API expects the user to provide an account object and looks into the cache to retrieve the token if present.
    * There is also an optional "forceRefresh" boolean the user can send to bypass the cache for access_token and id_token.
+   * Concurrent requests with the same request thumbprint return the same in-progress result.
    * In case the refresh_token is expired or not found, an error is thrown
    * and the guidance is for the user to call any interactive token acquisition API (eg: `acquireTokenByCode()`).
    */
@@ -122383,9 +123348,22 @@ var ClientApplication = class {
       ...await this.initializeBaseRequest(request),
       forceRefresh: request.forceRefresh || false
     };
+    if (!validRequest.account) {
+      return this.acquireTokenSilentAsync(validRequest, request.azureCloudOptions);
+    }
+    const authorityForThumbprint = Authority.generateAuthority(validRequest.authority, request.azureCloudOptions || this.config.auth.azureCloudOptions);
+    const silentRequestKey = getSilentRequestKey({
+      requestType: "non-native",
+      request: validRequest,
+      authority: authorityForThumbprint,
+      clientId: this.config.auth.clientId
+    });
+    return acquireTokenSilentDeduped(this, this.logger, silentRequestKey, validRequest.correlationId, () => this.acquireTokenSilentAsync(validRequest, request.azureCloudOptions));
+  }
+  async acquireTokenSilentAsync(validRequest, azureCloudOptions) {
     const serverTelemetryManager = this.initializeServerTelemetryManager(ApiId.acquireTokenSilent, validRequest.correlationId, validRequest.forceRefresh);
     try {
-      const discoveredAuthority = await this.createAuthority(validRequest.authority, validRequest.correlationId, void 0, request.azureCloudOptions);
+      const discoveredAuthority = await this.createAuthority(validRequest.authority, validRequest.correlationId, void 0, azureCloudOptions);
       const clientConfiguration = await this.buildOauthClientConfiguration(discoveredAuthority, validRequest.correlationId, validRequest.redirectUri || "", serverTelemetryManager);
       const silentFlowClient = new SilentFlowClient(clientConfiguration, new StubPerformanceClient());
       this.logger.verbose("Silent flow client created", validRequest.correlationId);
@@ -122400,7 +123378,7 @@ var ClientApplication = class {
         throw error;
       }
     } catch (error) {
-      if (error instanceof AuthError) {
+      if (error instanceof AuthError2) {
         error.correlationId = validRequest.correlationId;
       }
       serverTelemetryManager.cacheFailedRequest(error);
@@ -122447,7 +123425,7 @@ var ClientApplication = class {
       this.logger.verbose("Username password client created", validRequest.correlationId);
       return await usernamePasswordClient.acquireToken(validRequest);
     } catch (e) {
-      if (e instanceof AuthError) {
+      if (e instanceof AuthError2) {
         e.correlationId = validRequest.correlationId;
       }
       serverTelemetryManager.cacheFailedRequest(e);
@@ -122612,13 +123590,17 @@ var LoopbackClient = class {
   }
   /**
    * Spins up a loopback server which returns the server response when the localhost redirectUri is hit
+   * @param expectedState - State sent in the authorization request
    * @param successTemplate
    * @param errorTemplate
    * @returns
    */
-  async listenForAuthCode(successTemplate, errorTemplate) {
+  async listenForAuthCode(expectedState, successTemplate, errorTemplate) {
     if (this.server) {
       throw NodeAuthError.createLoopbackServerAlreadyExistsError();
+    }
+    if (!expectedState) {
+      throw NodeAuthError.createStateNotFoundError("");
     }
     return new Promise((resolve, reject) => {
       this.server = import_http.default.createServer((req, res) => {
@@ -122637,7 +123619,7 @@ var LoopbackClient = class {
           return;
         } else if (url2 === Constants_exports.FORWARD_SLASH) {
           if (method === "POST") {
-            this.handlePostRequest(req, res, resolve, successTemplate, errorTemplate);
+            this.handlePostRequest(req, res, resolve, expectedState, successTemplate, errorTemplate);
             return;
           }
           res.end(successTemplate || "Auth code was successfully acquired. You can close this window now.");
@@ -122652,16 +123634,14 @@ var LoopbackClient = class {
             res.end();
             return;
           }
-          if (authCodeResponse.code) {
-            res.writeHead(Constants_exports.HTTP_REDIRECT, {
-              location: redirectUri
-            });
-            res.end();
+          if (!this.isExpectedState(parsedUrl.searchParams, expectedState)) {
+            res.writeHead(400);
+            res.end("Invalid authorization response state.");
+            return;
           }
-          if (authCodeResponse.error) {
-            res.end(errorTemplate || `Error occurred: ${authCodeResponse.error}`);
-          }
-          resolve(authCodeResponse);
+          res.writeHead(400);
+          res.end("OAuth responses must use form_post and cannot be returned in the URL.");
+          reject(NodeAuthError.createLoopbackServerQueryResponseNotSupportedError());
         } else {
           res.writeHead(200);
           res.end();
@@ -122681,7 +123661,7 @@ var LoopbackClient = class {
   /**
    * Handles POST requests for form_post response mode
    */
-  handlePostRequest(req, res, resolve, successTemplate, errorTemplate) {
+  handlePostRequest(req, res, resolve, expectedState, successTemplate, errorTemplate) {
     const contentType3 = req.headers["content-type"]?.split(";")[0]?.trim();
     if (contentType3 !== "application/x-www-form-urlencoded") {
       res.writeHead(415);
@@ -122705,6 +123685,11 @@ var LoopbackClient = class {
         res.end();
         return;
       }
+      if (!this.isExpectedState(new URLSearchParams(body), expectedState)) {
+        res.writeHead(400);
+        res.end("Invalid authorization response state.");
+        return;
+      }
       if (authCodeResponse.error) {
         res.writeHead(200);
         res.end(errorTemplate || `Error occurred: ${authCodeResponse.error}`);
@@ -122714,6 +123699,13 @@ var LoopbackClient = class {
       }
       resolve(authCodeResponse);
     });
+  }
+  /**
+   * Requires exactly one state value matching the pending authorization request.
+   */
+  isExpectedState(parameters, expectedState) {
+    const states = parameters.getAll("state");
+    return states.length === 1 && states[0] === expectedState;
   }
   /**
    * Get the port that the loopback server is running on
@@ -122983,7 +123975,7 @@ var PublicClientApplication = class extends ClientApplication {
       this.logger.verbose("Device code client created", validRequest.correlationId);
       return await deviceCodeClient.acquireToken(validRequest);
     } catch (e) {
-      if (e instanceof AuthError) {
+      if (e instanceof AuthError2) {
         e.correlationId = validRequest.correlationId;
       }
       serverTelemetryManager.cacheFailedRequest(e);
@@ -123023,14 +124015,15 @@ var PublicClientApplication = class extends ClientApplication {
     }
     const { verifier, challenge } = await this.cryptoProvider.generatePkceCodes();
     const loopbackClient = new LoopbackClient(preferredPort);
-    const responseMode = remainingProperties.responseMode ?? Constants_exports.ResponseMode.FORM_POST;
-    if (responseMode !== Constants_exports.ResponseMode.QUERY && responseMode !== Constants_exports.ResponseMode.FORM_POST) {
+    const responseMode = remainingProperties.responseMode;
+    if (responseMode !== void 0 && responseMode !== Constants_exports.ResponseMode.FORM_POST) {
       throw createClientConfigurationError(ClientConfigurationErrorCodes_exports.invalidResponseMode, correlationId);
     }
+    const state5 = ProtocolUtils_exports.setRequestState(this.cryptoProvider, remainingProperties.state ? this.cryptoProvider.base64Encode(remainingProperties.state) : remainingProperties.state, void 0, correlationId);
     let authCodeResponse = {};
     let authCodeListenerError = null;
     try {
-      const authCodeListener = loopbackClient.listenForAuthCode(successTemplate, errorTemplate).then((response) => {
+      const authCodeListener = loopbackClient.listenForAuthCode(state5, successTemplate, errorTemplate).then((response) => {
         authCodeResponse = response;
       }).catch((e) => {
         authCodeListenerError = e;
@@ -123041,9 +124034,10 @@ var PublicClientApplication = class extends ClientApplication {
         correlationId,
         scopes: request.scopes || Constants_exports.OIDC_DEFAULT_SCOPES,
         redirectUri,
-        responseMode,
+        responseMode: Constants_exports.ResponseMode.FORM_POST,
         codeChallenge: challenge,
-        codeChallengeMethod: Constants_exports.CodeChallengeMethodValues.S256
+        codeChallengeMethod: Constants_exports.CodeChallengeMethodValues.S256,
+        state: state5
       };
       const authCodeUrl = await this.getAuthCodeUrl(validRequest);
       await openBrowser(authCodeUrl);
@@ -123051,6 +124045,7 @@ var PublicClientApplication = class extends ClientApplication {
       if (authCodeListenerError) {
         throw authCodeListenerError;
       }
+      this.validateState(state5, authCodeResponse.state || "", correlationId);
       if (authCodeResponse.error) {
         throw new ServerError(authCodeResponse.error, correlationId, authCodeResponse.error_description, authCodeResponse.suberror);
       } else if (!authCodeResponse.code) {
@@ -123061,7 +124056,8 @@ var PublicClientApplication = class extends ClientApplication {
         code: authCodeResponse.code,
         codeVerifier: verifier,
         clientInfo: clientInfo || "",
-        ...validRequest
+        ...validRequest,
+        state: remainingProperties.state
       };
       return await this.acquireTokenByCode(tokenRequest);
     } finally {
@@ -123078,7 +124074,8 @@ var PublicClientApplication = class extends ClientApplication {
     this.logger.trace("acquireTokenSilent called", correlationId);
     enforceResourceParameter(this.config.auth.isMcp, request);
     if (this.nativeBrokerPlugin) {
-      const brokerRequest = {
+      const nativeBrokerPlugin = this.nativeBrokerPlugin;
+      const brokerRequest = snapshotNativeRequest({
         ...request,
         clientId: this.config.auth.clientId,
         scopes: request.scopes || Constants_exports.OIDC_DEFAULT_SCOPES,
@@ -123092,8 +124089,12 @@ var PublicClientApplication = class extends ClientApplication {
         },
         accountId: request.account.nativeAccountId,
         forceRefresh: request.forceRefresh || false
-      };
-      return this.nativeBrokerPlugin.acquireTokenSilent(brokerRequest);
+      });
+      const silentRequestKey = getSilentRequestKey({
+        requestType: "native",
+        request: brokerRequest
+      });
+      return acquireTokenSilentDeduped(this, this.logger, silentRequestKey, correlationId, () => nativeBrokerPlugin.acquireTokenSilent(brokerRequest));
     }
     if (request.redirectUri) {
       if (!this.config.broker.nativeBrokerPlugin) {
@@ -123167,7 +124168,7 @@ var PublicClientApplication = class extends ClientApplication {
           resolve(r);
           return;
         } catch (e) {
-          if (e instanceof AuthError && e.errorCode === NodeAuthErrorMessage.noLoopbackServerExists.code) {
+          if (e instanceof AuthError2 && e.errorCode === NodeAuthErrorMessage.noLoopbackServerExists.code) {
             ticks++;
             return;
           }
@@ -123698,6 +124699,9 @@ var ConfidentialClientApplication = class extends ClientApplication {
    * @param Configuration - configuration object for the MSAL ConfidentialClientApplication instance
    */
   constructor(configuration) {
+    if ("instanceAware" in configuration.auth && configuration.auth.instanceAware === true) {
+      throw NodeAuthError.createUnsupportedCcaInstanceAwareError();
+    }
     super(configuration);
     const clientSecretNotEmpty = !!this.config.auth.clientSecret;
     const clientAssertionNotEmpty = !!this.config.auth.clientAssertion;
@@ -123727,6 +124731,26 @@ var ConfidentialClientApplication = class extends ClientApplication {
       );
     }
     this.appTokenProvider = void 0;
+  }
+  /**
+   * Creates the URL of the authorization request.
+   */
+  async getAuthCodeUrl(request) {
+    if (request.extraQueryParameters && Object.prototype.hasOwnProperty.call(request.extraQueryParameters, "instance_aware")) {
+      throw NodeAuthError.createUnsupportedCcaInstanceAwareError(request.correlationId);
+    }
+    return super.getAuthCodeUrl(request);
+  }
+  /**
+   * Acquires a token by exchanging an authorization code.
+   */
+  async acquireTokenByCode(request, authCodePayload) {
+    const sanitizedAuthCodePayload = authCodePayload ? {
+      code: request.code,
+      state: authCodePayload.state,
+      nonce: request.nonce
+    } : void 0;
+    return super.acquireTokenByCode(request, sanitizedAuthCodePayload);
   }
   /**
    * This extensibility point only works for the client_credential flow, i.e. acquireTokenByClientCredential and
@@ -123789,7 +124813,7 @@ var ConfidentialClientApplication = class extends ClientApplication {
       this.logger.verbose("Client credential client created", validRequest.correlationId);
       return await clientCredentialClient.acquireToken(validRequest);
     } catch (e) {
-      if (e instanceof AuthError) {
+      if (e instanceof AuthError2) {
         e.correlationId = validRequest.correlationId;
       }
       serverTelemetryManager.cacheFailedRequest(e);
@@ -123820,7 +124844,7 @@ var ConfidentialClientApplication = class extends ClientApplication {
       this.logger.verbose("On behalf of client created", validRequest.correlationId);
       return await oboClient.acquireToken(validRequest);
     } catch (e) {
-      if (e instanceof AuthError) {
+      if (e instanceof AuthError2) {
         e.correlationId = validRequest.correlationId;
       }
       throw e;
@@ -123867,7 +124891,7 @@ var ConfidentialClientApplication = class extends ClientApplication {
       this.logger.verbose("UserFederatedIdentityCredential client created", validRequest.correlationId);
       return await ficClient.acquireToken(validRequest);
     } catch (e) {
-      if (e instanceof AuthError) {
+      if (e instanceof AuthError2) {
         e.correlationId = validRequest.correlationId;
       }
       serverTelemetryManager.cacheFailedRequest(e);
@@ -124047,7 +125071,7 @@ var BaseManagedIdentitySource = class {
         response = await networkClientHelper.sendGetRequestAsync(networkRequest.computeUri(), networkRequestOptions);
       }
     } catch (error) {
-      if (error instanceof AuthError) {
+      if (error instanceof AuthError2) {
         throw error;
       } else {
         throw createClientAuthError(ClientAuthErrorCodes_exports.networkError, managedIdentityRequest.correlationId);
@@ -124478,7 +125502,7 @@ var AzureArc = class _AzureArc extends BaseManagedIdentitySource {
       try {
         retryResponse = await networkClient.sendGetRequestAsync(networkRequest.computeUri(), networkRequestOptions);
       } catch (error) {
-        if (error instanceof AuthError) {
+        if (error instanceof AuthError2) {
           throw error;
         } else {
           throw createClientAuthError(ClientAuthErrorCodes_exports.networkError, "");
@@ -125102,41 +126126,6 @@ var ManagedIdentityApplication = class _ManagedIdentityApplication {
   }
 };
 
-// node_modules/@azure/msal-node/dist/cache/distributed/DistributedCachePlugin.mjs
-var DistributedCachePlugin = class {
-  constructor(client, partitionManager) {
-    this.client = client;
-    this.partitionManager = partitionManager;
-  }
-  /**
-   * Deserializes the cache before accessing it
-   * @param cacheContext - TokenCacheContext
-   */
-  async beforeCacheAccess(cacheContext) {
-    const partitionKey2 = await this.partitionManager.getKey();
-    const cacheData = await this.client.get(partitionKey2);
-    cacheContext.tokenCache.deserialize(cacheData);
-  }
-  /**
-   * Serializes the cache after accessing it
-   * @param cacheContext - TokenCacheContext
-   */
-  async afterCacheAccess(cacheContext) {
-    if (cacheContext.cacheHasChanged) {
-      const kvStore = cacheContext.tokenCache.getKVStore();
-      const accountEntities = Object.values(kvStore).filter((value) => AccountEntityUtils_exports.isAccountEntity(value));
-      let partitionKey2;
-      if (accountEntities.length > 0) {
-        const accountEntity = accountEntities[0];
-        partitionKey2 = await this.partitionManager.extractKey(accountEntity);
-      } else {
-        partitionKey2 = await this.partitionManager.getKey();
-      }
-      await this.client.set(partitionKey2, cacheContext.tokenCache.serialize());
-    }
-  }
-};
-
 // node_modules/@azure/msal-node/dist/index.mjs
 var PromptValue2 = Constants_exports.PromptValue;
 var ResponseMode2 = Constants_exports.ResponseMode;
@@ -125455,13 +126444,6 @@ function ensureValidMsalToken(scopes, msalToken, getTokenOptions) {
     throw error(`Response had no "accessToken" property.`);
   }
 }
-function getAuthorityHost(options) {
-  let authorityHost = options?.authorityHost;
-  if (!authorityHost && isNodeLike3) {
-    authorityHost = process.env.AZURE_AUTHORITY_HOST;
-  }
-  return authorityHost ?? DefaultAuthorityHost;
-}
 function getAuthority(tenantId, host) {
   if (!host) {
     host = DefaultAuthorityHost;
@@ -125481,21 +126463,21 @@ function getKnownAuthorities(tenantId, authorityHost, disableInstanceDiscovery) 
   }
   return [];
 }
-var defaultLoggerCallback = (credLogger, platform2 = isNode ? "Node" : "Browser") => (level, message, containsPii) => {
+var defaultLoggerCallback = (credLogger, platform2 = isNodeLike3 ? "Node" : "Browser") => (level, message, containsPii) => {
   if (containsPii) {
     return;
   }
   switch (level) {
-    case dist_exports.LogLevel.Error:
+    case LogLevel2.Error:
       credLogger.info(`MSAL ${platform2} V2 error: ${message}`);
       return;
-    case dist_exports.LogLevel.Info:
+    case LogLevel2.Info:
       credLogger.info(`MSAL ${platform2} V2 info message: ${message}`);
       return;
-    case dist_exports.LogLevel.Verbose:
+    case LogLevel2.Verbose:
       credLogger.info(`MSAL ${platform2} V2 verbose message: ${message}`);
       return;
-    case dist_exports.LogLevel.Warning:
+    case LogLevel2.Warning:
       credLogger.info(`MSAL ${platform2} V2 warning: ${message}`);
       return;
   }
@@ -125503,15 +126485,15 @@ var defaultLoggerCallback = (credLogger, platform2 = isNode ? "Node" : "Browser"
 function getMSALLogLevel(logLevel) {
   switch (logLevel) {
     case "error":
-      return dist_exports.LogLevel.Error;
+      return LogLevel2.Error;
     case "info":
-      return dist_exports.LogLevel.Info;
+      return LogLevel2.Info;
     case "verbose":
-      return dist_exports.LogLevel.Verbose;
+      return LogLevel2.Verbose;
     case "warning":
-      return dist_exports.LogLevel.Warning;
+      return LogLevel2.Warning;
     default:
-      return dist_exports.LogLevel.Info;
+      return LogLevel2.Info;
   }
 }
 function handleMsalError(scopes, error, getTokenOptions) {
@@ -125540,7 +126522,12 @@ function handleMsalError(scopes, error, getTokenOptions) {
     logger4.info(formatError(scopes, `Error from the native broker: ${error.message} with status code: ${error.statusCode}`));
     return error;
   }
-  return new AuthenticationRequiredError2({ scopes, getTokenOptions, message: error.message });
+  return new AuthenticationRequiredError2({
+    scopes,
+    getTokenOptions,
+    message: error.message,
+    cause: error
+  });
 }
 function publicToMsal(account) {
   return {
@@ -126732,8 +127719,8 @@ function createEmptyPipeline2() {
 }
 
 // node_modules/@typespec/ts-http-runtime/dist/esm/util/inspect.js
-var import_node_util7 = require("node:util");
-var custom = import_node_util7.inspect.custom;
+var import_node_util8 = require("node:util");
+var custom = import_node_util8.inspect.custom;
 
 // node_modules/@typespec/ts-http-runtime/dist/esm/restError.js
 var errorSanitizer = new Sanitizer2();
@@ -127135,19 +128122,19 @@ function logPolicy2(options = {}) {
 
 // node_modules/@typespec/ts-http-runtime/dist/esm/util/userAgentPlatform.js
 var import_node_os3 = __toESM(require("node:os"), 1);
-var import_node_process10 = __toESM(require("node:process"), 1);
+var import_node_process11 = __toESM(require("node:process"), 1);
 function getHeaderName() {
   return "User-Agent";
 }
 async function setPlatformSpecificData2(map) {
-  if (import_node_process10.default && import_node_process10.default.versions) {
+  if (import_node_process11.default && import_node_process11.default.versions) {
     const osInfo = `${import_node_os3.default.type()} ${import_node_os3.default.release()}; ${import_node_os3.default.arch()}`;
-    if (import_node_process10.default.versions.bun) {
-      map.set("Bun", `${import_node_process10.default.versions.bun} (${osInfo})`);
-    } else if (import_node_process10.default.versions.deno) {
-      map.set("Deno", `${import_node_process10.default.versions.deno} (${osInfo})`);
-    } else if (import_node_process10.default.versions.node) {
-      map.set("Node", `${import_node_process10.default.versions.node} (${osInfo})`);
+    if (import_node_process11.default.versions.bun) {
+      map.set("Bun", `${import_node_process11.default.versions.bun} (${osInfo})`);
+    } else if (import_node_process11.default.versions.deno) {
+      map.set("Deno", `${import_node_process11.default.versions.deno} (${osInfo})`);
+    } else if (import_node_process11.default.versions.node) {
+      map.set("Node", `${import_node_process11.default.versions.node} (${osInfo})`);
     }
   }
 }
@@ -128533,8 +129520,8 @@ function getClient2(endpoint, clientOptions = {}) {
   const noDefaultAcceptHeader = clientOptions.internal?.noDefaultAcceptHeader ?? false;
   const { allowInsecureConnection: allowInsecureConnection2, httpClient } = clientOptions;
   const endpointUrl = clientOptions.endpoint ?? endpoint;
-  const client = (path5, ...args) => {
-    const getUrl = (requestOptions) => buildRequestUrl(endpointUrl, path5, args, { allowInsecureConnection: allowInsecureConnection2, ...requestOptions });
+  const client = (path6, ...args) => {
+    const getUrl = (requestOptions) => buildRequestUrl(endpointUrl, path6, args, { allowInsecureConnection: allowInsecureConnection2, ...requestOptions });
     return {
       get: (requestOptions = {}) => {
         return buildOperation("GET", getUrl(requestOptions), pipeline, requestOptions, allowInsecureConnection2, httpClient, noDefaultAcceptHeader);
@@ -128653,19 +129640,19 @@ function redirectPolicy3(options = {}) {
 
 // node_modules/@azure/core-rest-pipeline/dist/esm/util/userAgentPlatform.js
 var import_node_os4 = __toESM(require("node:os"), 1);
-var import_node_process11 = __toESM(require("node:process"), 1);
+var import_node_process12 = __toESM(require("node:process"), 1);
 function getHeaderName2() {
   return "User-Agent";
 }
 async function setPlatformSpecificData3(map) {
-  if (import_node_process11.default && import_node_process11.default.versions) {
+  if (import_node_process12.default && import_node_process12.default.versions) {
     const osInfo = `${import_node_os4.default.type()} ${import_node_os4.default.release()}; ${import_node_os4.default.arch()}`;
-    if (import_node_process11.default.versions.bun) {
-      map.set("Bun", `${import_node_process11.default.versions.bun} (${osInfo})`);
-    } else if (import_node_process11.default.versions.deno) {
-      map.set("Deno", `${import_node_process11.default.versions.deno} (${osInfo})`);
-    } else if (import_node_process11.default.versions.node) {
-      map.set("Node", `${import_node_process11.default.versions.node} (${osInfo})`);
+    if (import_node_process12.default.versions.bun) {
+      map.set("Bun", `${import_node_process12.default.versions.bun} (${osInfo})`);
+    } else if (import_node_process12.default.versions.deno) {
+      map.set("Deno", `${import_node_process12.default.versions.deno} (${osInfo})`);
+    } else if (import_node_process12.default.versions.node) {
+      map.set("Node", `${import_node_process12.default.versions.node} (${osInfo})`);
     }
   }
 }
@@ -129737,15 +130724,15 @@ function getRequestUrl(baseUri, operationSpec, operationArguments, fallbackObjec
   let isAbsolutePath = false;
   let requestUrl = replaceAll2(baseUri, urlReplacements);
   if (operationSpec.path) {
-    let path5 = replaceAll2(operationSpec.path, urlReplacements);
-    if (operationSpec.path === "/{nextLink}" && path5.startsWith("/")) {
-      path5 = path5.substring(1);
+    let path6 = replaceAll2(operationSpec.path, urlReplacements);
+    if (operationSpec.path === "/{nextLink}" && path6.startsWith("/")) {
+      path6 = path6.substring(1);
     }
-    if (isAbsoluteUrl(path5)) {
-      requestUrl = path5;
+    if (isAbsoluteUrl(path6)) {
+      requestUrl = path6;
       isAbsolutePath = true;
     } else {
-      requestUrl = appendPath2(requestUrl, path5);
+      requestUrl = appendPath2(requestUrl, path6);
     }
   }
   const { queryParams, sequenceParams } = calculateQueryParameters(operationSpec, operationArguments, fallbackObject);
@@ -129791,9 +130778,9 @@ function appendPath2(url2, pathToAppend) {
   }
   const searchStart = pathToAppend.indexOf("?");
   if (searchStart !== -1) {
-    const path5 = pathToAppend.substring(0, searchStart);
+    const path6 = pathToAppend.substring(0, searchStart);
     const search = pathToAppend.substring(searchStart + 1);
-    newPath = newPath + path5;
+    newPath = newPath + path6;
     if (search) {
       parsedUrl.search = parsedUrl.search ? `${parsedUrl.search}&${search}` : search;
     }
@@ -130219,15 +131206,23 @@ function parseRefreshTimestamp(body) {
   }
 }
 
-// node_modules/@azure/identity/dist/esm/client/identityClient.js
-var noCorrelationId = "noCorrelationId";
-function getIdentityClientAuthorityHost(options) {
+// node_modules/@azure/identity/dist/esm/util/authorityHost.js
+function getAuthorityHost(options) {
   let authorityHost = options?.authorityHost;
-  if (isNode) {
-    authorityHost = authorityHost ?? process.env.AZURE_AUTHORITY_HOST;
+  if (!authorityHost && isNodeLike3) {
+    authorityHost = process.env.AZURE_AUTHORITY_HOST;
   }
   return authorityHost ?? DefaultAuthorityHost;
 }
+
+// node_modules/@azure/identity/dist/esm/client/identityClient.js
+var noCorrelationId = "noCorrelationId";
+var HttpStatus = {
+  CLIENT_ERROR_RANGE_START: 400,
+  CLIENT_ERROR_RANGE_END: 499,
+  SERVER_ERROR_RANGE_START: 500,
+  SERVER_ERROR_RANGE_END: 599
+};
 var IdentityClient = class extends ServiceClient {
   authorityHost;
   allowLoggingAccountIdentifiers;
@@ -130238,7 +131233,7 @@ var IdentityClient = class extends ServiceClient {
   constructor(options) {
     const packageDetails = `azsdk-js-identity/${SDK_VERSION}`;
     const userAgentPrefix = options?.userAgentOptions?.userAgentPrefix ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}` : `${packageDetails}`;
-    const baseUri = getIdentityClientAuthorityHost(options);
+    const baseUri = getAuthorityHost(options);
     if (!baseUri.startsWith("https:")) {
       throw new Error("The authorityHost address must use the 'https' protocol.");
     }
@@ -130378,7 +131373,7 @@ var IdentityClient = class extends ServiceClient {
     const response = await this.sendRequest(request);
     this.logIdentifiers(response);
     return {
-      body: response.bodyAsText ? JSON.parse(response.bodyAsText) : void 0,
+      body: this.parseResponseBody(response),
       headers: response.headers.toJSON(),
       status: response.status
     };
@@ -130396,7 +131391,7 @@ var IdentityClient = class extends ServiceClient {
     const response = await this.sendRequest(request);
     this.logIdentifiers(response);
     return {
-      body: response.bodyAsText ? JSON.parse(response.bodyAsText) : void 0,
+      body: this.parseResponseBody(response),
       headers: response.headers.toJSON(),
       status: response.status
     };
@@ -130432,11 +131427,46 @@ var IdentityClient = class extends ServiceClient {
         return;
       }
       const base64Metadata = accessToken.split(".")[1];
-      const { appid, upn, tid, oid } = JSON.parse(Buffer.from(base64Metadata, "base64").toString("utf8"));
+      const { appid, upn, tid, oid } = JSON.parse(uint8ArrayToString3(stringToUint8Array3(base64Metadata, "base64url"), "utf-8"));
       logger2.info(`[Authenticated account] Client ID: ${appid}. Tenant ID: ${tid}. User Principal Name: ${upn || unavailableUpn}. Object ID (user): ${oid}`);
     } catch (e) {
       logger2.warning("allowLoggingAccountIdentifiers was set, but we couldn't log the account information. Error:", e.message);
     }
+  }
+  /**
+   * Parses the response body if possible. Add error properties if parsing fails.
+   * This follows MSAL INetworkModule behavior so the response is in expected format.
+   */
+  parseResponseBody(response) {
+    let parsedBody;
+    try {
+      parsedBody = JSON.parse(response.bodyAsText || "");
+    } catch (error) {
+      logger2.info(`IdentityClient: Could not parse response body: ${error}`);
+      let errorType;
+      let errorDescriptionHelper;
+      if (response.status >= HttpStatus.CLIENT_ERROR_RANGE_START && response.status <= HttpStatus.CLIENT_ERROR_RANGE_END) {
+        errorType = "client_error";
+        errorDescriptionHelper = "A client";
+      } else if (response.status >= HttpStatus.SERVER_ERROR_RANGE_START && response.status <= HttpStatus.SERVER_ERROR_RANGE_END) {
+        errorType = "server_error";
+        errorDescriptionHelper = "A server";
+      } else {
+        errorType = "unknown_error";
+        errorDescriptionHelper = "An unknown";
+      }
+      const errorDescriptionLines = [
+        `${errorDescriptionHelper} error occured.`,
+        `Http status code: ${response.status}`,
+        `Http status message: ${response.bodyAsText || "Unknown"}`,
+        `Headers: ${JSON.stringify(response.headers)}`
+      ];
+      parsedBody = {
+        error: errorType,
+        error_description: errorDescriptionLines.join("\n")
+      };
+    }
+    return parsedBody;
   }
 };
 
@@ -130566,7 +131596,7 @@ function generateMsalConfiguration(clientId, tenantId, msalClientOptions = {}) {
   const resolvedTenant = resolveTenantId(msalClientOptions.logger ?? msalLogger, tenantId, clientId);
   const authority = getAuthority(resolvedTenant, getAuthorityHost(msalClientOptions));
   const httpClient = new IdentityClient({
-    ...msalClientOptions.tokenCredentialOptions,
+    ...msalClientOptions,
     authorityHost: authority,
     loggingOptions: msalClientOptions.loggingOptions
   });
@@ -130968,6 +131998,41 @@ function createMsalClient(clientId, tenantId, createMsalClientOptions = {}) {
 // node_modules/@azure/identity/dist/esm/credentials/clientCertificateCredential.js
 var import_node_crypto4 = require("node:crypto");
 var import_promises3 = require("node:fs/promises");
+
+// node_modules/@azure/identity/dist/esm/util/certificatesUtils.js
+var import_crypto4 = require("crypto");
+function extractPemCertificateKeys(pemContent) {
+  const certificatePattern = /(-+BEGIN CERTIFICATE-+)(\n\r?|\r\n?)([A-Za-z0-9+/\n\r]+=*)(\n\r?|\r\n?)(-+END CERTIFICATE-+)/g;
+  const publicKeys = [];
+  let match;
+  do {
+    match = certificatePattern.exec(pemContent);
+    if (match) {
+      publicKeys.push(match[3]);
+    }
+  } while (match);
+  if (publicKeys.length === 0) {
+    throw new Error("The file at the specified path does not contain a PEM-encoded certificate.");
+  }
+  return publicKeys;
+}
+function canParseAsX509Certificate(pemCert) {
+  try {
+    const pemContents = extractPemCertificateKeys(pemCert);
+    for (let i = 0; i < pemContents.length; i++) {
+      const pemContent = pemContents[i];
+      const fullPemCertificate = `-----BEGIN CERTIFICATE-----
+${pemContent}
+-----END CERTIFICATE-----`;
+      new import_crypto4.X509Certificate(fullPemCertificate);
+    }
+    return true;
+  } catch (extractError) {
+    return false;
+  }
+}
+
+// node_modules/@azure/identity/dist/esm/credentials/clientCertificateCredential.js
 var credentialName = "ClientCertificateCredential";
 var logger8 = credentialLogger(credentialName);
 var ClientCertificateCredential2 = class {
@@ -130998,8 +132063,7 @@ var ClientCertificateCredential2 = class {
     }
     this.msalClient = createMsalClient(clientId, tenantId, {
       ...options,
-      logger: logger8,
-      tokenCredentialOptions: options
+      logger: logger8
     });
   }
   /**
@@ -131046,18 +132110,7 @@ async function parseCertificate(certificateConfiguration, sendCertificateChain) 
   const certificatePath = certificateConfiguration.certificatePath;
   const certificateContents = certificate || await (0, import_promises3.readFile)(certificatePath, "utf8");
   const x5c = sendCertificateChain ? certificateContents : void 0;
-  const certificatePattern = /(-+BEGIN CERTIFICATE-+)(\n\r?|\r\n?)([A-Za-z0-9+/\n\r]+=*)(\n\r?|\r\n?)(-+END CERTIFICATE-+)/g;
-  const publicKeys = [];
-  let match;
-  do {
-    match = certificatePattern.exec(certificateContents);
-    if (match) {
-      publicKeys.push(match[3]);
-    }
-  } while (match);
-  if (publicKeys.length === 0) {
-    throw new Error("The file at the specified path does not contain a PEM-encoded certificate.");
-  }
+  const publicKeys = extractPemCertificateKeys(certificateContents);
   const thumbprint = (0, import_node_crypto4.createHash)("sha1").update(Buffer.from(publicKeys[0], "base64")).digest("hex").toUpperCase();
   const thumbprintSha256 = (0, import_node_crypto4.createHash)("sha256").update(Buffer.from(publicKeys[0], "base64")).digest("hex").toUpperCase();
   return {
@@ -131115,8 +132168,7 @@ var ClientSecretCredential2 = class {
     this.additionallyAllowedTenantIds = resolveAdditionallyAllowedTenantIds(options?.additionallyAllowedTenants);
     this.msalClient = createMsalClient(clientId, tenantId, {
       ...options,
-      logger: logger9,
-      tokenCredentialOptions: options
+      logger: logger9
     });
   }
   /**
@@ -131173,8 +132225,7 @@ var UsernamePasswordCredential2 = class {
     this.username = username;
     this.password = password;
     this.msalClient = createMsalClient(clientId, this.tenantId, {
-      ...options,
-      tokenCredentialOptions: options ?? {}
+      ...options
     });
   }
   /**
@@ -131211,8 +132262,8 @@ var AllSupportedEnvironmentVariables = [
   "AZURE_CLIENT_SEND_CERTIFICATE_CHAIN"
 ];
 function getAdditionallyAllowedTenants() {
-  const additionallyAllowedValues = process.env.AZURE_ADDITIONALLY_ALLOWED_TENANTS ?? "";
-  return additionallyAllowedValues.split(";");
+  const additionallyAllowedValues = process.env.AZURE_ADDITIONALLY_ALLOWED_TENANTS;
+  return additionallyAllowedValues ? additionallyAllowedValues.split(";") : void 0;
 }
 var credentialName2 = "EnvironmentCredential";
 var logger11 = credentialLogger(credentialName2);
@@ -131253,9 +132304,13 @@ var EnvironmentCredential2 = class {
     const assigned = processEnvVars(AllSupportedEnvironmentVariables).assigned.join(", ");
     logger11.info(`Found the following environment variables: ${assigned}`);
     const tenantId = process.env.AZURE_TENANT_ID, clientId = process.env.AZURE_CLIENT_ID, clientSecret = process.env.AZURE_CLIENT_SECRET;
-    const additionallyAllowedTenantIds = getAdditionallyAllowedTenants();
+    const additionallyAllowedTenants = options?.additionallyAllowedTenants ?? getAdditionallyAllowedTenants();
     const sendCertificateChain = getSendCertificateChain();
-    const newOptions = { ...options, additionallyAllowedTenantIds, sendCertificateChain };
+    const newOptions = {
+      ...options,
+      additionallyAllowedTenants,
+      sendCertificateChain
+    };
     if (tenantId) {
       checkTenantId(logger11, tenantId);
     }
@@ -131429,9 +132484,8 @@ var ClientAssertionCredential2 = class {
     this.options = options;
     this.getAssertion = getAssertion;
     this.msalClient = createMsalClient(clientId, tenantId, {
-      ...options,
-      logger: logger13,
-      tokenCredentialOptions: this.options
+      ...this.options,
+      logger: logger13
     });
   }
   /**
@@ -131453,6 +132507,7 @@ var ClientAssertionCredential2 = class {
 
 // node_modules/@azure/identity/dist/esm/credentials/workloadIdentityCredential.js
 var import_promises4 = require("node:fs/promises");
+var import_node_fs4 = require("node:fs");
 var credentialName3 = "WorkloadIdentityCredential";
 var SupportedWorkloadEnvironmentVariables = [
   "AZURE_TENANT_ID",
@@ -131460,11 +132515,67 @@ var SupportedWorkloadEnvironmentVariables = [
   "AZURE_FEDERATED_TOKEN_FILE"
 ];
 var logger14 = credentialLogger(credentialName3);
+var ErrorMessages = {
+  FAILED_TO_PARSE_TOKEN_PROXY: (endpoint, error) => `Failed to parse custom token proxy URL "${endpoint}": ${error}`,
+  INVALID_HTTPS_SCHEME: (protocol) => `Custom token endpoint must use https scheme, got "${protocol}"`,
+  TOKEN_ENDPOINT_NO_USER_INFO: (url2) => `Custom token endpoint URL "${url2}" must not contain user info`,
+  TOKEN_ENDPOINT_NO_QUERY: (url2) => `Custom token endpoint URL "${url2}" must not contain a query`,
+  TOKEN_ENDPOINT_NO_FRAGMENT: (url2) => `Custom token endpoint URL "${url2}" must not contain a fragment`,
+  CA_FILE_EMPTY: (file) => `CA certificate file is empty: ${file}`,
+  FAILED_TO_READ_CA_FILE: (file, error) => `Failed to read CA certificate file: ${file}. ${error}`,
+  INVALID_CA_CERTIFICATES: `Invalid CA certificate data: no valid PEM certificates found`,
+  INVALID_FILE_PATH: (path6) => `Invalid file path provided ${path6}.`,
+  NO_FILE_CONTENT: (path6) => `No content on the file ${path6}.`,
+  NO_CA_SOURCE: `No CA certificate source specified.`,
+  CLIENT_ID_REQUIRED: `clientId is a required parameter. In DefaultAzureCredential and ManagedIdentityCredential, this can be provided as an environment variable - "AZURE_CLIENT_ID".
+        See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`,
+  TENANT_ID_REQUIRED: `tenantId is a required parameter. In DefaultAzureCredential and ManagedIdentityCredential, this can be provided as an environment variable - "AZURE_TENANT_ID".
+        See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`,
+  TOKEN_FILE_PATH_REQUIRED: `federatedTokenFilePath is a required parameter. In DefaultAzureCredential and ManagedIdentityCredential, this can be provided as an environment variable - "AZURE_FEDERATED_TOKEN_FILE".
+        See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`,
+  TOKEN_PROXY_NOT_SET: `AZURE_KUBERNETES_TOKEN_PROXY is not set but other custom endpoint-related environment variables are present`,
+  CA_FILE_AND_DATA_EXCLUSIVE: `AZURE_KUBERNETES_CA_FILE and AZURE_KUBERNETES_CA_DATA are mutually exclusive. Specify only one.`,
+  MISSING_ENV_VARS: `tenantId, clientId, and federatedTokenFilePath are required parameters. 
+      In DefaultAzureCredential and ManagedIdentityCredential, these can be provided as environment variables - 
+      "AZURE_TENANT_ID",
+      "AZURE_CLIENT_ID",
+      "AZURE_FEDERATED_TOKEN_FILE". See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`
+};
+function parseAndValidateCustomTokenProxy(endpoint) {
+  let tokenProxy;
+  try {
+    tokenProxy = new URL(endpoint);
+  } catch (error) {
+    throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.FAILED_TO_PARSE_TOKEN_PROXY(endpoint, error)}`);
+  }
+  if (tokenProxy.protocol !== "https:") {
+    throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.INVALID_HTTPS_SCHEME(tokenProxy.protocol)}`);
+  }
+  if (tokenProxy.username || tokenProxy.password) {
+    throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.TOKEN_ENDPOINT_NO_USER_INFO(tokenProxy.toString())}`);
+  }
+  if (tokenProxy.search) {
+    throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.TOKEN_ENDPOINT_NO_QUERY(tokenProxy.toString())}`);
+  }
+  if (tokenProxy.hash) {
+    throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.TOKEN_ENDPOINT_NO_FRAGMENT(tokenProxy.toString())}`);
+  }
+  if (!tokenProxy.pathname || tokenProxy.pathname === "") {
+    tokenProxy.pathname = "/";
+  }
+  return tokenProxy.toString();
+}
 var WorkloadIdentityCredential2 = class {
   client;
   azureFederatedTokenFileContent = void 0;
   cacheDate = void 0;
   federatedTokenFilePath;
+  // AKS proxy CA caching - persists across token requests
+  cachedTlsSettings;
+  cachedCaData;
+  caData;
+  caFile;
+  sniName;
   /**
    * WorkloadIdentityCredential supports Microsoft Entra Workload ID on Kubernetes.
    *
@@ -131481,19 +132592,110 @@ var WorkloadIdentityCredential2 = class {
       checkTenantId(logger14, tenantId);
     }
     if (!clientId) {
-      throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. clientId is a required parameter. In DefaultAzureCredential and ManagedIdentityCredential, this can be provided as an environment variable - "AZURE_CLIENT_ID".
-        See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`);
+      throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.CLIENT_ID_REQUIRED}`);
     }
     if (!tenantId) {
-      throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. tenantId is a required parameter. In DefaultAzureCredential and ManagedIdentityCredential, this can be provided as an environment variable - "AZURE_TENANT_ID".
-        See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`);
+      throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.TENANT_ID_REQUIRED}`);
     }
     if (!this.federatedTokenFilePath) {
-      throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. federatedTokenFilePath is a required parameter. In DefaultAzureCredential and ManagedIdentityCredential, this can be provided as an environment variable - "AZURE_FEDERATED_TOKEN_FILE".
-        See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`);
+      throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.TOKEN_FILE_PATH_REQUIRED}`);
+    }
+    if (workloadIdentityCredentialOptions.enableAzureProxy) {
+      const kubernetesTokenProxy = process.env.AZURE_KUBERNETES_TOKEN_PROXY;
+      const kubernetesSNIName = process.env.AZURE_KUBERNETES_SNI_NAME;
+      const kubernetesCAFile = process.env.AZURE_KUBERNETES_CA_FILE;
+      const kubernetesCAData = process.env.AZURE_KUBERNETES_CA_DATA;
+      if (!kubernetesTokenProxy) {
+        if (kubernetesSNIName || kubernetesCAFile || kubernetesCAData) {
+          throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.TOKEN_PROXY_NOT_SET}`);
+        }
+        logger14.info(`enableAzureProxy is true but AZURE_KUBERNETES_TOKEN_PROXY is not set, using normal authentication flow`);
+      } else {
+        const tokenProxy = parseAndValidateCustomTokenProxy(kubernetesTokenProxy);
+        if (kubernetesCAFile && kubernetesCAData) {
+          throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.CA_FILE_AND_DATA_EXCLUSIVE}`);
+        }
+        this.caData = kubernetesCAData;
+        this.caFile = kubernetesCAFile;
+        this.sniName = kubernetesSNIName;
+        const proxyClient = this.createAksProxyClient(tokenProxy);
+        workloadIdentityCredentialOptions.httpClient = proxyClient;
+        logger14.info(`${credentialName3}: Using proxy client for token requests`);
+      }
     }
     logger14.info(`Invoking ClientAssertionCredential with tenant ID: ${tenantId}, clientId: ${workloadIdentityCredentialOptions.clientId} and federated token path: [REDACTED]`);
-    this.client = new ClientAssertionCredential2(tenantId, clientId, this.readFileContents.bind(this), options);
+    this.client = new ClientAssertionCredential2(tenantId, clientId, this.readFileContents.bind(this), workloadIdentityCredentialOptions);
+  }
+  /**
+   * Creates a proxy HttpClient that intercepts token requests and redirects them to the Kubernetes endpoint
+   * Caching is handled at the credential level to persist across token requests
+   */
+  createAksProxyClient(tokenEndpoint) {
+    const defaultClient = createDefaultHttpClient3();
+    this.cachedTlsSettings = this.getTlsSettings();
+    return {
+      sendRequest: async (request) => {
+        const requestUrl = new URL(request.url);
+        logger14.info(`${credentialName3}: Redirecting request to Kubernetes endpoint: ${tokenEndpoint}`);
+        const proxyUrl = new URL(tokenEndpoint);
+        const requestPath = requestUrl.pathname.replace(/^\//, "");
+        const combinedPath = proxyUrl.pathname.endsWith("/") ? proxyUrl.pathname + requestPath : proxyUrl.pathname + "/" + requestPath;
+        const newUrl = new URL(proxyUrl.origin);
+        newUrl.pathname = combinedPath;
+        newUrl.search = requestUrl.search;
+        newUrl.hash = requestUrl.hash;
+        request.url = newUrl.toString();
+        request.tlsSettings = this.getTlsSettings();
+        logger14.info(`${credentialName3}: Sending request to ${request.url}`);
+        return defaultClient.sendRequest(request);
+      }
+    };
+  }
+  /**
+   * Gets TLS settings for the request.
+   * Handles a few scenarios with CA data or CA file provided.
+   */
+  getTlsSettings() {
+    if (!this.caData && !this.caFile) {
+      if (!this.cachedTlsSettings) {
+        this.cachedTlsSettings = this.sniName ? { servername: this.sniName } : {};
+      }
+      return this.cachedTlsSettings;
+    }
+    if (!this.caFile) {
+      if (!this.cachedTlsSettings) {
+        if (!canParseAsX509Certificate(this.caData)) {
+          throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.INVALID_CA_CERTIFICATES}`);
+        }
+        this.cachedTlsSettings = this.sniName ? { servername: this.sniName } : {};
+        this.cachedTlsSettings.ca = this.caData;
+      }
+      return this.cachedTlsSettings;
+    }
+    let fileContent;
+    try {
+      fileContent = (0, import_node_fs4.readFileSync)(this.caFile);
+    } catch (error) {
+      throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.FAILED_TO_READ_CA_FILE(this.caFile, error)}`);
+    }
+    if (fileContent.length === 0) {
+      if (!this.cachedTlsSettings) {
+        throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.CA_FILE_EMPTY(this.caFile)}`);
+      }
+      return this.cachedTlsSettings;
+    }
+    if (!this.cachedCaData || !fileContent.equals(this.cachedCaData)) {
+      const caDataString = fileContent.toString("utf8");
+      if (!canParseAsX509Certificate(caDataString)) {
+        throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.INVALID_CA_CERTIFICATES}`);
+      }
+      this.cachedTlsSettings = {
+        ca: caDataString,
+        ...this.sniName && { servername: this.sniName }
+      };
+      this.cachedCaData = fileContent;
+    }
+    return this.cachedTlsSettings;
   }
   /**
    * Authenticates with Microsoft Entra ID and returns an access token if successful.
@@ -131505,11 +132707,7 @@ var WorkloadIdentityCredential2 = class {
    */
   async getToken(scopes, options) {
     if (!this.client) {
-      const errorMessage = `${credentialName3}: is unavailable. tenantId, clientId, and federatedTokenFilePath are required parameters. 
-      In DefaultAzureCredential and ManagedIdentityCredential, these can be provided as environment variables - 
-      "AZURE_TENANT_ID",
-      "AZURE_CLIENT_ID",
-      "AZURE_FEDERATED_TOKEN_FILE". See the troubleshooting guide for more information: https://aka.ms/azsdk/js/identity/workloadidentitycredential/troubleshoot`;
+      const errorMessage = `${credentialName3}: is unavailable. ${ErrorMessages.MISSING_ENV_VARS}`;
       logger14.info(errorMessage);
       throw new CredentialUnavailableError2(errorMessage);
     }
@@ -131521,13 +132719,13 @@ var WorkloadIdentityCredential2 = class {
       this.azureFederatedTokenFileContent = void 0;
     }
     if (!this.federatedTokenFilePath) {
-      throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. Invalid file path provided ${this.federatedTokenFilePath}.`);
+      throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.INVALID_FILE_PATH(this.federatedTokenFilePath)}`);
     }
     if (!this.azureFederatedTokenFileContent) {
       const file = await (0, import_promises4.readFile)(this.federatedTokenFilePath, "utf8");
       const value = file.trim();
       if (!value) {
-        throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. No content on the file ${this.federatedTokenFilePath}.`);
+        throw new CredentialUnavailableError2(`${credentialName3}: is unavailable. ${ErrorMessages.NO_FILE_CONTENT(this.federatedTokenFilePath)}`);
       } else {
         this.azureFederatedTokenFileContent = value;
         this.cacheDate = Date.now();
@@ -131849,14 +133047,14 @@ function createExecutionError(error, stdout, stderr) {
 }
 
 // node_modules/@azure/core-process/dist/esm/process.js
-var childProcess2 = __toESM(require("node:child_process"), 1);
+var childProcess4 = __toESM(require("node:child_process"), 1);
 
 // node_modules/@azure/core-process/dist/esm/normalizeCommand.js
-var import_node_path3 = __toESM(require("node:path"), 1);
+var import_node_path4 = __toESM(require("node:path"), 1);
 
 // node_modules/@azure/core-process/dist/esm/resolveExecutable.js
-var import_node_fs4 = require("node:fs");
-var import_node_path2 = __toESM(require("node:path"), 1);
+var import_node_fs5 = require("node:fs");
+var import_node_path3 = __toESM(require("node:path"), 1);
 var import_node_url2 = require("node:url");
 var WINDOWS_NATIVE_EXTENSIONS = [".exe", ".com"];
 var WINDOWS_BATCH_EXTENSIONS = [".cmd", ".bat"];
@@ -131900,7 +133098,7 @@ function snapshotEnvironment(environment) {
 }
 function normalizeCwd(cwd) {
   const cwdPath = cwd instanceof URL ? (0, import_node_url2.fileURLToPath)(cwd) : cwd;
-  return import_node_path2.default.resolve(cwdPath ?? process.cwd());
+  return import_node_path3.default.resolve(cwdPath ?? process.cwd());
 }
 function createProcessContext(options = {}) {
   if (options.allowWindowsBatchFiles !== void 0 && typeof options.allowWindowsBatchFiles !== "boolean") {
@@ -131916,11 +133114,11 @@ function createProcessContext(options = {}) {
 }
 function isExecutableFile(filePath) {
   try {
-    if (!(0, import_node_fs4.statSync)(filePath).isFile()) {
+    if (!(0, import_node_fs5.statSync)(filePath).isFile()) {
       return false;
     }
     if (process.platform !== "win32") {
-      (0, import_node_fs4.accessSync)(filePath, import_node_fs4.constants.X_OK);
+      (0, import_node_fs5.accessSync)(filePath, import_node_fs5.constants.X_OK);
     }
     return true;
   } catch {
@@ -131934,7 +133132,7 @@ function isBatchExtension(extension) {
   return WINDOWS_BATCH_EXTENSIONS.some((candidate) => candidate === extension);
 }
 function resolveWindowsCandidate(candidate, allowWindowsBatchFiles) {
-  const extension = import_node_path2.default.extname(candidate).toLowerCase();
+  const extension = import_node_path3.default.extname(candidate).toLowerCase();
   if (extension) {
     if (!isNativeExtension(extension) && !(allowWindowsBatchFiles && isBatchExtension(extension))) {
       return void 0;
@@ -131961,7 +133159,7 @@ function getSearchPaths(context3) {
   const pathValue = getEnvironmentValue2(context3.env, "PATH") ?? "";
   const paths = [];
   const seen = /* @__PURE__ */ new Set();
-  for (const entry of pathValue.split(import_node_path2.default.delimiter)) {
+  for (const entry of pathValue.split(import_node_path3.default.delimiter)) {
     let candidate = entry;
     if (process.platform === "win32") {
       candidate = candidate.trim();
@@ -131969,10 +133167,10 @@ function getSearchPaths(context3) {
         candidate = candidate.slice(1, -1);
       }
     }
-    if (!candidate || !import_node_path2.default.isAbsolute(candidate)) {
+    if (!candidate || !import_node_path3.default.isAbsolute(candidate)) {
       continue;
     }
-    const normalized = import_node_path2.default.resolve(candidate);
+    const normalized = import_node_path3.default.resolve(candidate);
     const key = process.platform === "win32" ? normalized.toLowerCase() : normalized;
     if (!seen.has(key)) {
       seen.add(key);
@@ -131998,8 +133196,8 @@ function validateCommand(command) {
 }
 function resolveExecutableWithContext(command, context3) {
   validateCommand(command);
-  if (hasPathSeparator(command) || import_node_path2.default.isAbsolute(command)) {
-    const candidate = import_node_path2.default.resolve(context3.cwd, command);
+  if (hasPathSeparator(command) || import_node_path3.default.isAbsolute(command)) {
+    const candidate = import_node_path3.default.resolve(context3.cwd, command);
     if (process.platform === "win32") {
       return resolveWindowsCandidate(candidate, context3.allowWindowsBatchFiles);
     }
@@ -132008,20 +133206,20 @@ function resolveExecutableWithContext(command, context3) {
   const searchPaths = getSearchPaths(context3);
   if (process.platform !== "win32") {
     for (const searchPath of searchPaths) {
-      const candidate = import_node_path2.default.join(searchPath, command);
+      const candidate = import_node_path3.default.join(searchPath, command);
       if (isExecutableFile(candidate)) {
         return candidate;
       }
     }
     return void 0;
   }
-  const extension = import_node_path2.default.extname(command).toLowerCase();
+  const extension = import_node_path3.default.extname(command).toLowerCase();
   if (extension) {
     if (!isNativeExtension(extension) && !(context3.allowWindowsBatchFiles && isBatchExtension(extension))) {
       return void 0;
     }
     for (const searchPath of searchPaths) {
-      const candidate = import_node_path2.default.join(searchPath, command);
+      const candidate = import_node_path3.default.join(searchPath, command);
       if (isExecutableFile(candidate)) {
         return candidate;
       }
@@ -132030,7 +133228,7 @@ function resolveExecutableWithContext(command, context3) {
   }
   for (const searchPath of searchPaths) {
     for (const nativeExtension of WINDOWS_NATIVE_EXTENSIONS) {
-      const candidate = import_node_path2.default.join(searchPath, command + nativeExtension);
+      const candidate = import_node_path3.default.join(searchPath, command + nativeExtension);
       if (isExecutableFile(candidate)) {
         return candidate;
       }
@@ -132039,7 +133237,7 @@ function resolveExecutableWithContext(command, context3) {
   if (context3.allowWindowsBatchFiles) {
     for (const searchPath of searchPaths) {
       for (const batchExtension of WINDOWS_BATCH_EXTENSIONS) {
-        const candidate = import_node_path2.default.join(searchPath, command + batchExtension);
+        const candidate = import_node_path3.default.join(searchPath, command + batchExtension);
         if (isExecutableFile(candidate)) {
           return candidate;
         }
@@ -132050,9 +133248,9 @@ function resolveExecutableWithContext(command, context3) {
 }
 function canonicalizeWindowsPath(filePath) {
   try {
-    return import_node_fs4.realpathSync.native(filePath).toLowerCase();
+    return import_node_fs5.realpathSync.native(filePath).toLowerCase();
   } catch {
-    return import_node_path2.default.resolve(filePath).toLowerCase();
+    return import_node_path3.default.resolve(filePath).toLowerCase();
   }
 }
 function isWindowsDriveAbsolutePath(filePath) {
@@ -132066,7 +133264,7 @@ function resolveWindowsCommandInterpreter(childEnvironment) {
       code: "ERR_UNTRUSTED_COMMAND_INTERPRETER"
     });
   }
-  const executablePath = import_node_path2.default.join(systemRoot, "System32", "cmd.exe");
+  const executablePath = import_node_path3.default.join(systemRoot, "System32", "cmd.exe");
   if (!isExecutableFile(executablePath)) {
     throw new ProcessError2("The Windows command interpreter could not be found.", {
       code: "ERR_UNTRUSTED_COMMAND_INTERPRETER"
@@ -132157,7 +133355,7 @@ function normalizeCommand(command, args, context3) {
       windowsVerbatimArguments: false
     };
   }
-  const extension = import_node_path3.default.extname(resolvedPath).toLowerCase();
+  const extension = import_node_path4.default.extname(resolvedPath).toLowerCase();
   if (extension === ".exe" || extension === ".com") {
     return {
       executable: resolvedPath,
@@ -132264,10 +133462,10 @@ function prepareProcess(executable, args, options, allowedOptionNames) {
   }
   return { command, nodeOptions };
 }
-async function execFile8(command, args = [], options = {}) {
+async function execFile9(command, args = [], options = {}) {
   const prepared = prepareProcess(command, args, options, execFileOptionNames);
   return new Promise((resolve, reject) => {
-    callWithSanitizedChildProcessErrors(() => childProcess2.execFile(prepared.command.executable, prepared.command.args, {
+    callWithSanitizedChildProcessErrors(() => childProcess4.execFile(prepared.command.executable, prepared.command.args, {
       ...prepared.nodeOptions,
       cwd: prepared.command.cwd,
       env: prepared.command.env,
@@ -132299,7 +133497,7 @@ var processUtils = {
    */
   async execFileWithResult(file, params, options) {
     try {
-      const result = await execFile8(file, params, options);
+      const result = await execFile9(file, params, options);
       return { ...result, error: null };
     } catch (error) {
       if (isProcessError2(error)) {
@@ -132336,6 +133534,51 @@ var azureDeveloperCliPublicErrorMessages = {
 };
 var developerCliCredentialInternals = {
   /**
+   * Parses azd stderr JSON output to extract a human-readable error message.
+   *
+   * Three formats are supported across azd versions:
+   * - pre-v1.23.7: `{"type":"consoleMessage","data":{"message":"..."}}`
+   * - v1.23.7 - v1.23.15: an empty `consoleMessage` line followed by `{"error":"...","message":"...","suggestion":"..."}`
+   * - v1.24.0+: `{"error":"...","message":"...","suggestion":"..."}`
+   *
+   * The structured `error` field is preferred. If absent, falls back to the
+   * first non-empty `data.message` from a legacy `consoleMessage` line. If
+   * neither is found, the raw stderr is returned unchanged so plain-text and
+   * malformed output continue to surface to callers.
+   *
+   * @param stderr - The stderr output from azd command
+   * @returns The parsed error message or raw stderr
+   * @internal
+   */
+  parseAzdStderr(stderr) {
+    if (!stderr?.trim()) {
+      return stderr;
+    }
+    let fallback;
+    for (const rawLine of stderr.split("\n")) {
+      const line = rawLine.trim();
+      if (!line.startsWith("{")) {
+        continue;
+      }
+      let parsed;
+      try {
+        parsed = JSON.parse(line);
+      } catch {
+        continue;
+      }
+      if (typeof parsed?.error === "string" && parsed.error.trim()) {
+        return parsed.error.trim();
+      }
+      if (fallback === void 0) {
+        const message = parsed?.data?.message;
+        if (typeof message === "string" && message.trim()) {
+          fallback = message.trim();
+        }
+      }
+    }
+    return fallback ?? stderr;
+  },
+  /**
    * @internal
    */
   getSafeWorkingDir() {
@@ -132362,7 +133605,7 @@ var developerCliCredentialInternals = {
     }
     let claimsSections = [];
     if (claims) {
-      const encodedClaims = btoa(claims);
+      const encodedClaims = uint8ArrayToString3(stringToUint8Array3(claims, "utf-8"), "base64");
       claimsSections = ["--claims", encodedClaims];
     }
     const args = [
@@ -132459,7 +133702,8 @@ var AzureDeveloperCliCredential2 = class {
           };
         } catch (e) {
           if (obj.stderr) {
-            throw new CredentialUnavailableError2(obj.stderr);
+            const errorMessage = developerCliCredentialInternals.parseAzdStderr(obj.stderr);
+            throw new CredentialUnavailableError2(errorMessage);
           }
           throw e;
         }
@@ -132575,7 +133819,7 @@ var AzureCliCredential2 = class {
     const scope = typeof scopes === "string" ? scopes : scopes[0];
     const claimsValue = options.claims;
     if (claimsValue && claimsValue.trim()) {
-      const encodedClaims = btoa(claimsValue);
+      const encodedClaims = uint8ArrayToString3(stringToUint8Array3(claimsValue, "utf-8"), "base64");
       let loginCmd = `az login --claims-challenge ${encodedClaims} --scope ${scope}`;
       const tenantIdFromOptions = options.tenantId;
       if (tenantIdFromOptions) {
@@ -132814,7 +134058,7 @@ var AzurePowerShellCredential2 = class {
       const scope = typeof scopes === "string" ? scopes : scopes[0];
       const claimsValue = options.claims;
       if (claimsValue && claimsValue.trim()) {
-        const encodedClaims = btoa(claimsValue);
+        const encodedClaims = uint8ArrayToString3(stringToUint8Array3(claimsValue, "utf-8"), "base64");
         let loginCmd = `Connect-AzAccount -ClaimsChallenge ${encodedClaims}`;
         const tenantIdFromOptions = options.tenantId;
         if (tenantIdFromOptions) {
@@ -133015,7 +134259,6 @@ var BrokerCredential = class {
     this.brokerAdditionallyAllowedTenantIds = resolveAdditionallyAllowedTenantIds(options?.additionallyAllowedTenants);
     const msalClientOptions = {
       ...options,
-      tokenCredentialOptions: options,
       logger: logger21,
       brokerOptions: {
         enabled: true,
@@ -133326,16 +134569,16 @@ var GraphClient = class {
     }
     throw new Error("Graph retry loop exhausted");
   }
-  async *pages(path5) {
-    let next = path5.startsWith("http") ? path5 : `https://graph.microsoft.com/v1.0${path5}`;
+  async *pages(path6) {
+    let next = path6.startsWith("http") ? path6 : `https://graph.microsoft.com/v1.0${path6}`;
     while (next) {
       const page = await (await this.request(next)).json();
       yield page.value ?? [];
       next = page["@odata.nextLink"];
     }
   }
-  async post(path5, body) {
-    await this.request(`https://graph.microsoft.com/v1.0${path5}`, {
+  async post(path6, body) {
+    await this.request(`https://graph.microsoft.com/v1.0${path6}`, {
       method: "POST",
       body: JSON.stringify(body)
     });
@@ -135769,16 +137012,16 @@ var MatcherView = class {
    * @returns {string|undefined}
    */
   getCurrentTag() {
-    const path5 = this._matcher.path;
-    return path5.length > 0 ? path5[path5.length - 1].tag : void 0;
+    const path6 = this._matcher.path;
+    return path6.length > 0 ? path6[path6.length - 1].tag : void 0;
   }
   /**
    * Get current namespace.
    * @returns {string|undefined}
    */
   getCurrentNamespace() {
-    const path5 = this._matcher.path;
-    return path5.length > 0 ? path5[path5.length - 1].namespace : void 0;
+    const path6 = this._matcher.path;
+    return path6.length > 0 ? path6[path6.length - 1].namespace : void 0;
   }
   /**
    * Get current node's attribute value.
@@ -135786,9 +137029,9 @@ var MatcherView = class {
    * @returns {*}
    */
   getAttrValue(attrName) {
-    const path5 = this._matcher.path;
-    if (path5.length === 0) return void 0;
-    return path5[path5.length - 1].values?.[attrName];
+    const path6 = this._matcher.path;
+    if (path6.length === 0) return void 0;
+    return path6[path6.length - 1].values?.[attrName];
   }
   /**
    * Check if current node has an attribute.
@@ -135796,9 +137039,9 @@ var MatcherView = class {
    * @returns {boolean}
    */
   hasAttr(attrName) {
-    const path5 = this._matcher.path;
-    if (path5.length === 0) return false;
-    const current = path5[path5.length - 1];
+    const path6 = this._matcher.path;
+    if (path6.length === 0) return false;
+    const current = path6[path6.length - 1];
     return current.values !== void 0 && attrName in current.values;
   }
   /**
@@ -135824,18 +137067,18 @@ var MatcherView = class {
    * @returns {number}
    */
   getPosition() {
-    const path5 = this._matcher.path;
-    if (path5.length === 0) return -1;
-    return path5[path5.length - 1].position ?? 0;
+    const path6 = this._matcher.path;
+    if (path6.length === 0) return -1;
+    return path6[path6.length - 1].position ?? 0;
   }
   /**
    * Get current node's repeat counter (occurrence count of this tag name).
    * @returns {number}
    */
   getCounter() {
-    const path5 = this._matcher.path;
-    if (path5.length === 0) return -1;
-    return path5[path5.length - 1].counter ?? 0;
+    const path6 = this._matcher.path;
+    if (path6.length === 0) return -1;
+    return path6[path6.length - 1].counter ?? 0;
   }
   /**
    * Get current node's sibling index (alias for getPosition).
@@ -141011,9 +142254,9 @@ function getAccountNameFromUrl(url2) {
   const parsedUrl = new URL(url2);
   let accountName;
   const host = parsedUrl.host || "";
-  const path5 = parsedUrl.pathname || "";
+  const path6 = parsedUrl.pathname || "";
   const hostParts = host.split(".");
-  const pathParts = path5.split("/");
+  const pathParts = path6.split("/");
   if (hostParts.length >= 1 && hostParts[1] === "table") {
     url2 = url2.endsWith("/") ? url2.slice(0, -1) : url2;
     accountName = host.split(".")[0];
@@ -141116,8 +142359,8 @@ function getHeaderValueToSign(request, headerName) {
 }
 function getCanonicalizedResourceString(request, credential) {
   const url2 = new URL(request.url);
-  const path5 = url2.pathname || "/";
-  let canonicalizedResourceString = "/" + credential.name + path5;
+  const path6 = url2.pathname || "/";
+  let canonicalizedResourceString = "/" + credential.name + path6;
   const comp3 = url2.searchParams.get("comp");
   if (comp3) {
     canonicalizedResourceString = `${canonicalizedResourceString}?comp=${comp3}`;
@@ -142731,9 +143974,9 @@ function convertHttpClient2(requestPolicyClient) {
 // node_modules/@azure/storage-queue/dist/esm/utils/utils.common.js
 function appendToURLPath(url2, name3) {
   const urlParsed = new URL(url2);
-  let path5 = urlParsed.pathname;
-  path5 = path5 ? path5.endsWith("/") ? `${path5}${name3}` : `${path5}/${name3}` : name3;
-  urlParsed.pathname = path5;
+  let path6 = urlParsed.pathname;
+  path6 = path6 ? path6.endsWith("/") ? `${path6}${name3}` : `${path6}/${name3}` : name3;
+  urlParsed.pathname = path6;
   return urlParsed.toString();
 }
 function getProxyUriFromDevConnString(connectionString) {
@@ -143182,11 +144425,11 @@ var NativeCRC64 = (() => {
       throw new Error("Module.ENVIRONMENT has been deprecated. To force the environment, use the ENVIRONMENT compile-time option (for example, -sENVIRONMENT=web or -sENVIRONMENT=node)");
     }
     var scriptDirectory = "";
-    function locateFile(path5) {
+    function locateFile(path6) {
       if (Module["locateFile"]) {
-        return Module["locateFile"](path5, scriptDirectory);
+        return Module["locateFile"](path6, scriptDirectory);
       }
-      return scriptDirectory + path5;
+      return scriptDirectory + path6;
     }
     var read_, readAsync, readBinary, setWindowTitle;
     function logExceptionOnExit(e) {
@@ -146105,9 +147348,9 @@ var StorageSharedKeyCredentialPolicy = class extends CredentialPolicy {
    * @param request -
    */
   getCanonicalizedResourceString(request) {
-    const path5 = getURLPath(request.url) || "/";
+    const path6 = getURLPath(request.url) || "/";
     let canonicalizedResourceString = "";
-    canonicalizedResourceString += `/${this.factory.accountName}${path5}`;
+    canonicalizedResourceString += `/${this.factory.accountName}${path6}`;
     const queries = getURLQueries(request.url);
     const lowercaseQueries = {};
     if (queries) {
@@ -146589,9 +147832,9 @@ function storageSharedKeyCredentialPolicy(options) {
     return canonicalizedHeadersStringToSign;
   }
   function getCanonicalizedResourceString2(request) {
-    const path5 = getURLPath(request.url) || "/";
+    const path6 = getURLPath(request.url) || "/";
     let canonicalizedResourceString = "";
-    canonicalizedResourceString += `/${options.accountName}${path5}`;
+    canonicalizedResourceString += `/${options.accountName}${path6}`;
     const queries = getURLQueries(request.url);
     const lowercaseQueries = {};
     if (queries) {
@@ -147021,31 +148264,31 @@ function getClient3(endpoint, credentialsOrPipelineOptions, clientOptions = {}) 
     ...clientOptions,
     pipeline
   });
-  const client = (path5, ...args) => {
+  const client = (path6, ...args) => {
     return {
       get: (requestOptions = {}) => {
-        return tspClient.path(path5, ...args).get(wrapRequestParameters(requestOptions));
+        return tspClient.path(path6, ...args).get(wrapRequestParameters(requestOptions));
       },
       post: (requestOptions = {}) => {
-        return tspClient.path(path5, ...args).post(wrapRequestParameters(requestOptions));
+        return tspClient.path(path6, ...args).post(wrapRequestParameters(requestOptions));
       },
       put: (requestOptions = {}) => {
-        return tspClient.path(path5, ...args).put(wrapRequestParameters(requestOptions));
+        return tspClient.path(path6, ...args).put(wrapRequestParameters(requestOptions));
       },
       patch: (requestOptions = {}) => {
-        return tspClient.path(path5, ...args).patch(wrapRequestParameters(requestOptions));
+        return tspClient.path(path6, ...args).patch(wrapRequestParameters(requestOptions));
       },
       delete: (requestOptions = {}) => {
-        return tspClient.path(path5, ...args).delete(wrapRequestParameters(requestOptions));
+        return tspClient.path(path6, ...args).delete(wrapRequestParameters(requestOptions));
       },
       head: (requestOptions = {}) => {
-        return tspClient.path(path5, ...args).head(wrapRequestParameters(requestOptions));
+        return tspClient.path(path6, ...args).head(wrapRequestParameters(requestOptions));
       },
       options: (requestOptions = {}) => {
-        return tspClient.path(path5, ...args).options(wrapRequestParameters(requestOptions));
+        return tspClient.path(path6, ...args).options(wrapRequestParameters(requestOptions));
       },
       trace: (requestOptions = {}) => {
-        return tspClient.path(path5, ...args).trace(wrapRequestParameters(requestOptions));
+        return tspClient.path(path6, ...args).trace(wrapRequestParameters(requestOptions));
       }
     };
   };
@@ -148187,14 +149430,14 @@ function normalizeUnreserved(uri) {
 
 // node_modules/@azure/storage-queue/dist/esm/generated/api/queue/operations.js
 function _deleteMessageSend(context3, messageId, popReceipt, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("messages/{messageId}{?popreceipt,timeout}", {
+  const path6 = expandUrlTemplate("messages/{messageId}{?popreceipt,timeout}", {
     messageId,
     popreceipt: popReceipt,
     timeout: options?.timeoutInSeconds
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).delete({
+  return context3.path(path6).delete({
     ...operationOptionsToRequestParameters3(options),
     headers: {
       "x-ms-version": context3.version ?? "2026-04-06",
@@ -148245,7 +149488,7 @@ async function deleteMessage(context3, messageId, popReceipt, options = { reques
   return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
 }
 function _updateMessageSend(context3, messageId, popReceipt, visibilityTimeout, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("messages/{messageId}{?popreceipt,visibilitytimeout,timeout}", {
+  const path6 = expandUrlTemplate("messages/{messageId}{?popreceipt,visibilitytimeout,timeout}", {
     messageId,
     popreceipt: popReceipt,
     visibilitytimeout: visibilityTimeout,
@@ -148253,7 +149496,7 @@ function _updateMessageSend(context3, messageId, popReceipt, visibilityTimeout, 
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).put({
+  return context3.path(path6).put({
     ...operationOptionsToRequestParameters3(options),
     contentType: "application/xml",
     headers: {
@@ -148308,13 +149551,13 @@ async function updateMessage(context3, messageId, popReceipt, visibilityTimeout,
   return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
 }
 function _peekMessagesSend(context3, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("messages?peekonly=true{?numofmessages,timeout}", {
+  const path6 = expandUrlTemplate("messages?peekonly=true{?numofmessages,timeout}", {
     numofmessages: options?.numberOfMessages,
     timeout: options?.timeoutInSeconds
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).get({
+  return context3.path(path6).get({
     ...operationOptionsToRequestParameters3(options),
     headers: {
       "x-ms-version": context3.version ?? "2026-04-06",
@@ -148367,14 +149610,14 @@ async function peekMessages(context3, options = { requestOptions: {} }) {
   return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
 }
 function _sendMessageSend(context3, queueMessage, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("messages{?visibilitytimeout,messagettl,timeout}", {
+  const path6 = expandUrlTemplate("messages{?visibilitytimeout,messagettl,timeout}", {
     visibilitytimeout: options?.visibilityTimeout,
     messagettl: options?.messageTimeToLive,
     timeout: options?.timeoutInSeconds
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).post({
+  return context3.path(path6).post({
     ...operationOptionsToRequestParameters3(options),
     contentType: "application/xml",
     headers: {
@@ -148429,12 +149672,12 @@ async function sendMessage(context3, queueMessage, options = { requestOptions: {
   return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
 }
 function _clearSend(context3, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("messages{?timeout}", {
+  const path6 = expandUrlTemplate("messages{?timeout}", {
     timeout: options?.timeoutInSeconds
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).delete({
+  return context3.path(path6).delete({
     ...operationOptionsToRequestParameters3(options),
     headers: {
       "x-ms-version": context3.version ?? "2026-04-06",
@@ -148479,14 +149722,14 @@ async function clear(context3, options = { requestOptions: {} }) {
   return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
 }
 function _receiveMessagesSend(context3, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("messages{?numofmessages,visibilitytimeout,timeout}", {
+  const path6 = expandUrlTemplate("messages{?numofmessages,visibilitytimeout,timeout}", {
     numofmessages: options?.numberOfMessages,
     visibilitytimeout: options?.visibilityTimeout,
     timeout: options?.timeoutInSeconds
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).get({
+  return context3.path(path6).get({
     ...operationOptionsToRequestParameters3(options),
     headers: {
       "x-ms-version": context3.version ?? "2026-04-06",
@@ -148539,12 +149782,12 @@ async function receiveMessages(context3, options = { requestOptions: {} }) {
   return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
 }
 function _setAccessPolicySend(context3, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("?comp=acl{?timeout}", {
+  const path6 = expandUrlTemplate("?comp=acl{?timeout}", {
     timeout: options?.timeoutInSeconds
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).put({
+  return context3.path(path6).put({
     ...operationOptionsToRequestParameters3(options),
     contentType: "application/xml",
     headers: {
@@ -148597,12 +149840,12 @@ async function setAccessPolicy(context3, options = { requestOptions: {} }) {
   return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
 }
 function _getAccessPolicySend(context3, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("?comp=acl{?timeout}", {
+  const path6 = expandUrlTemplate("?comp=acl{?timeout}", {
     timeout: options?.timeoutInSeconds
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).get({
+  return context3.path(path6).get({
     ...operationOptionsToRequestParameters3(options),
     headers: {
       "x-ms-version": context3.version ?? "2026-04-06",
@@ -148655,12 +149898,12 @@ async function getAccessPolicy(context3, options = { requestOptions: {} }) {
   return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
 }
 function _setMetadataSend(context3, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("?comp=metadata{?timeout}", {
+  const path6 = expandUrlTemplate("?comp=metadata{?timeout}", {
     timeout: options?.timeoutInSeconds
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).put({
+  return context3.path(path6).put({
     ...operationOptionsToRequestParameters3(options),
     headers: {
       "x-ms-version": context3.version ?? "2026-04-06",
@@ -148711,12 +149954,12 @@ async function setMetadata(context3, options = { requestOptions: {} }) {
   return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
 }
 function _$deleteSend(context3, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("{?timeout}", {
+  const path6 = expandUrlTemplate("{?timeout}", {
     timeout: options?.timeoutInSeconds
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).delete({
+  return context3.path(path6).delete({
     ...operationOptionsToRequestParameters3(options),
     headers: {
       "x-ms-version": context3.version ?? "2026-04-06",
@@ -148761,12 +150004,12 @@ async function $delete(context3, options = { requestOptions: {} }) {
   return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
 }
 function _getPropertiesSend(context3, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("?comp=metadata{?timeout}", {
+  const path6 = expandUrlTemplate("?comp=metadata{?timeout}", {
     timeout: options?.timeoutInSeconds
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).get({
+  return context3.path(path6).get({
     ...operationOptionsToRequestParameters3(options),
     headers: {
       "x-ms-version": context3.version ?? "2026-04-06",
@@ -148818,12 +150061,12 @@ async function getProperties(context3, options = { requestOptions: {} }) {
   return addStorageCompatResponse(_storageCompat.getRawResponse(), void 0, parsedHeaders);
 }
 function _createSend(context3, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("{?timeout}", {
+  const path6 = expandUrlTemplate("{?timeout}", {
     timeout: options?.timeoutInSeconds
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).put({
+  return context3.path(path6).put({
     ...operationOptionsToRequestParameters3(options),
     headers: {
       "x-ms-version": context3.version ?? "2026-04-06",
@@ -148893,7 +150136,7 @@ function _getQueueOperations(context3) {
 
 // node_modules/@azure/storage-queue/dist/esm/generated/api/service/operations.js
 function _getQueuesSend(context3, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("?comp=list{?prefix,marker,maxresults,timeout,include}", {
+  const path6 = expandUrlTemplate("?comp=list{?prefix,marker,maxresults,timeout,include}", {
     prefix: options?.prefix,
     marker: options?.marker,
     maxresults: options?.maxresults,
@@ -148904,7 +150147,7 @@ function _getQueuesSend(context3, options = { requestOptions: {} }) {
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).get({
+  return context3.path(path6).get({
     ...operationOptionsToRequestParameters3(options),
     headers: {
       "x-ms-version": context3.version ?? "2026-04-06",
@@ -148954,12 +150197,12 @@ async function getQueues(context3, options = { requestOptions: {} }) {
   return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
 }
 function _getUserDelegationKeySend(context3, keyInfo, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("?restype=service&comp=userdelegationkey{?timeout}", {
+  const path6 = expandUrlTemplate("?restype=service&comp=userdelegationkey{?timeout}", {
     timeout: options?.timeoutInSeconds
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).post({
+  return context3.path(path6).post({
     ...operationOptionsToRequestParameters3(options),
     contentType: "application/xml",
     headers: {
@@ -149014,12 +150257,12 @@ async function getUserDelegationKey(context3, keyInfo, options = { requestOption
   return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
 }
 function _getStatisticsSend(context3, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("?restype=service&comp=stats{?timeout}", {
+  const path6 = expandUrlTemplate("?restype=service&comp=stats{?timeout}", {
     timeout: options?.timeoutInSeconds
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).get({
+  return context3.path(path6).get({
     ...operationOptionsToRequestParameters3(options),
     headers: {
       "x-ms-version": context3.version ?? "2026-04-06",
@@ -149072,12 +150315,12 @@ async function getStatistics(context3, options = { requestOptions: {} }) {
   return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
 }
 function _getPropertiesSend2(context3, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("?restype=service&comp=properties{?timeout}", {
+  const path6 = expandUrlTemplate("?restype=service&comp=properties{?timeout}", {
     timeout: options?.timeoutInSeconds
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).get({
+  return context3.path(path6).get({
     ...operationOptionsToRequestParameters3(options),
     headers: {
       "x-ms-version": context3.version ?? "2026-04-06",
@@ -149130,12 +150373,12 @@ async function getProperties2(context3, options = { requestOptions: {} }) {
   return addStorageCompatResponse(_storageCompat.getRawResponse(), parsedBody, parsedHeaders);
 }
 function _setPropertiesSend(context3, queueServiceProperties, options = { requestOptions: {} }) {
-  const path5 = expandUrlTemplate("?restype=service&comp=properties{?timeout}", {
+  const path6 = expandUrlTemplate("?restype=service&comp=properties{?timeout}", {
     timeout: options?.timeoutInSeconds
   }, {
     allowReserved: options?.requestOptions?.skipUrlEncoding
   });
-  return context3.path(path5).put({
+  return context3.path(path6).put({
     ...operationOptionsToRequestParameters3(options),
     contentType: "application/xml",
     headers: {
@@ -150406,6 +151649,7 @@ async function runSyntheticDeliveryProof(input, dependencies, collectionEnabled2
 }
 
 // index.ts
+import_functions.app.setup({ enableHttpStream: true });
 var required = (name3) => {
   const value = process.env[name3];
   if (!value) throw new Error(`${name3} must be configured`);
@@ -150493,13 +151737,9 @@ import_functions.app.http("testNotificationDelivery", {
   methods: ["POST"],
   authLevel: "function",
   handler: async (request, context3) => {
-    let input;
-    try {
-      input = await request.json();
-    } catch {
-      return { status: 400, jsonBody: { success: false, status: "invalid", message: "Request body must be valid JSON." } };
-    }
-    return runSyntheticDeliveryProof(input, {
+    const parsed = await readBoundedJsonObject(request);
+    if (parsed.response) return parsed.response;
+    return runSyntheticDeliveryProof(parsed.body, {
       graph,
       bot,
       history: state4,

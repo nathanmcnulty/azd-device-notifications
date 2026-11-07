@@ -35,8 +35,8 @@ axios/dist/node/axios.cjs:
   /*! @azure/msal-common v14.16.1 2025-08-05 */
 
 @azure/msal-node/lib/msal-node.cjs:
-  /*! @azure/msal-node v6.0.1 2026-09-15 */
-  /*! @azure/msal-common v16.14.1 2026-09-15 */
+  /*! @azure/msal-node v7.2.0 2026-11-05 */
+  /*! @azure/msal-common v16.16.0 2026-11-05 */
 
 @azure/msal-node/dist/cache/serializer/Serializer.mjs:
 @azure/msal-node/dist/cache/serializer/Deserializer.mjs:
@@ -62,6 +62,7 @@ axios/dist/node/axios.cjs:
 @azure/msal-node/dist/client/BaseClient.mjs:
 @azure/msal-node/dist/client/UsernamePasswordClient.mjs:
 @azure/msal-node/dist/protocol/Authorize.mjs:
+@azure/msal-node/dist/client/SilentRequestCoalescer.mjs:
 @azure/msal-node/dist/client/ClientApplication.mjs:
 @azure/msal-node/dist/network/LoopbackClient.mjs:
 @azure/msal-node/dist/client/DeviceCodeClient.mjs:
@@ -88,7 +89,7 @@ axios/dist/node/axios.cjs:
 @azure/msal-node/dist/client/ManagedIdentityApplication.mjs:
 @azure/msal-node/dist/cache/distributed/DistributedCachePlugin.mjs:
 @azure/msal-node/dist/index.mjs:
-  /*! @azure/msal-node v6.0.1 2026-09-15 */
+  /*! @azure/msal-node v7.2.0 2026-11-05 */
 
 @azure/msal-common/dist/constants/AADServerParamKeys.mjs:
 @azure/msal-common/dist/utils/Constants.mjs:
@@ -104,6 +105,7 @@ axios/dist/node/axios.cjs:
 @azure/msal-common/dist/cache/utils/AccountEntityUtils.mjs:
 @azure/msal-common/dist/error/AuthErrorCodes.mjs:
 @azure/msal-common/dist/error/ClientConfigurationError.mjs:
+@azure/msal-common/dist/network/ResponseHeaders.mjs:
 @azure/msal-common/dist/error/ClientConfigurationErrorCodes.mjs:
 @azure/msal-common/dist/authority/OpenIdConfigResponse.mjs:
 @azure/msal-common/dist/utils/StringUtils.mjs:
@@ -157,4 +159,4 @@ axios/dist/node/axios.cjs:
 @azure/msal-common/dist/client/SilentFlowClient.mjs:
 @azure/msal-common/dist/request/BaseAuthRequest.mjs:
 @azure/msal-common/dist/index-node.mjs:
-  /*! @azure/msal-common v16.14.1 2026-09-15 */
+  /*! @azure/msal-common v16.16.0 2026-11-05 */
