@@ -113190,11 +113190,21 @@ async function readBoundedJsonObject(request) {
 }
 
 // bot.ts
+var UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function normalizedUuid(value) {
+  return typeof value === "string" && UUID.test(value) ? value.toLowerCase() : void 0;
+}
+function nonemptyString(value) {
+  return typeof value === "string" && value.trim().length > 0;
+}
 var ManagedIdentityTeamsBot = class {
   constructor(appId, tenantId, conversations, logger33) {
     this.appId = appId;
     this.conversations = conversations;
     this.logger = logger33;
+    this.tenantId = normalizedUuid(tenantId) ?? (() => {
+      throw Error("TeamsBotTenantIdInvalid");
+    })();
     const authentication = new import_botbuilder.ConfigurationBotFrameworkAuthentication({
       MicrosoftAppType: "UserAssignedMSI",
       MicrosoftAppId: appId,
@@ -113210,9 +113220,14 @@ var ManagedIdentityTeamsBot = class {
   conversations;
   logger;
   adapter;
+  tenantId;
   async sendToEntraUser(ownerObjectId, card) {
-    const reference = await this.conversations.getConversation(ownerObjectId);
-    if (!reference?.serviceUrl || !reference.conversation) throw new PermanentDeliveryError("Teams bot installation conversation unavailable");
+    const owner = normalizedUuid(ownerObjectId);
+    if (!owner) throw new PermanentDeliveryError("Teams bot installation conversation unavailable");
+    const reference = await this.conversations.getConversation(owner);
+    if (!reference || !nonemptyString(reference.serviceUrl) || reference.channelId !== "msteams" || reference.conversation?.conversationType !== "personal" || reference.conversation.isGroup === true || !nonemptyString(reference.conversation.id) || normalizedUuid(reference.conversation.tenantId) !== this.tenantId || normalizedUuid(reference.user?.aadObjectId) !== owner || !nonemptyString(reference.user?.id)) {
+      throw new PermanentDeliveryError("Teams bot installation conversation unavailable");
+    }
     await this.adapter.continueConversationAsync(this.appId, reference, async (context3) => {
       await context3.sendActivity({ attachments: [{ contentType: "application/vnd.microsoft.card.adaptive", content: card }] });
     });
@@ -113248,13 +113263,21 @@ var ManagedIdentityTeamsBot = class {
     });
     const webRequest = { method: request.method, headers, body };
     await this.adapter.process(webRequest, response, async (context3) => {
-      const ownerObjectId = context3.activity.from?.aadObjectId;
+      const conversation = context3.activity.conversation;
+      if (context3.activity.channelId !== "msteams" || normalizedUuid(context3.activity.channelData?.tenant?.id) !== this.tenantId || conversation?.conversationType !== "personal" || conversation.isGroup === true || conversation.tenantId !== void 0 && normalizedUuid(conversation.tenantId) !== this.tenantId) return;
+      const ownerObjectId = normalizedUuid(context3.activity.from?.aadObjectId);
       if (ownerObjectId) {
         const installationAction = context3.activity.action;
         if (context3.activity.type === "installationUpdate" && installationAction === "remove") {
           await this.conversations.deleteConversation(ownerObjectId);
         } else {
-          await this.conversations.putConversation(ownerObjectId, import_botbuilder.TurnContext.getConversationReference(context3.activity));
+          if (!nonemptyString(conversation.id) || !nonemptyString(context3.activity.from?.id) || !nonemptyString(context3.activity.serviceUrl)) return;
+          const reference = import_botbuilder.TurnContext.getConversationReference(context3.activity);
+          await this.conversations.putConversation(ownerObjectId, {
+            ...reference,
+            user: { ...reference.user, aadObjectId: ownerObjectId },
+            conversation: { ...reference.conversation, tenantId: this.tenantId }
+          });
         }
       }
     });

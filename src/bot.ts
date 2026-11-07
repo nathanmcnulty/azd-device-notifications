@@ -7,6 +7,14 @@ import { PermanentDeliveryError, type ConversationRepository, type Logger } from
 import type { TeamsBotSender } from "./delivery.js";
 import { readBoundedJsonObject } from "./http-body.js";
 
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function normalizedUuid(value: unknown): string | undefined {
+  return typeof value === "string" && UUID.test(value) ? value.toLowerCase() : undefined;
+}
+function nonemptyString(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
 interface WebResponseCapture {
   statusCode: number;
   headers: Record<string, string>;
@@ -21,6 +29,7 @@ interface WebResponseCapture {
 
 export class ManagedIdentityTeamsBot implements TeamsBotSender {
   private readonly adapter: CloudAdapter;
+  private readonly tenantId: string;
 
   constructor(
     private readonly appId: string,
@@ -28,6 +37,7 @@ export class ManagedIdentityTeamsBot implements TeamsBotSender {
     private readonly conversations: ConversationRepository,
     private readonly logger: Logger
   ) {
+    this.tenantId = normalizedUuid(tenantId) ?? (() => { throw Error("TeamsBotTenantIdInvalid"); })();
     const authentication = new ConfigurationBotFrameworkAuthentication({
       MicrosoftAppType: "UserAssignedMSI",
       MicrosoftAppId: appId,
@@ -41,8 +51,16 @@ export class ManagedIdentityTeamsBot implements TeamsBotSender {
   }
 
   async sendToEntraUser(ownerObjectId: string, card: unknown): Promise<void> {
-    const reference = await this.conversations.getConversation(ownerObjectId) as Partial<ConversationReference> | undefined;
-    if (!reference?.serviceUrl || !reference.conversation) throw new PermanentDeliveryError("Teams bot installation conversation unavailable");
+    const owner = normalizedUuid(ownerObjectId);
+    if (!owner) throw new PermanentDeliveryError("Teams bot installation conversation unavailable");
+    const reference = await this.conversations.getConversation(owner) as Partial<ConversationReference> | undefined;
+    if (!reference || !nonemptyString(reference.serviceUrl)
+      || reference.channelId !== "msteams" || reference.conversation?.conversationType !== "personal"
+      || reference.conversation.isGroup === true || !nonemptyString(reference.conversation.id)
+      || normalizedUuid(reference.conversation.tenantId) !== this.tenantId
+      || normalizedUuid(reference.user?.aadObjectId) !== owner || !nonemptyString(reference.user?.id)) {
+      throw new PermanentDeliveryError("Teams bot installation conversation unavailable");
+    }
     await this.adapter.continueConversationAsync(this.appId, reference as ConversationReference, async (context) => {
       await context.sendActivity({ attachments: [{ contentType: "application/vnd.microsoft.card.adaptive", content: card }] });
     });
@@ -66,13 +84,24 @@ export class ManagedIdentityTeamsBot implements TeamsBotSender {
     request.headers.forEach((value, name) => { headers[name] = value; });
     const webRequest = { method: request.method, headers, body };
     await this.adapter.process(webRequest, response, async (context) => {
-      const ownerObjectId = context.activity.from?.aadObjectId;
+      const conversation = context.activity.conversation;
+      if (context.activity.channelId !== "msteams"
+        || normalizedUuid(context.activity.channelData?.tenant?.id) !== this.tenantId
+        || conversation?.conversationType !== "personal" || conversation.isGroup === true
+        || (conversation.tenantId !== undefined && normalizedUuid(conversation.tenantId) !== this.tenantId)) return;
+      const ownerObjectId = normalizedUuid(context.activity.from?.aadObjectId);
       if (ownerObjectId) {
         const installationAction = (context.activity as { action?: string }).action;
         if (context.activity.type === "installationUpdate" && installationAction === "remove") {
           await this.conversations.deleteConversation(ownerObjectId);
         } else {
-          await this.conversations.putConversation(ownerObjectId, TurnContext.getConversationReference(context.activity));
+          if (!nonemptyString(conversation.id) || !nonemptyString(context.activity.from?.id) || !nonemptyString(context.activity.serviceUrl)) return;
+          const reference = TurnContext.getConversationReference(context.activity);
+          await this.conversations.putConversation(ownerObjectId, {
+            ...reference,
+            user: { ...reference.user!, aadObjectId: ownerObjectId },
+            conversation: { ...reference.conversation!, tenantId: this.tenantId }
+          });
         }
       }
     });
