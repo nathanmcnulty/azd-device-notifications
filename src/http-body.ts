@@ -7,8 +7,8 @@ type JsonObjectResult = { body: Record<string, unknown>; response?: never }
   | { body?: never; response: HttpResponseInit };
 
 export async function readBoundedJsonObject(request: Pick<HttpRequest, "headers" | "body">): Promise<JsonObjectResult> {
-  const invalid = (): JsonObjectResult => ({ response: { status: 400, jsonBody: { message: "Request body must be a valid JSON object." } } });
-  const oversized = (): JsonObjectResult => ({ response: { status: 413, jsonBody: { message: "Request body exceeds 256 KiB." } } });
+  const invalid = (): JsonObjectResult => ({ response: { status: 400, jsonBody: { success: false, status: "invalid", message: "Request body must be a valid JSON object." } } });
+  const oversized = (): JsonObjectResult => ({ response: { status: 413, jsonBody: { success: false, status: "invalid", message: "Request body exceeds 256 KiB." } } });
   const length = request.headers.get("content-length");
   if (length !== null && (!/^\d+$/.test(length) || !Number.isSafeInteger(Number(length)))) return invalid();
   if (length !== null && Number(length) > MAX_HTTP_BODY_BYTES) {

@@ -38,7 +38,9 @@ describe("HTTP input allocation boundary", () => {
   });
 
   it.each(["{", "null", "[]", '"text"', "0", ""])("returns 400 for invalid/non-object input %j", async (body) => {
-    expect((await readBoundedJsonObject(request(body))).response?.status).toBe(400);
+    const response = (await readBoundedJsonObject(request(body))).response;
+    expect(response?.status).toBe(400);
+    expect(response?.jsonBody).toMatchObject({ success: false, status: "invalid" });
   });
 
   it("rejects invalid UTF-8 without replacement decoding", async () => {
