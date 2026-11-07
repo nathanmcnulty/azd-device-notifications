@@ -4,11 +4,14 @@ import { ManagedIdentityTeamsBot } from "./bot.js";
 import { boundedNumber } from "./configuration.js";
 import { dispatchEvent, validateDeliveryConfiguration } from "./delivery.js";
 import { GraphClient } from "./graph.js";
+import { readBoundedJsonObject } from "./http-body.js";
 import { loadNotificationEnvironment } from "./notification-contracts.js";
 import { pollDirectoryAudits, pollManagedDevices } from "./pollers.js";
 import { AzureStateRepository } from "./repositories.js";
 import { loadRoutingConfig } from "./routing.js";
 import { runSyntheticDeliveryProof } from "./synthetic.js";
+
+app.setup({ enableHttpStream: true });
 
 const required = (name: string): string => {
   const value = process.env[name];
@@ -88,13 +91,9 @@ app.http("testNotificationDelivery", {
   methods: ["POST"],
   authLevel: "function",
   handler: async (request, context) => {
-    let input: Record<string, unknown>;
-    try {
-      input = await request.json() as Record<string, unknown>;
-    } catch {
-      return { status: 400, jsonBody: { success: false, status: "invalid", message: "Request body must be valid JSON." } };
-    }
-    return runSyntheticDeliveryProof(input, {
+    const parsed = await readBoundedJsonObject(request);
+    if (parsed.response) return parsed.response;
+    return runSyntheticDeliveryProof(parsed.body, {
       graph, bot, history: state, logger: logger(context), routing, adminEmails, webhookUrl, emailSenderUpn,
       environment: notificationEnvironment
     }, collectionEnabled);

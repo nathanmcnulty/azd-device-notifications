@@ -5,6 +5,7 @@ import {
 } from "botbuilder";
 import { PermanentDeliveryError, type ConversationRepository, type Logger } from "./domain.js";
 import type { TeamsBotSender } from "./delivery.js";
+import { readBoundedJsonObject } from "./http-body.js";
 
 interface WebResponseCapture {
   statusCode: number;
@@ -48,7 +49,9 @@ export class ManagedIdentityTeamsBot implements TeamsBotSender {
   }
 
   async handle(request: HttpRequest): Promise<HttpResponseInit> {
-    const body = await request.json() as Record<string, unknown>;
+    const parsed = await readBoundedJsonObject(request);
+    if (parsed.response) return parsed.response;
+    const body = parsed.body;
     const response: WebResponseCapture = {
       statusCode: 200,
       headers: {},

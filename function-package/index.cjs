@@ -113150,6 +113150,45 @@ var ProviderRequestError = class extends Error {
   operationId;
 };
 
+// http-body.ts
+var MAX_HTTP_BODY_BYTES = 256 * 1024;
+async function readBoundedJsonObject(request) {
+  const invalid = () => ({ response: { status: 400, jsonBody: { message: "Request body must be a valid JSON object." } } });
+  const oversized = () => ({ response: { status: 413, jsonBody: { message: "Request body exceeds 256 KiB." } } });
+  const length = request.headers.get("content-length");
+  if (length !== null && (!/^\d+$/.test(length) || !Number.isSafeInteger(Number(length)))) return invalid();
+  if (length !== null && Number(length) > MAX_HTTP_BODY_BYTES) {
+    void request.body?.cancel().catch(() => {
+    });
+    return oversized();
+  }
+  if (!request.body) return invalid();
+  const reader = request.body.getReader();
+  const chunks = [];
+  let bytes = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (!(value instanceof Uint8Array)) return invalid();
+      bytes += value.byteLength;
+      if (bytes > MAX_HTTP_BODY_BYTES) {
+        void reader.cancel().catch(() => {
+        });
+        return oversized();
+      }
+      chunks.push(Buffer.from(value));
+    }
+    const parsed = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(Buffer.concat(chunks, bytes)));
+    if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) return invalid();
+    return { body: parsed };
+  } catch {
+    return invalid();
+  } finally {
+    reader.releaseLock();
+  }
+}
+
 // bot.ts
 var ManagedIdentityTeamsBot = class {
   constructor(appId, tenantId, conversations, logger33) {
@@ -113179,7 +113218,9 @@ var ManagedIdentityTeamsBot = class {
     });
   }
   async handle(request) {
-    const body = await request.json();
+    const parsed = await readBoundedJsonObject(request);
+    if (parsed.response) return parsed.response;
+    const body = parsed.body;
     const response = {
       statusCode: 200,
       headers: {},
@@ -151585,6 +151626,7 @@ async function runSyntheticDeliveryProof(input, dependencies, collectionEnabled2
 }
 
 // index.ts
+import_functions.app.setup({ enableHttpStream: true });
 var required = (name3) => {
   const value = process.env[name3];
   if (!value) throw new Error(`${name3} must be configured`);
@@ -151672,13 +151714,9 @@ import_functions.app.http("testNotificationDelivery", {
   methods: ["POST"],
   authLevel: "function",
   handler: async (request, context3) => {
-    let input;
-    try {
-      input = await request.json();
-    } catch {
-      return { status: 400, jsonBody: { success: false, status: "invalid", message: "Request body must be valid JSON." } };
-    }
-    return runSyntheticDeliveryProof(input, {
+    const parsed = await readBoundedJsonObject(request);
+    if (parsed.response) return parsed.response;
+    return runSyntheticDeliveryProof(parsed.body, {
       graph,
       bot,
       history: state4,
