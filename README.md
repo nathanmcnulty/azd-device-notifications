@@ -29,6 +29,10 @@ flowchart LR
     F --> G[Run real device-event tests]
 ```
 
+## Contributor validation
+
+Repository validation requires PowerShell 7.6 or later and Pester 6.2.0 or later. GitHub Actions pins Pester 6.2.0. Run `./scripts/Test-Repository.ps1` for the complete offline validation gate.
+
 ## Before you begin
 
 Start with test users or a test group. Decide which notification path you will prove before you enable collection.
@@ -37,7 +41,7 @@ Install:
 
 - [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
 - [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
-- [PowerShell 7](https://learn.microsoft.com/powershell/scripting/install/installing-powershell)
+- [PowerShell 7.6 or later](https://learn.microsoft.com/powershell/scripting/install/installing-powershell)
 
 Node.js and npm are not required on administrator workstations. The reviewed, ready-to-run Function code—including its application, Azure SDK, and Bot Framework dependencies—is included in [`function-package`](function-package). `azd` deploys it without running npm or building source code. The readable TypeScript source remains in [`src`](src) for review by people or coding agents.
 

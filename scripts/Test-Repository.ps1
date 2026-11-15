@@ -1,3 +1,5 @@
+#Requires -Version 7.6
+
 [CmdletBinding()]
 param()
 
@@ -64,11 +66,11 @@ if ($analysis.Count -gt 0) {
 }
 
 $pester = Get-Module -ListAvailable Pester |
-    Where-Object Version -ge ([version] '5.7.1') |
+    Where-Object Version -ge ([version] '6.2.0') |
     Sort-Object Version -Descending |
     Select-Object -First 1
 if (-not $pester) {
-    throw 'Pester 5.7.1 or later is required for repository validation.'
+    throw 'Pester 6.2.0 or later is required for repository validation.'
 }
 Import-Module $pester.Path -Force
 Set-StrictMode -Off
@@ -78,7 +80,7 @@ try {
 finally {
     Set-StrictMode -Version Latest
 }
-if ($testResult.FailedCount -gt 0) {
+if ($testResult.Result -ne 'Passed' -or $testResult.TotalCount -eq 0) {
     throw "$($testResult.FailedCount) repository test(s) failed."
 }
 
