@@ -43,7 +43,7 @@ Install:
 - [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
 - [PowerShell 7.6 or later](https://learn.microsoft.com/powershell/scripting/install/installing-powershell)
 
-Node.js and npm are not required on administrator workstations. The reviewed, ready-to-run Function code—including its application, Azure SDK, and Bot Framework dependencies—is included in [`function-package`](function-package). `azd` deploys it without running npm or building source code. The readable TypeScript source remains in [`src`](src) for review by people or coding agents.
+Node.js and npm are not required on administrator workstations. The reviewed, ready-to-run Function code—including its application, Azure SDK, and native Teams SDK dependencies—is included in [`function-package`](function-package). `azd` deploys it without running npm or building source code. The readable TypeScript source remains in [`src`](src) for review by people or coding agents.
 
 If you use email, install the Exchange Online PowerShell module:
 
