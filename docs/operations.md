@@ -9,6 +9,10 @@ stop validation before dependency installation or Node build commands. The
 production dependency audit remains a separate required gate; passing source
 tests does not establish native delivery or deployment acceptance.
 
+## Teams request authentication
+
+`POST /api/messages` uses native Teams SDK service-token validation with unauthenticated requests disabled. The bot app ID comes from the user-assigned managed identity client ID output, paired with the configured Entra tenant. Conversation storage is touched only after the SDK callback and tenant, personal-conversation, and owner checks succeed. The local unsigned-request rejection verifies the authentication boundary only; it is not live tenant or recipient-delivery evidence.
+
 ## Deployment states
 
 Use these checkpoints when handing the solution to another administrator:
