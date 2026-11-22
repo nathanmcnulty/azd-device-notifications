@@ -9,7 +9,7 @@ This template tells users and administrators when:
 Notifications can go to the device owner, an administrator, or both. Supported destinations are a personal Teams message, a Teams Workflow, and email from one shared mailbox.
 
 > [!WARNING]
-> This repository does not yet have a stable release. Use `main` for review and test deployments only, and prove every selected notification route before enabling collection. The solution detects and notifies; it does not remediate devices.
+> The latest published stable release is `v1.0.0`. Its publication does not establish production readiness or recipient-route acceptance. Use `main` for review and test deployments only, and prove every selected notification route before enabling collection. The solution detects and notifies; it does not remediate devices.
 
 > [!IMPORTANT]
 > This solution only detects and notifies. It never deletes, disables, retires, or wipes a device, changes compliance, or performs another remediation action.
