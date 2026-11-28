@@ -4,6 +4,10 @@ param()
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
+$toolchain = Get-Content -LiteralPath (Join-Path $repositoryRoot 'toolchain.lock.json') -Raw | ConvertFrom-Json
+$requiredAnalyzerVersion = [version]$toolchain.validation.psScriptAnalyzerMinimumVersion
+$requiredPesterVersion = [version]$toolchain.validation.pesterVersion
+$requiredBicepVersion = [string]$toolchain.validation.bicepVersion
 
 function Invoke-CheckedCommand {
     param(
@@ -51,11 +55,11 @@ if ($parseErrors.Count -gt 0) {
 }
 
 $analyzer = Get-Module -ListAvailable PSScriptAnalyzer |
-    Where-Object Version -ge ([version] '1.24.0') |
+    Where-Object Version -ge $requiredAnalyzerVersion |
     Sort-Object Version -Descending |
     Select-Object -First 1
 if (-not $analyzer) {
-    throw 'PSScriptAnalyzer 1.24.0 or later is required for repository validation.'
+    throw "PSScriptAnalyzer $requiredAnalyzerVersion or later is required for repository validation."
 }
 Import-Module $analyzer.Path -Force
 $analysis = @(Invoke-ScriptAnalyzer -Path (Join-Path $repositoryRoot 'scripts') -Recurse -Severity Error)
@@ -63,14 +67,32 @@ if ($analysis.Count -gt 0) {
     throw ($analysis | Format-Table -AutoSize | Out-String)
 }
 
-$pester = Get-Module -ListAvailable Pester |
-    Where-Object Version -ge ([version] '5.7.1') |
-    Sort-Object Version -Descending |
+$pester = Get-Module -ListAvailable -Name Pester |
+    Where-Object Version -eq $requiredPesterVersion |
     Select-Object -First 1
 if (-not $pester) {
-    throw 'Pester 5.7.1 or later is required for repository validation.'
+    throw "Pester $requiredPesterVersion is required for repository validation. Install it with: Install-Module Pester -RequiredVersion $requiredPesterVersion -Scope CurrentUser."
 }
-Import-Module $pester.Path -Force
+$loadedPesterModules = @(Get-Module -Name Pester)
+$incompatiblePesterModules = @($loadedPesterModules | Where-Object Version -ne $requiredPesterVersion)
+if ($incompatiblePesterModules.Count -gt 0) {
+    $loadedVersions = ($incompatiblePesterModules | ForEach-Object { $_.Version.ToString() }) -join ', '
+    throw "Pester $loadedVersions is already loaded in this PowerShell session. Start a fresh session so repository validation can import exact Pester $requiredPesterVersion."
+}
+if ($loadedPesterModules.Count -eq 0) {
+    Import-Module $pester.Path -Force
+}
+$loadedPester = @(Get-Module -Name Pester | Where-Object Version -eq $requiredPesterVersion)
+if ($loadedPester.Count -eq 0) {
+    throw "Pester $requiredPesterVersion was not loaded for repository validation."
+}
+$invokePesterCommand = Get-Command -Name Invoke-Pester -ErrorAction Stop
+if ($invokePesterCommand.Module.Version -ne $requiredPesterVersion) {
+    throw "Invoke-Pester resolves to version $($invokePesterCommand.Module.Version), not the selected Pester $requiredPesterVersion."
+}
+
+Import-Module (Join-Path $PSScriptRoot 'Toolchain.Requirements.psm1') -Force
+Import-AzdGraphAuthenticationModule
 Set-StrictMode -Off
 try {
     $testResult = Invoke-Pester -Path (Join-Path $repositoryRoot 'tests') -Output Detailed -PassThru
@@ -88,6 +110,7 @@ Invoke-CheckedCommand npm @('test') $sourceRoot 'Node tests'
 Invoke-CheckedCommand npm @('run', 'typecheck') $sourceRoot 'TypeScript typecheck'
 Invoke-CheckedCommand npm @('run', 'build') $sourceRoot 'TypeScript build'
 Invoke-CheckedCommand npm @('run', 'bundle') $sourceRoot 'Function bundle build'
+Invoke-CheckedCommand npm @('run', 'test:startup') $sourceRoot 'Real BotBuilder startup'
 Invoke-CheckedCommand npm @('audit', '--omit=dev', '--audit-level=high') $sourceRoot 'Production dependency audit'
 
 $deploymentPackageFiles = @(
@@ -159,12 +182,19 @@ if ($missingLinks.Count -gt 0) {
     throw "Local documentation links are missing:`n$($missingLinks -join "`n")"
 }
 
-& az bicep version | Out-Null
+$bicepVersionOutput = (& az bicep version | Out-String).Trim()
 if ($LASTEXITCODE -ne 0) {
     throw 'An already-installed Bicep CLI is required for repository validation.'
 }
+if ($bicepVersionOutput -notmatch "(?m)^Bicep CLI version $([regex]::Escape($requiredBicepVersion))(?:\s|$)") {
+    throw "Bicep CLI $requiredBicepVersion is required for repository validation. Found: $bicepVersionOutput"
+}
 Invoke-CheckedCommand az @('bicep', 'build', '--file', 'infra/main.bicep', '--no-restore') $repositoryRoot 'Bicep build'
-Get-Content -LiteralPath (Join-Path $repositoryRoot 'infra/main.json') -Raw | ConvertFrom-Json -Depth 100 | Out-Null
+$compiledTemplate = Get-Content -LiteralPath (Join-Path $repositoryRoot 'infra/main.json') -Raw | ConvertFrom-Json -Depth 100
+$expectedGeneratorPrefix = [regex]::Escape($requiredBicepVersion) + '\.'
+if ([string]$compiledTemplate.metadata._generator.version -notmatch "^$expectedGeneratorPrefix") {
+    throw "Generated ARM metadata does not identify Bicep $requiredBicepVersion."
+}
 
 & git -C $repositoryRoot diff --exit-code -- function-package/index.cjs function-package/index.cjs.LEGAL.txt `
     function-package/THIRD-PARTY-NOTICES.txt function-package/UNLICENSE.txt infra/main.json

@@ -107,11 +107,8 @@ if ($env:DEVICE_NOTIFICATION_TEAMS_TENANT_ID -ine $env:AZURE_TENANT_ID -or
     $env:DEVICE_NOTIFICATION_TEAMS_WORKLOAD_CLIENT_ID -ine $env:AZURE_WORKLOAD_CLIENT_ID) {
     throw 'Recorded Teams app state does not match the exact deployed tenant and workload identity.'
 }
-if (-not (Get-Module Microsoft.Graph.Authentication -ListAvailable)) {
-    throw 'Microsoft.Graph.Authentication is required for Teams app cleanup.'
-}
-
-Import-Module Microsoft.Graph.Authentication
+Import-Module (Join-Path $PSScriptRoot 'Toolchain.Requirements.psm1') -Force
+Import-AzdGraphAuthenticationModule
 $requiredScopes = @('AppCatalog.ReadWrite.All', 'TeamsAppInstallation.ReadWriteForUser')
 Connect-MgGraph -TenantId $env:AZURE_TENANT_ID -Scopes $requiredScopes -ContextScope Process -NoWelcome
 $context = Get-MgContext
