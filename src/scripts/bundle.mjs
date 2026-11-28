@@ -8,6 +8,10 @@ const repositoryRoot = path.resolve(sourceRoot, '..');
 const packageRoot = path.join(repositoryRoot, 'function-package');
 const outputPath = path.join(packageRoot, 'index.cjs');
 const licenseOverrideRoot = path.join(sourceRoot, 'third-party-licenses');
+const teamsSdkLicense = {
+  file: 'microsoft-teams-sdk-MIT.txt',
+  source: 'https://github.com/microsoft/teams.ts/blob/main/LICENSE',
+};
 
 const licenseOverrides = new Map([
   ['@nodable/entities@3.0.0', {
@@ -18,6 +22,15 @@ const licenseOverrides = new Map([
     file: 'tr46-LICENSE.txt',
     source: 'https://github.com/jsdom/tr46/tree/0.0.3',
   }],
+  ['@microsoft/signalr@10.0.11', {
+    file: 'microsoft-signalr-MIT.txt',
+    source: 'https://github.com/dotnet/aspnetcore/blob/main/LICENSE.txt',
+  }],
+  ['@microsoft/teams.api@2.2.1', teamsSdkLicense],
+  ['@microsoft/teams.apps@2.2.1', teamsSdkLicense],
+  ['@microsoft/teams.cards@2.2.1', teamsSdkLicense],
+  ['@microsoft/teams.common@2.2.1', teamsSdkLicense],
+  ['@microsoft/teams.graph@2.2.1', teamsSdkLicense],
 ]);
 
 const result = await build({

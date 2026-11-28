@@ -30,7 +30,7 @@ Their internal state and result taxonomies differ at the boundaries below.
 | State cleanup or terminal-write failure | Pre-send release failure maps to `failed`, `unknown`, `retryable: true`, code `DeliveryStateReleaseFailed` | No corresponding release operation. A state-write failure can leave `pending` or `sending`; the review API operates on `review` rows, so stranded sending-state recovery is a gap. | Preserve concurrency tokens and define recovery for uncertain state before sharing a runtime. |
 
 Neither runtime taxonomy has a recipient-received status. A successful Graph
-or Bot Framework response proves provider processing or acceptance only.
+or Teams API response proves provider processing or acceptance only.
 Human-visible delivery needs a separately retained recipient observation.
 
 ## Immutable recipient identity
