@@ -937,7 +937,7 @@ var require_azure_functions = __commonJS({
         "./src/constants.ts"(__unused_webpack_module, exports3) {
           Object.defineProperty(exports3, "__esModule", { value: true });
           exports3.returnBindingKey = exports3.version = void 0;
-          exports3.version = "4.16.5";
+          exports3.version = "4.17.1";
           exports3.returnBindingKey = "$return";
         },
         /***/
@@ -2822,7 +2822,7 @@ var require_azure_functions = __commonJS({
         /***/
         "./src/index.ts"(__unused_webpack_module, exports3, __webpack_require__3) {
           Object.defineProperty(exports3, "__esModule", { value: true });
-          exports3.MySqlChangeOperation = exports3.SqlChangeOperation = exports3.CosmosDBv4ChangeFeedMode = exports3.CosmosDBChangeFeedMode = exports3.arg = exports3.McpContent = exports3.Disposable = exports3.trigger = exports3.output = exports3.PromptInvocationContext = exports3.McpToolResponse = exports3.McpTextContent = exports3.McpResourceLinkContent = exports3.McpResourceContent = exports3.McpImageContent = exports3.McpContentBlock = exports3.McpAudioContent = exports3.promptArg = exports3.InvocationContext = exports3.input = exports3.HttpResponse = exports3.HttpRequest = exports3.PreInvocationContext = exports3.PostInvocationContext = exports3.LogHookContext = exports3.InvocationHookContext = exports3.HookContext = exports3.AppTerminateContext = exports3.AppStartContext = exports3.app = void 0;
+          exports3.MySqlChangeOperation = exports3.SqlChangeOperation = exports3.CosmosDBv4ChangeFeedMode = exports3.CosmosDBChangeFeedMode = exports3.Cardinality = exports3.DeliveryMode = exports3.arg = exports3.McpContent = exports3.Disposable = exports3.trigger = exports3.output = exports3.PromptInvocationContext = exports3.McpToolResponse = exports3.McpTextContent = exports3.McpResourceLinkContent = exports3.McpResourceContent = exports3.McpImageContent = exports3.McpContentBlock = exports3.McpAudioContent = exports3.promptArg = exports3.InvocationContext = exports3.input = exports3.HttpResponse = exports3.HttpRequest = exports3.PreInvocationContext = exports3.PostInvocationContext = exports3.LogHookContext = exports3.InvocationHookContext = exports3.HookContext = exports3.AppTerminateContext = exports3.AppStartContext = exports3.app = void 0;
           exports3.app = __webpack_require__3(
             /*! ./app */
             "./src/app.ts"
@@ -2969,6 +2969,16 @@ var require_azure_functions = __commonJS({
           Object.defineProperty(exports3, "arg", { enumerable: true, get: function() {
             return toolProperties_1.arg;
           } });
+          var DeliveryMode;
+          (function(DeliveryMode2) {
+            DeliveryMode2["Webhook"] = "Webhook";
+            DeliveryMode2["Poll"] = "Poll";
+          })(DeliveryMode = exports3.DeliveryMode || (exports3.DeliveryMode = {}));
+          var Cardinality;
+          (function(Cardinality2) {
+            Cardinality2["One"] = "one";
+            Cardinality2["Many"] = "many";
+          })(Cardinality = exports3.Cardinality || (exports3.Cardinality = {}));
           var CosmosDBChangeFeedMode;
           (function(CosmosDBChangeFeedMode2) {
             CosmosDBChangeFeedMode2["LatestVersion"] = "LatestVersion";
@@ -3493,7 +3503,14 @@ var require_azure_functions = __commonJS({
           }
           exports3.mcpPrompt = mcpPrompt;
           function connectorTrigger(options) {
-            return addTriggerBindingName(Object.assign(Object.assign({}, options), { type: "connectorTrigger" }));
+            var _a, _b;
+            if (options.deliveryMode === "Poll") {
+              const missingOptions = ["connection", "triggerConfigName"].filter((key) => options[key] === void 0 || options[key] === null);
+              if (missingOptions.length > 0) {
+                throw new Error(`The following options are required for Poll delivery mode: ${missingOptions.join(", ")}`);
+              }
+            }
+            return addTriggerBindingName(Object.assign(Object.assign({}, options), { deliveryMode: (_a = options.deliveryMode) !== null && _a !== void 0 ? _a : "Webhook", cardinality: (_b = options.cardinality) !== null && _b !== void 0 ? _b : "one", type: "connectorTrigger" }));
           }
           exports3.connectorTrigger = connectorTrigger;
           function generic(options) {
@@ -16000,7 +16017,7 @@ var require_follow_redirects = __commonJS({
       return URL2 && value instanceof URL2;
     }
     function escapeRegex(regex) {
-      return regex.replace(/[[\]\\/()*+?.^$|]/g, "\\$&");
+      return regex.replace(/[\^$\\.*+?()[\]{}|]/g, "\\$&");
     }
     module2.exports = wrap2({ http: http3, https: https2 });
     module2.exports.wrap = wrap2;
@@ -117019,7 +117036,7 @@ Error Description: '${typedError.message}'`, this.correlationId);
       }
     };
     var name$1 = "@azure/msal-common";
-    var version$1 = "16.16.0";
+    var version$1 = "16.16.1";
     var cacheQuotaExceeded2 = "cache_quota_exceeded";
     var cacheErrorUnknown2 = "cache_error_unknown";
     var CacheError2 = class _CacheError extends Error {
@@ -117429,18 +117446,22 @@ Error Description: '${typedError.message}'`, this.correlationId);
        * @param account
        */
       removeAccount(account, correlationId) {
-        this.removeAccountContext(account, correlationId);
         const accountKeys = this.getAccountKeys();
         const keyFilter = (key) => {
           return key.includes(account.homeAccountId) && key.includes(account.environment);
         };
+        this.getTokenKeys().idToken.filter(keyFilter).forEach((key) => {
+          this.removeIdToken(key, correlationId);
+        });
+        this.removeAccountContext(account, correlationId);
         accountKeys.filter(keyFilter).forEach((key) => {
           this.removeItem(key, correlationId);
           this.performanceClient.incrementFields({ accountsRemoved: 1 }, correlationId);
         });
       }
       /**
-       * Removes credentials associated with the provided account
+       * Removes access and refresh tokens associated with the provided account,
+       * preserving the account and its ID tokens.
        * @param account
        */
       removeAccountContext(account, correlationId) {
@@ -117448,9 +117469,6 @@ Error Description: '${typedError.message}'`, this.correlationId);
         const keyFilter = (key) => {
           return key.includes(account.homeAccountId) && key.includes(account.environment);
         };
-        allTokenKeys.idToken.filter(keyFilter).forEach((key) => {
-          this.removeIdToken(key, correlationId);
-        });
         allTokenKeys.accessToken.filter(keyFilter).forEach((key) => {
           this.removeAccessToken(key, correlationId);
         });
@@ -121684,7 +121702,7 @@ ${serverError}`, correlationId);
       }
     };
     var name3 = "@azure/msal-node";
-    var version4 = "7.2.0";
+    var version4 = "7.2.1";
     var BaseClient2 = class {
       constructor(configuration) {
         this.config = buildClientConfiguration2(configuration);
@@ -133219,7 +133237,7 @@ var Logger = class _Logger {
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/packageMetadata.mjs
 var name = "@azure/msal-common";
-var version = "16.16.0";
+var version = "16.16.1";
 
 // node_modules/@azure/msal-node/node_modules/@azure/msal-common/dist/error/CacheErrorCodes.mjs
 var cacheQuotaExceeded = "cache_quota_exceeded";
@@ -133635,18 +133653,22 @@ var CacheManager = class {
    * @param account
    */
   removeAccount(account, correlationId) {
-    this.removeAccountContext(account, correlationId);
     const accountKeys = this.getAccountKeys();
     const keyFilter = (key) => {
       return key.includes(account.homeAccountId) && key.includes(account.environment);
     };
+    this.getTokenKeys().idToken.filter(keyFilter).forEach((key) => {
+      this.removeIdToken(key, correlationId);
+    });
+    this.removeAccountContext(account, correlationId);
     accountKeys.filter(keyFilter).forEach((key) => {
       this.removeItem(key, correlationId);
       this.performanceClient.incrementFields({ accountsRemoved: 1 }, correlationId);
     });
   }
   /**
-   * Removes credentials associated with the provided account
+   * Removes access and refresh tokens associated with the provided account,
+   * preserving the account and its ID tokens.
    * @param account
    */
   removeAccountContext(account, correlationId) {
@@ -133654,9 +133676,6 @@ var CacheManager = class {
     const keyFilter = (key) => {
       return key.includes(account.homeAccountId) && key.includes(account.environment);
     };
-    allTokenKeys.idToken.filter(keyFilter).forEach((key) => {
-      this.removeIdToken(key, correlationId);
-    });
     allTokenKeys.accessToken.filter(keyFilter).forEach((key) => {
       this.removeAccessToken(key, correlationId);
     });
@@ -138046,7 +138065,7 @@ var ClientAssertion = class _ClientAssertion {
 
 // node_modules/@azure/msal-node/dist/packageMetadata.mjs
 var name2 = "@azure/msal-node";
-var version2 = "7.2.0";
+var version2 = "7.2.1";
 
 // node_modules/@azure/msal-node/dist/client/BaseClient.mjs
 var BaseClient = class {

@@ -319,8 +319,8 @@ safe-buffer/index.js:
   /*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
 @azure/msal-node/lib/msal-node.cjs:
-  /*! @azure/msal-node v7.2.0 2026-11-05 */
-  /*! @azure/msal-common v16.16.0 2026-11-05 */
+  /*! @azure/msal-node v7.2.1 2026-11-06 */
+  /*! @azure/msal-common v16.16.1 2026-11-06 */
 
 object-assign/index.js:
   /*
@@ -380,7 +380,7 @@ object-assign/index.js:
 @azure/msal-node/dist/client/ManagedIdentityApplication.mjs:
 @azure/msal-node/dist/cache/distributed/DistributedCachePlugin.mjs:
 @azure/msal-node/dist/index.mjs:
-  /*! @azure/msal-node v7.2.0 2026-11-05 */
+  /*! @azure/msal-node v7.2.1 2026-11-06 */
 
 @azure/msal-common/dist/constants/AADServerParamKeys.mjs:
 @azure/msal-common/dist/utils/Constants.mjs:
@@ -450,4 +450,4 @@ object-assign/index.js:
 @azure/msal-common/dist/client/SilentFlowClient.mjs:
 @azure/msal-common/dist/request/BaseAuthRequest.mjs:
 @azure/msal-common/dist/index-node.mjs:
-  /*! @azure/msal-common v16.16.0 2026-11-05 */
+  /*! @azure/msal-common v16.16.1 2026-11-06 */

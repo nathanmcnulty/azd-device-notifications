@@ -302,7 +302,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ================================================================================
-@azure/functions@4.16.5
+@azure/functions@4.17.1
 Declared license: MIT
 
 --- LICENSE ---
@@ -424,7 +424,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ================================================================================
-@azure/msal-node@7.2.0
+@azure/msal-node@7.2.1
 Declared license: MIT
 
 --- LICENSE ---
@@ -458,7 +458,7 @@ Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
 ================================================================================
-@azure/msal-common@16.16.0
+@azure/msal-common@16.16.1
 Declared license: MIT
 
 --- LICENSE ---
@@ -2513,7 +2513,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 [ossf-scorecard-visualizer]: https://ossf.github.io/scorecard-visualizer/#/projects/github.com/pillarjs/finalhandler
 
 ================================================================================
-follow-redirects@1.16.2
+follow-redirects@1.16.3
 Declared license: MIT
 
 --- LICENSE ---
