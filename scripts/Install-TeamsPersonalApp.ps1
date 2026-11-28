@@ -91,10 +91,8 @@ if ($Plan) {
     return
 }
 
-if (-not (Get-Module Microsoft.Graph.Authentication -ListAvailable)) {
-    throw 'Microsoft.Graph.Authentication is required. Install it before configuring the Teams app.'
-}
-Import-Module Microsoft.Graph.Authentication
+Import-Module (Join-Path $PSScriptRoot 'Toolchain.Requirements.psm1') -Force
+Import-AzdGraphAuthenticationModule
 $requiredScopes = @('AppCatalog.ReadWrite.All', 'TeamsAppInstallation.ReadWriteForUser')
 Connect-MgGraph -TenantId $env:AZURE_TENANT_ID -Scopes $requiredScopes -ContextScope Process -NoWelcome
 $context = Get-MgContext

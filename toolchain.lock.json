@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "validation": {
+    "testedPowerShellVersion": "7.6.6",
+    "pesterVersion": "6.2.0",
+    "bicepVersion": "0.46.1",
+    "psScriptAnalyzerMinimumVersion": "1.24.0"
+  },
+  "azdBicepCompiler": {
+    "environmentVariable": "AZD_BICEP_TOOL_PATH",
+    "banner": "Bicep CLI version 0.46.1 (545b338e2c)",
+    "linuxX64BinarySha256": "3e011d629ea4311b7a7dd8f0040ab2b1a072ea4ff5d02cb75e0e55a9a6703fb9"
+  },
+  "administratorModules": {
+    "Microsoft.Graph.Authentication": {
+      "version": "2.41.0",
+      "source": "PowerShell Gallery",
+      "projectUrl": "https://github.com/microsoftgraph/msgraph-sdk-powershell",
+      "packageFile": "Microsoft.Graph.Authentication.2.41.0.nupkg",
+      "packageSha256": "42e8b7a8bba6afd1910510d8108c1871ee5d12c5a4818cc4c36ca406369a7afd",
+      "payloadFiles": 58
+    }
+  }
+}

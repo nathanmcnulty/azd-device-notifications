@@ -8,14 +8,16 @@
     "build": "tsc -p tsconfig.json",
     "bundle": "node scripts/bundle.mjs",
     "typecheck": "tsc -p tsconfig.test.json --noEmit",
-    "test": "vitest run --config vitest.config.ts"
+    "test": "vitest run --config vitest.config.ts",
+    "postinstall": "node scripts/patch-botbuilder-zod.mjs",
+    "test:startup": "node scripts/test-botbuilder-startup.mjs"
   },
   "dependencies": {
     "@azure/data-tables": "^13.3.0",
     "@azure/functions": "^4.16.5",
     "@azure/identity": "^4.13.3",
     "@azure/storage-queue": "^12.32.0",
-    "botbuilder": "^4.23.3"
+    "botbuilder": "4.23.3"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
@@ -27,6 +29,7 @@
     "node": ">=22"
   },
   "overrides": {
-    "uuid": "^11.1.1"
+    "uuid": "^11.1.1",
+    "zod": "4.6.6"
   }
 }

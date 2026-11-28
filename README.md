@@ -50,8 +50,10 @@ Install-Module ExchangeOnlineManagement -Scope CurrentUser
 If you use personal Teams messages, install Microsoft Graph PowerShell authentication:
 
 ```powershell
-Install-Module Microsoft.Graph.Authentication -Scope CurrentUser
+Install-Module Microsoft.Graph.Authentication -RequiredVersion 2.41.0 -Scope CurrentUser
 ```
+
+The personal Teams install and cleanup helpers import Microsoft.Graph.Authentication 2.41.0 explicitly. This administrator-side module is not part of the deployed Node.js Function package.
 
 ### Administrator access
 
@@ -185,6 +187,16 @@ The predown hook removes and verifies absence of solution-created Teams catalog/
 ## For contributors
 
 Contributors need Node.js 22 to run tests and rebuild the committed runtime. Administrators deploying with `azd` do not.
+
+Local verification was run with PowerShell 7.6.6. The offline repository validator requires Pester 6.2.0 and Bicep 0.46.1, and imports Microsoft.Graph.Authentication 2.41.0 to verify the administrator helper's exact module selection. The selected versions and Graph package hash are recorded in [`toolchain.lock.json`](toolchain.lock.json).
+
+```powershell
+Install-Module PSScriptAnalyzer -RequiredVersion 1.24.0 -Scope CurrentUser
+Install-Module Pester -RequiredVersion 6.2.0 -Scope CurrentUser
+Install-Module Microsoft.Graph.Authentication -RequiredVersion 2.41.0 -Scope CurrentUser
+az bicep install --version v0.46.1
+./scripts/Test-Repository.ps1
+```
 
 ```powershell
 Set-Location ./src
