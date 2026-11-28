@@ -88,6 +88,7 @@ Invoke-CheckedCommand npm @('test') $sourceRoot 'Node tests'
 Invoke-CheckedCommand npm @('run', 'typecheck') $sourceRoot 'TypeScript typecheck'
 Invoke-CheckedCommand npm @('run', 'build') $sourceRoot 'TypeScript build'
 Invoke-CheckedCommand npm @('run', 'bundle') $sourceRoot 'Function bundle build'
+Invoke-CheckedCommand npm @('run', 'test:startup') $sourceRoot 'Real BotBuilder startup'
 Invoke-CheckedCommand npm @('audit', '--omit=dev', '--audit-level=high') $sourceRoot 'Production dependency audit'
 
 $deploymentPackageFiles = @(
