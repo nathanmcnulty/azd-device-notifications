@@ -34,9 +34,9 @@ Describe 'Deployment validation adapter' {
         $report.outcome | Should -Be 'planned'
         $report.summary.planned | Should -Be 10
         $report.summary.fail | Should -Be 0
-        Assert-MockCalled az -Times 0 -Exactly
-        Assert-MockCalled azd -Times 0 -Exactly
-        Assert-MockCalled Invoke-WebRequest -Times 0 -Exactly
+        Should -Invoke az -Times 0 -Exactly
+        Should -Invoke azd -Times 0 -Exactly
+        Should -Invoke Invoke-WebRequest -Times 0 -Exactly
     }
 
     It 'rejects an empty synthetic event selection' {
@@ -70,10 +70,10 @@ Describe 'Deployment validation adapter' {
                 }
             )
             $unexpected | Should -BeNullOrEmpty
-            Assert-MockCalled Get-DeviceNotificationValidationConfiguration -Times 0 -Exactly
-            Assert-MockCalled az -Times 0 -Exactly
-            Assert-MockCalled Invoke-GraphJson -Times 0 -Exactly
-            Assert-MockCalled Invoke-WebRequest -Times 0 -Exactly
+            Should -Invoke Get-DeviceNotificationValidationConfiguration -Times 0 -Exactly
+            Should -Invoke az -Times 0 -Exactly
+            Should -Invoke Invoke-GraphJson -Times 0 -Exactly
+            Should -Invoke Invoke-WebRequest -Times 0 -Exactly
         }
     }
 
@@ -121,7 +121,7 @@ Describe 'Deployment validation adapter' {
 
             ($results | Where-Object id -eq 'configuration.bot-endpoint').status | Should -Be 'pass'
             ($results | Where-Object id -eq 'security.bot-rejects-unauthenticated').status | Should -Be 'skipped'
-            Assert-MockCalled Invoke-WebRequest -Times 0 -Exactly
+            Should -Invoke Invoke-WebRequest -Times 0 -Exactly
         }
     }
 
@@ -158,7 +158,7 @@ Describe 'Deployment validation adapter' {
             $result = @(Invoke-AzdValidationSet -Definitions $definitions) | Where-Object id -eq 'configuration.bot-endpoint'
 
             $result.status | Should -Be 'pass'
-            Assert-MockCalled az -Times 3 -Exactly
+            Should -Invoke az -Times 3 -Exactly
         }
     }
 
@@ -189,6 +189,7 @@ Describe 'Deployment validation adapter' {
         $moduleFile.Count | Should -Be 1
         $moduleManifest = Import-PowerShellDataFile -LiteralPath (Join-Path $repoRoot $moduleFile[0].target)
         $moduleManifest.ModuleVersion.ToString() | Should -Be $component[0].version
+        $moduleManifest.PowerShellVersion | Should -Be '7.6'
         foreach ($file in $component[0].files) {
             $actual = (Get-FileHash -LiteralPath (Join-Path $repoRoot $file.target) -Algorithm SHA256).Hash.ToLowerInvariant()
             $actual | Should -Be $file.sha256

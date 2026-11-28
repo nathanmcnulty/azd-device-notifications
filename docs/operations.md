@@ -1,5 +1,18 @@
 # Operations
 
+## Repository validation
+
+Run `./scripts/Test-Repository.ps1` before proposing deployment changes. Its
+PowerShell gate requires a nonempty suite in which every discovered test passes.
+Skipped or inconclusive tests, discovery failures, and other incomplete execution
+stop validation before dependency installation or Node build commands. The
+production dependency audit remains a separate required gate; passing source
+tests does not establish native delivery or deployment acceptance.
+
+## Teams request authentication
+
+`POST /api/messages` uses native Teams SDK service-token validation with unauthenticated requests disabled. The bot app ID comes from the user-assigned managed identity client ID output, paired with the configured Entra tenant. Conversation storage is touched only after the SDK callback and tenant, personal-conversation, and owner checks succeed. The local unsigned-request rejection verifies the authentication boundary only; it is not live tenant or recipient-delivery evidence.
+
 ## Deployment states
 
 Use these checkpoints when handing the solution to another administrator:
@@ -39,6 +52,13 @@ validation contract. The report is redacted and ignored by Git. Run
 `./scripts/Test-Deployment.ps1 -Plan` to inspect the exact check set without
 authentication, Azure or Graph reads, the unauthenticated endpoint probe, or
 synthetic delivery.
+
+The validation engine is vendored from reviewed Reference commit
+`2b2e784ba11822272c0e4b8389976f95afafa9b9` as deployment-validation 2.0.0.
+It requires PowerShell 7.6 or newer. The lock records every file hash; validation
+does not fetch code from Reference at runtime. This adoption changes the module
+version and runtime floor only; the engine implementation and report schema are
+unchanged. Source adoption does not establish native delivery qualification.
 
 A complete default run tests `deviceRegistered`, `deviceEnrolled`, and `deviceNoncompliant`, then records `DEVICE_NOTIFICATION_DELIVERY_TESTED=true` plus a SHA-256 fingerprint of the exact routing and destinations. Testing only selected `-EventType` values is useful for diagnosis but does not record enablement proof.
 

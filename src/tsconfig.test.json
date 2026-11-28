@@ -3,7 +3,8 @@
   "compilerOptions": {
     "noEmit": true,
     "paths": {
-      "vitest": ["./node_modules/vitest/dist/index.d.ts"]
+      "vitest": ["./node_modules/vitest/dist/index.d.ts"],
+      "@azure/functions": ["./node_modules/@azure/functions/types/index.d.ts"]
     }
   },
   "include": ["**/*.ts", "../tests/**/*.ts"],

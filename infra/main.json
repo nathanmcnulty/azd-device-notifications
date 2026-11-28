@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.46.1.21595",
-      "templateHash": "16370132755544830535"
+      "templateHash": "14566662302031767285"
     }
   },
   "parameters": {
@@ -160,7 +160,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.46.1.21595",
-              "templateHash": "16869205058748106277"
+              "templateHash": "9901193307382985859"
             }
           },
           "parameters": {
@@ -431,6 +431,10 @@
                 "siteConfig": {
                   "minTlsVersion": "1.2",
                   "appSettings": [
+                    {
+                      "name": "FUNCTIONS_REQUEST_BODY_SIZE_LIMIT",
+                      "value": "262144"
+                    },
                     {
                       "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
                       "value": "[reference(resourceId('Microsoft.Insights/components', variables('insightsName')), '2020-02-02').ConnectionString]"

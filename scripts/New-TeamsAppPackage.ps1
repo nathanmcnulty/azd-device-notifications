@@ -1,3 +1,5 @@
+#Requires -Version 7.6
+
 [CmdletBinding()]
 param(
     [string] $OutputPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'teams-app/device-notifications.zip'),

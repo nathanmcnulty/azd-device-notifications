@@ -8,9 +8,10 @@ cookie/index.js:
    * MIT Licensed
    */
 
-safe-buffer/index.js:
-  /*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
-
+mime-db/index.js:
+mime-db/index.js:
+mime-db/index.js:
+mime-db/index.js:
 mime-db/index.js:
   /*!
    * mime-db
@@ -19,6 +20,10 @@ mime-db/index.js:
    * MIT Licensed
    */
 
+mime-types/index.js:
+mime-types/index.js:
+mime-types/index.js:
+mime-types/index.js:
 mime-types/index.js:
   /*!
    * mime-types
@@ -30,13 +35,299 @@ mime-types/index.js:
 axios/dist/node/axios.cjs:
   /*! Axios v1.20.0 Copyright (c) 2026 Matt Zabriskie and contributors */
 
-@azure/msal-node/lib/msal-node.cjs:
-  /*! @azure/msal-node v2.16.3 2025-08-05 */
-  /*! @azure/msal-common v14.16.1 2025-08-05 */
+reflect-metadata/Reflect.js:
+  /*! *****************************************************************************
+  Copyright (C) Microsoft. All rights reserved.
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+  this file except in compliance with the License. You may obtain a copy of the
+  License at http://www.apache.org/licenses/LICENSE-2.0
+  
+  THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+  WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+  MERCHANTABLITY OR NON-INFRINGEMENT.
+  
+  See the Apache Version 2.0 License for specific language governing permissions
+  and limitations under the License.
+  ***************************************************************************** */
+
+depd/index.js:
+  /*!
+   * depd
+   * Copyright(c) 2014-2018 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+statuses/index.js:
+  /*!
+   * statuses
+   * Copyright(c) 2014 Jonathan Ong
+   * Copyright(c) 2016 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+toidentifier/index.js:
+  /*!
+   * toidentifier
+   * Copyright(c) 2016 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+http-errors/index.js:
+  /*!
+   * http-errors
+   * Copyright(c) 2014 Jonathan Ong
+   * Copyright(c) 2016 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+bytes/index.js:
+  /*!
+   * bytes
+   * Copyright(c) 2012-2014 TJ Holowaychuk
+   * Copyright(c) 2015 Jed Watson
+   * MIT Licensed
+   */
+
+unpipe/index.js:
+  /*!
+   * unpipe
+   * Copyright(c) 2015 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+raw-body/index.js:
+  /*!
+   * raw-body
+   * Copyright(c) 2013-2014 Jonathan Ong
+   * Copyright(c) 2014-2022 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+ee-first/index.js:
+  /*!
+   * ee-first
+   * Copyright(c) 2014 Jonathan Ong
+   * MIT Licensed
+   */
+
+on-finished/index.js:
+  /*!
+   * on-finished
+   * Copyright(c) 2013 Jonathan Ong
+   * Copyright(c) 2014 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+content-type/dist/index.js:
+  /*!
+   * content-type
+   * Copyright(c) 2015 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+media-typer/index.js:
+  /*!
+   * media-typer
+   * Copyright(c) 2014-2017 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+type-is/index.js:
+  /*!
+   * type-is
+   * Copyright(c) 2014 Jonathan Ong
+   * Copyright(c) 2014-2015 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+body-parser/lib/read.js:
+body-parser/lib/types/raw.js:
+body-parser/lib/types/text.js:
+body-parser/index.js:
+  /*!
+   * body-parser
+   * Copyright(c) 2014-2015 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+body-parser/lib/types/json.js:
+body-parser/lib/types/urlencoded.js:
+  /*!
+   * body-parser
+   * Copyright(c) 2014 Jonathan Ong
+   * Copyright(c) 2014-2015 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+encodeurl/index.js:
+  /*!
+   * encodeurl
+   * Copyright(c) 2016 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+escape-html/index.js:
+  /*!
+   * escape-html
+   * Copyright(c) 2012-2013 TJ Holowaychuk
+   * Copyright(c) 2015 Andreas Lubbe
+   * Copyright(c) 2015 Tiancheng "Timothy" Gu
+   * MIT Licensed
+   */
+
+parseurl/index.js:
+  /*!
+   * parseurl
+   * Copyright(c) 2014 Jonathan Ong
+   * Copyright(c) 2014-2017 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+finalhandler/index.js:
+  /*!
+   * finalhandler
+   * Copyright(c) 2014-2022 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+express/lib/view.js:
+express/lib/application.js:
+express/lib/request.js:
+express/lib/express.js:
+express/index.js:
+  /*!
+   * express
+   * Copyright(c) 2009-2013 TJ Holowaychuk
+   * Copyright(c) 2013 Roman Shtylman
+   * Copyright(c) 2014-2015 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+etag/index.js:
+  /*!
+   * etag
+   * Copyright(c) 2014-2016 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+forwarded/index.js:
+  /*!
+   * forwarded
+   * Copyright(c) 2014-2017 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+proxy-addr/index.js:
+  /*!
+   * proxy-addr
+   * Copyright(c) 2014-2016 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+express/lib/utils.js:
+express/lib/response.js:
+  /*!
+   * express
+   * Copyright(c) 2009-2013 TJ Holowaychuk
+   * Copyright(c) 2014-2015 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+router/lib/layer.js:
+router/lib/route.js:
+router/index.js:
+  /*!
+   * router
+   * Copyright(c) 2013 Roman Shtylman
+   * Copyright(c) 2014-2022 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+negotiator/lib/accept.js:
+  /*!
+   * negotiator
+   * Copyright(c) 2026 Blake Embrey
+   * MIT Licensed
+   */
+
+negotiator/index.js:
+  /*!
+   * negotiator
+   * Copyright(c) 2012 Federico Romero
+   * Copyright(c) 2012-2014 Isaac Z. Schlueter
+   * Copyright(c) 2015 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+accepts/index.js:
+  /*!
+   * accepts
+   * Copyright(c) 2014 Jonathan Ong
+   * Copyright(c) 2015 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+fresh/index.js:
+  /*!
+   * fresh
+   * Copyright(c) 2012 TJ Holowaychuk
+   * Copyright(c) 2016-2017 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+range-parser/index.js:
+  /*!
+   * range-parser
+   * Copyright(c) 2012-2014 TJ Holowaychuk
+   * Copyright(c) 2015-2016 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+content-disposition/dist/index.js:
+  /*!
+   * content-disposition
+   * Copyright(c) 2014-2017 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+send/index.js:
+  /*!
+   * send
+   * Copyright(c) 2012 TJ Holowaychuk
+   * Copyright(c) 2014-2022 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+vary/index.js:
+  /*!
+   * vary
+   * Copyright(c) 2014-2017 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+serve-static/index.js:
+  /*!
+   * serve-static
+   * Copyright(c) 2010 Sencha Inc.
+   * Copyright(c) 2011 TJ Holowaychuk
+   * Copyright(c) 2014-2016 Douglas Christopher Wilson
+   * MIT Licensed
+   */
+
+safe-buffer/index.js:
+  /*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
 @azure/msal-node/lib/msal-node.cjs:
-  /*! @azure/msal-node v6.0.1 2026-09-15 */
-  /*! @azure/msal-common v16.14.1 2026-09-15 */
+  /*! @azure/msal-node v7.2.0 2026-11-05 */
+  /*! @azure/msal-common v16.16.0 2026-11-05 */
+
+object-assign/index.js:
+  /*
+  object-assign
+  (c) Sindre Sorhus
+  @license MIT
+  */
 
 @azure/msal-node/dist/cache/serializer/Serializer.mjs:
 @azure/msal-node/dist/cache/serializer/Deserializer.mjs:
@@ -62,6 +353,7 @@ axios/dist/node/axios.cjs:
 @azure/msal-node/dist/client/BaseClient.mjs:
 @azure/msal-node/dist/client/UsernamePasswordClient.mjs:
 @azure/msal-node/dist/protocol/Authorize.mjs:
+@azure/msal-node/dist/client/SilentRequestCoalescer.mjs:
 @azure/msal-node/dist/client/ClientApplication.mjs:
 @azure/msal-node/dist/network/LoopbackClient.mjs:
 @azure/msal-node/dist/client/DeviceCodeClient.mjs:
@@ -88,7 +380,7 @@ axios/dist/node/axios.cjs:
 @azure/msal-node/dist/client/ManagedIdentityApplication.mjs:
 @azure/msal-node/dist/cache/distributed/DistributedCachePlugin.mjs:
 @azure/msal-node/dist/index.mjs:
-  /*! @azure/msal-node v6.0.1 2026-09-15 */
+  /*! @azure/msal-node v7.2.0 2026-11-05 */
 
 @azure/msal-common/dist/constants/AADServerParamKeys.mjs:
 @azure/msal-common/dist/utils/Constants.mjs:
@@ -104,6 +396,7 @@ axios/dist/node/axios.cjs:
 @azure/msal-common/dist/cache/utils/AccountEntityUtils.mjs:
 @azure/msal-common/dist/error/AuthErrorCodes.mjs:
 @azure/msal-common/dist/error/ClientConfigurationError.mjs:
+@azure/msal-common/dist/network/ResponseHeaders.mjs:
 @azure/msal-common/dist/error/ClientConfigurationErrorCodes.mjs:
 @azure/msal-common/dist/authority/OpenIdConfigResponse.mjs:
 @azure/msal-common/dist/utils/StringUtils.mjs:
@@ -157,4 +450,4 @@ axios/dist/node/axios.cjs:
 @azure/msal-common/dist/client/SilentFlowClient.mjs:
 @azure/msal-common/dist/request/BaseAuthRequest.mjs:
 @azure/msal-common/dist/index-node.mjs:
-  /*! @azure/msal-common v16.14.1 2026-09-15 */
+  /*! @azure/msal-common v16.16.0 2026-11-05 */
